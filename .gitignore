@@ -1,0 +1,16 @@
+source/Config.php
+teste/
+uploads/
+log-vendas.txt
+logs/
+bd/
+vendor/
+*.zip
+error_log
+docker-compose.yml
+.DS_Store
+bling.txt
+pagarme-status.txt
+pagarme.json
+postback-pagarme.txt
+club-main/source/Config.php
