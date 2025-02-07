@@ -1,0 +1,30 @@
+nome = Francisco Monteiro 
+email = fhamonteiro@hotmail.com 
+telefone = 34999145481 
+venda = 1203 
+status_transacao = 4 
+transacao = PAY-ZLHDEZADHD9H 
+produtor = 33 
+afiliado = 36 
+valor_bruto = 60.24 
+valor_produto = 50.00 
+valor_desconto = 0.00 
+nomekit = Produto teste 13 
+produto = Produto teste 13 
+*******************************************************
+
+nome = Francisco Monteiro 
+email = fhamonteiro@hotmail.com 
+telefone = 34999145481 
+venda = 1204 
+status_transacao = 4 
+transacao = PAY-H8W7LNOR4UID 
+produtor = 33 
+afiliado = 36 
+valor_bruto = 100.00 
+valor_produto = 50.00 
+valor_desconto = 0.00 
+nomekit = Produto teste 13 
+produto = Produto teste 13 
+*******************************************************
+

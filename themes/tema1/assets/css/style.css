@@ -1,0 +1,413 @@
+*{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* CLASSE COM CONFIGURAÇÕES PADRÃO "DEFAULT" */
+html, body {
+    background: #deddef;
+    height: 100%;
+}
+
+table {
+    background: #fff;
+}
+
+.rascunho input[type='checkbox'] {
+    display: none;
+}
+
+.rascunho label {
+    cursor: pointer;
+    display: block;
+    margin: 15px;
+    padding-left: 25px;
+    position: relative;
+}
+.rascunho label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -1.5px;
+    width: 20px;
+    height: 20px;
+    border: solid 1px #aaa;
+    border-radius: 3px;
+    box-shadow: border-box;
+    display: inline-block;
+}
+.rascunho label::after {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 1.5px;
+    width: 14px;
+    height: 14px;
+    border: solid 1px #aaa;
+    border-radius: 3px;
+    box-shadow: border-box;
+    display: inline-block;
+}
+.rascunho input:checked + label::after {
+    background-color: red;
+}
+
+.titulo {
+    font-size: 30px;
+}
+
+.valor {
+    font-size: 18px;
+}
+
+.default{
+    padding: 2em;
+}
+.container {
+    max-width: 100%;
+}
+
+label {
+    margin: 8px 0;
+}
+
+.center {
+    text-align: center;
+    padding: 1em 0;
+}
+
+/* TOPO */
+.topo {
+    padding: 10px 20px;
+    height: 4em;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+    /*background: #7f00ff;*/
+    background: #0061a7;
+}
+
+.topo .link{
+    color: #fff;
+    float: right;
+    font-size: 16px;
+}
+
+.topo .link a {
+    color: #fff;
+    font-weight: bold;
+}
+
+.head {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 1em;
+}
+
+.linha {
+    border-bottom: 2px solid #fff;
+}
+.saldo {
+    background: #02b186;
+    color: #fff;
+    font-size: 20px;
+    padding: 7px;
+    text-align: center;
+}
+/* FIM TOPO */
+
+/* MENU LATERAL*/
+.main_sidebar {
+    width: 16.6666667%;;
+    /*background: #293234;*/
+    background: #fff;
+    background-size: cover;
+    color: #666;
+    font-size: 16px;
+    padding: 1em;
+    top: 5em;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    position: fixed;
+    overflow: auto;
+}
+
+.menu a {
+    color: #888;
+}
+.menu a:hover {
+    color: #444;
+}
+.menu ul li {
+    padding: 8px 0;
+}
+
+.submenu {
+    padding-left: 1em;
+}
+/* FIM MENU LATERAL*/
+
+.menu-edicao a {
+    font-size: 16px;
+    color: #666;
+    padding: 1em;
+}
+
+.menu-edicao a:hover {
+    background: #f1f1f1;
+}
+
+.conteudo {
+    top: 5em;
+    position: relative;
+}
+.conteudo-principal {
+    padding: 0 3em;
+}
+
+.principal {
+    /*background: #fff;*/
+    padding: 1em;
+    margin: 10px 0;
+    position: relative;
+}
+
+.card {
+    /*max-width: 32%;*/
+    margin: 8px 0;
+    text-align: center;
+    background: #fff;
+    box-shadow: 2px 2px 4px #ccc;
+    border-radius: 6px;
+    /*height: 13em;*/
+}
+
+.card-head {
+    border-bottom: 1px solid #ddd;
+    padding: 1em 0;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+    padding: 1em;
+}
+
+.card-g {
+    padding: 2em;
+}
+
+.legenda {
+    border-radius: 50%;
+    line-height: 20px;
+    min-height: 20px;
+    min-width: 20px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+.openNav {
+    display: none;
+}
+
+.content {
+    margin-bottom: 5em;
+}
+.footer {
+    max-width: 82%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    float: right;
+    padding: 1em;
+    margin: 20px 0 0 10px;
+}
+
+.produto-marketplace {
+    box-shadow: 1px 1px 6px #aaa;
+    color: #222;
+    border-radius: 6px;
+    margin: 20px 0px;
+}
+.produto-marketplace:hover {
+    transform: scale(1.1);
+    animation: 3s linear;
+}
+.descricao {
+    padding: 0 20px;
+}
+a:hover {
+    text-decoration: none;
+}
+
+.tab {
+    margin: 10px 0;
+    border-bottom: 3px solid #0061a7;
+}
+
+.tab_content {
+    background: #fff;
+    padding: 3px 15px;
+    border-radius: 6px 6px 0 0;
+    width: 20%;
+}
+
+.form-group {
+    background: #fff;
+    margin: 10px 0;
+    padding: 1em;
+}
+
+/* FORMULÁRIO */
+form-group {
+    width: 90%;
+    margin: 0 auto;
+}
+/* FIM FORMULÁRIO */
+
+/* ESTILIZAÇÃO DO PAGINADOR */
+.navegacao{
+    text-align: center;
+}
+.ativo{
+    color: red;
+    pointer-events: none;
+    cursor: default;
+}
+
+.inativo{
+    color: green;
+    background: #fff;
+}
+.paginas{
+    text-align: center;
+    font-size: 20px;
+    border-radius: 3px;
+    margin: 3px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+}
+/* FIM ESTILIZAÇÃO DO PAGINADOR */
+
+/* FILTROS */
+.col-50 {
+    width: 47%;
+    margin: 0 2px;
+    float: left;
+}
+
+.filtros{
+    padding: 2em 5px;
+    margin: 0 0 1em 0;
+    position: relative;
+    background: #FFF;
+}
+
+.lbldata {
+    position: absolute;
+    top: -28px;
+}
+/* FIM FILTROS */
+
+/* FIM ESTILIZAÇÃO DO PAGINADOR */
+
+.ajax_load {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+}
+
+.ajax_load_box {
+    margin: auto;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.ajax_load_box_circle {
+    border: 16px solid #e3e3e3;
+    border-top: 16px solid #1dd1a1;
+    border-radius: 50%;
+    margin: auto;
+    width: 80px;
+    height: 80px;
+
+    -webkit-animation: spin 1.2s linear infinite;
+    -o-animation: spin 1.2s linear infinite;
+    animation: spin 1.2s linear infinite;
+}
+
+.ajax_load_box_title {
+    margin-top: 15px;
+    font-weight: bold;
+}
+@media(max-width: 500px) {
+    .openNav {
+        display: inline;
+        font-size: 30px;
+        position: relative;
+        cursor: pointer;
+        z-index: 100;
+    }
+
+    .menu {
+        border-top: solid 2px #eee;
+        display: none;
+    }
+    .main_sidebar {
+        width: 100%;
+        position: relative;
+        top: auto;
+        margin: 0 auto;
+    }
+    .main_sidebar img{
+        width: 50%;
+    }
+
+    .topo {
+        padding: 15px;
+    }
+    .topo .logo {
+        width: 60%;
+        float: left;
+    }
+    .topo .link {
+        width: 40%;
+        float: left;
+    }
+    saldo, titulo-site {
+        width: 50%;
+        float: left;
+    }
+    .titulo {
+        font-size: 28px;
+    }
+    .linha {
+        margin: 10px 0;
+    }
+    .card {
+        max-width: 100%;
+    }
+
+    .col-50 {
+        width: 45%;
+        margin: 0 5px;
+        float: left;
+    }
+    .col-md-5 .row {
+        width: 100%;
+        margin: 0;
+    }
+}
+

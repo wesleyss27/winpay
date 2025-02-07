@@ -1,0 +1,32 @@
+dados = {
+"token": "e0088721fa099a1aac41d43a2b6ea6a0",
+"id": "f0645d32ad7d1933e73c45c4198680e6",
+"tipo": "nfe",
+"external_id": "PAY-G9TND7Z1LRMM",
+}
+#################################################
+
+dados = {
+"token": "e0088721fa099a1aac41d43a2b6ea6a0",
+"id": "5fe3d0ce9291c9f1fe298a3cbd3b346f",
+"tipo": "nfe",
+"external_id": "PAY-9D9A3K1MVI6H",
+}
+#################################################
+
+dados = {
+"token": "e0088721fa099a1aac41d43a2b6ea6a0",
+"id": "b0dc128e642abc688fc238433246c03f",
+"tipo": "nfe",
+"external_id": "PAY-6LPJWB2FSMN7",
+}
+#################################################
+
+dados = {
+"token": "e0088721fa099a1aac41d43a2b6ea6a0",
+"id": "7fdc38b86e27c391c9681251f9883f2e",
+"tipo": "nfe",
+"external_id": "PAY-52R56XVVHYK3",
+}
+#################################################
+

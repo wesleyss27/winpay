@@ -1,0 +1,17 @@
+# Exceção para validação do Let's Encrypt
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/.well-known/acme-challenge/ [NC]
+RewriteRule ^ - [L]
+
+# Excluir autenticação para o domínio principal ou caminhos específicos
+#<FilesMatch "\.(php|html|css|js|jpg|png|gif)$">
+#    AuthType Basic
+#    AuthName "Área restrita"
+#    AuthUserFile .htpasswd
+#    Require valid-user
+#</FilesMatch>
+
+# ROUTER URL Rewrite
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=/$1 [L,QSA]

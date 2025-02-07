@@ -1,0 +1,194 @@
+{
+    "date": "",
+    "env": "",
+    "event": "PAYMENT.AUTHORIZED",
+    "resource": {
+        "payment": {
+            "_links": {
+                "order": {
+                    "href": "https://api.moip.com.br/v2/orders/ORD-KZNA14HLLCZR",
+                    "title": "ORD-KZNA14HLLCZR"
+                },
+                "self": {
+                    "href": "https://api.moip.com.br/v2/payments/PAY-4UH4Z9HDTDAU"
+                }
+            },
+            "acquirerDetails": {
+                "authorizationNumber": "130611502242",
+                "taxDocument": {
+                    "number": "08561701000101",
+                    "type": "CNPJ"
+                }
+            },
+            "amount": {
+                "currency": "BRL",
+                "fees": 446,
+                "gross": 9700,
+                "liquid": 9254,
+                "refunds": 0,
+                "total": 9700
+            },
+            "createdAt": "2021-11-02T08:27:03.000-03",
+            "delayCapture": false,
+            "events": [
+                {
+                    "createdAt": "2021-11-02T08:27:14.302-03",
+                    "type": "PAYMENT.AUTHORIZED"
+                },
+                {
+                    "createdAt": "2021-11-02T08:27:06.000-03",
+                    "type": "PAYMENT.IN_ANALYSIS"
+                },
+                {
+                    "createdAt": "2021-11-02T08:27:03.000-03",
+                    "type": "PAYMENT.CREATED"
+                }
+            ],
+            "fees": [
+                {
+                    "amount": 446,
+                    "type": "TRANSACTION"
+                }
+            ],
+            "fundingInstrument": {
+                "creditCard": {
+                    "brand": "VISA",
+                    "first6": "417401",
+                    "holder": {
+                        "birthDate": "1987-08-30",
+                        "birthdate": "1987-08-30",
+                        "fullname": "Karine Mara Fagundes De Souza Marques",
+                        "taxDocument": {
+                            "number": "05810777929",
+                            "type": "CPF"
+                        }
+                    },
+                    "id": "CRC-6J0SIJ1WZNM9",
+                    "last4": "8917",
+                    "store": true
+                },
+                "method": "CREDIT_CARD"
+            },
+            "id": "PAY-ZLHDEZADHD9H",
+            "installmentCount": 1,
+            "receivers": [
+                {
+                    "amount": {
+                        "currency": "BRL",
+                        "fees": 446,
+                        "refunds": 0,
+                        "total": 9700
+                    },
+                    "feePayor": true,
+                    "moipAccount": {
+                        "fullname": "OCTAPAY SOLUCOES EM PAGAMENTOS ON-LINE LTDA",
+                        "id": "MPA-D18BC06784DB",
+                        "login": "thiago@octapay.com.br"
+                    },
+                    "type": "PRIMARY"
+                }
+            ],
+            "statementDescriptor": "OctaPay",
+            "status": "AUTHORIZED",
+            "updatedAt": "2021-11-02T08:27:14.302-03"
+        }
+    }
+}
+
+{
+    "date": "",
+    "env": "",
+    "event": "PAYMENT.AUTHORIZED",
+    "resource": {
+        "payment": {
+            "_links": {
+                "order": {
+                    "href": "https://api.moip.com.br/v2/orders/ORD-KZNA14HLLCZR",
+                    "title": "ORD-KZNA14HLLCZR"
+                },
+                "self": {
+                    "href": "https://api.moip.com.br/v2/payments/PAY-4UH4Z9HDTDAU"
+                }
+            },
+            "acquirerDetails": {
+                "authorizationNumber": "130611502242",
+                "taxDocument": {
+                    "number": "08561701000101",
+                    "type": "CNPJ"
+                }
+            },
+            "amount": {
+                "currency": "BRL",
+                "fees": 446,
+                "gross": 9700,
+                "liquid": 9254,
+                "refunds": 0,
+                "total": 9700
+            },
+            "createdAt": "2021-11-02T08:27:03.000-03",
+            "delayCapture": false,
+            "events": [
+                {
+                    "createdAt": "2021-11-02T08:27:14.302-03",
+                    "type": "PAYMENT.AUTHORIZED"
+                },
+                {
+                    "createdAt": "2021-11-02T08:27:06.000-03",
+                    "type": "PAYMENT.IN_ANALYSIS"
+                },
+                {
+                    "createdAt": "2021-11-02T08:27:03.000-03",
+                    "type": "PAYMENT.CREATED"
+                }
+            ],
+            "fees": [
+                {
+                    "amount": 446,
+                    "type": "TRANSACTION"
+                }
+            ],
+            "fundingInstrument": {
+                "creditCard": {
+                    "brand": "VISA",
+                    "first6": "417401",
+                    "holder": {
+                        "birthDate": "1987-08-30",
+                        "birthdate": "1987-08-30",
+                        "fullname": "Karine Mara Fagundes De Souza Marques",
+                        "taxDocument": {
+                            "number": "05810777929",
+                            "type": "CPF"
+                        }
+                    },
+                    "id": "CRC-6J0SIJ1WZNM9",
+                    "last4": "8917",
+                    "store": true
+                },
+                "method": "CREDIT_CARD"
+            },
+            "id": "PAY-H8W7LNOR4UID",
+            "installmentCount": 1,
+            "receivers": [
+                {
+                    "amount": {
+                        "currency": "BRL",
+                        "fees": 446,
+                        "refunds": 0,
+                        "total": 9700
+                    },
+                    "feePayor": true,
+                    "moipAccount": {
+                        "fullname": "OCTAPAY SOLUCOES EM PAGAMENTOS ON-LINE LTDA",
+                        "id": "MPA-D18BC06784DB",
+                        "login": "thiago@octapay.com.br"
+                    },
+                    "type": "PRIMARY"
+                }
+            ],
+            "statementDescriptor": "OctaPay",
+            "status": "AUTHORIZED",
+            "updatedAt": "2021-11-02T08:27:14.302-03"
+        }
+    }
+}
+

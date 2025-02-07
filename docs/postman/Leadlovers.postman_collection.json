@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "ffd933ee-8128-4948-b15b-0d880af6dbdd",
+		"name": "Leadlovers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Chamando API em Processos - Integração normal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customer\": {\r\n        \"name\": \"Francisco Monteiro\",\r\n        \"email\": \"fhamonteiro@hotmail.com\",\r\n        \"phones\": [\r\n            {\r\n                \"country\": \"55\",\r\n                \"area\": \"34\",\r\n                \"number\": \"999145481\"\r\n            }\r\n        ]\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Produto teste 13\",\r\n            \"quantity\": 1,\r\n            \"unit_amount\": 6024\r\n        }\r\n    ],\r\n    \"qr_code\": {\r\n        \"amount\": {\r\n            \"value\": 6024\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"address\": {\r\n            \"street\": \"Rua Sabará\",\r\n            \"number\": \"50\",\r\n            \"locality\": \"Nova Vila Bretas\",\r\n            \"city\": \"Governador Valadares\",\r\n            \"region_code\": \"MG\",\r\n            \"country\": \"BRA\",\r\n            \"postal_code\": \"35051420\"\r\n        }\r\n    },\r\n    \"charges\": [\r\n        {\r\n            \"description\": \"loja teste\",\r\n            \"amount\": {\r\n                \"value\": 6024,\r\n                \"currency\": \"BRL\"\r\n            },\r\n            \"payment_method\": {\r\n                \"type\": \"CREDIT_CARD\",\r\n                \"installments\": 12,\r\n                \"capture\": true,\r\n                \"card\": {\r\n                    \"number\": \"5482239989434535\",\r\n                    \"exp_month\": \"01\",\r\n                    \"exp_year\": \"24\",\r\n                    \"security_code\": \"222\",\r\n                    \"holder\": {\r\n                        \"name\": \"Francisco Monteiro\",\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Chamando endpoint criado pela Leadlovers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customer\": {\r\n        \"name\": \"Francisco Monteiro\",\r\n        \"email\": \"fhamonteiro@hotmail.com\",\r\n        \"phones\": [\r\n            {\r\n                \"country\": \"55\",\r\n                \"area\": \"34\",\r\n                \"number\": \"999145481\"\r\n            }\r\n        ]\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Produto teste 13\",\r\n            \"quantity\": 1,\r\n            \"unit_amount\": 6024\r\n        }\r\n    ],\r\n    \"qr_code\": {\r\n        \"amount\": {\r\n            \"value\": 6024\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"address\": {\r\n            \"street\": \"Rua Sabará\",\r\n            \"number\": \"50\",\r\n            \"locality\": \"Nova Vila Bretas\",\r\n            \"city\": \"Governador Valadares\",\r\n            \"region_code\": \"MG\",\r\n            \"country\": \"BRA\",\r\n            \"postal_code\": \"35051420\"\r\n        }\r\n    },\r\n    \"charges\": [\r\n        {\r\n            \"description\": \"loja teste\",\r\n            \"amount\": {\r\n                \"value\": 6024,\r\n                \"currency\": \"BRL\"\r\n            },\r\n            \"payment_method\": {\r\n                \"type\": \"CREDIT_CARD\",\r\n                \"installments\": 12,\r\n                \"capture\": true,\r\n                \"card\": {\r\n                    \"number\": \"5482239989434535\",\r\n                    \"exp_month\": \"01\",\r\n                    \"exp_year\": \"24\",\r\n                    \"security_code\": \"222\",\r\n                    \"holder\": {\r\n                        \"name\": \"Francisco Monteiro\",\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

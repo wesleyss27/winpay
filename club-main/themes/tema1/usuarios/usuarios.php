@@ -1,0 +1,400 @@
+<?php $v->layout("_theme"); ?>
+<?php
+
+$tipo_usuario = array(
+    1 => "MASTER",
+    2 => "ADMINISTRADOR",
+    3 => "FUNCIONÁRIO",
+    4 => "PRODUTOR",
+    5 => "AFILIADO",
+    6 => "COMPRADOR"
+);
+
+if($_SESSION["tipo"] != 1 && $_SESSION["tipo"] != 2){
+    header("Location: " . URL_BASE);
+}
+$i = 1;
+?>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h4 style="font-family:inter">Gerenciar Usuários</h4>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="./">Início</a></li>
+              <li class="breadcrumb-item">Configurações</li>
+              <li class="breadcrumb-item active">Gerenciar Usuários</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <a class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-lg" style="font-family:inter" id="cadastro">Cadastrar <i class="fa fa-chevron-right"></i> </a>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+       
+          </div>
+        </div>
+
+        <?php if($usuarios): ?>
+        <script> var dados = []; </script>
+
+        <div class="card-body p-0" style="overflow: auto">
+          <table class="table table-striped projects" style="font-size:13px">
+            <thead>
+              <tr style="font-family:inter">
+                <th>ID</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Login</th>
+                <th>Tipo</th>
+                <th>Desde</th>
+                <th style="width:10%">Ação</th>
+              </tr>
+            </thead>
+     
+            <tbody>
+            <?php foreach($usuarios as $usuario): ?>
+              <tr style="font-family:inter">
+                <th scope="row"><?= $usuario->id; ?></th>
+                <td>
+                  <?php if($usuario->foto){ 
+                      $foto = $usuario->foto;
+                  } else { 
+                    $foto = "user.png";
+                  } ?>
+                  <img src="<?= url("uploads/perfil/$foto"); ?>" alt="" width="30px" style="border-radius: 50%">
+                  <?= $usuario->nome; ?>
+                </td>
+                <td><?= $usuario->email; ?></td>
+                <td><?= $usuario->login; ?></td>
+                <td><?= $tipo_usuario[$usuario->tipo_usuario]; ?></td>
+                <td><?= formataData($usuario->created_at); ?></td>
+                <?php if($usuario->tipo_usuario != 1 || $_SESSION["tipo"] == 1): ?>
+                <td>
+                  <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="editar(<?= $i; ?>)"><i class="fas fa-edit"></i></a>
+                  <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#idexcluir"><i class="fas fa-ban"></i></a>
+                </td>
+                <?php endif; ?>
+              </tr>
+
+              <script>
+                  dados[<?= $i ?>] = {
+                      id : "<?= $usuario->id ?>",
+                      email : "<?= $usuario->email ?>",
+                      nome : "<?= $usuario->nome ?>",
+                      foto : "<?= $foto ?>",
+                      login : "<?= $usuario->login ?>",
+                      senha : "<?= $usuario->senha ?>",
+                      tipo_usuario : "<?= $usuario->tipo_usuario ?>"
+                  }
+              </script>
+
+              <?php $i++; endforeach; ?>      
+            </tbody>
+          </table>
+        </div>
+
+        <?php
+        //EXIBE A NAVEGAÇÃO DO PAGINADOR
+        $link = URL_BASE."/funcionarios/";
+
+        //VARIÁVEIS VÊM DO CONTROLADOR AppPedidos
+        $paginador->paginas($total, $pagina, $link);
+        
+        else:
+        ?>
+        <h4>Não existem usuários cadastrados ou ativos!</h4>
+        <?php endif; ?>
+      </div>
+    </section>
+  </div>
+ 
+ <!-- cadastar -->
+ <div class="modal fade" id="modal-lg">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h3 class="card-title"><i class="fa fa-info-circle"></i> Cadastrar Usuário</h3>
+              <button type="button" class="close" data-dismiss="modal"> &times;</button>
+            </div>
+
+            <form action="#" method="post" style="font-family:inter; font-size:12px"> 
+              <div class="modal-body">
+                <input type="hidden" name="id" id="id">
+                <div class="row">
+                  <div class="col-md-6" style="text-align: center">
+                    <img id="fotoP" src="" alt="" width="150px" style="border-radius: 50%">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label>Nome Completo*</label>
+                    <input type="text" name="nome" id='nome' class="form-control input-lg" placeholder="Nome completo">
+                  </div>
+                </div>
+      
+                <div class="row">
+                  <div class="col-6">
+                    <label style="margin-top:10px">Email*</label>
+                    <input type="email" name="email" id='email' class="form-control input-lg" placeholder="Email *" required>
+                    <p id="msg-email"></p>
+                  </div>
+                    
+                  <div class="col-6">
+                    <label style="margin-top:10px">Senha*</label>
+                    <input type="password" name="senha" id='senha' class="form-control input-lg" placeholder="Senha *" required>
+
+                    <p id="aviso">*deixe em branco para manter a mesma senha</p>
+                    <input type="hidden" name="senha_atual" id='senha_atual'>
+                  </div>
+                </div>
+      
+                <div class="row">
+  
+                  <div class="col-6">
+                    <label style="margin-top:10px">Login de usuário*</label>
+                    <input type="text" name="login" id='login' class="form-control input-lg" placeholder="Login de usuário">
+                    <p id="msg-login"></p>
+                  </div>
+  
+                  <div class="col-6">
+                    <label style="margin-top:10px">Permissão*</label>
+                    <select name="tipo_usuario" id="tipo_usuario" class="form-control input-lg" required="required">
+                        <option disabled selected>Permissão *</option>
+                        <?php if($_SESSION["tipo"] == 1): ?>
+                        <option value="1">Master</option>
+                        <?php endif; ?>
+                        <option value="2">Administrador</option>
+                        <option value="3">Funcionário</option>
+                    </select>
+                  </div>
+            </div>
+            </div>
+
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelar">Cancelar</button>
+              <button class="btn btn-primary" id="salvar">Salvar</button>
+              <button class="btn btn-warning" id="editar">Editar</button>
+            </div>
+				</form>
+      </div>
+    </div>
+  </div>
+<!-- end cadastrar -->
+
+<!-- excluir plano -->
+<div class="modal fade" id="idexcluir">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Bloquear?</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+           
+            <div class="modal-footer justify-content-between">
+              <button class="btn btn-default" data-dismiss="modal">Não</button>
+              <button type="submit" class="btn btn-primary" name=""><i class="fa fa-check"></i> Sim</button>
+            </div>
+          </div>
+          
+        </div>
+       
+      </div>
+	  <!-- end excluir plano -->
+
+<?= $v->start("scripts") ?>
+    <script>
+
+    $("#cadastro").click(() => {
+
+        $(".card-title").html("Cadastrar Novo Usuário");
+        $("#salvar").css("display", "inline");
+        $("#editar").css("display", "none");
+        $("#aviso").css("display", "none");
+        cancelar();
+    })
+
+    $("#email").blur(function(){
+        var email = $(this).val();
+        $.ajax({
+            url: "<?=$router->route("appusuarios.email")?>",
+            data: { email: email},
+
+            type: "POST",
+            beforeSend: function () {
+                console.log("atualizando");
+            },
+            error: function() {
+                console.log("O servidor não conseguiu processar o pedido");
+            },
+            success: function (callback) {
+                console.log("callback ", callback);
+                if(callback == "Não existe usuário com esse email"){
+                    $("#cadastrar").attr("disabled", false);
+                    $("#add-email").css("background", "#eeeeee");
+                    $("#msg-email").html("");
+                } else {
+                    $("#add-email").css("background", "#ed1c24");
+                    $("#msg-email").html("Email já cadastrado");
+                    $("#cadastrar").attr("disabled", true);
+                }
+            }
+        });
+    });
+
+    $("#login").blur(function(){
+        var login = $(this).val();
+        $.ajax({
+            url: "<?=$router->route("appusuarios.login")?>",
+            data: {login: login},
+
+            type: "POST",
+            beforeSend: function () {
+                console.log("atualizando");
+            },
+            error: function() {
+                console.log("O servidor não conseguiu processar o pedido");
+            },
+            success: function (callback) {
+                console.log("callback ", callback);
+                if(callback == "Não existe usuário com esse login"){
+                    $("#add-login").css("background", "#eeeeee");
+                    $("#msg-login").html("");
+                    $("#cadastrar").attr("disabled", false);
+                } else {
+                    $("#add-login").css("background", "#ed1c24");
+                    $("#msg-login").html("Login não disponível");
+                    $("#cadastrar").attr("disabled", true);
+                }
+            }
+        });
+    });
+
+    $("#salvar").click(function(e) {
+        e.preventDefault();
+        salvarEditar(1);
+    });
+
+    $("#editar").click(function(e) {
+        e.preventDefault();
+        salvarEditar(0);
+    });
+    
+    $("#cancelar").click(function(e) {
+        e.preventDefault();
+        cancelar();
+    });
+    
+    function salvarEditar(salvar) {
+        if(salvar == 1) {
+            url = "<?= $router->route("appusuarios.funcionarios"); ?>";
+        } else {
+            url = "<?=$router->route("appusuarios.editar")?>";
+        }
+
+        var email = $("#email").val(),
+            senha = $("#senha").val(),
+            tipo_usuario = $("#tipo_usuario").val(),
+            nome = $("#nome").val(),
+            login = $("#login").val();
+
+        var form = $("form");
+
+        if(email == "" || (senha == "" && salvar == 1 ) || tipo_usuario == ""){
+
+            alert("Preecha todos os dados necessários");
+
+        } else {
+
+            $.ajax({
+
+                url: url,
+                data: form.serialize(),
+                type: "POST",
+                //datatype: "json",
+                beforeSend: function () {
+                    console.log("atualizando");
+                },
+                error: function() {
+                    console.log("O servidor não conseguiu processar o pedido");
+                },
+                success: function (callback) {
+                    console.log(form.serialize());
+                    console.log("callback ", callback);
+                    alert(callback);
+                    if(callback == "Cadastrado Com Sucesso!"){
+                        $('form').each (function(){
+                            this.reset();
+                        });
+                        location.reload();
+                    }
+                    if(callback == "Atualizado Com Sucesso!"){
+                        $('form').each (function(){
+                            this.reset();
+                        });
+                        location.reload();
+                    }
+                }
+
+            });
+        }
+    }
+
+    function editar(i) {
+        var id = dados[i]["id"];
+        var email = dados[i]["email"];
+        var nome = dados[i]["nome"];
+        var foto = dados[i]["foto"];
+        var senha = dados[i]["senha"];
+        var login = dados[i]["login"];
+        var tipo_usuario = dados[i]["tipo_usuario"];
+        var src = "<?= url("uploads/perfil/"); ?>";
+
+        console.log(id, email, nome, senha, login, tipo_usuario);
+
+        $(".card-title").html("Editar Usuário " + nome);
+        $("#salvar").css("display", "none");
+        $("#editar").css("display", "inline");
+        $("#aviso").css("display", "block");
+        $("#id").attr({"value": id});
+        $("#email").attr({"value": email});
+        $("#nome").attr({"value": nome});
+        $("#fotoP").attr("src", src + foto);
+        $("#senha_atual").attr({"value": senha});
+        $("#login").attr({"value": login});
+        $("#tipo_usuario option[value=" + tipo_usuario + "]").attr({"selected": true});
+
+    }
+
+    function cancelar() {
+        $("#salvar").css("display", "inline");
+        $("#editar").css("display", "none");
+        $("#id").attr({"value": ""});
+        $("#email").attr({"value": ""});
+        $("#nome").attr({"value": ""});
+        $("#senha_atual").attr({"value": ""});
+        $("#login").attr({"value": ""});
+        $("#tipo_usuario").attr({"selected": true});
+
+    }
+</script>
+<?= $v->end() ?>

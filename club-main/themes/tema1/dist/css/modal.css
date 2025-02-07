@@ -1,0 +1,323 @@
+@charset "utf-8";
+
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+
+.box {
+	max-width: 70%;
+	margin: 60px auto;
+	padding-top: 65px;
+	padding-bottom: 30px;
+	transition: 0.3s ease;
+	border-radius: 3px
+}
+.titulo {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 20px;
+	color: #333366;
+	font-weight: bold;
+}
+.sub-titulo {
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 30px;
+	color: #fff
+}
+.txt-modalx {
+	font-family: 'Ubuntu', sans-serif;
+	padding: 0 15px 0 15px
+}
+.txt-destaque1 {
+	font-weight: 800;
+    color: #180033;
+    font-size: 30px;
+	font-family: 'Ubuntu', sans-serif
+}
+.txt-destaque2 {
+	font-weight: 800;
+	color: #fff;
+	font-size: 23px;
+	font-family: 'Ubuntu', sans-serif;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7)
+}
+.box-howUse {
+    border-radius: 4px;
+	border: 1px solid transparent;
+    padding: 10px 10px 10px 10px;
+    height:auto;
+    width: auto;
+    background-color: #002d6111
+    
+}
+.h4-footer {
+	color: #fff;
+	position: relative;
+	top: 50px;
+	font-family: 'Ubuntu', sans-serif;
+	cursor: default;
+	padding-bottom: 50px
+}
+.col-xs-12:hover .h4-footer {
+	-webkit-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+	-webkit-animation-duration: 1.5s;
+	animation-duration: 1.5s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation-name: pular;
+	animation-name: pular
+}
+@keyframes pular {
+	from {
+		-webkit-transform: scale(1);
+		transform: scale(1)
+	}
+	50% {
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1)
+	}
+	to {
+		-webkit-transform: scale(1);
+		transform: scale(1)
+	}
+
+}
+.botao-controle:before,
+.botao-controle:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 2px;
+	width: 0;
+	background: #1AAB8A;
+	transition: 200ms ease all
+}
+.botao-controle:after {
+	right: inherit;
+	top: inherit;
+	left: 0;
+	bottom: 0
+}
+.botao-controle:hover:before,
+.botao-controle:hover:after {
+	width: 100%;
+	transition: 400ms ease all
+}
+.body-modalx {
+    min-width: 900px;
+	background-color: #fffffff2;
+	padding: 15px 15px 15px 15px;
+	border-radius: 2px;
+	-webkit-box-shadow: 0px 0px 25px 6px #00000052;
+	-moz-box-shadow: 0px 0px 25px 6px #00000052;
+	box-shadow: 0px 0px 25px 6px #00000052
+}
+.btn-close-modalx {
+	background-color: #e2e2e2;
+	color: #333366;
+	font-size: 16px;
+	font-family: 'Ubuntu',;
+	border: none;
+	outline: none;
+	padding: 7px;
+	letter-spacing: 1px;
+	border-radius: 5px;
+	transition: 0.3s;
+	margin-top: 14px
+}
+.btn-close-modalx:hover {
+    background-color: #c7c7c7;
+	color: #333366;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2)
+
+/**/
+}
+#modalx-slideUp {
+	-webkit-animation-name: bounceOut;
+	animation-name: bounceOut;
+	-webkit-animation-duration: 0.4s;
+	animation-duration: 0.4s;
+	-webkit-animation-duration: 0.7s;
+	animation-duration: 0.7s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both
+}
+@-webkit-keyframes bounceOut {
+	20% {
+		-webkit-transform: scale3d(.9, .9, .9);
+		transform: scale3d(.9, .9, .9)
+	}
+	50%,
+	55% {
+		opacity: 1;
+		-webkit-transform: scale3d(1.1, 1.1, 1.1);
+		transform: scale3d(1.1, 1.1, 1.1)
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: scale3d(.3, .3, .3);
+		transform: scale3d(.3, .3, .3)
+	}
+}
+@keyframes bounceOut {
+	20% {
+		-webkit-transform: scale3d(.9, .9, .9);
+		transform: scale3d(.9, .9, .9)
+	}
+	50%,
+	55% {
+		opacity: 1;
+		-webkit-transform: scale3d(1.1, 1.1, 1.1);
+		transform: scale3d(1.1, 1.1, 1.1)
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: scale3d(.3, .3, .3);
+		transform: scale3d(.3, .3, .3)
+	}
+}
+
+.popup_visible #modalx-slideUp {
+    -webkit-animation-name: fadeInUp;
+	animation-name: fadeInUp;
+	-webkit-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both
+}
+@-webkit-keyframes fadeInUp {
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, 100%, 0);
+		transform: translate3d(0, 100%, 0)
+	}
+	100% {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none
+	}
+}
+@keyframes fadeInUp {
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, 100%, 0);
+		transform: translate3d(0, 100%, 0)
+	}
+	100% {
+		opacity: 1;
+		-webkit-transform: none;
+		transform: none
+	}
+}
+/**/
+#modalx-howUse {
+	-webkit-animation-name: howUseOut;
+	animation-name: howUseOut;
+	-webkit-animation-duration: 0.4s;
+	animation-duration: 0.4s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both
+}
+0%,
+60%,
+75%,
+90%,
+100% {
+	-webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+	transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000)
+}
+@-webkit-keyframes howUseOut {
+	20% {
+		opacity: 1;
+		-webkit-transform: translate3d(-20px, 0, 0);
+		transform: translate3d(-20px, 0, 0)
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: translate3d(2000px, 0, 0);
+		transform: translate3d(2000px, 0, 0)
+	}
+}
+@keyframes howUseOut {
+	20% {
+		opacity: 1;
+		-webkit-transform: translate3d(-20px, 0, 0);
+		transform: translate3d(-20px, 0, 0)
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: translate3d(2000px, 0, 0);
+		transform: translate3d(2000px, 0, 0)
+	}
+}
+.popup_visible #modalx-howUse {
+	-webkit-animation-name: howUseIn;
+	animation-name: howUseIn;
+	-webkit-animation-duration: 0.6s;
+	animation-duration: 0.6s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both
+}
+@-webkit-keyframes howUseIn {
+	0%, 60%, 75%, 90%, 100% {
+		-webkit-transition-timing-function: cubic-bezier(0.115, 0.610, 0.055, 1.000);
+		transition-timing-function: cubic-bezier(0.115, 0.610, 0.055, 1.000)
+	}
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -3000px, 0);
+		transform: translate3d(0, -3000px, 0)
+	}
+	60% {
+		opacity: 1;
+		-webkit-transform: translate3d(0, 25px, 0);
+		transform: translate3d(0, 25px, 0)
+	}
+	75% {
+		-webkit-transform: translate3d(0, -10px, 0);
+		transform: translate3d(0, -10px, 0)
+	}
+	90% {
+		-webkit-transform: translate3d(0, 5px, 0);
+		transform: translate3d(0, 5px, 0)
+	}
+	100% {
+		-webkit-transform: none;
+		transform: none
+	}
+}
+@keyframes howUseIn {
+	0%,
+	60%,
+	75%,
+	90%,
+	100% {
+		-webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+		transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000)
+	}
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -3000px, 0);
+		transform: translate3d(0, -3000px, 0)
+	}
+	60% {
+		opacity: 1;
+		-webkit-transform: translate3d(0, 25px, 0);
+		transform: translate3d(0, 25px, 0)
+	}
+	75% {
+		-webkit-transform: translate3d(0, -10px, 0);
+		transform: translate3d(0, -10px, 0)
+	}
+	90% {
+		-webkit-transform: translate3d(0, 5px, 0);
+		transform: translate3d(0, 5px, 0)
+	}
+	100% {
+		-webkit-transform: none;
+		transform: none
+	}
+}
+/*/*/

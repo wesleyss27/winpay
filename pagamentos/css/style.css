@@ -1,0 +1,919 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f1f4f8;
+  font-family: "Lato", sans-serif;
+}
+
+hr {
+  margin: 5px 0;
+}
+
+i {
+  /* color:rgba(56, 179, 93); */
+  color: #ccc;
+}
+
+.container {
+  max-width: 1000px;
+}
+
+.center {
+  text-align: center;
+  margin: 10px auto;
+}
+
+.header img {
+  width: 100%;
+}
+
+.banner-checkout {
+  width: 100%;
+  height: auto;
+}
+
+.margin-top-0 {
+  margin-top: 0px;
+}
+
+#img-aviso {
+  width: 100%;
+  height: 107px;
+}
+
+.cabecalho {
+  padding: 1em;
+  background: #ddd;
+}
+
+.cabecalho-2 {
+  padding: 1em;
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+}
+
+.cabecalho-2-novo {
+  padding: 1em;
+  background: #2aaadf;
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+}
+
+.newform {
+  height: 45px;
+  border: 1px solid #a2b2c3;
+  color: #3d4853;
+  border-radius: 6px;
+  box-shadow: none;
+  width: 100%;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+    -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.newform2 {
+  height: 45px;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+    -webkit-box-shadow 0.15s ease-in-out;
+}
+
+.newform3 {
+  height: 45px;
+  border: 1px solid #ccc;
+  border-radius: 0 0.25rem 0.25rem 0;
+  width: 100%;
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+    -webkit-box-shadow 0.15s ease-in-out;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 15px 0 5px 0;
+}
+
+.brand {
+  margin: 20px 3px 0px 0px;
+  float: left;
+}
+
+.cabecalho-novo {
+  background-color: #fff;
+  padding: 30px 30px 0;
+  color: #414141;
+  font-weight: bold;
+  margin: auto;
+  text-align: left;
+  width: 100%;
+
+  border-radius: 4px 4px 0 0;
+}
+
+.container-75 {
+  width: 1024px;
+  margin: 0 auto;
+}
+
+.rodape {
+  background-color: #fff;
+  width: 100%;
+  border-radius: 0;
+  padding: 15px;
+  margin-top: 25px;
+}
+
+.rodape2 {
+  width: 100%;
+  float: left;
+  margin-bottom: 20px;
+}
+
+.icone {
+  float: left;
+  padding: 8px 10px 0px 10px;
+  border: 1px solid #ccc;
+  height: 45px;
+  background-color: #fafafa;
+  border-right: none;
+  width: 35px;
+}
+
+.corpo {
+  padding: 15px 30px 30px;
+  background: #fff;
+
+  border-radius: 0 0 4px 4px;
+}
+
+.tab-checkout-tabs {
+  border: none;
+}
+
+.tab-checkout-tabs a {
+  margin: 2px;
+}
+
+.tab-checkout-tabs .nav-link {
+  border: 1px solid #a2b2c3;
+  border-radius: 6px;
+  color: #3d4853;
+}
+
+.tab-checkout-tabs .nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  border: 1px solid #213b54;
+  border-radius: 5px;
+  border-color: #213b54;
+  background-color: #f2fcff;
+  color: #213b54;
+}
+
+.seguro-rodape {
+  text-align: center;
+  background-color: #3baa41;
+  width: 210px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 14px;
+  float: right;
+  /* margin-right: -20px; */
+  padding: 12px;
+  margin-top: 15px;
+}
+
+.topo {
+  padding: 1em 0;
+  margin: 0 auto;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* text-align: center; */
+  color: #fff;
+  /* background: #030d63; */
+  /* height: 40px; */
+  background-image: linear-gradient(to right, #0b0024, #3c2f98, #3c2f98);
+  /* height: 6em; */
+}
+
+.texto-teste {
+  display: inline-block;
+}
+
+.parabens-compra {
+  padding: 1em;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  /* background-color: #fff; */
+}
+
+.resumo {
+  background: #fff;
+  border-radius: 10px;
+}
+
+.desconto-especial {
+  padding: 1em;
+  margin-top: 10px;
+  background: rgb(224, 7, 7);
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.borda-bloco-upsell {
+  border-radius: 30px;
+}
+
+.novo-upsell {
+  background: rgb(224, 7, 7);
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  padding: 3px;
+  border-radius: 33px;
+}
+
+.sub-headline-upsell {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 1%;
+}
+
+.novo-bloco-upsell {
+  width: 85%;
+  background: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px #aaa;
+  margin: 30px auto;
+  /* /* padding: 20px 10px; */
+}
+
+.imagem-upsell {
+  margin-top: 2%;
+}
+
+.btn-nao-obrigado {
+  background: transparent;
+  border: none;
+}
+
+/* ## Preço riscado na tela de finalização de compra ## */
+
+.preco-tachado {
+  color: red;
+  text-decoration: line-through;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.img-produto {
+  margin: 0 auto;
+  width: 140px;
+  height: 140px;
+  border-radius: 10px;
+}
+
+.col-img {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.img-upsell {
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+}
+
+.txt-right-desktop {
+  text-align: right;
+}
+
+.bloco-upsell {
+  width: 85%;
+  background: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px #aaa;
+  margin: 30px auto;
+  padding: 20px 10px;
+}
+
+.txt-preco {
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.obrigado h1 {
+  font-size: 60px;
+}
+
+#boletoh2 {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.obrigado .aviso {
+  color: #fff;
+  padding: 1em;
+}
+
+.obrigado p {
+  font-size: 20px;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+.obrigado .col-6 {
+  padding: 1em;
+}
+
+.obrigado {
+  width: 100%;
+  overflow: hidden;
+}
+
+.obrigado iframe {
+  height: 768px;
+  width: 102%;
+  margin: 0;
+  bottom: 0;
+  position: relative;
+}
+
+.boleto iframe {
+  height: 500px;
+  width: 100%;
+  margin: 0;
+  bottom: 0;
+  position: relative;
+}
+
+.alerta {
+  background: #c50000;
+  color: #fff;
+}
+
+.alerta-alerta {
+  background: #e7ff00;
+}
+
+.alerta,
+.alerta-alerta {
+  padding: 1em;
+  margin: 7px 0;
+}
+
+.col-50 {
+  width: 50%;
+  float: left;
+}
+
+.col-40 {
+  width: 45%;
+  float: left;
+}
+
+.col-60 {
+  width: 55%;
+  float: left;
+}
+
+.politicas {
+  padding: 1em 0;
+}
+
+.check-lente {
+  display: none;
+}
+
+#pendencias {
+  display: none;
+}
+
+.check-line {
+  position: relative;
+}
+
+#cvv {
+  background: url("../../pagamentos/imgs/cvv4.png") no-repeat right;
+  background-size: 60px;
+}
+
+.teste {
+  background: #c50000;
+}
+
+/* EFEITO PISCA PISCA */
+
+@keyframes fa-blink {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fa-blink {
+  -webkit-animation: fa-blink 2s linear infinite;
+  -moz-animation: fa-blink 2s linear infinite;
+  -ms-animation: fa-blink 2s linear infinite;
+  -o-animation: fa-blink 2s linear infinite;
+  animation: fa-blink 2s linear infinite;
+}
+
+/*DEFAULT LOAD*/
+
+.ajax_load {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999999;
+}
+
+.ajax_load_box {
+  margin: auto;
+  text-align: center;
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.ajax_load_box_circle {
+  border: 16px solid #e3e3e3;
+  border-top: 16px solid #1dd1a1;
+  border-radius: 50%;
+  margin: auto;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 1.2s linear infinite;
+  -o-animation: spin 1.2s linear infinite;
+  animation: spin 1.2s linear infinite;
+}
+
+.ajax_load_box_title {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ESTILO CONTADOR */
+
+.contador-topo {
+  width: 100%;
+  position: relative;
+}
+
+.contador {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.timer {
+  text-align: right;
+  font-size: 30px;
+}
+
+/* FIM ESTILO CONTADOR */
+
+/* TOAST DE NOTIFICAÇÃO */
+
+.position-fixed {
+  position: fixed;
+  display: flex;
+  bottom: 20px;
+  flex-direction: column;
+  justify-content: flex-end;
+  left: 20px;
+}
+
+.corpo-toast {
+  float: left;
+  text-align: left;
+}
+
+/* FIM TOAST DE NOTIFICAÇÃO */
+
+.mobile {
+  display: none;
+}
+
+.btn-pagamento {
+  background: #71c358;
+  color: #fff;
+  font-weight: 500;
+  border: 0;
+  height: 50px;
+  margin: 0 auto;
+  border-bottom: 5px solid #50b232;
+  border-radius: 6px;
+  font-size: 15px;
+  width: 100%;
+}
+
+.btn-pagamento:hover {
+  background: #60c542;
+  color: #fff;
+}
+
+.btn-oferta {
+  font-weight: bold;
+  font-size: 20px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 30px;
+  background-color: #04bd14;
+  color: #f8f8f8;
+  text-transform: uppercase;
+}
+
+.btn-oferta:hover {
+  transform: scale(1.2);
+}
+
+.btn-atencao {
+  font-weight: bold;
+  border-radius: 30px;
+  height: 60px;
+  border: 5px solid #f0f1a4;
+  box-shadow: 1px 1px 20px rgba(238, 241, 49, 0.6);
+  margin: 0 0 15px 0;
+  background: #ff0;
+  color: #000;
+}
+
+.btn-atencao:hover {
+  background: #edfa38;
+  color: #111;
+}
+
+.imagem-produto {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+}
+
+.showmobile {
+  display: none;
+}
+
+/* ORDER BUMP */
+
+.img-produto-order-bump2 {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  float: left;
+}
+
+/*.img-produto-order-bump {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+}
+
+.txt_order_bump_checkout {
+    display: inline-block;
+    margin-top: 14%;
+}
+
+.txt_titulo_order_bump {
+    display: block;
+    text-align: center;
+    font-size: 120%;
+    color: red;
+}
+
+.hr_order_bump {
+    height: 1px;
+    border: none;
+    background-color: #A9A9A9;
+} */
+
+.txt_titulo_order_bump {
+  display: block;
+  text-align: center;
+  font-size: 120%;
+  color: red;
+}
+
+.box-order-bump {
+  border: 2px dashed red;
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 14px;
+  font-family: "Montserat", sans-serif;
+}
+
+.img-produto-order-bump {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  /* float:left; */
+}
+
+.texto-destaque {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.check-order-bump {
+  padding: 5px 10px;
+  background: #d4d5d6;
+  box-shadow: 2px 2px 5px #ddd;
+  width: 100%;
+}
+
+/* FIM ORDER BUMP */
+
+@media (max-width: 500px) {
+  .hidedesk {
+    display: none;
+  }
+
+  .header img {
+    width: 100%;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .contador-topo {
+    text-align: center;
+  }
+
+  .timer {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .titulo-secao {
+    font-size: 20px !important;
+  }
+
+  .imagem-produto {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+  }
+
+  #mes-val {
+    padding: 2px;
+  }
+
+  .col-40 > .form-control {
+    width: 100%;
+    float: left;
+  }
+
+  .col-50 > .form-control {
+    width: 70px;
+    float: left;
+  }
+
+  .col-60 > .form-control {
+    width: 82px;
+    float: left;
+  }
+
+  .topo {
+    display: block;
+    position: relative;
+    text-align: center;
+  }
+
+  .obrigado iframe {
+    margin: 0;
+    top: 0;
+    position: relative;
+    height: 100vh;
+  }
+
+  .banner-checkout {
+    width: 100%;
+    height: 100%;
+  }
+
+  #cvv {
+    background-size: 40px;
+  }
+
+  .selos,
+  .aviso-taxa {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .img-selo {
+    text-align: center;
+    float: none;
+    margin-top: 20px;
+  }
+
+  .resumo {
+    /* flex-direction: column-reverse; */
+    margin: 5px;
+  }
+
+  .novo-upsell {
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .parabens-compra {
+    font-size: 20px;
+  }
+
+  .txt-right-desktop {
+    text-align: left;
+  }
+
+  .txt-center-mobile {
+    text-align: center;
+  }
+
+  .img-upsell {
+    width: 150px;
+    height: 150px;
+  }
+
+  .txt-preco {
+    font-size: 36px;
+  }
+
+  .btn-oferta {
+    border: 10px #04bd14 solid;
+    padding: 6px 9px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .bloco-upsell {
+    width: 95%;
+    margin: 20px auto;
+    padding: 20px 10px;
+  }
+
+  #img-aviso {
+    width: 100%;
+    height: 100%;
+  }
+
+  .container-75 {
+    width: 95%;
+  }
+
+  .newform {
+    height: 45px;
+    border: 1px solid #a2b2c3;
+    border-radius: 0;
+    box-shadow: none;
+    width: 100%;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+      -webkit-box-shadow 0.15s ease-in-out;
+  }
+
+  .newform2 {
+    height: 45px;
+    border: 1px solid #ccc;
+    border-radius: 0 0.25rem 0.25rem 0;
+    width: 85%;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+      -webkit-box-shadow 0.15s ease-in-out;
+  }
+
+  .newform3 {
+    height: 45px;
+    border: 1px solid #ccc;
+    border-radius: 0 0.25rem 0.25rem 0;
+    width: 96%;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+      -webkit-box-shadow 0.15s ease-in-out;
+  }
+
+  .newform4 {
+    width: 67% !important;
+  }
+
+  .showmobile {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .width100 {
+    min-width: 100% !important;
+  }
+
+  .titulo-secao {
+    font-size: 15px !important;
+  }
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    margin: 15px 0 5px 0;
+  }
+
+  .btn {
+    width: 100% !important;
+  }
+
+  .container-85 {
+    width: 85%;
+  }
+
+  .seguro-rodape {
+    margin: 0 auto;
+    float: none;
+  }
+
+  .img-selo {
+    width: auto;
+  }
+
+  /* ORDER BUMP */
+  .img-produto-order-bump {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+  }
+
+  .txt_order_bump_checkout {
+    float: right;
+    /* margin-top: -74px; */
+    margin-right: auto;
+    font-size: small;
+  }
+
+  .txt_titulo_order_bump {
+    display: block;
+    text-align: center;
+    font-size: 120%;
+    color: red;
+  }
+
+  /* FIM ORDER BUMP */
+}

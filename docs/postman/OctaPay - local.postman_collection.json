@@ -1,0 +1,645 @@
+{
+	"info": {
+		"_postman_id": "08c0c0d3-1e2b-4d62-9ce3-cc8f78591a93",
+		"name": "OctaPay - local",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Vendas",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Vendas App",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/vendas/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"vendas",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"suporte@octapay.com.br2\",\r\n    \"senha\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/login/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Meus Produtos",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 33\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/produtos/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"produtos",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Saldo",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/comissao/saldo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"comissao",
+						"saldo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Saques",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\": 12,\r\n    \"valor_saque\": 200,\r\n    \"conta\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/saques/sacar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"saques",
+						"sacar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verificar saldo",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\": 12,\r\n    \"valor_saque\": 200\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/saques/verificar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"saques",
+						"verificar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Marktplace",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"formato\": 8\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/marketplace/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"marketplace",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Produtos Promovidos",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/produtos/promovidos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"produtos",
+						"promovidos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Relatórios",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/relatorios/painel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"relatorios",
+						"painel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Afiliacao",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"produto\": 4,\r\n    \"afiliado\": 7,\r\n    \"liberar_comprador\": 0,\r\n    \"tempo_cookie\": 30,\r\n    \"tipo_comissao\": 1,\r\n    \"comissao_afiliado\": 34,\r\n    \"tipo_atribuicao\": 2,\r\n    \"afiliados_aprovacao\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/afiliados/afiliacao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"afiliados",
+						"afiliacao"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Banco - ver",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/bancos/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"bancos",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Extrato Saqes",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "3FB823B8B806",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api-octapay/saques/extrato",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api-octapay",
+						"saques",
+						"extrato"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

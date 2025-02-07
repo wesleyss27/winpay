@@ -1,0 +1,24 @@
+{
+ "data": "22/11/2024 20:58:56",
+a:1:{i:0;O:8:"stdClass":2:{s:4:"Code";i:126;s:7:"Message";s:38:"Credit Card Expiration Date is invalid";}}}
+
+*************************************************************
+
+{
+ "data": "22/11/2024 21:00:04",
+a:1:{i:0;O:8:"stdClass":2:{s:4:"Code";i:127;s:7:"Message";s:61:"You must provide CreditCard Number, WalletKey, Token or Alias";}}}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 19:42:46",
+O:8:"stdClass":3:{s:15:"MerchantOrderId";s:7:"1235514";s:8:"Customer";O:8:"stdClass":1:{s:4:"Name";s:12:"Wesley Silva";}s:7:"Payment";O:8:"stdClass":21:{s:16:"ServiceTaxAmount";i:0;s:12:"Installments";i:1;s:8:"Interest";i:0;s:7:"Capture";b:1;s:12:"Authenticate";b:0;s:9:"Recurrent";b:0;s:10:"CreditCard";O:8:"stdClass":5:{s:10:"CardNumber";s:12:"123123**3123";s:6:"Holder";s:6:"wesley";s:14:"ExpirationDate";s:7:"11/2030";s:8:"SaveCard";b:0;s:5:"Brand";s:4:"Visa";}s:14:"SoftDescriptor";s:9:"RedRocket";s:8:"Provider";s:5:"Cielo";s:8:"IsQrCode";b:0;s:6:"Amount";i:3000;s:12:"ReceivedDate";s:19:"2025-02-03 19:42:46";s:6:"Status";i:0;s:10:"IsSplitted";b:0;s:13:"ReturnMessage";s:29:"Nmero do cartao nao fornecido";s:10:"ReturnCode";s:2:"55";s:9:"PaymentId";s:36:"7d480ae0-b29d-4531-8e8e-138503e41d44";s:4:"Type";s:10:"CreditCard";s:8:"Currency";s:3:"BRL";s:7:"Country";s:3:"BRA";s:5:"Links";a:1:{i:0;O:8:"stdClass":3:{s:6:"Method";s:3:"GET";s:3:"Rel";s:4:"self";s:4:"Href";s:89:"https://apiquery.cieloecommerce.cielo.com.br/1/sales/7d480ae0-b29d-4531-8e8e-138503e41d44";}}}}}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 19:43:13",
+O:8:"stdClass":3:{s:15:"MerchantOrderId";s:7:"3390390";s:8:"Customer";O:8:"stdClass":1:{s:4:"Name";s:12:"Wesley Silva";}s:7:"Payment";O:8:"stdClass":21:{s:16:"ServiceTaxAmount";i:0;s:12:"Installments";i:1;s:8:"Interest";i:0;s:7:"Capture";b:1;s:12:"Authenticate";b:0;s:9:"Recurrent";b:0;s:10:"CreditCard";O:8:"stdClass":5:{s:10:"CardNumber";s:12:"123123**3123";s:6:"Holder";s:6:"wesley";s:14:"ExpirationDate";s:7:"11/2030";s:8:"SaveCard";b:0;s:5:"Brand";s:4:"Visa";}s:14:"SoftDescriptor";s:9:"RedRocket";s:8:"Provider";s:5:"Cielo";s:8:"IsQrCode";b:0;s:6:"Amount";i:3000;s:12:"ReceivedDate";s:19:"2025-02-03 19:43:13";s:6:"Status";i:0;s:10:"IsSplitted";b:0;s:13:"ReturnMessage";s:29:"Nmero do cartao nao fornecido";s:10:"ReturnCode";s:2:"55";s:9:"PaymentId";s:36:"c85d959d-cf0a-45d7-9aa7-52681d16989b";s:4:"Type";s:10:"CreditCard";s:8:"Currency";s:3:"BRL";s:7:"Country";s:3:"BRA";s:5:"Links";a:1:{i:0;O:8:"stdClass":3:{s:6:"Method";s:3:"GET";s:3:"Rel";s:4:"self";s:4:"Href";s:89:"https://apiquery.cieloecommerce.cielo.com.br/1/sales/c85d959d-cf0a-45d7-9aa7-52681d16989b";}}}}}
+
+*************************************************************
+

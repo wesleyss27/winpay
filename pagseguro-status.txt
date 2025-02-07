@@ -1,0 +1,30 @@
+dados = {
+26/01/2022 17:39:00
+ ID Transacao: CHAR_992582af-febf-44fb-994b-81cd00b743b0
+Meio de Pagamento: CREDIT_CARD
+Status: PAID
+}
+dados = {
+26/01/2022 19:47:34
+ ID Transacao: CHAR_89917608-D380-4D97-871F-962E16641132
+Meio de Pagamento: 
+Status: 
+}
+dados = {
+26/01/2022 19:49:10
+ ID Transacao: ORDE_705793D2-6250-4F6A-ADB6-E85C342D69EC
+Meio de Pagamento: CREDIT_CARD
+Status: PAID
+}
+dados = {
+26/01/2022 19:49:37
+ ID Transacao: ORDE_705793D2-6250-4F6A-ADB6-E85C342D69EC
+Meio de Pagamento: CREDIT_CARD
+Status: PAID
+}
+dados = {
+26/01/2022 19:49:47
+ ID Transacao: ORDE_705793D2-6250-4F6A-ADB6-E85C342D69EC
+Meio de Pagamento: CREDIT_CARD
+Status: CANCELED
+}

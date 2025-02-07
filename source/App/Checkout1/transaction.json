@@ -1,0 +1,158 @@
+{
+    "id": "PAY-5G8AIVNRQRNS",
+    "status": "IN_ANALYSIS",
+    "delayCapture": false,
+    "amount": {
+        "total": 9500,
+        "gross": 9500,
+        "fees": 0,
+        "refunds": 0,
+        "liquid": 9500,
+        "currency": "BRL"
+    },
+    "installmentCount": 1,
+    "statementDescriptor": "minhaLoja.com",
+    "fundingInstrument": {
+        "creditCard": {
+            "id": "CRC-Y41GHX7EMP2T",
+            "brand": "MASTERCARD",
+            "first6": "527071",
+            "last4": "3815",
+            "store": true,
+            "holder": {
+                "birthdate": "1988-12-30",
+                "birthDate": "1988-12-30",
+                "taxDocument": {
+                    "type": "CPF",
+                    "number": "33333333333"
+                },
+                "fullname": "Jose Portador da Silva"
+            }
+        },
+        "method": "CREDIT_CARD"
+    },
+    "acquirerDetails": {
+        "authorizationNumber": "T12996",
+        "taxDocument": {
+            "type": "CNPJ",
+            "number": "01027058000191"
+        }
+    },
+    "fees": [
+        {
+            "type": "TRANSACTION",
+            "amount": 0
+        }
+    ],
+    "events": [
+        {
+            "type": "PAYMENT.IN_ANALYSIS",
+            "createdAt": "2021-04-30T17:14:38.366-03"
+        },
+        {
+            "type": "PAYMENT.CREATED",
+            "createdAt": "2021-04-30T17:14:38.159-03"
+        }
+    ],
+    "receivers": [
+        {
+            "moipAccount": {
+                "id": "MPA-52C68483D145",
+                "login": "pedro@octa.life",
+                "fullname": "pedro henrique"
+            },
+            "type": "PRIMARY",
+            "amount": {
+                "total": 9500,
+                "currency": "BRL",
+                "fees": 0,
+                "refunds": 0
+            },
+            "feePayor": true
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "https://sandbox.moip.com.br/v2/payments/PAY-5G8AIVNRQRNS"
+        },
+        "order": {
+            "href": "https://sandbox.moip.com.br/v2/orders/ORD-8XDEL911TXVB",
+            "title": "ORD-8XDEL911TXVB"
+        }
+    },
+    "updatedAt": "2021-04-30T17:14:38.366-03",
+    "createdAt": "2021-04-30T17:14:38.158-03"
+}
+
+
+
+{
+    "id": "PAY-CHKOP8KIQ3SE",
+    "status": "WAITING",
+    "delayCapture": false,
+    "amount": {
+        "total": 9500,
+        "gross": 9500,
+        "fees": 0,
+        "refunds": 0,
+        "liquid": 9500,
+        "currency": "BRL"
+    },
+    "installmentCount": 1,
+    "fundingInstrument": {
+        "boleto": {
+            "expirationDate": "2021-05-01",
+            "lineCode": "34191.09032 73423.010195 61309.830000 7 86070000009500",
+            "logoUri": "https://octapay.com.br/octapay/themes/tema2/assets/imgs/logo.png"
+        },
+        "method": "BOLETO"
+    },
+    "fees": [
+        {
+            "type": "TRANSACTION",
+            "amount": 0
+        }
+    ],
+    "events": [
+        {
+            "type": "PAYMENT.CREATED",
+            "createdAt": "2021-04-30T17:15:53.302-03"
+        },
+        {
+            "type": "PAYMENT.WAITING",
+            "createdAt": "2021-04-30T17:15:53.302-03"
+        }
+    ],
+    "receivers": [
+        {
+            "moipAccount": {
+                "id": "MPA-52C68483D145",
+                "login": "pedro@octa.life",
+                "fullname": "pedro henrique"
+            },
+            "type": "PRIMARY",
+            "amount": {
+                "total": 9500,
+                "currency": "BRL",
+                "fees": 0,
+                "refunds": 0
+            },
+            "feePayor": true
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "https://sandbox.moip.com.br/v2/payments/PAY-CHKOP8KIQ3SE"
+        },
+        "order": {
+            "href": "https://sandbox.moip.com.br/v2/orders/ORD-XJE0IGDAZ6B8",
+            "title": "ORD-XJE0IGDAZ6B8"
+        },
+        "payBoleto": {
+            "printHref": "https://sandbox.moip.com.br/v2/boleto/BOL-UWVR1AL3QWTS/print",
+            "redirectHref": "https://sandbox.moip.com.br/v2/boleto/BOL-UWVR1AL3QWTS"
+        }
+    },
+    "updatedAt": "2021-04-30T17:15:53.302-03",
+    "createdAt": "2021-04-30T17:15:53.302-03"
+}

@@ -1,0 +1,47 @@
+{
+    "name": "octalife2020/octapay",
+    "description": "Persitencia de Dados",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pedro Henrique da Silva",
+            "email": "pedrohenriquedasilva100@yahoo.com.br",
+            "role": "desenvolvedor"
+        },
+        {
+            "name": "Thiago Tatim",
+            "email": "thiagotatim@octa.life",
+            "role": "desenvolvedor"
+        },
+        {
+            "name": "Thiago Félix",
+            "email": "thiago@octa.life",
+            "role": "desenvolvedor"
+        }
+    ],
+    "minimum-stability": "stable",
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "Source\\": "source/"
+        },
+        "files": [
+            "source/Config.php"
+        ]
+    },
+    "require": {
+        "php": "^7.0 || ^8.0",
+        "ext-pdo": "*",
+        "coffeecode/datalayer": "1.1.*",
+        "coffeecode/router": "1.0.*",
+        "league/plates": "4.0.0-alpha",
+        "moip/moip-sdk-php": "^3.1",
+        "phpmailer/phpmailer": "^6.2",
+        "pusher/pusher-php-server": "^4.1",
+        "sendgrid/sendgrid": "^7.9",
+        "dompdf/dompdf": "^2.0"
+    }
+}

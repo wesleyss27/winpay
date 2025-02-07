@@ -1,0 +1,137 @@
+2025-01-14 00:04:12.570 [info] [main] Log level: Info
+2025-01-14 00:04:12.570 [info] [main] Validating found git in: "git"
+2025-01-14 00:04:12.571 [info] [main] Using git "2.34.1" from "git"
+2025-01-14 00:04:12.571 [info] [Model][doInitialScan] Initial repository scan started
+2025-01-14 00:04:12.571 [info] [Model][doInitialScan] Initial repository scan completed - repositories (0), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2025-01-14 00:05:00.680 [info] [main] Log level: Info
+2025-01-14 00:05:00.680 [info] [main] Validating found git in: "git"
+2025-01-14 00:05:00.680 [info] [main] Using git "2.34.1" from "git"
+2025-01-14 00:05:00.680 [info] [Model][doInitialScan] Initial repository scan started
+2025-01-14 00:05:00.680 [info] > git rev-parse --show-toplevel [8ms]
+2025-01-14 00:05:00.680 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.692 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.692 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.704 [info] > git rev-parse --show-toplevel [3ms]
+2025-01-14 00:05:00.704 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.716 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.716 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.728 [info] > git rev-parse --show-toplevel [3ms]
+2025-01-14 00:05:00.728 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.740 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.740 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.752 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.752 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.762 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.762 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.771 [info] > git rev-parse --show-toplevel [3ms]
+2025-01-14 00:05:00.771 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.782 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.782 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.790 [info] > git rev-parse --show-toplevel [2ms]
+2025-01-14 00:05:00.790 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.799 [info] > git rev-parse --show-toplevel [1ms]
+2025-01-14 00:05:00.799 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.812 [info] > git rev-parse --show-toplevel [3ms]
+2025-01-14 00:05:00.812 [info] fatal: detected dubious ownership in repository at '/home/teste/roxpay/roxpay-dashboard'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:00.818 [info] [Model][doInitialScan] Initial repository scan completed - repositories (0), closed repositories (0), parent repositories (0), unsafe repositories (1)
+2025-01-14 00:05:07.951 [info] > git config --global --add safe.directory /home/teste/roxpay/roxpay-dashboard [3ms]
+2025-01-14 00:05:07.965 [info] > git rev-parse --show-toplevel [3ms]
+2025-01-14 00:05:07.980 [info] > git rev-parse --git-dir --git-common-dir [3ms]
+2025-01-14 00:05:08.007 [info] [Model][openRepository] Opened repository: /home/teste/roxpay/roxpay-dashboard
+2025-01-14 00:05:08.028 [info] > git config --get commit.template [2ms]
+2025-01-14 00:05:08.039 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [3ms]
+2025-01-14 00:05:08.081 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [4ms]
+2025-01-14 00:05:08.676 [info] > git status -z -uall [623ms]
+2025-01-14 00:05:08.795 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [22ms]
+2025-01-14 00:05:09.269 [info] > git config --local branch.develop.vscode-merge-base [466ms]
+2025-01-14 00:05:09.270 [warning] [Git][config] git config failed: Failed to execute git
+2025-01-14 00:05:09.301 [info] > git config --get commit.template [508ms]
+2025-01-14 00:05:09.434 [info] > git reflog develop --grep-reflog=branch: Created from *. [134ms]
+2025-01-14 00:05:09.458 [info] > git reflog HEAD --grep-reflog=checkout: moving from .* to develop [15ms]
+2025-01-14 00:05:09.472 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [17ms]
+2025-01-14 00:05:09.528 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [53ms]
+2025-01-14 00:05:09.576 [info] > git symbolic-ref --short refs/remotes/origin/HEAD [5ms]
+2025-01-14 00:05:09.576 [info] fatal: ref refs/remotes/origin/HEAD is not a symbolic ref
+2025-01-14 00:05:09.577 [warning] [Repository][getDefaultBranch] Failed to get default branch details: Failed to execute git.
+2025-01-14 00:05:09.610 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [86ms]
+2025-01-14 00:05:09.613 [info] > git merge-base refs/heads/develop refs/remotes/origin/develop [5ms]
+2025-01-14 00:05:09.628 [info] > git diff --name-status -z --diff-filter=ADMR 7a98d6f9895ad8a100ba380fda95284c2c66c55b...refs/remotes/origin/develop [3ms]
+2025-01-14 00:05:10.172 [info] > git status -z -uall [681ms]
+2025-01-14 00:05:10.886 [info] > git check-ignore -v -z --stdin [590ms]
+2025-01-14 00:05:11.923 [info] > git config --get commit.template [1ms]
+2025-01-14 00:05:11.940 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [5ms]
+2025-01-14 00:05:11.966 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [2ms]
+2025-01-14 00:05:12.101 [info] > git log --format=%H%n%aN%n%aE%n%at%n%ct%n%P%n%D%n%B -z --shortstat --diff-merges=first-parent -n50 --skip=0 --topo-order --decorate=full --stdin [2291ms]
+2025-01-14 00:05:12.492 [info] > git status -z -uall [544ms]
+2025-01-14 00:05:17.553 [info] > git config --get commit.template [10ms]
+2025-01-14 00:05:17.556 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [5ms]
+2025-01-14 00:05:17.588 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [5ms]
+2025-01-14 00:05:18.046 [info] > git status -z -uall [479ms]
+2025-01-14 00:05:23.109 [info] > git config --get commit.template [2ms]
+2025-01-14 00:05:23.123 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [3ms]
+2025-01-14 00:05:23.151 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [3ms]
+2025-01-14 00:05:23.636 [info] > git status -z -uall [505ms]
+2025-01-14 00:05:28.684 [info] > git config --get commit.template [1ms]
+2025-01-14 00:05:28.697 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [4ms]
+2025-01-14 00:05:28.726 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [4ms]
+2025-01-14 00:05:29.484 [info] > git status -z -uall [777ms]
+2025-01-14 00:05:34.535 [info] > git config --get commit.template [3ms]
+2025-01-14 00:05:34.550 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [2ms]
+2025-01-14 00:05:34.579 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [3ms]
+2025-01-14 00:05:34.616 [info] > git status -z -uall [58ms]
+2025-01-14 00:05:39.663 [info] > git config --get commit.template [2ms]
+2025-01-14 00:05:39.675 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [2ms]
+2025-01-14 00:05:39.704 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [5ms]
+2025-01-14 00:05:39.739 [info] > git status -z -uall [55ms]
+2025-01-14 00:05:44.798 [info] > git config --get commit.template [14ms]
+2025-01-14 00:05:44.798 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [2ms]
+2025-01-14 00:05:44.826 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [3ms]
+2025-01-14 00:05:44.865 [info] > git status -z -uall [56ms]
+2025-01-14 00:05:49.925 [info] > git config --get commit.template [11ms]
+2025-01-14 00:05:49.927 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [4ms]
+2025-01-14 00:05:49.968 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [6ms]
+2025-01-14 00:05:50.018 [info] > git status -z -uall [71ms]
+2025-01-14 00:05:55.090 [info] > git config --get commit.template [17ms]
+2025-01-14 00:05:55.099 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/develop refs/remotes/develop [12ms]
+2025-01-14 00:05:55.133 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [8ms]
+2025-01-14 00:05:55.171 [info] > git status -z -uall [63ms]
+2025-01-14 00:05:56.319 [info] > git log --oneline --cherry develop...develop@{upstream} -- [169ms]

@@ -1,0 +1,441 @@
+{
+	"info": {
+		"_postman_id": "14313838-2d87-42ae-9e2d-bd803c438f9c",
+		"name": "Mercado Pago",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CARTÃO DE CRÉDITO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_amount\": 1000,\r\n    \"token\": \"961ea9e58177df087ad03ad11289e0e4\",\r\n    \"installments\": 12,\r\n    \"payment_method_id\": \"master\",\r\n    \"payer\": {\r\n        \"first_name\": \"FUND\",\r\n        \"email\": \"test@test.com\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TESTE WEBHOOK",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_amount\": 1000,\r\n    \"token\": \"961ea9e58177df087ad03ad11289e0e4\",\r\n    \"installments\": 12,\r\n    \"payment_method_id\": \"master\",\r\n    \"payer\": {\r\n        \"first_name\": \"FUND\",\r\n        \"email\": \"test@test.com\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TESTE WEBHOOK Localhost",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_amount\": 1000,\r\n    \"token\": \"961ea9e58177df087ad03ad11289e0e4\",\r\n    \"installments\": 12,\r\n    \"payment_method_id\": \"master\",\r\n    \"payer\": {\r\n        \"first_name\": \"FUND\",\r\n        \"email\": \"test@test.com\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BOLETO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_amount\": 1000,\r\n    \"payment_method_id\": \"bolbradesco\",\r\n    \"date_of_expiration\": \"2022-01-01T23:59:59.000-04:00\",\r\n    \"payer\": {\r\n        \"first_name\": \"FUND\",\r\n        \"last_name\": \"test123\",\r\n        \"email\": \"test@test.com\",\r\n        \"identification\": {\r\n            \"type\": \"CPF\",\r\n            \"number\": \"19119119100\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PIX",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_amount\": 1000,\r\n    \"payment_method_id\": \"bolbradesco\",\r\n    \"date_of_expiration\": \"2022-01-01T23:59:59.000-04:00\",\r\n    \"payer\": {\r\n        \"first_name\": \"FUND\",\r\n        \"last_name\": \"test123\",\r\n        \"email\": \"test@test.com\",\r\n        \"identification\": {\r\n            \"type\": \"CPF\",\r\n            \"number\": \"19119119100\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pesquisar Pagamento",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments/1245144711",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments",
+						"1245144711"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CHARGEBACK",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"accredited\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments/1245179796",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments",
+						"1245179796"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CANCELAR PAGAMENTO Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"accredited\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payments/1245179796",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payments",
+						"1245179796"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Meios de pagamento",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "TEST-3682392838513017-072221-ce3cceae4ee1f92f694d4f795f86cf8b-460395588",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"additional_info_needed\": [\r\n        {\r\n            \"cardholder_identification_number\": 5350693063882564,\r\n            \"cardholder_identification_type\": \"credit_card\",\r\n            \"cardholder_name\": \"Francisco Monteiro\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.mercadopago.com/v1/payment_methods",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mercadopago",
+						"com"
+					],
+					"path": [
+						"v1",
+						"payment_methods"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

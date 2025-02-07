@@ -1,0 +1,45 @@
+version: "3"
+services:
+  php-apache:
+    image: misaelsilva777/php-apache-redrocket:1.0
+    container_name: php-apache
+    ports:
+      - "89:80"
+    volumes:
+      - ./:/var/www/html
+      - ./php:/usr/local/etc/php
+      - ./.htpasswd:/etc/apache2/.htpasswd
+      - ./000-default-alefy.conf:/etc/apache2/sites-available/000-default-alefy.conf
+    networks:
+      - mynetwork
+
+  mysql:
+    container_name: mariadb-redrocket
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 0
+    ports:
+      - "3309:3306"
+    networks:
+      - mynetwork
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    ports:
+      - 8181:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    links:
+      - mysql
+    restart: always
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

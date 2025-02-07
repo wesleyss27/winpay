@@ -1,0 +1,350 @@
+{
+	"info": {
+		"_postman_id": "ab2a168c-6be5-4eef-9fcf-89d5f0d012ad",
+		"name": "Wirecard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Cliente",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customer\": {\r\n        \"name\": \"Francisco Monteiro\",\r\n        \"email\": \"fhamonteiro@hotmail.com\",\r\n        \"phones\": [\r\n            {\r\n                \"country\": \"55\",\r\n                \"area\": \"34\",\r\n                \"number\": \"999145481\"\r\n            }\r\n        ]\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Produto teste 13\",\r\n            \"quantity\": 1,\r\n            \"unit_amount\": 6024\r\n        }\r\n    ],\r\n    \"qr_code\": {\r\n        \"amount\": {\r\n            \"value\": 6024\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"address\": {\r\n            \"street\": \"Rua Sabará\",\r\n            \"number\": \"50\",\r\n            \"locality\": \"Nova Vila Bretas\",\r\n            \"city\": \"Governador Valadares\",\r\n            \"region_code\": \"MG\",\r\n            \"country\": \"BRA\",\r\n            \"postal_code\": \"35051420\"\r\n        }\r\n    },\r\n    \"charges\": [\r\n        {\r\n            \"description\": \"loja teste\",\r\n            \"amount\": {\r\n                \"value\": 6024,\r\n                \"currency\": \"BRL\"\r\n            },\r\n            \"payment_method\": {\r\n                \"type\": \"CREDIT_CARD\",\r\n                \"installments\": 12,\r\n                \"capture\": true,\r\n                \"card\": {\r\n                    \"number\": \"5482239989434535\",\r\n                    \"exp_month\": \"01\",\r\n                    \"exp_year\": \"24\",\r\n                    \"security_code\": \"222\",\r\n                    \"holder\": {\r\n                        \"name\": \"Francisco Monteiro\",\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Teste webhook wirecard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"date\": \"\",\r\n    \"env\": \"\",\r\n    \"event\": \"PAYMENT.AUTHORIZED\",\r\n    \"resource\": {\r\n        \"payment\": {\r\n            \"_links\": {\r\n                \"order\": {\r\n                    \"href\": \"https://api.moip.com.br/v2/orders/ORD-KZNA14HLLCZR\",\r\n                    \"title\": \"ORD-KZNA14HLLCZR\"\r\n                },\r\n                \"self\": {\r\n                    \"href\": \"https://api.moip.com.br/v2/payments/PAY-4UH4Z9HDTDAU\"\r\n                }\r\n            },\r\n            \"acquirerDetails\": {\r\n                \"authorizationNumber\": \"130611502242\",\r\n                \"taxDocument\": {\r\n                    \"number\": \"08561701000101\",\r\n                    \"type\": \"CNPJ\"\r\n                }\r\n            },\r\n            \"amount\": {\r\n                \"currency\": \"BRL\",\r\n                \"fees\": 446,\r\n                \"gross\": 9700,\r\n                \"liquid\": 9254,\r\n                \"refunds\": 0,\r\n                \"total\": 9700\r\n            },\r\n            \"createdAt\": \"2021-11-02T08:27:03.000-03\",\r\n            \"delayCapture\": false,\r\n            \"events\": [\r\n                {\r\n                    \"createdAt\": \"2021-11-02T08:27:14.302-03\",\r\n                    \"type\": \"PAYMENT.AUTHORIZED\"\r\n                },\r\n                {\r\n                    \"createdAt\": \"2021-11-02T08:27:06.000-03\",\r\n                    \"type\": \"PAYMENT.IN_ANALYSIS\"\r\n                },\r\n                {\r\n                    \"createdAt\": \"2021-11-02T08:27:03.000-03\",\r\n                    \"type\": \"PAYMENT.CREATED\"\r\n                }\r\n            ],\r\n            \"fees\": [\r\n                {\r\n                    \"amount\": 446,\r\n                    \"type\": \"TRANSACTION\"\r\n                }\r\n            ],\r\n            \"fundingInstrument\": {\r\n                \"creditCard\": {\r\n                    \"brand\": \"VISA\",\r\n                    \"first6\": \"417401\",\r\n                    \"holder\": {\r\n                        \"birthDate\": \"1987-08-30\",\r\n                        \"birthdate\": \"1987-08-30\",\r\n                        \"fullname\": \"Karine Mara Fagundes De Souza Marques\",\r\n                        \"taxDocument\": {\r\n                            \"number\": \"05810777929\",\r\n                            \"type\": \"CPF\"\r\n                        }\r\n                    },\r\n                    \"id\": \"CRC-6J0SIJ1WZNM9\",\r\n                    \"last4\": \"8917\",\r\n                    \"store\": true\r\n                },\r\n                \"method\": \"CREDIT_CARD\"\r\n            },\r\n            \"id\": \"PAY-H8W7LNOR4UID\",\r\n            \"installmentCount\": 1,\r\n            \"receivers\": [\r\n                {\r\n                    \"amount\": {\r\n                        \"currency\": \"BRL\",\r\n                        \"fees\": 446,\r\n                        \"refunds\": 0,\r\n                        \"total\": 9700\r\n                    },\r\n                    \"feePayor\": true,\r\n                    \"moipAccount\": {\r\n                        \"fullname\": \"OCTAPAY SOLUCOES EM PAGAMENTOS ON-LINE LTDA\",\r\n                        \"id\": \"MPA-D18BC06784DB\",\r\n                        \"login\": \"thiago@octapay.com.br\"\r\n                    },\r\n                    \"type\": \"PRIMARY\"\r\n                }\r\n            ],\r\n            \"statementDescriptor\": \"OctaPay\",\r\n            \"status\": \"AUTHORIZED\",\r\n            \"updatedAt\": \"2021-11-02T08:27:14.302-03\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/octapay/webhook",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"octapay",
+						"webhook"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Pedido",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"reference_id\": \"ex-00001\",\r\n    \"customer\": {\r\n        \"name\": \"Jose da Silva\",\r\n        \"email\": \"email@test.com\",\r\n        \"tax_id\": \"12345678909\",\r\n        \"phones\": [\r\n            {\r\n                \"country\": \"55\",\r\n                \"area\": \"11\",\r\n                \"number\": \"999999999\",\r\n                \"type\": \"MOBILE\"\r\n            }\r\n        ]\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"reference_id\": \"referencia do item\",\r\n            \"name\": \"nome do item\",\r\n            \"quantity\": 1,\r\n            \"unit_amount\": 500\r\n        }\r\n    ],\r\n    \"qr_code\": {\r\n        \"amount\": {\r\n            \"value\": 500\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"address\": {\r\n            \"street\": \"Avenida Brigadeiro Faria Lima\",\r\n            \"number\": \"1384\",\r\n            \"complement\": \"apto 12\",\r\n            \"locality\": \"Pinheiros\",\r\n            \"city\": \"São Paulo\",\r\n            \"region_code\": \"SP\",\r\n            \"country\": \"BRA\",\r\n            \"postal_code\": \"01452002\"\r\n        }\r\n    },\r\n    \"notification_urls\": [\r\n        \"https://meusite.com/notificacoes\"\r\n    ],\r\n    \"charges\": [\r\n        {\r\n            \"reference_id\": \"referencia do pagamento\",\r\n            \"description\": \"descricao do pagamento\",\r\n            \"amount\": {\r\n                \"value\": 500,\r\n                \"currency\": \"BRL\"\r\n            },\r\n            \"payment_method\": {\r\n                \"type\": \"CREDIT_CARD\",\r\n                \"installments\": 1,\r\n                \"capture\": true,\r\n                \"card\": {\r\n                    \"number\": \"4111111111111111\",\r\n                    \"exp_month\": \"12\",\r\n                    \"exp_year\": \"2026\",\r\n                    \"security_code\": \"123\",\r\n                    \"holder\": {\r\n                        \"name\": \"Jose da Silva\"\r\n                    },\r\n                    \"store\": false\r\n                }\r\n            },\r\n            \"notification_urls\": [\r\n                \"https://meusite.com/notificacoes\"\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cartão de crédito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": {\r\n        \"value\": 5000,\r\n        \"currency\": \"BRL\"\r\n    },\r\n    \"payment_method\": {\r\n        \"type\": \"BOLETO\",\r\n        \"boleto\": {\r\n            \"due_date\": \"2021-12-12\",\r\n            \"instruction_lines\": {\r\n                \"line_1\": \"Pagamento processado via PagSeguro\"\r\n            },\r\n            \"holder\": {\r\n                \"name\": \"Francisco Monteiro\",\r\n                \"tax_id\": \"06100056690\",\r\n                \"email\": \"fhamonteiro@hotmail.com\",\r\n                \"address\": {\r\n                    \"country\": \"Brasil\",\r\n                    \"city\": \"Governador Valadares\",\r\n                    \"region\": \"MG\",\r\n                    \"region_code\": \"MG\",\r\n                    \"postal_code\": \"35051420\",\r\n                    \"street\": \"Rua Sabará\",\r\n                    \"number\": \"50\",\r\n                    \"locality\": \"Nova Vila Bretas\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/charges",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"charges"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Webhook",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "GHFTO94EJ16I8FHZ4ZMWASLCMIYZCD2Q",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "T8XUHOVEGXEN3JSMD96ACY1AHMRVT3NTUSXBB3E7",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"events\": [\r\n    \"ORDER.*\",\r\n    \"PAYMENT.AUTHORIZED\",\r\n    \"PAYMENT.CANCELLED\",\r\n    \"PAYMENT.REFUNDED\"\r\n  ],\r\n  \"target\": \"https://testewebhook.free.beeceptor.com\",\r\n  \"media\": \"WEBHOOK\"\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.moip.com.br/v2/preferences/notifications#",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"moip",
+						"com",
+						"br"
+					],
+					"path": [
+						"v2",
+						"preferences",
+						"notifications"
+					],
+					"hash": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Webhooks",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "GHFTO94EJ16I8FHZ4ZMWASLCMIYZCD2Q",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "T8XUHOVEGXEN3JSMD96ACY1AHMRVT3NTUSXBB3E7",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "notificationCode",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://sandbox.moip.com.br/v2/preferences/notifications",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"moip",
+						"com",
+						"br"
+					],
+					"path": [
+						"v2",
+						"preferences",
+						"notifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pesquisar Pagamento",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "GHFTO94EJ16I8FHZ4ZMWASLCMIYZCD2Q",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "T8XUHOVEGXEN3JSMD96ACY1AHMRVT3NTUSXBB3E7",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://sandbox.moip.com.br/v2/payments/PAY-CYG5J6T9NM4F",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"moip",
+						"com",
+						"br"
+					],
+					"path": [
+						"v2",
+						"payments",
+						"PAY-CYG5J6T9NM4F"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Webhook",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "GHFTO94EJ16I8FHZ4ZMWASLCMIYZCD2Q",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "T8XUHOVEGXEN3JSMD96ACY1AHMRVT3NTUSXBB3E7",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "notificationCode",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://sandbox.moip.com.br/v2/preferences/notifications/NPR-R4L4MLFJ10WU",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"moip",
+						"com",
+						"br"
+					],
+					"path": [
+						"v2",
+						"preferences",
+						"notifications",
+						"NPR-R4L4MLFJ10WU"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

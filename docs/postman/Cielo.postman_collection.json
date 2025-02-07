@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "3ea60905-5540-4228-86a7-cf59dc36a307",
+		"name": "Cielo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cartão de crédito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "MerchantId",
+						"value": "5885c885-66da-4ff1-b98e-9a632b3f831b",
+						"type": "text"
+					},
+					{
+						"key": "MerchantKey",
+						"value": "DMYXDTMFMUEOKVZYVPTBVVLKVDCSDVVZMEKOTEJO",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n   \"MerchantOrderId\":\"2014111701\",\r\n   \"Customer\":{  \r\n      \"Name\":\"Comprador crédito completo\",\r\n      \"Identity\":\"11225468954\",\r\n      \"IdentityType\":\"CPF\",\r\n      \"Email\":\"compradorteste@teste.com\",\r\n      \"Birthdate\":\"1991-01-02\",\r\n      \"Address\":{  \r\n         \"Street\":\"Rua Teste\",\r\n         \"Number\":\"123\",\r\n         \"Complement\":\"AP 123\",\r\n         \"ZipCode\":\"12345987\",\r\n         \"City\":\"Rio de Janeiro\",\r\n         \"State\":\"RJ\",\r\n         \"Country\":\"BRA\"\r\n      },\r\n        \"DeliveryAddress\": {\r\n            \"Street\": \"Rua Teste\",\r\n            \"Number\": \"123\",\r\n            \"Complement\": \"AP 123\",\r\n            \"ZipCode\": \"12345987\",\r\n            \"City\": \"Rio de Janeiro\",\r\n            \"State\": \"RJ\",\r\n            \"Country\": \"BRA\"\r\n        }\r\n   },\r\n   \"Payment\":{  \r\n     \"ServiceTaxAmount\":0,\r\n     \"Installments\":1,\r\n     \"Interest\":\"ByMerchant\",\r\n     \"Capture\":true,\r\n     \"Authenticate\":false,\r\n     \"SoftDescriptor\":\"123456789ABCD\",\r\n     \"CreditCard\":{  \r\n         \"CardNumber\":\"4551870000000183\",\r\n         \"Holder\":\"Teste Holder\",\r\n         \"ExpirationDate\":\"12/2030\",\r\n         \"SecurityCode\":\"123\",\r\n         \"SaveCard\":\"false\",\r\n         \"Brand\":\"Visa\",\r\n         \"CardOnFile\":{\r\n            \"Usage\": \"Used\",\r\n            \"Reason\":\"Unscheduled\"\r\n         }\r\n     },\r\n     \"IsCryptoCurrencyNegotiation\": true,\r\n     \"Type\":\"CreditCard\",\r\n     \"Amount\":15700,\r\n     \"AirlineData\":{\r\n         \"TicketNumber\":\"AR988983\"\r\n     }\r\n   }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+					"protocol": "https",
+					"host": [
+						"apisandbox",
+						"cieloecommerce",
+						"cielo",
+						"com",
+						"br"
+					],
+					"path": [
+						"1",
+						"sales",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Boleto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "MerchantId",
+						"value": "5885c885-66da-4ff1-b98e-9a632b3f831b",
+						"type": "text"
+					},
+					{
+						"key": "MerchantKey",
+						"value": "DMYXDTMFMUEOKVZYVPTBVVLKVDCSDVVZMEKOTEJO",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n    \"MerchantOrderId\":\"2014111706\",\r\n    \"Customer\":\r\n    {  \r\n        \"Name\":\"Comprador Teste Boleto\",\r\n        \"Identity\": \"1234567890\",\r\n        \"Address\":\r\n        {\r\n          \"Street\": \"Avenida Marechal Câmara\",\r\n          \"Number\": \"160\",    \r\n          \"Complement\": \"Sala 934\",\r\n          \"ZipCode\" : \"22750012\",\r\n          \"District\": \"Centro\",\r\n          \"City\": \"Rio de Janeiro\",\r\n          \"State\" : \"RJ\",\r\n          \"Country\": \"BRA\"\r\n        }\r\n    },\r\n    \"Payment\":\r\n    {  \r\n        \"Type\":\"Boleto\",\r\n        \"Amount\":15700,\r\n        \"Provider\": \"Bradesco\",\r\n        \"ExpirationDate\": \"2021-12-30\"\r\n\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+					"protocol": "https",
+					"host": [
+						"apisandbox",
+						"cieloecommerce",
+						"cielo",
+						"com",
+						"br"
+					],
+					"path": [
+						"1",
+						"sales",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "QR CODE",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "MerchantId",
+						"value": "5885c885-66da-4ff1-b98e-9a632b3f831b",
+						"type": "text"
+					},
+					{
+						"key": "MerchantKey",
+						"value": "DMYXDTMFMUEOKVZYVPTBVVLKVDCSDVVZMEKOTEJO",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n   \"MerchantOrderId\":\"2019010101\",\r\n   \"Customer\":{  \r\n      \"Name\":\"Francisco Monteiro\"\r\n   },\r\n   \"Payment\":{\r\n     \"Type\":\"qrcode\",\r\n     \"Amount\":100,\r\n     \"Installments\":1,\r\n     \"Capture\":false\r\n   }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/",
+					"protocol": "https",
+					"host": [
+						"apisandbox",
+						"cieloecommerce",
+						"cielo",
+						"com",
+						"br"
+					],
+					"path": [
+						"1",
+						"sales",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pagamento",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "MerchantId",
+						"value": "5885c885-66da-4ff1-b98e-9a632b3f831b",
+						"type": "text"
+					},
+					{
+						"key": "MerchantKey",
+						"value": "DMYXDTMFMUEOKVZYVPTBVVLKVDCSDVVZMEKOTEJO",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n   \"MerchantOrderId\":\"2014111701\",\r\n   \"Customer\":{  \r\n      \"Name\":\"Comprador crédito completo\",\r\n      \"Identity\":\"11225468954\",\r\n      \"IdentityType\":\"CPF\",\r\n      \"Email\":\"compradorteste@teste.com\",\r\n      \"Birthdate\":\"1991-01-02\",\r\n      \"Address\":{  \r\n         \"Street\":\"Rua Teste\",\r\n         \"Number\":\"123\",\r\n         \"Complement\":\"AP 123\",\r\n         \"ZipCode\":\"12345987\",\r\n         \"City\":\"Rio de Janeiro\",\r\n         \"State\":\"RJ\",\r\n         \"Country\":\"BRA\"\r\n      },\r\n        \"DeliveryAddress\": {\r\n            \"Street\": \"Rua Teste\",\r\n            \"Number\": \"123\",\r\n            \"Complement\": \"AP 123\",\r\n            \"ZipCode\": \"12345987\",\r\n            \"City\": \"Rio de Janeiro\",\r\n            \"State\": \"RJ\",\r\n            \"Country\": \"BRA\"\r\n        }\r\n   },\r\n   \"Payment\":{  \r\n     \"ServiceTaxAmount\":0,\r\n     \"Installments\":1,\r\n     \"Interest\":\"ByMerchant\",\r\n     \"Capture\":true,\r\n     \"Authenticate\":false,\r\n     \"SoftDescriptor\":\"123456789ABCD\",\r\n     \"CreditCard\":{  \r\n         \"CardNumber\":\"4551870000000183\",\r\n         \"Holder\":\"Teste Holder\",\r\n         \"ExpirationDate\":\"12/2030\",\r\n         \"SecurityCode\":\"123\",\r\n         \"SaveCard\":\"false\",\r\n         \"Brand\":\"Visa\",\r\n         \"CardOnFile\":{\r\n            \"Usage\": \"Used\",\r\n            \"Reason\":\"Unscheduled\"\r\n         }\r\n     },\r\n     \"IsCryptoCurrencyNegotiation\": true,\r\n     \"Type\":\"CreditCard\",\r\n     \"Amount\":15700,\r\n     \"AirlineData\":{\r\n         \"TicketNumber\":\"AR988983\"\r\n     }\r\n   }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://apisandbox.cieloecommerce.cielo.com.br/1/sales/3d070ff2-1d61-4aeb-b1ac-ab3c29cf3eea",
+					"protocol": "https",
+					"host": [
+						"apisandbox",
+						"cieloecommerce",
+						"cielo",
+						"com",
+						"br"
+					],
+					"path": [
+						"1",
+						"sales",
+						"3d070ff2-1d61-4aeb-b1ac-ab3c29cf3eea"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

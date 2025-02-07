@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "76201103-138a-45fb-813b-b0d869fa9baf",
+		"name": "televendas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "postback-produtos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"codigo_produto\" : \"12345\",\r\n\"nome_produto\" : \"Produto Teste Atualização2\",\r\n\"usuario_produto\" : \"\",\r\n\"descricao_produto\" : \"descricao-teste\",\r\n\"categoria_produto\" : \"1\",\r\n\"tipo_produto\" : \"2\",\r\n\"membros_produto\" : \"membro-teste\",\r\n\"url_membro_produto\" : \"url_membro-teste\",\r\n\"link_rastreio_produto\" : \"link-teste\",\r\n\"tipo_cobranca_produto\" : \"2\",\r\n\"valor_produto\" : \"37.00\",\r\n\"email_suporte_produto\" : \"email-teste\",\r\n\"whatsapp_checkout\" : \"whatsapp-teste\",\r\n\"status_produto\" : \"1\",\r\n\"frete_fixo_produto\" : \"14,15\",\r\n\"pagina_venda\" : \"pagina-teste\",\r\n\"url_midias_produto\" : \"url-teste\",\r\n\"foto_produto\" : \"teste-foto\",\t\r\n\"garantia_produto\" : \"teste-garantia\",\r\n\"disponivel\" : \"teste-disponivel\",\r\n\"documentos\" : \"teste-documento\",\r\n\"descricao_atendente\" : \"teste-descricao\",\r\n\"abrir_atendimento\" : \"1\",\r\n\"atendente_aprovacao\" : \"1\",\r\n\"visualizacao\" : \"1\",\r\n\"tipo_comissao\" : \"1\",\r\n\"comissao_atendente\" : \"15.2\",\r\n\"tipo_atribuicao\" : \"1\",\r\n\"usuario_ultima_alteracao\" : \"2021-02-15 08: 54: 49\",\r\n\"data_criacao\" : \"2021-02-15 08: 54: 49\",\r\n\"data_atualizacao\" : \"2021-02-15 08: 54: 49\",\r\n\r\n\"nome_produtor\" : \"Pedro Henrique da Silva\",\r\n\"telefone_produtor\" : \"\",\r\n\"email_produtor\" : \"pedrohenriquedasilva100@gmail.com\",\r\n\"cpf_cnpj_produtor\" : \"06100056690\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/televendas/produtos/postback",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"televendas",
+						"produtos",
+						"postback"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

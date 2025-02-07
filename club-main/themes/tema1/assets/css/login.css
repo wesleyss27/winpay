@@ -1,0 +1,179 @@
+
+/*login*/
+:root {
+    --input-padding-x: 1.5rem;
+    --input-padding-y: 0.75rem;
+  }
+  .corpo{
+    width:40%;
+    margin:auto;
+    min-width:500px;
+    max-width:2000px
+  }
+    
+  .login,
+  .image {
+    min-height: 100vh;
+  }
+  
+  .bg-image {
+    background-image: url(../imgs/bg6.png);
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .login-heading {
+    font-weight: 300;
+  
+  }
+
+  .logo {
+    display: block;
+    margin-right: auto;
+    
+  }
+  
+  .btn-login {
+  padding: 13px 20px 12px;
+  background: #3aaa3a;
+  background-image: -webkit-linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
+  background-image: -o-linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
+  background-image: -moz-linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
+  background-image: linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
+  background-size: 210% 210%;
+  background-position: top right;
+  background-color: #3aaa3a;
+  transition: all 0.15s ease;
+  box-shadow: none;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #fff;
+  margin-bottom: 24px; 
+  max-width: 400px;
+  }
+  .login-card form {
+    max-width: 326px; }
+    
+    .login-card.form-control:focus {
+      border-color: #00ccff;
+      background-color: transparent;
+      box-shadow: none;
+    }
+    .login-card .form-control::-webkit-input-placeholder {
+      color: #919aa3; }
+    .login-card .form-control::-moz-placeholder {
+      color: #919aa3; }
+    .login-card .form-control:-ms-input-placeholder {
+      color: #919aa3; }
+    .login-card .form-control::-ms-input-placeholder {
+      color: #919aa3; }
+    .login-card .form-control::placeholder {
+      color: #919aa3; 
+    }
+  .form-label-group {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  
+  .form-label-group>input,
+  .form-label-group>select,
+  .form-label-group>label {
+    padding: var(--input-padding-y) var(--input-padding-x);
+    height: auto;
+    border: 1px solid #3aaa3b;
+    padding: 15px 25px;
+    max-height: 47px;
+    font-size: 13px;
+    line-height: 15;
+    font-weight: normal; 
+  }
+  
+  .form-label-group>label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: 0;
+    /* Override default `<label>` margin */
+    line-height: 1.5;
+    color: #495057;
+    cursor: text;
+    /* Match the input under the label */
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    transition: all .1s ease-in-out;
+
+  }
+  
+  .form-label-group::-webkit-input-placeholder {
+    color: transparent;
+    
+  }
+  
+  .form-label-group:-ms-input-placeholder {
+    color: transparent;
+  }
+  
+  .form-label-group::-ms-input-placeholder {
+    color: transparent;
+  }
+  
+  .form-label-group::-moz-placeholder {
+    color: transparent;
+  }
+  
+  .form-label-group::placeholder {
+    color: transparent;
+  }
+  
+  .input-group input:not(:placeholder-shown) {
+    padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
+    padding-bottom: calc(var(--input-padding-y) / 3);
+
+  }
+  
+  .form-label-group:not(:placeholder-shown)~label {
+    padding-top: calc(var(--input-padding-y) / 3);
+    padding-bottom: calc(var(--input-padding-y) / 3);
+    font-size: 12px;
+    color: #777;
+  }
+    /* Fallback for Edge
+  -------------------------------------------------- */
+  
+  @supports (-ms-ime-align: auto) {
+    .form-label-group >label {
+      display: none;
+    }
+    .form-label-group input::-ms-input-placeholder {
+      color: #777;
+    }
+  }
+  
+  /* Fallback for IE
+  -------------------------------------------------- */
+  
+  @media all and (-ms-high-contrast: none),
+  (-ms-high-contrast: active) {
+    .form-label-group >label {
+      display: none;
+    }
+    .form-label-group input:-ms-input-placeholder {
+      color: #777;
+    }
+  }
+    /* Fallback for IE
+  -------------------------------------------------- */
+  
+  @media (min-width: 1400px){
+    .corpo{
+      width:60%;
+      margin:auto;
+      min-width:600px;
+      max-width:2000px
+    }
+  }

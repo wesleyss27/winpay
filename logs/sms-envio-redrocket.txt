@@ -1,0 +1,2793 @@
+{
+ "data": "04/11/2024 21:36:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-04 21:36:41" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 11:56:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 11:56:45" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:05:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:05:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:09:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:09:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:14:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:14:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:18:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:18:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:23:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:23:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:23:24",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:23:24" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:23:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:23:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:27:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:27:44" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:32:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:32:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:36:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:36:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:41:16",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:41:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 12:45:49",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 12:45:49" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 13:09:30",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 13:09:30" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 13:15:26",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 13:15:26" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 14:37:27",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 14:37:27" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 14:41:57",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 14:41:57" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 14:49:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 14:49:28" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:13:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:13:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:17:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:17:41" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:35:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:35:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:45:51",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:45:51" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:50:23",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:50:23" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:55:02",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:55:02" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 20:59:32",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 20:59:32" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 21:01:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 21:01:41" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 21:04:50",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 21:04:50" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 21:15:22",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 21:15:22" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 21:20:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 21:20:45" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:28:06",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:28:06" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:32:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:32:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:37:10",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:37:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:41:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:41:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:43:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:43:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:48:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:48:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:53:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:53:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/11/2024 23:56:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-07 23:56:05" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:00:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:00:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:20:16",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:20:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:22:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:22:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:39:27",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:39:27" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:44:00",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:44:00" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:48:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:48:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 00:53:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 00:53:06" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:15:16",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:15:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:19:51",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:19:51" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:23:59",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:23:59" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:24:02",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:24:02" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:26:16",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:26:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:29:20",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:29:20" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:29:22",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:29:22" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:29:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:29:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:30:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:30:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:30:56",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:30:56" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:32:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:32:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:35:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:35:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:37:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:37:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:38:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:38:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:38:12",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:38:12" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:38:59",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:38:59" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:39:01",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:39:02" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:42:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:42:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:42:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:42:44" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:43:08",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:43:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:43:10",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:43:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:43:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:43:28" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:43:30",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:43:30" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:43:50",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:43:50" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:43:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:43:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:45:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:45:45" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:45:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:45:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:46:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:46:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:46:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:46:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:47:25",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:47:25" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:47:27",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:47:27" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:47:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:47:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:47:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:47:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:48:25",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:48:25" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:48:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:48:28" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:49:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:49:05" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:49:07",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:49:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:49:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:49:29" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:49:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:49:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:49:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:49:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:49:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:49:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:51:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:51:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:51:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:51:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:52:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:52:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:52:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:52:15" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:52:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:52:44" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:52:46",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:52:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:53:03",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:53:03" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:53:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:53:06" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:53:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:53:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:53:24",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:53:24" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:54:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:54:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:54:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:54:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:58:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:58:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 12:58:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 12:58:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:00:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:00:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:00:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:00:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:00:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:00:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:00:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:00:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:01:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:01:18" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:01:20",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:01:20" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:01:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:01:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:01:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:01:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:01:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:01:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:01:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:01:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:02:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:02:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:02:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:02:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:02:33",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:02:33" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:02:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:02:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:03:51",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:03:51" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:03:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:03:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:04:08",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:04:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:04:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:04:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:05:12",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:05:12" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:05:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:05:15" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:05:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:05:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:05:50",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:05:50" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:06:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:06:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:07:00",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:07:00" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:07:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:07:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:07:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:07:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:10:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:10:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:10:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:10:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:12:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:12:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:12:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:12:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:13:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:13:15" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:13:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:13:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:13:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:13:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:13:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:13:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:15:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:15:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:15:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:15:18" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:15:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:15:41" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:16:32",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:16:32" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:16:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:16:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:17:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:17:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:17:24",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:17:24" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:18:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:18:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:18:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:18:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:18:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:18:28" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:18:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:18:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:19:26",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:19:26" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:19:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:19:29" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:20:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:20:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:20:19",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:20:19" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:20:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:20:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:20:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:20:45" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:21:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:21:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:21:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:21:18" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:21:33",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:21:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:21:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:21:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:21:56",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:21:56" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:28:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:28:41" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:28:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:28:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:30:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:30:06" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:30:08",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:30:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:30:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:30:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:30:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:30:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:33:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:33:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:33:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:33:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:38:04",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:38:04" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:38:07",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:38:07" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:38:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:38:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:38:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:38:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:39:00",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:39:01" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:39:03",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:39:03" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:39:46",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:39:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:39:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:39:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:40:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:40:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:40:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:40:41" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:47:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:47:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:47:41",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:47:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:52:19",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:52:19" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:52:22",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:52:22" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:59:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:59:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 13:59:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 13:59:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 14:05:07",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 14:05:07" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 14:05:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 14:05:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 14:09:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 14:09:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 14:09:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 14:09:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 14:13:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 14:13:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 14:13:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 14:13:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:12:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:12:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:15:22",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:15:23" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:16:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:16:15" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:17:20",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:17:20" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:17:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:17:45" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:18:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:18:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:18:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:18:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:18:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:18:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:19:29",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:19:29" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:19:32",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:19:33" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:20:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:20:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:20:12",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:20:12" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:21:23",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:21:23" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:25:26",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:25:26" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:29:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:29:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:51:32",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:51:32" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:51:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:51:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:51:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:51:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:53:46",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:53:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:57:27",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:57:27" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 15:59:25",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 15:59:26" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 16:05:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 16:05:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 16:08:32",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 16:08:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 16:08:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 16:08:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 16:08:56",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 16:08:56" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 16:09:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 16:09:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 20:46:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 20:46:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 20:46:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 20:46:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 20:49:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 20:49:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 20:49:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 20:49:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 20:52:56",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 20:52:56" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "08/11/2024 20:53:00",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-08 20:53:00" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "10/11/2024 19:55:01",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-10 19:55:01" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "10/11/2024 19:55:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-10 19:55:05" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "10/11/2024 20:00:49",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-10 20:00:49" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "10/11/2024 20:00:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-10 20:00:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 16:57:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 16:57:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 16:57:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 16:57:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:09:22",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:09:22" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:09:24",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:09:25" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:17:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:17:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:17:33",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:17:33" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:24:04",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:24:03" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:24:06",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:24:06" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:24:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:24:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:24:45",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:24:45" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:25:10",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:25:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:25:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:25:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:26:29",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:26:29" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:26:32",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:26:32" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:27:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:27:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:27:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:27:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:28:07",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:28:07" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:28:10",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:28:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:29:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:29:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:29:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:29:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:31:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:31:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:31:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:31:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:33:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:33:47" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:33:50",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:33:50" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:34:08",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:34:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:34:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:34:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:35:51",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:35:50" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:35:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:35:57" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:36:29",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:36:29" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:36:33",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:36:33" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:38:14",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:38:14" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:38:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:38:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:39:57",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:39:57" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:40:01",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:40:01" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:46:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:46:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:46:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:46:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:49:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:49:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:49:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:49:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:51:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:51:47" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:51:51",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:51:51" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:52:00",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:52:00" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:52:04",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:52:04" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:52:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:52:20" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:52:24",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:52:24" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:54:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:54:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "11/11/2024 17:55:52",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-11 17:55:52" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "12/11/2024 20:53:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-12 20:53:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "12/11/2024 20:54:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-12 20:54:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "15/11/2024 23:23:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-15 23:23:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "15/11/2024 23:24:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-15 23:24:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:03:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:03:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:30:04",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:30:04" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:30:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:30:47" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:31:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:31:18" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:31:50",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:31:51" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:32:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:32:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:33:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:33:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:34:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:34:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:38:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:38:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:41:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:41:44" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:42:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:42:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:42:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:42:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:43:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:43:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:45:08",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:45:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:46:46",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:46:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:50:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:50:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:51:30",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:51:30" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:52:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:52:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:52:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:52:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:56:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:56:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 00:57:30",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 00:57:30" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:00:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:00:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:06:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:06:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:07:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:07:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:08:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:08:43" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:10:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:10:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:11:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:11:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:14:19",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:14:19" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:14:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:14:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:21:08",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:21:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "16/11/2024 01:21:23",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2024-11-16 01:21:23" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 21:59:10",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 21:59:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:04:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:04:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:20:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:20:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:26:57",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:26:57" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:30:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:30:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:34:02",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:34:02" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:35:59",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:35:59" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:38:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:38:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:39:19",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:39:18" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:42:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:42:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:43:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:43:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:45:07",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:45:07" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:50:53",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:50:53" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:51:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:51:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:52:43",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:52:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:52:59",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:52:59" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 22:54:02",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 22:54:02" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:01:24",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:01:24" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:02:10",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:02:10" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:02:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:02:28" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:03:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:03:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:04:12",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:04:12" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:04:28",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:04:28" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:07:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:07:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:08:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:08:44" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:09:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:09:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:10:16",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:10:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:14:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:14:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:15:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:15:05" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:16:46",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:16:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:19:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:19:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:20:16",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:20:16" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:21:09",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:21:09" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:21:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:21:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:25:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:25:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:25:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:25:47" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:30:54",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:30:54" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:31:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:31:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:32:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:32:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:33:29",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:33:29" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:33:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:33:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:34:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:34:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:40:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:40:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:41:33",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:41:33" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:42:57",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:42:57" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:43:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:43:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:44:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:44:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:45:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:45:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:46:36",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:46:36" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:47:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:47:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:48:58",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:48:58" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:49:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:49:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:50:44",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:50:44" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:51:27",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:51:27" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:55:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:55:15" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:58:46",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:58:46" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "04/01/2025 23:59:49",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-04 23:59:49" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:00:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:00:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:00:51",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:00:51" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:06:35",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:06:35" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:09:39",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:09:39" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:12:48",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:12:48" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:20:00",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:20:00" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:24:56",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:24:56" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 00:29:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 00:29:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 17:28:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 17:28:11" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 17:29:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 17:29:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 17:32:11",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 17:32:12" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 17:35:42",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 17:35:42" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:16:07",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:16:08" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:18:03",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:18:03" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:18:59",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:18:59" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:23:26",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:23:26" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:23:38",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:23:38" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:25:49",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:25:49" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:29:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:29:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:36:13",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:36:13" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:37:33",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:37:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:39:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:39:47" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:41:37",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:41:37" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:43:49",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:43:50" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:44:47",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:44:47" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:48:15",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:48:15" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "05/01/2025 19:50:30",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-01-05 19:50:30" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 19:49:20",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 19:49:20" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:04:56",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:04:56" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:09:17",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:09:17" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:11:18",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:11:18" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:19:31",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:19:31" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:22:55",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:22:55" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:34:40",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:34:40" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:43:05",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:43:05" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:51:01",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:51:00" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 21:57:21",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 21:57:21" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "03/02/2025 22:06:34",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-03 22:06:34" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+
+{
+ "data": "07/02/2025 16:27:22",
+ "envio_sms": "{ "data": {   "success": false,   "date": "2025-02-07 16:27:22" }, "errors": {   "error": true,   "description": "SEM_SALDO" }}",
+}
+
+*************************************************************
+

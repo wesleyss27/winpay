@@ -1,0 +1,443 @@
+{
+	"info": {
+		"_postman_id": "83a46aa6-0cf1-439d-a652-1c4305c792da",
+		"name": "PagarMe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cartão de crédito",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "pk_test_mawRLoBFoziK1jqA",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"amount\": 19738,\r\n            \"description\": \"produto teste\",\r\n            \"quantity\": 1,\r\n            \"code\": \"33\"\r\n        }\r\n    ],\r\n    \"customer\": {\r\n        \"name\": \"Francisco Monteiro\",\r\n        \"email\": \"fhamonteiro@hotmail.com\",\r\n        \"type\": \"individual\",\r\n        \"phones\": {\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"34\",\r\n                \"number\": \"999145481\"\r\n            }\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"recipient_name\": \"Francisco Monteiro\",\r\n        \"description\": \"produto teste\",\r\n        \"recipient_phone\": \"999145481\",\r\n        \"address\": {\r\n            \"line_1\": \"50, Rua Sabará, Nova Vila Bretas\",\r\n            \"zip_code\": \"35051420\",\r\n            \"city\": \"Governador Valadares\",\r\n            \"state\": \"MG\",\r\n            \"country\": \"BR\"\r\n        }\r\n    },\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"credit_card\",\r\n            \"credit_card\": {\r\n                \"recurrence\": false,\r\n                \"installments\": 12,\r\n                \"statement_descriptor\": \"loja teste 2\",\r\n                \"card\": {\r\n                    \"number\": \"4556591804713558\",\r\n                    \"holder_name\": \"Francisco Monteiro\",\r\n                    \"exp_month\": \"01\",\r\n                    \"exp_year\": \"23\",\r\n                    \"cvv\": \"123\",\r\n                    \"billing_address\": {\r\n                        \"line_1\": \"50, Rua Sabará, Nova Vila Bretas\",\r\n                        \"zip_code\": \"35051420\",\r\n                        \"city\": \"Governador Valadares\",\r\n                        \"state\": \"MG\",\r\n                        \"country\": \"BR\"\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/orders",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Pagamento",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "pk_test_mawRLoBFoziK1jqA",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/charges/ch_4b82V0mhosNoy59d",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"charges",
+						"ch_4b82V0mhosNoy59d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PIX",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"amount\": 100000,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": \"12345\"\r\n        }\r\n    ],\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"email\": \"Tony@Avangers.com\",\r\n        \"document\": \"06100056690\",\r\n        \"type\": \"individual\",\r\n        \"phones\": {\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"34\",\r\n                \"number\": \"99145481\"\r\n            }\r\n        }\r\n    },\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"Pix\",\r\n            \"Pix\": {\r\n                \"expires_in\": \"52134613\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/orders",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Boleto",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "pk_test_mawRLoBFoziK1jqA",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"amount\": 100000,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": \"12345\"\r\n        }\r\n    ],\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"email\": \"Tony@Avangers.com\",\r\n        \"document\": \"06100056690\",\r\n        \"type\": \"individual\",\r\n        \"phones\": {\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"34\",\r\n                \"number\": \"99145481\"\r\n            }\r\n        }\r\n    },\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"boleto\",\r\n            \"boleto\": {\r\n                \"instructions\": \"Pagar até o vencimento\",\r\n                \"due_at\": \"2022-09-20T00:00:00Z\",\r\n                \"document_number\": \"123\",\r\n                \"type\": \"DM\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/orders",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "pk_test_mawRLoBFoziK1jqA",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"amount\": 100000,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": \"12345\"\r\n        }\r\n    ],\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"email\": \"Tony@Avangers.com\",\r\n        \"document\": \"06100056690\",\r\n        \"type\": \"individual\",\r\n        \"phones\": {\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"34\",\r\n                \"number\": \"99145481\"\r\n            }\r\n        }\r\n    },\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"boleto\",\r\n            \"boleto\": {\r\n                \"instructions\": \"Pagar até o vencimento\",\r\n                \"due_at\": \"2022-09-20T00:00:00Z\",\r\n                \"document_number\": \"123\",\r\n                \"type\": \"DM\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/hooks/hook_id/retry",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"hooks",
+						"hook_id",
+						"retry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook Copy",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "pk_test_mawRLoBFoziK1jqA",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"amount\": 100000,\r\n            \"description\": \"Chaveiro do Tesseract\",\r\n            \"quantity\": 1,\r\n            \"code\": \"12345\"\r\n        }\r\n    ],\r\n    \"customer\": {\r\n        \"name\": \"Tony Stark\",\r\n        \"email\": \"Tony@Avangers.com\",\r\n        \"document\": \"06100056690\",\r\n        \"type\": \"individual\",\r\n        \"phones\": {\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"34\",\r\n                \"number\": \"99145481\"\r\n            }\r\n        }\r\n    },\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"boleto\",\r\n            \"boleto\": {\r\n                \"instructions\": \"Pagar até o vencimento\",\r\n                \"due_at\": \"2022-09-20T00:00:00Z\",\r\n                \"document_number\": \"123\",\r\n                \"type\": \"DM\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/hooks/hook_id/retry",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"hooks",
+						"hook_id",
+						"retry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Boleto Copy",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "pk_test_mawRLoBFoziK1jqA",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_EgdjLQ1Tv2cg0yV6",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"amount\": 18276,\r\n            \"description\": \"produto teste\",\r\n            \"quantity\": 1,\r\n            \"code\": \"33\"\r\n        }\r\n    ],\r\n    \"customer\": {\r\n        \"name\": \"Francisco Monteiro\",\r\n        \"email\": \"fhamonteiro@hotmail.com\",\r\n        \"document\": \"06100056690\",\r\n        \"type\": \"individual\",\r\n        \"phones\": {\r\n            \"mobile_phone\": {\r\n                \"country_code\": \"55\",\r\n                \"area_code\": \"34\",\r\n                \"number\": \"999145481\"\r\n            }\r\n        }\r\n    },\r\n    \"payments\": [\r\n        {\r\n            \"payment_method\": \"boleto\",\r\n            \"boleto\": {\r\n                \"instructions\": \"Pagar até o vencimento\",\r\n                \"due_at\": \"2022-01-24\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/orders",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancelar cobrança",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "sk_test_tra6ezsW3BtPPXQa",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.pagar.me/core/v5/charges/ch_WXwrZ8TnaSZ30mN4/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"pagar",
+						"me"
+					],
+					"path": [
+						"core",
+						"v5",
+						"charges",
+						"ch_WXwrZ8TnaSZ30mN4",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

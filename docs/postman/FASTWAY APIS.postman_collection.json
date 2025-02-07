@@ -1,0 +1,2354 @@
+{
+	"info": {
+		"_postman_id": "61c7569d-25c9-4e56-937c-5728a7db9780",
+		"name": "FASTWAY APIS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TOOLBAR",
+			"item": [
+				{
+					"name": "ATUALIZA CHAMADA",
+					"item": [
+						{
+							"name": "Atualiza Chamada",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/toolbar/atualiza_info_chamada.php?cpf=12345678900&chave=ABC123&nome=Joao Carlos&fone=119446588712&id=425031&livre=prefre pagar em 5x",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"toolbar",
+										"atualiza_info_chamada.php"
+									],
+									"query": [
+										{
+											"key": "cpf",
+											"value": "12345678900"
+										},
+										{
+											"key": "chave",
+											"value": "ABC123"
+										},
+										{
+											"key": "nome",
+											"value": "Joao Carlos"
+										},
+										{
+											"key": "fone",
+											"value": "119446588712"
+										},
+										{
+											"key": "id",
+											"value": "425031"
+										},
+										{
+											"key": "livre",
+											"value": "prefre pagar em 5x"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ATUALIZAR INFO CLIENTE",
+					"item": [
+						{
+							"name": "Atualiza Info Cliente",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://192.168.2.121/api/toolbar/atualizar_info_cliente.php?cpf=12345678900&chave=ABC123&nome=Joao Carlos&operador=vinicius&senha=1234567",
+									"protocol": "http",
+									"host": [
+										"192",
+										"168",
+										"2",
+										"121"
+									],
+									"path": [
+										"api",
+										"toolbar",
+										"atualizar_info_cliente.php"
+									],
+									"query": [
+										{
+											"key": "cpf",
+											"value": "12345678900"
+										},
+										{
+											"key": "chave",
+											"value": "ABC123"
+										},
+										{
+											"key": "nome",
+											"value": "Joao Carlos"
+										},
+										{
+											"key": "operador",
+											"value": "vinicius"
+										},
+										{
+											"key": "senha",
+											"value": "1234567"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=LOGIN&operador=joao&senha=1234567&ramal=5000",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "LOGIN",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Login do operador que irá se autenticar no sistema. Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Senha do operador que irá se autenticar no sistema. Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Ramal do operador. Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modo Manual",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=MODO MANUAL&operador=joao&senha=1234567&ramal=5000",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "MODO MANUAL",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Discagem Manual",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=DISCAGEM MANUAL&operador=vinicius&senha=1234567&ramal=5000&ctt_chave=AE0XF&ctt_nome=VINICIUS IANNI&ctt_fone=11999998888",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "DISCAGEM MANUAL",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "vinicius",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ctt_chave",
+									"value": "AE0XF",
+									"description": "Parâmetro Opcional"
+								},
+								{
+									"key": "ctt_nome",
+									"value": "VINICIUS IANNI",
+									"description": "Parâmetro Opcional"
+								},
+								{
+									"key": "ctt_fone",
+									"value": "11999998888",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancela Discagem Manual",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=CANCELA DISCAGEM MANUAL&operador=joao&senha=1234567&ramal=5000&ctt_chave=AE0XF&ctt_nome=VINICIUS IANNI&ctt_fone=11999998888",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "CANCELA DISCAGEM MANUAL",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ctt_chave",
+									"value": "AE0XF"
+								},
+								{
+									"key": "ctt_nome",
+									"value": "VINICIUS IANNI"
+								},
+								{
+									"key": "ctt_fone",
+									"value": "11999998888"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encerrar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=ENCERRAR&operador=joao&senha=1234567&subcomando=SEM_INTERESSE",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "ENCERRAR",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "subcomando",
+									"value": "SEM_INTERESSE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Encerrar com Ultimo Atendimento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=ENCERRAR&operador=joao&senha=1234567&subcomando=SEM_INTERESSE&ultimo_atendimento=S",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "ENCERRAR",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "subcomando",
+									"value": "SEM_INTERESSE"
+								},
+								{
+									"key": "ultimo_atendimento",
+									"value": "S"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agendar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=ENCERRAR&operador=joao&senha=1234567&subcomando=AGENDA&agenda_fone=11944658871&agenda_hora=11:51&agenda_data=2018-11-22",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "ENCERRAR",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "subcomando",
+									"value": "AGENDA"
+								},
+								{
+									"key": "agenda_fone",
+									"value": "11944658871"
+								},
+								{
+									"key": "agenda_hora",
+									"value": "11:51"
+								},
+								{
+									"key": "agenda_data",
+									"value": "2018-11-22"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finalizar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=FINALIZADO&operador=joao&senha=1234567",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "FINALIZADO",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pausa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=PAUSA&operador=joao&senha=1234567&subcomando=PAUSA_LANCHE",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "PAUSA",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "subcomando",
+									"value": "PAUSA_LANCHE",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fim Pausa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=FIM PAUSA&operador=joao&senha=1234567",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "FIM PAUSA",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modo Discador",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=MODO DISCADOR&operador=joao&senha=1234567&ramal=5000",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "MODO DISCADOR",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sair",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=SAIR&operador=joao&senha=1234567&ramal=5000",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "SAIR",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trocar Campanha",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=TROCAR CAMPANHA&operador=joao&senha=123456&ramal=5000&campanha_atual_id=4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "TROCAR CAMPANHA",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "123456",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ramal",
+									"value": "5000",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "campanha_atual_id",
+									"value": "4",
+									"description": "Id da campanha para qual será feita a troca. Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transferir Ramal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=TRANSFERIR_RAMAL&operador=joao&senha=1234567&transfere_ramal=1560",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "TRANSFERIR_RAMAL",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "transfere_ramal",
+									"value": "1560",
+									"description": "Ramal para onde será transferida a ligação Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=PING&operador=joao&senha=1234567",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "PING",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DTMF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1/api/toolbar/index.php?comando=DTMF&operador=joao&senha=1234567&ctt_fone=7",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"toolbar",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "comando",
+									"value": "DTMF",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "operador",
+									"value": "joao",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "senha",
+									"value": "1234567",
+									"description": "Parâmetro Obrigatório"
+								},
+								{
+									"key": "ctt_fone",
+									"value": "7",
+									"description": "Parâmetro Obrigatório"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MAILING UP",
+			"item": [
+				{
+					"name": "MailingUp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "login",
+									"value": "usuario",
+									"type": "text"
+								},
+								{
+									"key": "senha",
+									"value": "senha",
+									"type": "text"
+								},
+								{
+									"key": "CampanhaId",
+									"value": "365",
+									"type": "text"
+								},
+								{
+									"key": "uploading",
+									"value": "42",
+									"type": "text"
+								},
+								{
+									"key": "auto_ddd",
+									"value": "off",
+									"type": "text"
+								},
+								{
+									"key": "ddd",
+									"value": "21",
+									"type": "text"
+								},
+								{
+									"key": "mailing_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "data_inicio",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "arquivo",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1/api/mailingup/index.php",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"mailingup",
+								"index.php"
+							]
+						},
+						"description": "Mailing_up"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RELATORIO",
+			"item": [
+				{
+					"name": "Bilhetagem",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/relatorio/bilhetagem.php?servico=23&data_inicial=18/12/2018&data_final=30/12/2018&tronco=*",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"relatorio",
+								"bilhetagem.php"
+							],
+							"query": [
+								{
+									"key": "servico",
+									"value": "23",
+									"description": "Serviço que deseja consultar"
+								},
+								{
+									"key": "data_inicial",
+									"value": "18/12/2018",
+									"description": "Inicio do periodo a ser pesquisado"
+								},
+								{
+									"key": "data_final",
+									"value": "30/12/2018",
+									"description": "Fim do periodo a ser pesquisado"
+								},
+								{
+									"key": "tronco",
+									"value": "*",
+									"description": "Id do tronco a ser pesquisado - Parâmetro opcional"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Chamadas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/relatorio/chamadas.php?servico=23&data_inicial=18/12/2018&data_final=30/12/2018&tronco=*&chave=1234&formato=csv",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"relatorio",
+								"chamadas.php"
+							],
+							"query": [
+								{
+									"key": "servico",
+									"value": "23",
+									"description": "Serviço que deseja consultar"
+								},
+								{
+									"key": "data_inicial",
+									"value": "18/12/2018",
+									"description": "Inicio do periodo a ser pesquisado - pode-se informar apenas a data ou data e hora : 18/12/2018 10:00"
+								},
+								{
+									"key": "data_final",
+									"value": "30/12/2018",
+									"description": "Fim do periodo a ser pesquisado - pode-se informar apenas a data ou data e hora : 18/12/2018 10:10"
+								},
+								{
+									"key": "tronco",
+									"value": "*",
+									"description": "Id do tronco a ser pesquisado -  Parâmetro opcional"
+								},
+								{
+									"key": "chave",
+									"value": "1234",
+									"description": "Chave a ser utilizada como filtro na pesquisa - Parâmetro Opcional"
+								},
+								{
+									"key": "formato",
+									"value": "csv",
+									"description": "formato do resultado, csv ou json - Parâmetro Opcional"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eventos por Operador",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/relatorio/operador_evento.php?data_inicial=18/12/2018&data_final=31/12/2018&operador=&grupo=&listar_bloqueio=",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"relatorio",
+								"operador_evento.php"
+							],
+							"query": [
+								{
+									"key": "data_inicial",
+									"value": "18/12/2018",
+									"description": "Inicio do periodo a ser pesquisado"
+								},
+								{
+									"key": "data_final",
+									"value": "31/12/2018",
+									"description": "Fim do periodo a ser pesquisado"
+								},
+								{
+									"key": "operador",
+									"value": "",
+									"description": "Id do operador a ser pesquisado - Parâmetro opcional"
+								},
+								{
+									"key": "grupo",
+									"value": "",
+									"description": "Id do grupo de operadores a ser pesquisado - Parâmetro opcional"
+								},
+								{
+									"key": "listar_bloqueio",
+									"value": "",
+									"description": "Caso deseje listar somente os eventos de bloqueio, o valor deve ser on - Parâmetro opcional."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GRAVACAO",
+			"item": [
+				{
+					"name": "gravacao_id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/gravacao/index.php?id=1234",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"gravacao",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1234"
+								}
+							]
+						},
+						"description": "Retorna a gravação de acordo com o id informado"
+					},
+					"response": []
+				},
+				{
+					"name": "gravacao_chave",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/gravacao/index.php?chave=AXBCD",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"gravacao",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "chave",
+									"value": "AXBCD"
+								}
+							]
+						},
+						"description": "Retorna a gravação de acordo com a chave informada"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GRAVACAO_LOTE",
+			"item": [
+				{
+					"name": "Gravacao Lote",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/gravacao_lote/index.php?servicos=23&data_inicio=18/12/2018&data_fim=31/12/2018&formato=padrao&extensao=wav&cpf=&operador=&tipo_ligacao=",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"gravacao_lote",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "servicos",
+									"value": "23",
+									"description": "Id do serviço a ser pesquisado"
+								},
+								{
+									"key": "data_inicio",
+									"value": "18/12/2018",
+									"description": "Inicio do periodo a ser pesquisado"
+								},
+								{
+									"key": "data_fim",
+									"value": "31/12/2018",
+									"description": "Fim do periodo a ser pesquisado"
+								},
+								{
+									"key": "formato",
+									"value": "padrao",
+									"description": "Formato em que serão salvos os nomes dos aquivos. Formatos Suportados: Padrão, Caixa Economica Federal com Operador e Caixa Economica Federal sem Operador. Parâmetro Opcional"
+								},
+								{
+									"key": "extensao",
+									"value": "wav",
+									"description": "Formato de audio em que serão salvos os arquivos. Suportados WAV / MP3 Parâmetro Opcional"
+								},
+								{
+									"key": "cpf",
+									"value": "",
+									"description": "CPF a ser pesquisado. Parâmetro opcional"
+								},
+								{
+									"key": "operador",
+									"value": "",
+									"description": "Id do Operador a ser pesquisado. Parâmetro opcional"
+								},
+								{
+									"key": "tipo_ligacao",
+									"value": "",
+									"description": "Tipo da Ligação a ser pesquisado. Tipos Suportados:  P = PABX, D = DISCADOR, M = MANUAL, A = AGENDA, T = TRANSFERENCIA, C = CHAT, R = RECEPTIVO, U = URA ATIVA Parâmetro Opcional"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LIGACAO",
+			"item": [
+				{
+					"name": "Ligacao",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1/api/ligacao/index.php?login=joao&senha=123456&campanha_id=23&data=18/12/2018 00:00 - 31/12/2018 23:59&reexportar=&cpf=&resultado=",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"ligacao",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "login",
+									"value": "joao",
+									"description": "Login do operador autorizado a consultar o relatório"
+								},
+								{
+									"key": "senha",
+									"value": "123456",
+									"description": "Senha do operador autorizado a consultar o relatório"
+								},
+								{
+									"key": "campanha_id",
+									"value": "23",
+									"description": "Id da Campanha (Serviço) a ser consultada"
+								},
+								{
+									"key": "data",
+									"value": "18/12/2018 00:00 - 31/12/2018 23:59",
+									"description": "Periodo a ser pesquisado"
+								},
+								{
+									"key": "reexportar",
+									"value": "",
+									"description": "Parâmetro opcional, caso informado o valor deve ser on"
+								},
+								{
+									"key": "cpf",
+									"value": "",
+									"description": "Parametro opcional"
+								},
+								{
+									"key": "resultado",
+									"value": "",
+									"description": "Formato do resultado da consulta - csv, json ou xml"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FMI",
+			"item": [
+				{
+					"name": "Operador",
+					"item": [
+						{
+							"name": "Adicionar Operador",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/operador/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=AdicionarOperador&operador_logon=mariasilva&operador_nome=Maria da Silva&operador_senha=12345&operador_grupo_id=87&operador_perfil=O&operador_ligacao_manual=C&operador_email=mariasilva@gmail.com&operador_ramal=2002&operador_skill=3",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"operador",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para cadastrar novos operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para cadastrar novos operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "AdicionarOperador",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_logon",
+											"value": "mariasilva",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_nome",
+											"value": "Maria da Silva",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_senha",
+											"value": "12345",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_grupo_id",
+											"value": "87",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_perfil",
+											"value": "O",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_ligacao_manual",
+											"value": "C",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_email",
+											"value": "mariasilva@gmail.com",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_ramal",
+											"value": "2002",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_skill",
+											"value": "3",
+											"description": "Parâmetro Opcional"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alterar Operador",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/operador/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=AlterarOperador&operador_id=178&operador_logon=mariasilva&operador_nome=Maria Aparecida da Silva&operador_senha=12345&operador_grupo_id=87&operador_perfil=O&operador_ligacao_manual=C&operador_email=mariasilva@gmail.com&operador_ramal=2020&operador_skill=3",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"operador",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para alterar operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para alterar operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "AlterarOperador",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_id",
+											"value": "178",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_logon",
+											"value": "mariasilva",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_nome",
+											"value": "Maria Aparecida da Silva",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_senha",
+											"value": "12345",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_grupo_id",
+											"value": "87",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_perfil",
+											"value": "O",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_ligacao_manual",
+											"value": "C",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_email",
+											"value": "mariasilva@gmail.com",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_ramal",
+											"value": "2020",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_skill",
+											"value": "3",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remover Operador",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/operador/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=RemoverOperador&operador_id=177",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"operador",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para remover operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para remover operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "RemoverOperador",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_id",
+											"value": "177",
+											"description": "Id do operador que deseja excluir Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Todos Operadores",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/operador/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=ListarTodos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"operador",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para listar os operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para listar os operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "ListarTodos",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Operadores Logados",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/operador/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=ListarLogados&servico_id=107",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"operador",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para listar os operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para listar os operadores  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "ListarLogados",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "servico_id",
+											"value": "107",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Agendamento",
+					"item": [
+						{
+							"name": "Remover Agendamentos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/agendamento/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=Remover&servico_id=23&operador_id=10",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"agendamento",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para remover os agendamentos Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para remover os agendamentos  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "Remover",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "servico_id",
+											"value": "23",
+											"description": "Id do serviço que contém os agendamentos que deseja remover Parâmetro Obrigatório"
+										},
+										{
+											"key": "operador_id",
+											"value": "10",
+											"description": "Ido do operador que deseja remover os agendamentos Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Mailing",
+					"item": [
+						{
+							"name": "Finalizar",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/mailing/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=Finalizar&mailing_id=2707",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"mailing",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para finalizar o mailing as pausas  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para finalizar o mailing  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "Finalizar",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "mailing_id",
+											"value": "2707",
+											"description": "Id do mailing que será finalizado Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Pausar",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/mailing/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=Pausar&mailing_id=2707",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"mailing",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para pausar o mailing  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para pausar o mailing  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "Pausar",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "mailing_id",
+											"value": "2707",
+											"description": "Id do mailing que será pausado Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fim de Pausa",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/mailing/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=FimPausa&mailing_id=2707",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"mailing",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para encerrar a pausa do mailing  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para encerrar a pausa do mailing  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "FimPausa",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "mailing_id",
+											"value": "2707",
+											"description": "Id do mailing que sairá da pausa Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Validador",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/mailing/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=Validador&mailing_id=2733&validador_id=103",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"mailing",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para transferir o mailing para o validador Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para transferir o mailing para o validador  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "Validador",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "mailing_id",
+											"value": "2733",
+											"description": "Id do mailing que será transferido para o validador Parâmetro Obrigatório"
+										},
+										{
+											"key": "validador_id",
+											"value": "103",
+											"description": "Id do serviço que fará a validação do mailing Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar todos os Mailings",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/mailing/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=Listar",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"mailing",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para listar os mailings Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para listar os mailings Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "Listar",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Mailing",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/mailing/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=ListarMailing&mailing_id=3244",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"mailing",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522"
+										},
+										{
+											"key": "api_comando",
+											"value": "ListarMailing"
+										},
+										{
+											"key": "mailing_id",
+											"value": "3244"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Call",
+					"item": [
+						{
+							"name": "Detalhe da Call",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/call/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=Detalhe&call_id=123456",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"call",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para consultar o detalhe da call Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para consultar o detalhe da call Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "Detalhe",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "call_id",
+											"value": "123456",
+											"description": "Id da call Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Atualiza Informações da Call",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost/api/fmi/call/atualizaInfoChamada.php?api_logon=operadorsenior&api_senha=164522&call_id=46027&chave=abcdef&tabulacao=SEM INTERESSE&cpf=12345678900&nome=João",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"call",
+										"atualizaInfoChamada.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para consultar o detalhe da call Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para consultar o detalhe da call Parâmetro Obrigatório"
+										},
+										{
+											"key": "call_id",
+											"value": "46027",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "chave",
+											"value": "abcdef",
+											"description": "Parâmetro Opcional"
+										},
+										{
+											"key": "tabulacao",
+											"value": "SEM INTERESSE",
+											"description": "Parâmetro Opcional"
+										},
+										{
+											"key": "cpf",
+											"value": "12345678900",
+											"description": "Parâmetro Opcional"
+										},
+										{
+											"key": "nome",
+											"value": "João",
+											"description": "Parâmetro Opcional"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Pausa",
+					"item": [
+						{
+							"name": "Listar Pausas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/pausa/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=ListarPausas",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"pausa",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para listar as pausas  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para listar as pausas  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "ListarPausas",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Servico",
+					"item": [
+						{
+							"name": "Listar Serviços",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/servico/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=ListarServicos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"servico",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para listar os serviços  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para listar os serviços  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "ListarServicos",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Serviços Ativos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/servico/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=ListarAtivos",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"servico",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para listar os serviços  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para listar os serviços  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "ListarAtivos",
+											"description": "Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Iniciar um Serviço",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/servico/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=IniciarServico&servico_id=106",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"servico",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para iniciar serviço  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para iniciar serviço  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "IniciarServico",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "servico_id",
+											"value": "106",
+											"description": "Id do serviço que será iniciado Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Parar um Serviço",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1/api/fmi/servico/index.php?api_logon=operadorsenior&api_senha=164522&api_comando=PararServico&servico_id=106",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"fmi",
+										"servico",
+										"index.php"
+									],
+									"query": [
+										{
+											"key": "api_logon",
+											"value": "operadorsenior",
+											"description": "Logon do usuário com permissão para parar serviço  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_senha",
+											"value": "164522",
+											"description": "Senha do usuário com permissão para parar serviço  Parâmetro Obrigatório"
+										},
+										{
+											"key": "api_comando",
+											"value": "PararServico",
+											"description": "Parâmetro Obrigatório"
+										},
+										{
+											"key": "servico_id",
+											"value": "106",
+											"description": "Id do serviço que será parado Parâmetro Obrigatório"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "CALLBACK",
+			"item": [
+				{
+					"name": "callback",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://octapay.s1.fastdialer.com.br/api/callback?formato=json&campanha=165&nome=Joao&fone=34999145481&agendamento=2021-08-09 11:00&operador=&chave=abandono de carrinho&cpf=12345678900&obs=",
+							"protocol": "https",
+							"host": [
+								"octapay",
+								"s1",
+								"fastdialer",
+								"com",
+								"br"
+							],
+							"path": [
+								"api",
+								"callback"
+							],
+							"query": [
+								{
+									"key": "formato",
+									"value": "json"
+								},
+								{
+									"key": "campanha",
+									"value": "165"
+								},
+								{
+									"key": "nome",
+									"value": "Joao"
+								},
+								{
+									"key": "fone",
+									"value": "34999145481"
+								},
+								{
+									"key": "agendamento",
+									"value": "2021-08-09 11:00"
+								},
+								{
+									"key": "operador",
+									"value": ""
+								},
+								{
+									"key": "chave",
+									"value": "abandono de carrinho"
+								},
+								{
+									"key": "cpf",
+									"value": "12345678900"
+								},
+								{
+									"key": "obs",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

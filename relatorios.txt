@@ -1,0 +1,51 @@
+$i = 0;
+            $j = 0;
+            if($todasVendasProdutor){
+              foreach ($todasVendasProdutor as $vendasProdutor) {
+                $i++;
+
+                @$valorProdutor += $vendasProdutor->valor_liquido;
+                
+                if(
+                  $vendasProdutor->forma_pagamento == 2 && 
+                  ($vendasProdutor->status_transacao == 4 ||
+                  $vendasProdutor->status_transacao == 8)
+                )
+                  @$boletosPagos1++;
+
+                  if(
+                    $vendasProdutor->forma_pagamento == 1 && 
+                    ($vendasProdutor->status_transacao == 4 ||
+                    $vendasProdutor->status_transacao == 8)
+                  )
+                    @$cartoesPagos1++;
+              }
+            }
+
+            if($todasVendasAfiliado){
+              foreach ($todasVendasAfiliado as $vendasAfiliado) {
+                $j++;
+
+                @$valorAfiliado += $vendasAfiliado->valor_liquido;
+
+                if(
+                  $vendasAfiliado->forma_pagamento == 2 && 
+                  ($vendasAfiliado->status_transacao == 4 ||
+                  $vendasAfiliado->status_transacao == 8)
+                )
+                  @$boletosPagos2++;
+
+                if(
+                  $vendasAfiliado->forma_pagamento == 1 && 
+                  ($vendasAfiliado->status_transacao == 4 ||
+                  $vendasAfiliado->status_transacao == 8)
+                )
+                  @$cartoesPagos2++;
+              }
+            }
+
+            $total = $i + $j;
+            echo "total de vendas: $total";
+            echo " - valor de vendas: " . @$valorProdutor . " - " . @$valorAfiliado;
+            echo "<br>boletos: " . @$boletosPagos1 ." - ". @$boletosPagos2;
+            echo "<br>cartões: " . @$cartoesPagos1 ." - ". @$cartoesPagos2;

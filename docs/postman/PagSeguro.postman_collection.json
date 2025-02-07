@@ -1,0 +1,362 @@
+{
+	"info": {
+		"_postman_id": "f0a670bd-6f5d-4611-9d2f-e4521d503349",
+		"name": "PagSeguro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cartão de crédito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customer\": {\r\n        \"name\": \"Francisco Monteiro\",\r\n        \"email\": \"fhamonteiro@hotmail.com\",\r\n        \"phones\": [\r\n            {\r\n                \"country\": \"55\",\r\n                \"area\": \"34\",\r\n                \"number\": \"999145481\"\r\n            }\r\n        ]\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Produto teste 13\",\r\n            \"quantity\": 1,\r\n            \"unit_amount\": 6024\r\n        }\r\n    ],\r\n    \"qr_code\": {\r\n        \"amount\": {\r\n            \"value\": 6024\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"address\": {\r\n            \"street\": \"Rua Sabará\",\r\n            \"number\": \"50\",\r\n            \"locality\": \"Nova Vila Bretas\",\r\n            \"city\": \"Governador Valadares\",\r\n            \"region_code\": \"MG\",\r\n            \"country\": \"BRA\",\r\n            \"postal_code\": \"35051420\"\r\n        }\r\n    },\r\n    \"charges\": [\r\n        {\r\n            \"description\": \"loja teste\",\r\n            \"amount\": {\r\n                \"value\": 6024,\r\n                \"currency\": \"BRL\"\r\n            },\r\n            \"payment_method\": {\r\n                \"type\": \"CREDIT_CARD\",\r\n                \"installments\": 12,\r\n                \"capture\": true,\r\n                \"card\": {\r\n                    \"number\": \"5482239989434535\",\r\n                    \"exp_month\": \"01\",\r\n                    \"exp_year\": \"24\",\r\n                    \"security_code\": \"222\",\r\n                    \"holder\": {\r\n                        \"name\": \"Francisco Monteiro\",\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PIX",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"reference_id\": \"ex-00001\",\r\n    \"customer\": {\r\n        \"name\": \"Jose da Silva\",\r\n        \"email\": \"email@test.com\",\r\n        \"tax_id\": \"12345678909\",\r\n        \"phones\": [\r\n            {\r\n                \"country\": \"55\",\r\n                \"area\": \"11\",\r\n                \"number\": \"999999999\",\r\n                \"type\": \"MOBILE\"\r\n            }\r\n        ]\r\n    },\r\n    \"items\": [\r\n        {\r\n            \"reference_id\": \"referencia do item\",\r\n            \"name\": \"nome do item\",\r\n            \"quantity\": 1,\r\n            \"unit_amount\": 500\r\n        }\r\n    ],\r\n    \"qr_code\": {\r\n        \"amount\": {\r\n            \"value\": 500\r\n        }\r\n    },\r\n    \"shipping\": {\r\n        \"address\": {\r\n            \"street\": \"Avenida Brigadeiro Faria Lima\",\r\n            \"number\": \"1384\",\r\n            \"complement\": \"apto 12\",\r\n            \"locality\": \"Pinheiros\",\r\n            \"city\": \"São Paulo\",\r\n            \"region_code\": \"SP\",\r\n            \"country\": \"BRA\",\r\n            \"postal_code\": \"01452002\"\r\n        }\r\n    },\r\n    \"notification_urls\": [\r\n        \"https://meusite.com/notificacoes\"\r\n    ],\r\n    \"charges\": [\r\n        {\r\n            \"reference_id\": \"referencia do pagamento\",\r\n            \"description\": \"descricao do pagamento\",\r\n            \"amount\": {\r\n                \"value\": 500,\r\n                \"currency\": \"BRL\"\r\n            },\r\n            \"payment_method\": {\r\n                \"type\": \"CREDIT_CARD\",\r\n                \"installments\": 1,\r\n                \"capture\": true,\r\n                \"card\": {\r\n                    \"number\": \"4111111111111111\",\r\n                    \"exp_month\": \"12\",\r\n                    \"exp_year\": \"2026\",\r\n                    \"security_code\": \"123\",\r\n                    \"holder\": {\r\n                        \"name\": \"Jose da Silva\"\r\n                    },\r\n                    \"store\": false\r\n                }\r\n            },\r\n            \"notification_urls\": [\r\n                \"https://meusite.com/notificacoes\"\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Boleto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": {\r\n        \"value\": 5000,\r\n        \"currency\": \"BRL\"\r\n    },\r\n    \"payment_method\": {\r\n        \"type\": \"BOLETO\",\r\n        \"boleto\": {\r\n            \"due_date\": \"2021-12-12\",\r\n            \"instruction_lines\": {\r\n                \"line_1\": \"Pagamento processado via PagSeguro\"\r\n            },\r\n            \"holder\": {\r\n                \"name\": \"Francisco Monteiro\",\r\n                \"tax_id\": \"06100056690\",\r\n                \"email\": \"fhamonteiro@hotmail.com\",\r\n                \"address\": {\r\n                    \"country\": \"Brasil\",\r\n                    \"city\": \"Governador Valadares\",\r\n                    \"region\": \"MG\",\r\n                    \"region_code\": \"MG\",\r\n                    \"postal_code\": \"35051420\",\r\n                    \"street\": \"Rua Sabará\",\r\n                    \"number\": \"50\",\r\n                    \"locality\": \"Nova Vila Bretas\"\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/charges",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"charges"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pedido",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders/ORDE_09C206AC-A041-4A4E-95C6-C0D9367E30FA",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders",
+						"ORDE_09C206AC-A041-4A4E-95C6-C0D9367E30FA"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Pedido Cobrança",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders/ORDE_09C206AC-A041-4A4E-95C6-C0D9367E30FA",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders",
+						"ORDE_09C206AC-A041-4A4E-95C6-C0D9367E30FA"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Capturar Cobrança Cartao - Pix",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"charges\": [\r\n        {\r\n            \"reference_id\": \"referencia do pagamento\",\r\n            \"description\": \"descricao do pagamento\",\r\n            \"amount\": {\r\n                \"value\": 105000,\r\n                \"currency\": \"BRL\"\r\n            }\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders/ORDE_3C50523E-6B09-4378-B95F-B2DD448FC4C7/pay",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders",
+						"ORDE_3C50523E-6B09-4378-B95F-B2DD448FC4C7",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancelar - Estornar Cobrança",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\" : {\r\n        \"value\": 500\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/charges/CHAR_D1C3FF62-0354-41C0-8E53-6FED498DB420/cancel",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"charges",
+						"CHAR_D1C3FF62-0354-41C0-8E53-6FED498DB420",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancelar - Estornar Cobrança Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "749E4412AFE645D48C23CEF0B11C2733",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"charges\":{}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://sandbox.api.pagseguro.com/orders/ORDE_34E7948D-164E-4083-A837-85769D45C7D0/pay",
+					"protocol": "https",
+					"host": [
+						"sandbox",
+						"api",
+						"pagseguro",
+						"com"
+					],
+					"path": [
+						"orders",
+						"ORDE_34E7948D-164E-4083-A837-85769D45C7D0",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Teste processo webhook pagseguro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "notificationCode",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/octapay/checkout-transparente/pagseguro",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"octapay",
+						"checkout-transparente",
+						"pagseguro"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

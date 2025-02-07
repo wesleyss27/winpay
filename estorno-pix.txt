@@ -1,0 +1,163 @@
+'codigoLoja': 's504swwzatyx', <br>
+data: 2021-04-23 14:51:02<br>'s': '1', <br>'nsu': '454', <br>'orderId': '454', <br>'nit': 'c45bf07ee4c7f43e43577ef364034b327b001968b7aa105f401bb3500ef0b447', <br>'pedido': '454', <br>'codigoLoja': 's504swwzatyx', <br>
+data: 2021-04-23 16:35:04<br>'s': '1', 
+'nsu': '453', 
+'orderId': '453', 
+'nit': 'c45bf07ee4c7f43e11d1043c36c65ce2428fb40fff9775fa2139916e5b693b69', 
+'pedido': '453', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-04-26 09:10:20
+'s': '1', 
+'nsu': '452', 
+'orderId': '452', 
+'nit': '12e479dd36839230c412ca99d4d980017c3e7343729611437e45668c8d78da0a', 
+'pedido': '452', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-04-28 11:19:33
+'s': '1', 
+'nsu': '458', 
+'orderId': '458', 
+'nit': '7845af93e726d14e4862467d4c62f78844f84b2fa1eba2439adf1faf29451a1a', 
+'pedido': '458', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 10:53:49
+'s': '1', 
+'nsu': '1047', 
+'orderId': '1047', 
+'nit': '3e93ff771972e34345adf5f28ed017f2641255d20347f2c6234aa4e1cd9814cb', 
+'pedido': '1047', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 11:11:49
+'s': '1', 
+'nsu': '1046', 
+'orderId': '1046', 
+'nit': '3e93ff771972e343303cd150c79d20b288075e31d934b2702df491f6d429fe00', 
+'pedido': '1046', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 11:17:22
+'s': '1', 
+'nsu': '1046', 
+'orderId': '1046', 
+'nit': '3e93ff771972e3430a8bba31adedf7328be4d5c411588b12503cfa06373d7713', 
+'pedido': '1046', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 12:02:20
+'s': '1', 
+'nsu': '1045', 
+'orderId': '1045', 
+'nit': '3e93ff771972e343f3cb870c155e35e49af804979f8fd19adfd16263838b6a59', 
+'pedido': '1045', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 12:03:20
+'s': '1', 
+'nsu': '1045', 
+'orderId': '1045', 
+'nit': '3e93ff771972e3430465b80715d10c450f4396646931e71b6f184eb40cd718d0', 
+'pedido': '1045', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 15:50:44
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fa79665df8b87c7b72dcacacbb6be2bdebe554fc7c556416e2', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 15:53:09
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fa47b3e9a545c477eda1f6ef4b764b7e994d10615d917492c5', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 15:53:49
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fac855d5de11a441eeffaf805fdaf16e00c3f022fd96317c7a', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 15:57:55
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351faa8f689745640c722f07ed1e8a0d0388737b6d549e06c6dd2', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 16:00:08
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fa4d2f3258a4e8f2f4b03eb0f516dab4fc5638db21fb80b70d', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 16:00:31
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fa97b07f8f54fefa95ac13ff6a014ba4fb602ddac3875866e1', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 16:31:25
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fa39689e8eae7201bd5f6819d059a275e8662d013078d6a059', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 16:45:37
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351fae217dde91a1c676ef31b48a092ef63a7798592309582ad28', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 16:52:07
+'s': '1', 
+'nsu': '2841', 
+'orderId': '2841', 
+'nit': '4affadcfd0b351faeeef8b7cdc746a35ddae9ca047ef056f3064ca6a0703637d', 
+'pedido': '2841', 
+'codigoLoja': 'qy4epa8ynwaa', 
+'status-estorno': 'salvo', 
+
+data: 2021-09-13 17:04:19
+'s': '1', 
+'nsu': '1047', 
+'orderId': '1047', 
+'nit': '3e93ff771972e343a4a0690fdcfe030f374d9fcc583ecae35de7c7fc750575ee', 
+'pedido': '1047', 
+'codigoLoja': 's504swwzatyx', 
+'status-estorno': 'salvo', 
+

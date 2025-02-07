@@ -1,0 +1,35 @@
+version: "3"
+services:
+
+  php-apache:
+    image: misaelsilva777/php-apache-redrocket:1.1
+    container_name: php-apache-app
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
+      - ./php:/usr/local/etc/php
+      - ./.htpasswd:/etc/apache2/.htpasswd
+      - ~/.ssh/redrocket.pem:/usr/local/apache2/conf/seu_certificado.crt
+      - ~/.ssh/private-redrocket:/usr/local/apache2/conf/sua_chave.key  
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+    networks:
+      - mynetwork
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    ports:
+      - 8181:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=redrocket-app.ccpbwbd5xl62.sa-east-1.rds.amazonaws.com
+      - PMA_USER=admin
+      - PMA_PASSWORD=uaFe8U5rV6MBEeN
+    restart: always
+    networks:
+      - mynetwork
+    
+networks:
+  mynetwork:
+    driver: bridge
