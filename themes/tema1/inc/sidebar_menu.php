@@ -6,7 +6,7 @@
     background: #ddd !important;
   }
 </style>
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; top: 25px; background-color: #3c2f98; border-radius: 10px;">
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; top: 25px; background-color: #010101; border-radius: 10px;">
   <?php
 
   use Source\Models\Usuarios\Usuario;
@@ -17,10 +17,10 @@
   if ($section->getTipo() != 6) :
   ?>
     <a href="<?= url() ?>" class="brand-link" style="border:0">
-      <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo5.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
+      <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo-icon.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
     </a>
   <?php elseif ($section->getTipo() == 6) : ?>
-    <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo5.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
+    <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo-icon.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
   <?php endif ?>
 
   <div class="sidebar">
