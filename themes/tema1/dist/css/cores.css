@@ -29,7 +29,7 @@
 }
 
 .bg-vermelho-gradient {
-    background: linear-gradient(to right, #b73234, #e04e51, #b73234);
+    background: linear-gradient(135deg, rgb(255, 105, 180), rgb(155, 135, 245));
     color: #fff;
 }
 

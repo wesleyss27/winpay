@@ -19,305 +19,417 @@
 -->
 
 <div class="row">
-  <div class="col-md-4">
-    <div class="card l-bg-orange-dark">
-      <div class="card-statistic-3 p-4">
-        <div class="card-icon card-icon-large">
-          <i class="fas fa-dollar-sign" style="animation: flash 1.5s infinite;"></i>
-        </div>
-    
-        <h5>Total em conta</h5>
-       
-        <h3>R$ <?= formataNumero($valorTotal) ?></h3>
-        
-        <div class="row">
-          <div class="col-md-12">
-            <span>Soma do valor disponivel mais recebimentos</span>
-          </div>
-        </div>
-
+  <!-- Card Total em conta -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <i class="fas fa-piggy-bank card-icon"></i> 
+        <button class="toggle-visibility btn btn-sm" data-target="#totalValue">
+          <i class="fas fa-eye-slash"></i>
+        </button>
       </div>
+      <h5 class="mb-1">Total em conta</h5>
+      <h3 id="totalValue" class="hidden-value">R$ <?= formataNumero($valorTotal) ?></h3>
+      <small class="d-block">Soma do valor disponível + recebimentos</small>
     </div>
   </div>
 
-  <style>
-    @keyframes flash {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-  </style>
-
-  <div class="col-md-4">
-    <div class="card l-bg-green-dark">
-      <div class="card-statistic-3 p-4">
-        <div class="card-icon card-icon-large"><i class="fas fa-ticket-alt"></i></div>
-        
-        <h5>Disponível para saque</h5>
-  
-        <h3>R$ <?= formataNumero( ! empty( $saldoPagarme->available_amount ) ? $saldoPagarme->available_amount / 100 : 0 ) ?></h3>
-         
-        <div class="row">
-          <div class="col-md-12">
-            <span>Soma do valor disponivel mais recebimentos</span>
-          </div>
-
-        </div>
-       
-
+  <!-- Card Disponível para saque -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <i class="fas fa-coins card-icon"></i> 
+        <button class="toggle-visibility btn btn-sm" data-target="#disponivelValue">
+          <i class="fas fa-eye-slash"></i>
+        </button>
       </div>
+      <h5 class="mb-1">Disponível para saque</h5>
+      <h3 id="disponivelValue" class="hidden-value">
+        R$ <?= formataNumero( ! empty( $saldoPagarme->available_amount ) ? $saldoPagarme->available_amount / 100 : 0 ) ?>
+      </h3>
+      <small class="d-block">Valor disponível para saque</small>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card l-bg-blue-dark">
-      <div class="card-statistic-3 p-4">
-      <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
-
-        <h5>Total cancelados</h5>
-
-        <h3>R$ <?= formataNumero($valorCancelado) ?></h3>
-
-        <div class="row">
-
-          <div class="col-md-12">
-            <span>Soma do valor disponivel mais recebimentos</span>
-          </div>
-
-        </div>
+  <!-- Card Total cancelados -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <i class="fas fa-file-invoice-dollar card-icon"></i> 
+        <button class="toggle-visibility btn btn-sm" data-target="#canceladoValue">
+          <i class="fas fa-eye-slash"></i>
+        </button>
       </div>
+      <h5 class="mb-1">Total cancelados</h5>
+      <h3 id="canceladoValue" class="hidden-value">R$ <?= formataNumero($valorCancelado) ?></h3>
+      <small class="d-block">Valor total cancelado</small>
     </div>
   </div>
 </div>
+
+
+<!-- Estilos personalizados -->
+<style>
+  /* Estilização dos cards no estilo WinPay */
+  .winpay-card {
+    background: rgb(30, 36, 51); /* Fundo escuro para manter o estilo */
+    border-radius: 10px; /* Cantos levemente arredondados */
+    color: #ffffff; /* Fonte branca */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+    transition: all 0.2s ease-in-out;
+  }
+
+  .winpay-card:hover {
+    border-color: rgb(155, 135, 245);
+    transform: scale(1.02);
+  }
+
+  /* Ícones pequenos no canto superior esquerdo */
+  .card-icon {
+    font-size: 1.3rem;
+    color: #A0AEC0;
+  }
+
+  /* Títulos dos cards */
+  h5 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #A0AEC0;
+  }
+
+  /* Valor do card */
+  h3 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  /* Pequena legenda abaixo */
+  .text-muted {
+    color: #A0AEC0 !important;
+    font-size: 0.85rem;
+  }
+
+  /* Ocultação dos valores */
+  .hidden-value {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+  }
+
+  /* Estilização do botão de visibilidade */
+  .toggle-visibility {
+    background: none;
+    border: none;
+    color: #A0AEC0;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .toggle-visibility:hover {
+    color: #ffffff;
+  }
+</style>
+
+<!-- Script para alternar a visibilidade dos valores -->
+<script>
+  document.querySelectorAll('.toggle-visibility').forEach(function(button) {
+    button.addEventListener('click', function() {
+      const targetSelector = this.getAttribute('data-target');
+      const valueElement = document.querySelector(targetSelector);
+      if (valueElement.classList.contains('hidden-value')) {
+        valueElement.classList.remove('hidden-value');
+        this.innerHTML = '<i class="fas fa-eye"></i>';
+      } else {
+        valueElement.classList.add('hidden-value');
+        this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+      }
+    });
+  });
+</script>
 
 <!-- LINHA 2 -->
 <div class="row">
-  <div class="col-md-4">
-    <div class="card card-body">
-      <div class="row align-items-center justify-content-center">
-        <i class="fas fa-credit-card" style="font-size:30px; color:#009788"></i>
-
-        <div class="col text-right">
-          <h3>R$ <?= number_format(@$dados["valorCartaoPago"], 2, ",", ".") ?></h3>
-          <h5 class="text-c-blue mb-0">
-            <?php
-            @$analitico[2] = array("Vendas Cart&atilde;o", @$dados["cartoes"], @$dados["valorCartao"], $p)
-            ?><br>
-            <?php
-            if (@$dados["totalVendas"] > 0)
-              $p = @$dados["cartoes"] / @$dados["totalVendas"] * 100;
-            else
-              $p = "0";
-            echo number_format(@$p, 2, ",", ".");
-            ?>% - <span class="text-muted">Total Cartão</span></h5>
-        </div>
+  <!-- Card Vendas Cartão -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <i class="fas fa-credit-card card-icon"></i>
       </div>
-
-      <hr>
-      <div class="row align-items-center justify-content-center card-active">
-        <div class="col-6">
-          <h6 class="text-center m-b-10" style="color:#8BC24A"><span class="text-muted m-r-5">Aprovados: </span>
-            <?php
-            if (@$dados["cartoes"] > 0)
-              $p = @$dados["cartoesPagos"] / @$dados["cartoes"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>%</h6>
-          <div class="progress  mt-1" style="height: 8px;">
-            <div class="progress-bar l-bg-wss" role="progressbar" style="width:100%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+      <h5 class="mb-1">Vendas Cartão</h5>
+      <h3 class="modern-value">R$ <?= number_format(@$dados["valorCartaoPago"], 2, ",", ".") ?></h3>
+      <h6 class="modern-percent">
+        <?= number_format(@$p, 2, ",", ".") ?>% - <span class="text-muted">Total Cartão</span>
+      </h6>
+      <hr class="border-secondary my-2">
+      <div class="d-flex justify-content-between text-center">
+        <div class="progress-container">
+          <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
+          <div class="progress modern-progress">
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 245);"></div>
           </div>
         </div>
-        <div class="col-6">
-          <h6 class="text-center  m-b-10" style="color:red"><span class="text-muted m-r-5">Cancelados: </span>
-            <?php
-            if (@$dados["cartoes"] > 0)
-              $p = $dados["cartoesCancelados"] / @$dados["cartoes"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>%</h6>
-          <div class="progress mt-1" style="height: 8px;">
-            <div class="progress-bar l-bg-wss1" role="progressbar" style="width:100%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-container">
+          <h6 class="modern-label"><span class="text-muted">Cancelados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
+          <div class="progress modern-progress">
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgba(155, 135, 245, 0.5);"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Conversão boleto -->
-  <div class="col-md-4">
-    <div class="card card-body">
-      <div class="row align-items-center justify-content-center">
-        <i class="fas fa-barcode" style="font-size:35px; color:#3F51B5"></i>
-
-        <div class="col text-right">
-          <h3>R$ <?= number_format(@$dados["valorBoletoPago"], 2, ",", ".") ?></h3>
-          <h5 class="text-c-blue mb-0">
-            <?php
-            $analitico[6] = array("Boletos", @$dados["boletos"], @$dados["valorBoleto"], @$p)
-            ?><br>
-            <?php
-            if (@$dados["totalVendas"] > 0)
-              $p = $dados["boletos"] / $dados["totalVendas"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>% - <span class="text-muted">Total Boletos</span></h5>
-        </div>
+  <!-- Card Conversão Boleto -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <i class="fas fa-receipt card-icon"></i>
       </div>
-
-      <hr>
-      <div class="row align-items-center justify-content-center card-active">
-        <div class="col-6">
-          <h6 class="text-center m-b-10" style="color:#8BC24A"><span class="text-muted m-r-5">Aprovados: </span>
-            <?php
-            if (@$dados["boletos"] > 0)
-              $p = $dados["boletosPagos"] / $dados["boletos"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>%</h6>
-          <div class="progress mt-1" style="height: 8px;">
-            <div class="progress-bar l-bg-wss" role="progressbar" style="width:100%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+      <h5 class="mb-1">Boletos</h5>
+      <h3 class="modern-value">R$ <?= number_format(@$dados["valorBoletoPago"], 2, ",", ".") ?></h3>
+      <h6 class="modern-percent">
+        <?= number_format(@$p, 2, ",", ".") ?>% - <span class="text-muted">Total Boletos</span>
+      </h6>
+      <hr class="border-secondary my-2">
+      <div class="d-flex justify-content-between text-center">
+        <div class="progress-container">
+          <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
+          <div class="progress modern-progress">
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 245);"></div>
           </div>
         </div>
-        <div class="col-6">
-          <h6 class="text-center  m-b-10" style="color:red"><span class="text-muted m-r-5">Vencidos: </span>
-            <?php
-            if (@$dados["boletos"] > 0)
-              $p = $dados["boletosCancelados"] / $dados["boletos"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>%</h6>
-          <div class="progress mt-1" style="height: 8px;">
-            <div class="progress-bar l-bg-wss1" role="progressbar" style="width:100%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-container">
+          <h6 class="modern-label"><span class="text-muted">Vencidos:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
+          <div class="progress modern-progress">
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgba(155, 135, 245, 0.5);"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Conversão Pix -->
-  <div class="col-md-4">
-    <div class="card card-body">
-      <div class="row align-items-center justify-content-center">
-        <img src="<?= url("themes/tema1/images/pix-text-info.png"); ?>" style="width:30px"></i>
-
-        <div class="col text-right">
-          <h3>R$ <?= number_format(@$dados["valorPixPago"], 2, ",", ".") ?></h3>
-          <h5 class="text-c-blue mb-0">
-            <?php
-            $analitico[2] = array("Vendas Cart&atilde;o", @$dados["pix"], @$dados["valorPix"], $p)
-            ?><br>
-            <?php
-            if (@$dados["totalVendas"] > 0)
-              $p = $dados["pix"] / $dados["totalVendas"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>% - <span class="text-muted">Total Pix</span></h5>
-        </div>
+  <!-- Card Conversão Pix -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <i class="fas fa-bolt card-icon"></i>
       </div>
-
-      <hr>
-      <div class="row align-items-center justify-content-center card-active">
-        <div class="col-6">
-          <h6 class="text-center m-b-10" style="color:#8BC24A"><span class="text-muted m-r-5">Aprovados: </span>
-            <?php
-            if (@$dados["pix"] > 0)
-              $p = $dados["pixPagos"] / $dados["pix"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>%</h6>
-          <div class="progress">
-            <div class="progress-bar progress-c-blue" role="progressbar" style="width:50%;height:6px;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+      <h5 class="mb-1">Pix</h5>
+      <h3 class="modern-value">R$ <?= number_format(@$dados["valorPixPago"], 2, ",", ".") ?></h3>
+      <h6 class="modern-percent">
+        <?= number_format(@$p, 2, ",", ".") ?>% - <span class="text-muted">Total Pix</span>
+      </h6>
+      <hr class="border-secondary my-2">
+      <div class="d-flex justify-content-between text-center">
+        <div class="progress-container">
+          <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
+          <div class="progress modern-progress">
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 245);"></div>
           </div>
         </div>
-        <div class="col-6">
-          <h6 class="text-center  m-b-10" style="color:red"><span class="text-muted m-r-5">Cancelados: </span>
-            <?php
-            if (@$dados["pix"] > 0)
-              $p = $dados["pixCancelados"] / $dados["pix"] * 100;
-            else
-              $p = "0";
-            echo number_format($p, 2, ",", ".");
-            ?>%</h6>
-          <div class="progress">
-            <div class="progress-bar progress-c-green" role="progressbar" style="width:50%;height:6px;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-container">
+          <h6 class="modern-label"><span class="text-muted">Cancelados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
+          <div class="progress modern-progress">
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgba(155, 135, 245, 0.5);"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
+<!-- Estilos personalizados -->
+<style>
+  /* Estilização dos cards no estilo WinPay */
+  .winpay-card {
+    background: rgb(30, 36, 51); /* Fundo escuro */
+    border-radius: 10px; /* Cantos levemente arredondados */
+    color: #ffffff; /* Fonte branca */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+    transition: all 0.2s ease-in-out;
+  }
+
+  .winpay-card:hover {
+    border-color: rgb(155, 135, 245);
+    transform: scale(1.02);
+  }
+
+  /* Ícones */
+  .card-icon {
+    font-size: 1.5rem;
+    color: #A0AEC0;
+  }
+
+  /* Títulos */
+  h5 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #A0AEC0;
+  }
+
+  /* Valor */
+  h3 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  /* Legenda */
+  .text-muted {
+    color: #A0AEC0 !important;
+    font-size: 0.85rem;
+  }
+
+  /* Labels */
+  .modern-label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #A0AEC0;
+  }
+
+  /* Barra de progresso */
+  .modern-progress {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    width: 100%;
+  }
+
+  /* Ajuste dos contêineres das barras para ficarem lado a lado */
+  .progress-container {
+    width: 48%;
+  }
+</style>
+
+<!-- LINHA 3 -->
 <div class="row">
-  <div class="col-md-4">
-    <div class="card card-body">
-      <h5>Tentativas de compras</h5>
-      <h3>R$ <?= formataNumero($valorPendente) ?></h3>
-
-      <hr>
-      <div class="row">
-        <div class="col-md-6">
-          <span class="text-muted">Total: <?= $pendenteVendas ?></span>
+  <!-- Card: Tentativas de compras -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3 d-flex flex-column justify-content-between">
+      <div>
+        <div class="d-flex justify-content-between align-items-center">
+          <i class="fas fa-cart-arrow-down card-icon"></i>
         </div>
-
-        <div class="col-md-6">
-          <span class="text-muted">Ticket: R$ <?= formataNumero($ticketPendente) ?></span>
-        </div>
+        <h5 class="mb-2">Tentativas de compras</h5>
+        <h3 class="modern-value">R$ <?= formataNumero($valorPendente) ?></h3>
       </div>
-
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card card-body">
-      <h5>Estornos e Chargebacks</h5>
-
-      <hr>
+      <hr class="border-secondary my-2">
       <div class="row">
         <div class="col-6">
-          <span class="text-muted">Estornos: <?= $estornoVendas ?></span>
+          <span class="modern-info">Total: <?= $pendenteVendas ?></span>
         </div>
-
-        <div class="col-6">
-          <span class="text-muted">R$ <?= formataNumero($valorEstorno) ?></span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <span class="text-muted">Chargebacks: <?= $chargebackVendas ?></span>
-        </div>
-
-        <div class="col-6">
-          <span class="text-muted">R$ <?= formataNumero($valorChargeback) ?></span>
+        <div class="col-6 text-right">
+          <span class="modern-info">Ticket: R$ <?= formataNumero($ticketPendente) ?></span>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card card-body">
-      <h5>Abandono de checkout</h5>
-      <!-- <h3>R$ <?= formataNumero($valorPendente) ?></h3> -->
-
-      <hr>
-      <div class="row">
-        <div class="col-md-6">
-          <span class="text-muted">Total: <?= $abandonadoVendas ?></span>
+  <!-- Card: Estornos e Chargebacks -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3 d-flex flex-column justify-content-between">
+      <div>
+        <div class="d-flex justify-content-between align-items-center">
+          <i class="fas fa-exchange-alt card-icon"></i>
         </div>
-
-        <div class="col-md-6">
-          <!-- <span class="text-muted">Ticket: R$ <?= formataNumero($ticketPendente) ?></span> -->
+        <h5 class="mb-2">Estornos e Chargebacks</h5>
+      </div>
+      <hr class="border-secondary my-2">
+      <div class="row">
+        <div class="col-6">
+          <span class="modern-info">Estornos: <?= $estornoVendas ?></span>
+        </div>
+        <div class="col-6 text-right">
+          <span class="modern-info">R$ <?= formataNumero($valorEstorno) ?></span>
         </div>
       </div>
-
+      <div class="row mt-2">
+        <div class="col-6">
+          <span class="modern-info">Chargebacks: <?= $chargebackVendas ?></span>
+        </div>
+        <div class="col-6 text-right">
+          <span class="modern-info">R$ <?= formataNumero($valorChargeback) ?></span>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Card: Abandono de checkout -->
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card p-3 d-flex flex-column justify-content-between" style="min-height: 150px;">
+      <div>
+        <div class="d-flex justify-content-between align-items-center">
+          <i class="fas fa-user-slash card-icon"></i>
+        </div>
+        <h5 class="mb-2">Abandono de checkout</h5>
+      </div>
+      <hr class="border-secondary my-2">
+      <div class="row">
+        <div class="col-6">
+          <span class="modern-info">Total: <?= $abandonadoVendas ?></span>
+        </div>
+        <div class="col-6 text-right">
+          <!-- Espaço reservado para outros dados se necessário -->
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+<!-- Estilos personalizados -->
+<style>
+  .winpay-card {
+    background: rgb(30, 36, 51); /* Fundo escuro */
+    border-radius: 10px; /* Cantos levemente arredondados */
+    color: #ffffff; /* Fonte branca */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+    transition: all 0.2s ease-in-out;
+    min-height: 180px; /* Garante que todos os cards tenham a mesma altura */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .winpay-card:hover {
+    border-color: rgb(155, 135, 245);
+    transform: scale(1.02);
+  }
+
+  /* Ícones */
+  .card-icon {
+    font-size: 1.3rem;
+    color: #A0AEC0;
+  }
+
+  /* Títulos */
+  h5 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #A0AEC0;
+  }
+
+  /* Valor */
+  h3 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  /* Legenda */
+  .text-muted {
+    color: #A0AEC0 !important;
+    font-size: 0.85rem;
+  }
+
+  /* Label */
+  .modern-info {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #A0AEC0;
+  }
+
+  /* Garante que os cards fiquem com a mesma altura */
+  .d-flex.flex-column {
+    height: 100%;
+  }
+</style>
+

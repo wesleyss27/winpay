@@ -6,7 +6,7 @@
     background: #ddd !important;
   }
 </style>
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; top: 25px; background-color: #010101; border-radius: 10px;">
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; background-color: rgb(30, 36, 51);">
   <?php
 
   use Source\Models\Usuarios\Usuario;
@@ -530,7 +530,7 @@
 
             <i class="nav-icon fas fa-chart-pie txt-branco-octa"></i>
             <p class="txt-branco-octa" style="text-shadow:#343a40">
-              Painel REDROCKET
+              Painel WINPAY
               <i class="fas fa-angle-left right"></i>
             </p>
             </a>

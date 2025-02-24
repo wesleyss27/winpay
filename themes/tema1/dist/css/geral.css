@@ -351,7 +351,7 @@
 footer {
     display: block;
     text-align: center;
-    float: left;
+    /* float: left; */
 }
 
 .oculta {

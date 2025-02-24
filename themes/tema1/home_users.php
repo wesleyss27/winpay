@@ -36,28 +36,92 @@ if ($_SESSION["tipo"] == 6) {
 
         <div class="row">
           <div class="col-md-8"></div>
-          <div class="col-md-4" style="text-align: right;">
-            <div class="btn-group pull-right">
+          <div class="col-md-4 text-right">
+            <div class="btn-group">
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Personalizado</button>
+                <button class="btn btn-winpay dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Personalizado
+                </button>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 300px; padding-left: 20px">
-                  <div class="row">
-                    <input type="date" name="" id="inicio" class="form-control col-5"> &nbsp; &nbsp;
-                    <input type="date" name="" id="fim" class="form-control col-5">
-
-                    <button class="btn btn-info btn-sm" onclick="busca('personalizado')">Filtrar</button>
+                <div class="dropdown-menu dropdown-winpay" aria-labelledby="dropdownMenuButton">
+                  <div class="p-3">
+                    <div class="row">
+                      <div class="col-6">
+                        <label for="inicio">Início</label>
+                        <input type="date" id="inicio" class="form-control winpay-input">
+                      </div>
+                      <div class="col-6">
+                        <label for="fim">Fim</label>
+                        <input type="date" id="fim" class="form-control winpay-input">
+                      </div>
+                    </div>
+                    <div class="text-center mt-3">
+                      <button class="btn btn-winpay-sm" onclick="busca('personalizado')">Filtrar</button>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <button class="btn btn-secondary" onclick="busca('hoje')">Hoje</button>
-              <button class="btn btn-secondary" onclick="busca('ontem')">Ontem</button>
-              <button class="btn btn-secondary" onclick="busca('semana')">7D</button>
-              <button class="btn btn-secondary" onclick="busca('mes')">30D</button>
+              <button class="btn btn-winpay" onclick="busca('hoje')">Hoje</button>
+              <button class="btn btn-winpay" onclick="busca('ontem')">Ontem</button>
+              <button class="btn btn-winpay" onclick="busca('semana')">7D</button>
+              <button class="btn btn-winpay" onclick="busca('mes')">30D</button>
             </div>
           </div>
         </div>
+
+        <!-- Estilos personalizados -->
+        <style>
+          /* Botões modernos */
+          .btn-winpay {
+            background: rgb(30, 36, 51);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: all 0.3s ease-in-out;
+          }
+
+          .btn-winpay:hover {
+            background: rgb(50, 56, 71);
+            border-color: rgb(155, 135, 245);
+          }
+
+          .btn-winpay-sm {
+            background: rgb(155, 135, 245);
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            border-radius: 5px;
+          }
+
+          .btn-winpay-sm:hover {
+            background: rgb(135, 115, 225);
+          }
+
+          /* Dropdown com largura aumentada */
+          .dropdown-winpay {
+            width: 350px !important; /* Aumentei a largura */
+            background: rgb(40, 46, 61);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+          }
+
+          /* Input de data */
+          .winpay-input {
+            background: rgb(25, 30, 45);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 100%;
+          }
+
+          .winpay-input:focus {
+            border-color: rgb(155, 135, 245);
+            outline: none;
+          }
+        </style>
+
+
+        <br>
 
         <div id="dados_render">
           <!-- < ?php $v->insert("home_users_dados") ?> -->
@@ -68,106 +132,172 @@ if ($_SESSION["tipo"] == 6) {
 
           <!-- GRÁFICO -->
           <div class="col-lg-12 col-12">
-            <div class="card" style="">
-
-              <div class="card-header">
-                <h3 style="font-family:inter" class="card-title"><i class="fas fa-chart-area me-1"></i> Suas comissões - mês atual e anterior</h3>
-                <!-- 
-                <div class="card-tools">
-                  Atual: <i class="fa fa-chart-bar" style="color:green"></i> | Anterior: <i class="fa fa-chart-bar" style="color:blue"></i>
-                </div>
-                -->
+            <div class="winpay-card p-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h3 class="card-title">
+                  <i class="fas fa-chart-area me-1"></i> Suas comissões - mês atual e anterior
+                </h3>
               </div>
-              <!-- /.card-header -->
 
-              <div class="card-body">
-                <small style="text-align: center">Clique em uma opção para ocultar</small>
-                <div class="chart">
-                  <canvas id="areaChart" style="height: 180px; width: 120%"></canvas>
-                </div>
+              <!-- Pequena legenda opcional -->
+              <small class="text-center d-block mb-2">Clique em uma opção para ocultar</small>
+
+              <!-- Área do gráfico -->
+              <div class="chart-container">
+                <canvas id="areaChart"></canvas>
               </div>
-              <!-- /.card-body -->
-
             </div>
+
+            <!-- Estilos personalizados -->
+            <style>
+              .winpay-card {
+                background: rgb(30, 36, 51); /* Fundo escuro */
+                border-radius: 10px; /* Cantos arredondados */
+                color: #ffffff; /* Texto branco */
+                border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+                transition: all 0.2s ease-in-out;
+                padding: 20px;
+              }
+
+              .winpay-card:hover {
+                border-color: rgb(155, 135, 245);
+                transform: scale(1.02);
+              }
+
+              /* Título */
+              .card-title {
+                font-size: 1rem;
+                font-weight: bold;
+                color: #A0AEC0;
+              }
+
+              /* Ícone */
+              .fa-chart-area {
+                color: rgb(155, 135, 245);
+              }
+
+              /* Gráfico */
+              .chart-container {
+                width: 100%;
+                height: 200px;
+                position: relative;
+              }
+            </style>
             <!-- /.card -->
+              <br>
+            <div class="winpay-card p-4">
+              <h5 class="mb-3"><i class="fas fa-chart-line"></i> Suas Vendas</h5>
 
-            <div class="card">
-              <div class="card-header">
-                <h5>Suas Vendas</h5>
+              <!-- RELATÓRIO SIMPLES USUÁRIO -->
+              <div class="row text-center">
+                <div class="col-md-4 stat-box">
+                  <h6>Vendas do mês</h6>
+                  <h4><?= $vendasAtual + $vendasCoprodutor ?></h4>
+                </div>
+
+                <div class="col-md-4 stat-box">
+                  <h6>Total faturado de vendas</h6>
+                  <?php
+                  if ($_SESSION["tipo"] != 5) {
+                    $soma = $vendasAtualSoma->soma;
+                  } else {
+                    $soma = $mes;
+                  }
+                  ?>
+                  <h4><?= "R$ " . number_format($soma, 2, ",", "."); ?></h4>
+                </div>
+
+                <div class="col-md-4 stat-box">
+                  <h6><?= ($_SESSION["tipo"] != 5) ? "Ticket médio" : "Comissão média" ?></h6>
+                  <?php if ($vendasAtual) $somaVendas = $soma / $vendasAtual; ?>
+                  <?php if ($vendasCoprodutor) $somaValores = $mes / $vendasCoprodutor; ?>
+                  <h4><?= "R$ " . number_format(@$somaVendas + @$somaValores, 2, ",", ".") ?></h4>
+                </div>
               </div>
 
-              <div class="card-body">
+              <!-- RELATÓRIO REDROCKET -->
+              <?php if ($_SESSION["tipo"] == 1) : ?>
+                <h5 class="mt-4"><i class="fas fa-rocket"></i> Geral WINPAY <small>(vendas pagas)</small></h5>
 
-                <!-- RELATÓRIO SIMPLES USUÁRIO -->
-                <div class="row">
-                  <div class="col-md-4 bg-azul-dark" style="text-align: center; padding: 5px; border-radius: 7px; border: 2px solid #fff">
-                    Vendas do mês <br>
-                    <?= $vendasAtual + $vendasCoprodutor ?>
+                <div class="row text-center justify-content-center" style="gap: 15px;">
+                  <div class="col-md-4 stat-box">
+                    <h6>Vendas do mês</h6>
+                    <h4><?= $vendasTotal ?></h4>
                   </div>
 
-                  <div class="col-md-4 bg-azul-dark" style="text-align: center; padding: 5px; border-radius: 7px; border: 2px solid #fff">
-                    Total faturado de vendas <br>
-                    <?php
-                    if ($_SESSION["tipo"] != 5) {
-                      $soma = $vendasAtualSoma->soma;
-                    } else {
-                      $soma = $mes;
-                    }
-                    ?>
-                    <?= "R$ " . number_format($soma, 2, ",", "."); ?>
+                  <div class="col-md-4 stat-box">
+                    <h6>Total vendas</h6>
+                    <?php $soma = $vendasTotalSoma->soma; ?>
+                    <h4><?= "R$ " . number_format($soma, 2, ",", "."); ?></h4>
                   </div>
 
-                  <div class="col-md-4 bg-azul-dark" style="text-align: center; padding: 5px; border-radius: 7px; border: 2px solid #fff">
-                    <?php if ($_SESSION["tipo"] != 5) : ?>
-                      Ticket médio <br>
+                  <div class="col-md-4 stat-box">
+                    <h6>Ticket médio</h6>
+                    <?php if ($vendasTotal) : ?>
+                      <h4><?= "R$ " . number_format($soma / $vendasTotal, 2, ",", ".") ?></h4>
                     <?php else : ?>
-                      Comissão média <br>
+                      <h4>R$ 0,00</h4>
                     <?php endif ?>
-
-                    <?php if ($vendasAtual) $somaVendas = $soma / $vendasAtual; ?>
-                    <?php if ($vendasCoprodutor) $somaValores = $mes / $vendasCoprodutor; ?>
-                    <?= "R$ " . number_format(@$somaVendas + @$somaValores, 2, ",", ".") ?>
-
                   </div>
                 </div>
-                <!-- FIM RELATÓRIO SIMPLES USUÁRIO -->
-                <br>
-
-                <!-- RELATÓRIO REDROCKET -->
-                <?php if ($_SESSION["tipo"] == 1) : ?>
-                  <h5>Geral REDROCKET <small>(vendas pagas)</small></h5>
-
-                  <div class="row">
-                    <div class="col-md-4 bg-azul-dark" style="text-align: center; padding: 5px; border-radius: 7px; border: 2px solid #fff">
-                      Vendas do mês <br>
-                      <?= $vendasTotal ?>
-                    </div>
-
-                    <div class="col-md-4 bg-azul-dark" style="text-align: center; padding: 5px; border-radius: 7px; border: 2px solid #fff">
-                      Total vendas <br>
-                      <?php $soma = $vendasTotalSoma->soma; ?>
-                      <?= "R$ " . number_format($soma, 2, ",", "."); ?>
-                    </div>
-
-                    <div class="col-md-4 bg-azul-dark" style="text-align: center; padding: 5px; border-radius: 7px; border: 2px solid #fff">
-
-                      Ticket médio <br>
-
-                      <?php if ($vendasTotal) : ?>
-                        <?= "R$ " . number_format($soma / $vendasTotal, 2, ",", ".") ?>
-                      <?php else : ?>
-                        R$ 0,00
-                      <?php endif ?>
-
-                    </div>
-                  </div>
-                <?php endif ?>
-                <!-- FIM RELATÓRIO REDROCKET -->
-
-              </div>
-              <!-- /.card-body -->
-
+              <?php endif ?>
             </div>
+
+            <!-- Estilos Modernizados -->
+            <style>
+              .winpay-card {
+                background: rgb(30, 36, 51); /* Fundo escuro */
+                border-radius: 10px; /* Cantos arredondados */
+                color: #ffffff; /* Texto branco */
+                border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+                transition: all 0.2s ease-in-out;
+                padding: 20px;
+              }
+
+              .winpay-card:hover {
+                border-color: rgb(155, 135, 245);
+                transform: scale(1.02);
+              }
+
+              /* Estilização das estatísticas */
+              .stat-box {
+                background: rgba(255, 255, 255, 0.05);
+                padding: 15px;
+                border-radius: 10px;
+                transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+                margin-bottom: 10px; /* Garante espaçamento entre os cards */
+              }
+
+              .stat-box:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 10px rgba(155, 135, 245, 0.3);
+              }
+
+              /* Ajusta a distribuição dos elementos na linha */
+              .row.text-center {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center; /* Centraliza os elementos */
+                gap: 15px; /* Adiciona espaçamento entre os cards */
+              }
+
+
+              /* Títulos das estatísticas */
+              h6 {
+                font-size: 0.9rem;
+                font-weight: bold;
+                color: #A0AEC0;
+              }
+
+              /* Números destacados */
+              h4 {
+                font-size: 1.6rem;
+                font-weight: bold;
+                margin-top: 5px;
+                color: rgb(155, 135, 245);
+              }
+            </style>
+
             <!-- /.card -->
 
           </div>
@@ -390,105 +520,103 @@ if ($_SESSION["tipo"] == 6) {
   //   $('#modalUpsell').modal('show');
 
   $(function() {
-    /* ChartJS
-     * -------
-     * Here we will create a few charts using ChartJS
-     */
+    /* ChartJS - Gráfico de Vendas Modernizado */
 
-    //--------------
-    //- AREA CHART -
-    //--------------
-
-    // GRÁFICO DE VENDAS
     var canvasVendas = $('#areaChart').get(0).getContext('2d');
 
     <?php
     $dados = array();
     for ($i = 1; $i <= 31; $i++) {
-      $dados[$i] = $i;
+        $dados[$i] = $i;
     }
     ?>
 
     var dadosVendas = {
-      labels: [<?php foreach ($dados as $dado) echo $dado . "," ?>],
-      datasets: [{
-          label: 'Atual',
-          backgroundColor: 'rgba(0, 123, 255, 0.3)', // Azul claro
-          borderColor: '#007bff', // Azul vibrante
-          lineTension: 0.3,
-          pointRadius: 4,
-          pointBorderWidth: '3',
-          pointBorderColor: '#0056b3', // Azul escuro
-          pointColor: '#0056b3', // Azul escuro
-          pointStyle: 'circle',
-          pointStrokeColor: 'rgba(0, 123, 255, 0.4)', // Azul claro
-          pointHighlightFill: '#fff',
-          pointHoverBackgroundColor: "rgba(0, 123, 255, 0.7)", // Azul mais escuro
-          pointHighlightStroke: 'rgba(0, 123, 255, 0.4)', // Azul claro
-          data: [<?php foreach ($comAtual as $atual) echo $atual . "," ?>]
-        },
-        {
-          label: 'Anterior',
-          borderDash: [5, 5],
-          backgroundColor: 'rgba(255, 159, 0, 0.3)', // Laranja suave
-          borderColor: '#ff9f00', // Laranja-alaranjado
-          pointRadius: 4,
-          pointBorderWidth: '3',
-          pointBorderColor: '#ff6f00', // Laranja suave
-          pointColor: '#ff6f00', // Laranja suave
-          pointStyle: 'circle',
-          pointStrokeColor: '#ff6f00', // Laranja suave
-          pointHighlightFill: '#fff',
-          pointHighlightStroke: 'rgba(255, 159, 0, 0.4)', // Laranja suave
-          data: [<?php foreach ($comAnterior as $anterior) echo $anterior . "," ?>]
-        }
-      ]
+        labels: [<?php foreach ($dados as $dado) echo $dado . "," ?>],
+        datasets: [{
+                label: 'Mês Atual',
+                backgroundColor: 'rgba(155, 135, 245, 0.2)', // Roxo claro
+                borderColor: 'rgb(155, 135, 245)', // Roxo vibrante
+                pointRadius: 5,
+                pointBorderWidth: 2,
+                pointBackgroundColor: 'rgb(155, 135, 245)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: 'rgb(155, 135, 245)',
+                data: [<?php foreach ($comAtual as $atual) echo $atual . "," ?>],
+                fill: true,
+                tension: 0.3, // Suavização das curvas
+            },
+            {
+                label: 'Mês Anterior',
+                borderDash: [5, 5], // Linha tracejada
+                backgroundColor: 'rgba(255, 99, 132, 0.2)', // Vermelho claro
+                borderColor: 'rgb(255, 99, 132)', // Vermelho moderno
+                pointRadius: 5,
+                pointBorderWidth: 2,
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: 'rgb(255, 99, 132)',
+                data: [<?php foreach ($comAnterior as $anterior) echo $anterior . "," ?>],
+                fill: true,
+                tension: 0.3, // Suavização das curvas
+            }
+        ]
     }
 
     var opcoesVendas = {
-      maintainAspectRatio: false,
-      responsive: true,
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: {
-          fontColor: '#fff' // Cor do texto das legendas
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    color: '#A0AEC0', // Cor das legendas no tema escuro
+                    font: {
+                        size: 13,
+                        weight: 'bold',
+                    }
+                }
+            }
+        },
+        interaction: {
+            mode: 'nearest',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: false
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    color: '#A0AEC0', // Cor do texto eixo X
+                }
+            },
+            y: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)', // Linhas sutis no eixo Y
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#A0AEC0' // Cor do texto eixo Y
+                }
+            }
         }
-      },
-      hover: {
-            mode: 'label'
-      },
-      scales: {
-        xAxes: [{
-          display: true,
-          gridLines: {
-            display: false,
-            drawTicks: false,
-          },
-          ticks: {
-            fontColor: '#fff' // Cor do texto dos eixos X
-          }
-        }],
-        yAxes: [{
-          gridLines: {
-            display: false,
-          },
-          ticks: {
-            fontColor: '#fff' // Cor do texto dos eixos X
-          }
-        }]
-      }
     }
 
     var graficoVendas = new Chart(canvasVendas, {
-      type: 'line',
-      data: dadosVendas,
-      options: opcoesVendas
-    })
-    // FIM GRÁFICO DE VENDAS
+        type: 'line',
+        data: dadosVendas,
+        options: opcoesVendas
+    });
+});
 
-
-  })
 </script>
 
 <?= $v->end(); ?>
