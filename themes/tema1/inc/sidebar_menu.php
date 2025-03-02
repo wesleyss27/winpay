@@ -232,15 +232,6 @@
               </li>
             <?php endif ?>
 
-            <?php if ($_SESSION["tipo"] == 1 || $_SESSION["tipo"] == 2 || $_SESSION["tipo"] == 3) : ?>
-              <li class="nav-item">
-                <a href="<?= url("denuncias") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                  <i class="nav-icon fas fa-ban"></i>
-                  <p>Denúncias de produtos</p>
-                </a>
-              </li>
-            <?php endif; ?>
-
             <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("comissao_menu")) : ?>
               <?php $url_atual = HTTP . "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
               if (
