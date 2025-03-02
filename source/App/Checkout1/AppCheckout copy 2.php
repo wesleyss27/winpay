@@ -512,7 +512,7 @@ class AppCheckout
                 $_SESSION["erros"]["comprador"][] = @$erros->code;
             }
 
-            $dataEmail["email"]          = "dev.ti@redrocketpay.com";
+            $dataEmail["email"]          = "suporte@winpay.digital";
             $enviaEmail = (new Emails())->enviaSendGrid($dataEmail);
         }
 
@@ -544,7 +544,7 @@ class AppCheckout
                     $dataEmail["mensagem"] .= "$key: $value<br>";
                 }
 
-                $dataEmail["email"] = "dev.ti@redrocketpay.com";
+                $dataEmail["email"] = "suporte@winpay.digital";
                 $enviaEmail = (new Emails())->enviaSendGrid($dataEmail);
 
                 /** 
@@ -897,7 +897,7 @@ class AppCheckout
                 $_SESSION["erros"]["transacao"] = @$erros->description;
             }
 
-            $dataEmail["email"]          = "dev.ti@redrocketpay.com";
+            $dataEmail["email"]          = "suporte@winpay.digital";
             $enviaEmail = (new Emails())->enviaSendGrid($dataEmail);
         }
 

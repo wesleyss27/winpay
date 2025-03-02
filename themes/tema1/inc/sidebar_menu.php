@@ -17,7 +17,7 @@
   if ($section->getTipo() != 6) :
   ?>
     <a href="<?= url() ?>" class="brand-link" style="border:0">
-      <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo-icon.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
+      <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo4.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
     </a>
   <?php elseif ($section->getTipo() == 6) : ?>
     <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo-icon.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>

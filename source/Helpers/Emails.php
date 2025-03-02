@@ -165,11 +165,11 @@ class Emails
                             </div>
 
                             <div>
-                                Site: <span style="color: blue">redrocketpay.com </span><br>
+                                Site: <span style="color: blue">winpay.digital </span><br>
                             </div>
 
                             <div>
-                                Whatsapp: <a href="https://api.whatsapp.com/send?phone=5533998787884">33 99878-7884</a>
+                                Whatsapp: <a href="https://api.whatsapp.com/send?phone=5533000000000">33 90000-0000</a>
                             </div>
 
                         </footer>

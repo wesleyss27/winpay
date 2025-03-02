@@ -17,11 +17,70 @@ if ($_SESSION["tipo"] == 6) {
       <?php
       if (!@$usuarioPagarme->pagarme_conta) {
       ?>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script>
-          if (confirm("Você precisa cadastrar ou atualizar seus dados bancários para poder transacionar")) {
-            location.href = "<?= url("banco") ?>"
-          }
+          swal({
+            title: "Atenção!",
+            text: "Você precisa cadastrar ou atualizar seus dados bancários para poder transacionar.",
+            icon: "warning",
+            buttons: {
+              cancel: {
+                text: "Cancelar",
+                visible: true,
+                className: "btn-cancel"
+              },
+              confirm: {
+                text: "Ok",
+                className: "btn-confirm"
+              }
+            },
+            dangerMode: true,
+          })
+          .then((confirmado) => {
+            if (confirmado) {
+              window.location.href = "<?= url('banco') ?>";
+            }
+          });
         </script>
+
+        <style>
+          /* Personalização da caixa de diálogo */
+          .swal-modal {
+            background: rgb(30, 36, 51) !important; /* Fundo escuro */
+          }
+
+          /* Torna todo o texto branco */
+          .swal-title, .swal-text {
+            color: white !important;
+          }
+
+          /* Personalização dos botões */
+          .swal-button {
+            background-color: white !important; /* Botão branco */
+            color: rgb(30, 36, 51) !important; /* Texto escuro */
+            border-radius: 5px;
+            font-weight: bold;
+          }
+
+          /* Estilo do botão ao passar o mouse */
+          .swal-button:hover {
+            background-color: #ddd !important;
+            color: rgb(30, 36, 51) !important;
+          }
+
+          /* Estilo específico para o botão de Cancelar */
+          .btn-cancel {
+            background-color: transparent !important;
+            color: white !important;
+            border: 1px solid white !important;
+          }
+
+          .btn-cancel:hover {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+          }
+        </style>
+
+
       <?php } ?>
 
       <?= $section->getTipoSecaoLayout() ?>

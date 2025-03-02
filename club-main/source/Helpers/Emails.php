@@ -17,10 +17,10 @@ class Emails
         $mail->Port = 587;
         $mail->SMTPAuth = true;
         $mail->CharSet = 'UTF-8';
-        $mail->Username = 'suporte@redrocketpay.com';
+        $mail->Username = 'suporte@winpay.digital';
         $mail->Password = 'X278g113';
-        $mail->setFrom('suporte@redrocketpay.com', 'Suporte RedRocket');
-        $mail->addReplyTo('sac@redrocketpay.com', 'Suporte RedRocket');
+        $mail->setFrom('suporte@winpay.digital', 'Suporte WinPay');
+        $mail->addReplyTo('suporte@winpay.digital', 'Suporte WinPay');
 
         $mail->addAddress($data["email"], $data["nome"]);
 
@@ -47,7 +47,7 @@ class Emails
         if ($validar) {
             $email = new \SendGrid\Mail\Mail();
             //$email->setFrom("pedro@redrocketpay.com", "Suporte RedRocket");
-            $email->setFrom("suporte.oficial@redrocketpay.com", "Suporte RedRocket");
+            $email->setFrom("suporte@winpay.digital", "Suporte WinPay");
             if (@$data["reply"]) {
                 $email->setReplyTo($data["reply"]);
             }
@@ -165,11 +165,11 @@ class Emails
                             </div>
 
                             <div>
-                                Site: <span style="color: blue">redrocketpay.com </span><br>
+                                Site: <span style="color: blue">winpay.digital </span><br>
                             </div>
 
                             <div>
-                                Whatsapp: <a href="https://api.whatsapp.com/send?phone=5533998787884">33 99878-7884</a>
+                                Whatsapp: <a href="https://api.whatsapp.com/send?phone=5533000000000">33 90000-0000</a>
                             </div>
 
                         </footer>

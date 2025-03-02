@@ -201,7 +201,7 @@ class AppPagamentoAssinaturas
                 $this->logs($dataEmail, "assinaturas-erro-comprador");
             }
 
-            $dataEmail["email"]          = "dev.ti@redrocketpay.com";
+            $dataEmail["email"]          = "suporte@winpay.digital";
             $enviaEmail = (new Emails())->enviaSendGrid($dataEmail);
         }
 
@@ -377,7 +377,7 @@ class AppPagamentoAssinaturas
                 $this->logs($data, "assinaturas-erro-transacao");
             }
 
-            $dataEmail["email"]          = "dev.ti@redrocketpay.com";
+            $dataEmail["email"]          = "suporte@winpay.digital";
             $enviaEmail = (new Emails())->enviaSendGrid($dataEmail);
         }
 

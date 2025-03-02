@@ -238,7 +238,7 @@ class AppLogin
             $cadastroUsers = (new Emails())->cadastroUsuario($data);
             $enviaEmail = (new Emails())->enviaSendGrid($cadastroUsers);
 
-            $data["email"] = "suporte.oficial@redrocketpay.com";
+            $data["email"] = "suporte@winpay.digital";
             $data["assunto"] = "Novo usuário cadastrado";
             $data["mensagem"] = "Novo usuário cadastrado <br>" .
                 "Nome: $usuario->nome <br>";

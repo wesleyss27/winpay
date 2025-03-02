@@ -408,7 +408,7 @@ class AppProdutor
 
         $emails[1] = @$usuarios->email;
         // $emails[2] = "pedrohenriquedasilva100@gmail.com";
-        $emails[2] = "suporte.oficial@redrocketpay.com";
+        $emails[2] = "suporte@winpay.digital";
 
         foreach ($emails as $emails) {
             $msg["email"] = $emails;

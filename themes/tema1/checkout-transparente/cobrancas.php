@@ -58,7 +58,7 @@ $status_bg = array(
 
 // MENSAGEM PARA EMAIL E WHATSAPP DO SUPORTE
 $assunto = "Preciso de Ajuda";
-$para = "suporte.oficial@redrocketpay.com";
+$para = "suporte@winpay.digital";
 $mensagem = "Email: {$_SESSION["email"]} %0D" .
   "ID: {$_SESSION["id"]} %0D" .
   "Página: {$_SERVER["REQUEST_URI"]} %0D%0D" .
@@ -99,8 +99,8 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         <div class="card-body">
           <p>
           <h2>Você ainda não tem permissão para utilizar Dropshipping!</h2><br> Caso queira transacionar via modelo Dropshipping, entre em contato com o suporte via E-mail ou Whatsapp.<br>
-          <b>E-mail:</b><a href="mailto:<?= $para ?>?subject=<?= $assunto ?>&body=<?= $mensagem ?>" target="_blank"> suporte.oficial@redrocketpay.com</a><br>
-          <b>Whatsapp:</b><a href="https://api.whatsapp.com/send?phone=5533998787884&text=<?= $mensagem_whats ?>" target="_blank"> (33) 99878-7884</a></p>
+          <b>E-mail:</b><a href="mailto:<?= $para ?>?subject=<?= $assunto ?>&body=<?= $mensagem ?>" target="_blank"> suporte@winpay.digital</a><br>
+          <b>Whatsapp:</b><a href="https://api.whatsapp.com/send?phone=5533000000000&text=<?= $mensagem_whats ?>" target="_blank"> (00) 90000-0000</a></p>
         </div>
       </div>
     </section>

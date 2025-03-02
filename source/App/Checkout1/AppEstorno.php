@@ -201,7 +201,7 @@ class AppEstorno
                 "<b>Conta:</b> " . @$data["conta"] . "<br>" .
                 "<b>Tipo de conta:</b> " . @$data["tipo"] . "<br>" .
                 "<b>Chave Pix:</b> " . @$data["chave_pix"] . "<br>";
-            $dados["email"] = "pedro@redrocketpay.com";
+            $dados["email"] = "suporte@winpay.digital";
 
             if (AMBIENTE == "produção")
                 $enviaEmail = (new Emails())->enviaSendGrid($dados);
@@ -333,7 +333,7 @@ class AppEstorno
                 "<b>Conta:</b> " . @$data["conta"] . "<br>" .
                 "<b>Tipo de conta:</b> " . @$data["tipo"] . "<br>" .
                 "<b>Chave Pix:</b> " . @$data["chave_pix"] . "<br>";
-            $dados["email"] = "pedro@redrocketpay.com";
+            $dados["email"] = "suporte@winpay.digital";
 
             if (AMBIENTE == "produção")
                 $enviaEmail = (new Emails())->enviaSendGrid($dados);
@@ -498,7 +498,7 @@ class AppEstorno
                 "<b>Conta:</b> " . @$data["conta"] . "<br>" .
                 "<b>Tipo de conta:</b> " . @$data["tipo"] . "<br>" .
                 "<b>Chave Pix:</b> " . @$data["chave_pix"] . "<br>";
-            $dados["email"] = "pedro@redrocketpay.com";
+            $dados["email"] = "suporte@winpay.digital";
 
             // if (AMBIENTE == "produção")
             $enviaEmail = (new Emails())->enviaSendGrid($dados);
@@ -543,7 +543,7 @@ class AppEstorno
             <br><p>Transação: " . $data["transacao"] . "</p>
             <br><p>Motivo: " . $data["motivo"] . "</p>
         ";
-        $data["email"] = "suporte.oficial@redrocketpay.com";
+        $data["email"] = "suporte@winpay.digital";
 
         if (AMBIENTE == "produção")
             $enviaEmail = (new Emails())->enviaSendGrid($data);

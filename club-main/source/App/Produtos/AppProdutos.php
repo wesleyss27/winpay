@@ -371,7 +371,7 @@ class AppProdutos
                 $msg = "Produto Cadastrado Com Sucesso! Produto será enviado para análise";
                 $classCss = "bg-success";
 
-                $data["email"] = "thiago@redrocketpay.com";
+                $data["email"] = "suporte@winpay.digital";
                 $data["assunto"] = "Novo produto cadastrado";
                 $data["mensagem"] = "Novo produto cadastrado <br>" . 
                                     "Nome do produto: $produto->nome <br>" .
@@ -441,7 +441,7 @@ class AppProdutos
             $produto->status = 0;
         elseif($produto->rascunho == 0 && ($produto->status == 0 || $produto->status == 1)) {
             $produto->status = 1;
-            $data["email"] = "thiago@redrocketpay.com";
+            $data["email"] = "suporte@winpay.digital";
             $data["assunto"] = "Novo produto cadastrado";
             $data["mensagem"] = "Novo produto cadastrado <br>" . 
                                 "Nome do produto: $produto->nome <br>" .
