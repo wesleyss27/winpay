@@ -276,7 +276,7 @@
                   <li class="nav-item sub-item" title="Comissões da REDROCKET">
                     <a href="<?= url('comissao/redrocket') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
                       <i class="far fa-chart-bar nav-icon"></i>
-                      <p>Comissão REDROCKET</p>
+                      <p>Comissão WINPAY</p>
                     </a>
                   </li>
                 <?php endif ?>
