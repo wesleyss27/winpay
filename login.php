@@ -1,112 +1,199 @@
-<?php
-date_default_timezone_set("America/Sao_Paulo");
-
-$url_atual = HTTP . "$_SERVER[HTTP_HOST]";
-if ($url_atual == "http://localhost") {
-  $redirect = explode("/redrocket", @$_GET["redirect"]);
-  $redirect = @$redirect[1];
-} else {
-  $redirect = @$_GET["redirect"];
-}
-?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= $title; ?></title>
-  <link rel="icon" href="<?= url("themes/imgs/logos/logo-icon.png"); ?>">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/cores.css"); ?>">
-  <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/login2.css?" . time()); ?>">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="<?= url("themes/tema1/assets/js/jquery.js"); ?>"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <title>Login - WinPay</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+  
+  <style>
+    /* 🌙 Fundo escuro elegante */
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .background-elements {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top left, rgba(123, 97, 255, 0.2), transparent 50%),
+                  radial-gradient(circle at bottom right, rgba(97, 255, 245, 0.15), transparent 50%);
+    }
+
+    .login-container {
+      display: flex;
+      width: 80%;
+      max-width: 1200px;
+    }
+
+    /* 📌 Lado esquerdo (Texto Motivacional) */
+    .login-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-left h1 {
+      font-weight: bold;
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 0;
+    }
+
+    .login-left h1 span {
+      color: #7e69aa;
+    }
+
+    .underline {
+      width: 60px;
+      height: 3px;
+      background: #7e69aa;
+      margin-top: 5px;
+    }
+
+    .login-left p {
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .login-left {
+        display: none;
+      }
+      .login-box {
+        width: 100%;
+      }
+    }
+
+    /* 📌 Lado direito (Formulário) */
+    .login-box {
+      flex: 1;
+      background: #1e293b;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 2;
+      height: 700px;
+    }
+
+    /* 🔑 Campos de entrada */
+    .form-control {
+      background: white;
+      border: none;
+      color: black;
+      border-radius: 5px;
+      padding: 12px;
+    }
+
+    .form-control::placeholder {
+      color: #6c757d;
+    }
+
+    .input-group-text {
+      background: transparent;
+      border: none;
+      color: #7e69aa;
+    }
+
+    .label-icon {
+      color: white; /* Mantém o texto branco */
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .label-icon .material-symbols-outlined {
+      color: #7e69aa; /* Ícones na cor PAY */
+    }
+
+
+    .input-group {
+      margin-bottom: 25px;
+    }
+    
+  </style>
 </head>
 
-<body class="body bg-white d-flex justify-content-center align-items-center">
-  <div class="container-fluid h-100">
-      <div class="row login-container h-100">
-            <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
-              <!-- Imagem de background (lado esquerdo) -->
-              <img class="w-100 h-100" src="<?= url("themes/imgs/login.png"); ?>" alt="" style="object-fit: cover;">
-            </div>
+<body>
+  <div class="background-elements"></div>
+  <div class="login-container">
+    <div class="login-left">
+      <h1><b>WIN</b><span>PAY</span></h1>
+      <div class="underline"></div>
+      <p>"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
+      <span style="color: #9b6ef3;">Robert Collier</span>
+    </div>
 
-          <div class="col-md-6 vh-100 d-flex justify-content-center align-items-center" style="background: #fafcff">
-              <!-- Conteúdo de login (lado direito) -->
-              <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                <img class="logo mb-2" style="width: 180px; height: auto;" src="<?= url("themes/imgs/logos/logo.png"); ?>" alt="Logo-redrocket" width="240px">
-                  
-                <h3 class="mb-5">Acesse sua conta</h3>
+    <div class="login-box">
+      <h3 class="text-center mb-4">Acesse sua conta</h3>
+      <form action="<?= $router->route('login.logar'); ?>" method="post">
+        <div class="label-icon">
+          <span class="material-symbols-outlined">mail</span> Email ou login
+        </div>
+        <div class="input-group">
+          <input type="email" name="email" class="form-control" placeholder="Seu email" required>
+        </div>
+        <div class="label-icon">
+          <span class="material-symbols-outlined">lock</span> Senha
+        </div>
+        <div class="input-group">
+          <input type="password" name="senha" class="form-control" placeholder="Sua senha" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary btn-block" style="background: #7e69aa; border-radius: 8px; font-weight: bold; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; outline: none; box-shadow: none;">
+          ENTRAR <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
 
-                <?= $v->insert("themes/tema2/fragmentos/msg-cadastrar-editar", []); ?>
+        <br><br><br><br><br><br>
+        <div class="text-center mt-3 login-links">
+          <a href="#" data-toggle="modal" data-target="#myModal">Esqueceu sua senha?</a> •
+          <a href="<?= url('cadastro'); ?>">Cadastre-se</a>
+        </div>
+        <div class="text-center mt-2">
+          <a href="mailto:suporte.oficial@redrocket.com.br?subject=Preciso de Ajuda&body=Ol%C3%A1,%20estou%20com%20problema%20na%20p%C3%A1gina%20<?= $_SERVER["REQUEST_URI"] ?>.%20Estou%20com%20o%20seguinte%20problema:">Não conseguiu entrar?</a>
+        </div>
+      </form>
+    </div>
+  </div>
 
-                <form action="<?= $router->route("login.logar"); ?>" method="post" class="w-50">
-                  <input type="hidden" name="redirect" value="<?= @$redirect ?>">
-
-                  <div class="form-label-group">
-                    <small><label>Email ou login</label></small>
-                    <input type="text" id='email' name="email" class="form-control input-lg" placeholder="Email ou login" required>
-                  </div>
-
-                  <div class="form-label-group">
-                    <small><label>Senha</label></small>
-                    <input type="password" name="senha" id='senha' class="form-control input-lg" placeholder="Senha" required>
-                  </div>
-
-                    <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" style="border-radius: 50px;">Entrar</button>
-
-                  <div class="text-center mt-4">
-                    <a href="#" data-toggle="modal" data-target="#myModal" class="">Esqueceu sua senha?</a> •
-                    <a href="<?= url("cadastro") ?>" class=""> Cadastre-se</a><br>
-
-                    <?php
-                    $assunto = "Preciso de Ajuda";
-                    $para = "suporte.oficial@redrocket.com.br";
-                    $mensagem = "Olá, estou com problema na página " . $_SERVER["REQUEST_URI"] . ". Estou com o seguinte problema:";
-                    ?>
-                    <a href="mailto:<?= $para ?>?subject=<?= $assunto ?>&body=<?= $mensagem ?>">Não conseguiu entrar?</a>
-                  </div>
-                </form>
-              </div>
-          </div>
-      </div>
-
-      <!-- The Modal -->
-      <div class="modal" id="myModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Esqueceu a senha</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <form action="#" method="post">
-              <!-- Modal body -->
-              <div class="modal-body" style="background: #f4f6f9">
-                <div class="card card-body">
-                  Informe o email cadastrado:
-                  <input type="text" name="email2" id="email2" class="form-control">
-                </div>
-              </div>
-
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" id="salvar">Enviar</button>
-              </div>
-            </form>
-
-          </div>
+  <!-- Modal "Esqueceu sua senha?" -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="background: #1e293b; color: white;">
+        <div class="modal-header" style="border-bottom: 1px solid #7e69aa;">
+          <h4 class="modal-title">Esqueceu a senha</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Digite seu email para receber um link de redefinição de senha.</p>
+          <input type="email" id="email2" class="form-control" placeholder="Seu email">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button class="btn btn-primary" id="salvar">Enviar</button>
         </div>
       </div>
-      <!-- Modal -->
+    </div>
   </div>
 
   <script>
@@ -114,28 +201,8 @@ if ($url_atual == "http://localhost") {
       e.preventDefault();
       var email = $("#email2").val();
       console.log(email);
-      salvar("<?= $router->route("appusuarios.esqueceuSenha") ?>");
+      salvar("<?= $router->route('appusuarios.esqueceuSenha') ?>");
     });
-
-    function salvar(url) {
-      var form = $("form");
-      $.ajax({
-
-        url: url,
-        data: form.serialize(),
-        type: "POST",
-        success: function(callback) {
-
-          if (callback == "Email enviado com sucesso.") {
-            alert("Verifique o email informado para redefinir sua senha");
-            location.reload();
-          } else {
-            alert(callback);
-          }
-        }
-
-      });
-    };
   </script>
 </body>
 </html>
