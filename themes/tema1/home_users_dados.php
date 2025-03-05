@@ -20,7 +20,7 @@
 
 <div class="row">
   <!-- Card Total em conta -->
-  <div class="col-md-4 mb-4">
+  <div class="col-md-6 mb-5">
     <div class="winpay-card p-3">
       <div class="d-flex justify-content-between align-items-center">
         <i class="fas fa-piggy-bank card-icon"></i> 
@@ -35,7 +35,7 @@
   </div>
 
   <!-- Card Disponível para saque -->
-  <div class="col-md-4 mb-4">
+  <div class="col-md-6 mb-5">
     <div class="winpay-card p-3">
       <div class="d-flex justify-content-between align-items-center">
         <i class="fas fa-coins card-icon"></i> 
@@ -51,8 +51,8 @@
     </div>
   </div>
 
-  <!-- Card Total cancelados -->
-  <div class="col-md-4 mb-4">
+  <!-- Card Total cancelados 
+  <div class="col-md-4 mb-4"> 
     <div class="winpay-card p-3">
       <div class="d-flex justify-content-between align-items-center">
         <i class="fas fa-file-invoice-dollar card-icon"></i> 
@@ -65,7 +65,9 @@
       <small class="d-block">Valor total cancelado</small>
     </div>
   </div>
+  -->
 </div>
+
 
 
 <!-- Estilos personalizados -->
@@ -302,7 +304,7 @@
 
 <!-- LINHA 3 -->
 <div class="row">
-  <!-- Card: Tentativas de compras -->
+  <!-- Card: Tentativas de compras 
   <div class="col-md-4 mb-4">
     <div class="winpay-card p-3 d-flex flex-column justify-content-between">
       <div>
@@ -324,7 +326,9 @@
     </div>
   </div>
 
-  <!-- Card: Estornos e Chargebacks -->
+  -->
+
+  <!-- Card: Estornos e Chargebacks 
   <div class="col-md-4 mb-4">
     <div class="winpay-card p-3 d-flex flex-column justify-content-between">
       <div>
@@ -353,7 +357,9 @@
     </div>
   </div>
 
-  <!-- Card: Abandono de checkout -->
+  -->
+
+  <!-- Card: Abandono de checkout
   <div class="col-md-4 mb-4">
     <div class="winpay-card p-3 d-flex flex-column justify-content-between" style="min-height: 150px;">
       <div>
@@ -373,6 +379,7 @@
       </div>
     </div>
   </div>
+  -->
 </div>
 
 

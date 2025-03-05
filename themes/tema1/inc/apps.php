@@ -10,7 +10,7 @@
       <a href="<?= url_club() ?>" class="dropdown-item" target="_blank">
         <p>
           <img src="<?= url("themes/imgs/logos/logo-icon.png") ?>" alt="" width="20px">
-          <span style="color: #023770">Club REDROCKET</span>
+          <span style="color: #023770">Club WINPAY</span>
         </p>
       </a>
 
