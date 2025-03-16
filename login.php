@@ -13,7 +13,7 @@
   <style>
     /* 🌙 Fundo escuro elegante */
     body {
-      background-color: #0f172a;
+      background-color: black;
       color: white;
       font-family: 'Poppins', sans-serif;
       height: 100vh;
@@ -31,8 +31,8 @@
       top: 0;
       left: 0;
       pointer-events: none;
-      background: radial-gradient(circle at top left, rgba(123, 97, 255, 0.2), transparent 50%),
-                  radial-gradient(circle at bottom right, rgba(97, 255, 245, 0.15), transparent 50%);
+      background: radial-gradient(circle at top left, rgba(217, 192, 0, 0.2), transparent 50%),
+            radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.15), transparent 50%);
     }
 
     .login-container {
@@ -58,13 +58,13 @@
     }
 
     .login-left h1 span {
-      color: #7e69aa;
+      color: rgb(217, 192, 0);
     }
 
     .underline {
       width: 60px;
       height: 3px;
-      background: #7e69aa;
+      background: rgb(217, 192, 0);
       margin-top: 5px;
     }
 
@@ -85,7 +85,7 @@
     /* 📌 Lado direito (Formulário) */
     .login-box {
       flex: 1;
-      background: #1e293b;
+      background: transparent;
       padding: 3rem;
       border-radius: 10px;
       box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
@@ -110,7 +110,7 @@
     .input-group-text {
       background: transparent;
       border: none;
-      color: #7e69aa;
+      color: rgb(217, 192, 0);
     }
 
     .label-icon {
@@ -123,7 +123,7 @@
     }
 
     .label-icon .material-symbols-outlined {
-      color: #7e69aa; /* Ícones na cor PAY */
+      color: rgb(217, 192, 0); /* Ícones na cor PAY */
     }
 
 
@@ -141,7 +141,7 @@
       <h1><b>WIN</b><span>PAY</span></h1>
       <div class="underline"></div>
       <p>"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
-      <span style="color: #9b6ef3;">Robert Collier</span>
+      <span style="color: rgb(217, 192, 0);">Robert Collier</span>
     </div>
 
     <div class="login-box">
@@ -160,17 +160,17 @@
           <input type="password" name="senha" class="form-control" placeholder="Sua senha" required>
         </div>
         <br>
-        <button type="submit" class="btn btn-primary btn-block" style="background: #7e69aa; border-radius: 8px; font-weight: bold; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; outline: none; box-shadow: none;">
+        <button type="submit" class="btn btn-primary btn-block" style="background: rgb(217, 192, 0); border-radius: 8px; font-weight: bold; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; outline: none; box-shadow: none; color: black;">
           ENTRAR <span class="material-symbols-outlined">arrow_forward</span>
         </button>
 
         <br><br><br><br><br><br>
-        <div class="text-center mt-3 login-links">
-          <a href="#" data-toggle="modal" data-target="#myModal">Esqueceu sua senha?</a> •
-          <a href="<?= url('cadastro'); ?>">Cadastre-se</a>
+        <div class="text-center mt-3 login-links" style="color: white;">
+          <a href="#" data-toggle="modal" data-target="#myModal" style="color: white;">Esqueceu sua senha?</a> •
+          <a href="<?= url('cadastro'); ?>" style="color: white;">Cadastre-se</a>
         </div>
-        <div class="text-center mt-2">
-          <a href="mailto:suporte.oficial@redrocket.com.br?subject=Preciso de Ajuda&body=Ol%C3%A1,%20estou%20com%20problema%20na%20p%C3%A1gina%20<?= $_SERVER["REQUEST_URI"] ?>.%20Estou%20com%20o%20seguinte%20problema:">Não conseguiu entrar?</a>
+        <div class="text-center mt-2" style="color: white;">
+          <a href="mailto:suporte.oficial@redrocket.com.br?subject=Preciso de Ajuda&body=Ol%C3%A1,%20estou%20com%20problema%20na%20p%C3%A1gina%20<?= $_SERVER["REQUEST_URI"] ?>.%20Estou%20com%20o%20seguinte%20problema:" style="color: white;">Não conseguiu entrar?</a>
         </div>
       </form>
     </div>

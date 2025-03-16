@@ -123,7 +123,7 @@ function dadosEndereco($venda)
     <?= $section->getTipoSecaoLayout() ?>
 
     <div class="col-sm-6">
-      <h4 style="font-family:inter"><?= $title ?></h4>
+      <h4 style="font-family:inter; color: white"><?= $title ?></h4>
     </div>
 
     <form action="#" style="font-family:inter; font-size:10px">

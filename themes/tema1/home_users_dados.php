@@ -74,7 +74,7 @@
 <style>
   /* Estilização dos cards no estilo WinPay */
   .winpay-card {
-    background: rgb(30, 36, 51); /* Fundo escuro para manter o estilo */
+    background: rgb(0, 0, 0); /* Fundo escuro para manter o estilo */
     border-radius: 10px; /* Cantos levemente arredondados */
     color: #ffffff; /* Fonte branca */
     border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
@@ -82,7 +82,7 @@
   }
 
   .winpay-card:hover {
-    border-color: rgb(155, 135, 245);
+    border-color: rgb(217, 192, 0);
     transform: scale(1.02);
   }
 
@@ -167,13 +167,13 @@
         <div class="progress-container">
           <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
           <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 245);"></div>
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(217, 192, 0);"></div>
           </div>
         </div>
         <div class="progress-container">
           <h6 class="modern-label"><span class="text-muted">Cancelados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
           <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgba(155, 135, 245, 0.5);"></div>
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 0);"></div>
           </div>
         </div>
       </div>
@@ -196,13 +196,13 @@
         <div class="progress-container">
           <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
           <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 245);"></div>
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(217, 192, 0);"></div>
           </div>
         </div>
         <div class="progress-container">
           <h6 class="modern-label"><span class="text-muted">Vencidos:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
           <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgba(155, 135, 245, 0.5);"></div>
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 0);"></div>
           </div>
         </div>
       </div>
@@ -225,13 +225,13 @@
         <div class="progress-container">
           <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
           <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 245);"></div>
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(217, 192, 0);"></div>
           </div>
         </div>
         <div class="progress-container">
           <h6 class="modern-label"><span class="text-muted">Cancelados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
           <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgba(155, 135, 245, 0.5);"></div>
+            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 0);"></div>
           </div>
         </div>
       </div>
@@ -251,7 +251,7 @@
   }
 
   .winpay-card:hover {
-    border-color: rgb(155, 135, 245);
+    border-color: rgb(217, 192, 0);
     transform: scale(1.02);
   }
 
@@ -397,7 +397,7 @@
   }
 
   .winpay-card:hover {
-    border-color: rgb(155, 135, 245);
+    border-color: rgb(217, 192, 0);
     transform: scale(1.02);
   }
 

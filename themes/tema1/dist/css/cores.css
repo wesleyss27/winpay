@@ -29,8 +29,8 @@
 }
 
 .bg-vermelho-gradient {
-    background: linear-gradient(135deg, rgb(255, 105, 180), rgb(155, 135, 245));
-    color: #fff;
+    background: rgb(217, 192, 0);
+    color: black;
 }
 
 .bg-verde-octa {

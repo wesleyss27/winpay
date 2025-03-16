@@ -531,7 +531,7 @@ class AppWeb
 
 
         echo $this->view->render("marketplace", [
-            "title" => "Marketplace RedRocket",
+            "title" => "Marketplace RedRockettt",
             "section" => @$section,
             "permissao" => @$permissao,
             "produtos" => $produtos,

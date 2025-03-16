@@ -31,7 +31,7 @@ include "lista-bancos.php";
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 style="font-family:inter">Contas Bancárias</h1>
+            <h1 style="font-family:inter; color:white">Contas Bancárias</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -61,7 +61,7 @@ include "lista-bancos.php";
           <?php endif; ?>
 
           <div class="col-12 col-md-3">
-            <h6 style="font-family:inter; color:#fff">|</h6>
+            <h6 style="font-family:inter; color:black">|</h6>
             <button type="submit" name="" class="form-control form-control btn-primary"> <i class="fa fa-check"></i> Buscar</button>
           </div>
         </div>
@@ -137,7 +137,7 @@ include "lista-bancos.php";
                 </tr>
 
                 <?php $usuario = $usuarioDados->find("usuario = $banco->usuario")->fetch() ?>
-                <tr style="border-bottom: 5px solid #2AAADE;">
+                <tr style="border-bottom: 5px solid rgb(217, 192, 0);">
                   <td colspan="5">
                     <b> Usuário </b> &nbsp; <?= $usuario->nome; ?> - <?= $usuario->cpf_cnpj; ?>
                     imagem: <a href="<?= url("uploads/banco/" . $banco->imagem_conta) ?>" target="_blank"><?= $banco->imagem_conta ?></a><br>

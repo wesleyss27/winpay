@@ -46,18 +46,18 @@ if ($_SESSION["tipo"] == 6) {
         <style>
           /* Personalização da caixa de diálogo */
           .swal-modal {
-            background: rgb(30, 36, 51) !important; /* Fundo escuro */
+            background: rgb(155, 135, 0); !important; /* Fundo amarelo para chamar atenção */
           }
 
           /* Torna todo o texto branco */
           .swal-title, .swal-text {
-            color: white !important;
+            color: black !important;
           }
 
           /* Personalização dos botões */
           .swal-button {
-            background-color: white !important; /* Botão branco */
-            color: rgb(30, 36, 51) !important; /* Texto escuro */
+            background-color: black; !important; /* Botão branco */
+            color: white !important; /* Texto escuro */
             border-radius: 5px;
             font-weight: bold;
           }
@@ -71,12 +71,13 @@ if ($_SESSION["tipo"] == 6) {
           /* Estilo específico para o botão de Cancelar */
           .btn-cancel {
             background-color: transparent !important;
-            color: white !important;
-            border: 1px solid white !important;
+            color: black !important;
+            border: 1px solid black !important;
           }
 
           .btn-cancel:hover {
-            background-color: rgba(255, 255, 255, 0.2) !important;
+            background-color: black !important;
+            color: white !important;
           }
         </style>
 
@@ -133,19 +134,20 @@ if ($_SESSION["tipo"] == 6) {
         <style>
           /* Botões modernos */
           .btn-winpay {
-            background: rgb(30, 36, 51);
+            background: black;
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff;
             transition: all 0.3s ease-in-out;
           }
 
           .btn-winpay:hover {
-            background: rgb(50, 56, 71);
-            border-color: rgb(155, 135, 245);
+            background: black;
+            color: white;
+            border-color: rgb(217, 192, 0);
           }
 
           .btn-winpay-sm {
-            background: rgb(155, 135, 245);
+            background: rgb(217, 192, 0);
             color: #fff;
             border: none;
             padding: 6px 16px;
@@ -154,7 +156,7 @@ if ($_SESSION["tipo"] == 6) {
           }
 
           .btn-winpay-sm:hover {
-            background: rgb(135, 115, 225);
+            background: rgb(155, 135, 0);
           }
 
           /* Dropdown com largura aumentada */
@@ -174,7 +176,7 @@ if ($_SESSION["tipo"] == 6) {
           }
 
           .winpay-input:focus {
-            border-color: rgb(155, 135, 245);
+            border-color: rgb(217, 192, 0);
             outline: none;
           }
         </style>
@@ -219,7 +221,7 @@ if ($_SESSION["tipo"] == 6) {
               }
 
               .winpay-card:hover {
-                border-color: rgb(155, 135, 245);
+                border-color: rgb(217, 192, 0);
                 transform: scale(1.02);
               }
 
@@ -232,7 +234,7 @@ if ($_SESSION["tipo"] == 6) {
 
               /* Ícone */
               .fa-chart-area {
-                color: rgb(155, 135, 245);
+                color: rgb(217, 192, 0);
               }
 
               /* Gráfico */
@@ -305,7 +307,7 @@ if ($_SESSION["tipo"] == 6) {
             <!-- Estilos Modernizados -->
             <style>
               .winpay-card {
-                background: rgb(30, 36, 51); /* Fundo escuro */
+                background: rgb(0, 0, 0); /* Fundo escuro */
                 border-radius: 10px; /* Cantos arredondados */
                 color: #ffffff; /* Texto branco */
                 border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
@@ -314,7 +316,7 @@ if ($_SESSION["tipo"] == 6) {
               }
 
               .winpay-card:hover {
-                border-color: rgb(155, 135, 245);
+                border-color: rgb(217, 192, 0);
                 transform: scale(1.02);
               }
 
@@ -329,7 +331,7 @@ if ($_SESSION["tipo"] == 6) {
 
               .stat-box:hover {
                 transform: scale(1.05);
-                box-shadow: 0 4px 10px rgba(155, 135, 245, 0.3);
+                box-shadow: 0 4px 10px rgb(155, 135, 0);
               }
 
               /* Ajusta a distribuição dos elementos na linha */
@@ -353,7 +355,7 @@ if ($_SESSION["tipo"] == 6) {
                 font-size: 1.6rem;
                 font-weight: bold;
                 margin-top: 5px;
-                color: rgb(155, 135, 245);
+                color: rgb(217, 192, 0);
               }
             </style>
 
@@ -595,13 +597,13 @@ if ($_SESSION["tipo"] == 6) {
         datasets: [{
                 label: 'Mês Atual',
                 backgroundColor: 'rgba(155, 135, 245, 0.2)', // Roxo claro
-                borderColor: 'rgb(155, 135, 245)', // Roxo vibrante
+                borderColor: 'rgb(217, 192, 0)', // Roxo vibrante
                 pointRadius: 5,
                 pointBorderWidth: 2,
-                pointBackgroundColor: 'rgb(155, 135, 245)',
+                pointBackgroundColor: 'rgb(217, 192, 0)',
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: "#fff",
-                pointHoverBorderColor: 'rgb(155, 135, 245)',
+                pointHoverBorderColor: 'rgb(217, 192, 0)',
                 data: [<?php foreach ($comAtual as $atual) echo $atual . "," ?>],
                 fill: true,
                 tension: 0.3, // Suavização das curvas

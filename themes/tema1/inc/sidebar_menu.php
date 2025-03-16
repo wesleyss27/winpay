@@ -6,7 +6,7 @@
     background: #ddd !important;
   }
 </style>
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; background-color: rgb(30, 36, 51);">
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; background-color: rgb(0, 0, 0);">
   <?php
 
   use Source\Models\Usuarios\Usuario;
