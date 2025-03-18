@@ -5,7 +5,147 @@
   #aside .nav-link.active {
     background: #ddd !important;
   }
+
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px rgba(255, 200, 0, 0.5); }
+    33% { text-shadow: 0 0 15px rgba(255, 200, 0, 1); }
+    66% { text-shadow: 0 0 5px rgba(255, 200, 0, 0.5); }
+    100% { text-shadow: 0 0 15px rgba(255, 200, 0, 1); }
+  }
+
+  .brand-logo {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 2px;
+    transition: opacity 0.3s ease-in-out;
+    position: relative;
+    display: inline-block;
+  }
+
+  .brand-logo .highlight {
+    color: rgb(217, 192, 0); /* Amarelo */
+    animation: glow 1.5s infinite alternate; /* Efeito brilho */
+  }
+
+  .brand-logo .underline {
+    width: 38px; /* Ajustado para o tamanho exato de "WIN" */
+    height: 2px;
+    background-color: rgb(217, 192, 0); /* Cor amarela */
+    position: absolute;
+    bottom: -5px;
+    left: 50px; /* Afastado um pouco para a direita */
+  }
+
+  /* 🔻 Oculta o texto quando o menu está colapsado */
+  .sidebar-mini.sidebar-collapse .brand-logo {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  /* 🔄 Mostra o texto quando expande */
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-logo {
+    opacity: 1;
+  }
+
+  /* Sidebar */
+  .main-sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #111; /* Fundo escuro */
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Estiliza os links */
+  .nav-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Ícones do Material Design */
+  .nav-sidebar .nav-link span.material-icons-outlined {
+    font-size: 22px;
+    margin-right: 10px;
+    color: rgb(217, 192, 0); /* Ícones amarelos */
+  }
+
+  /* Texto alinhado ao lado dos ícones */
+  .nav-sidebar .nav-link p {
+    margin: 0;
+    font-weight: bold;
+  }
+
+  /* Efeito Hover */
+  .nav-sidebar .nav-link:hover {
+    background-color: #222;
+    color: #f4b400;
+  }
+
+  /* Item ativo */
+  .nav-sidebar .nav-link.active {
+    background-color: #f4b400;
+    color: #111;
+    font-weight: bold;
+  }
+
+  /* Ajusta os ícones quando colapsado */
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link {
+    justify-content: flex-end !important;
+    padding: 10px 0 !important;
+  }
+
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link .material-icons-outlined {
+    margin-right: 0 !important;
+    font-size: 24px !important;
+  }
+
+  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link p {
+    display: none !important;
+  }
+
+  /* Expande quando o mouse está sobre */
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover {
+    width: 250px !important;
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link {
+    justify-content: flex-start !important;
+    padding: 10px !important;
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link .material-icons-outlined {
+    margin-right: 10px !important;
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link p {
+    display: inline !important;
+  }
+
+  /* Colapsa novamente quando o mouse sai */
+  .sidebar-mini.sidebar-collapse .main-sidebar:not(:hover) {
+    width: 80px !important;
+  }
 </style>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet">
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; background-color: rgb(0, 0, 0);">
   <?php
 
@@ -13,12 +153,13 @@
   use Source\Models\Permissao\Section;
 
   $section = new Section();
-
   if ($section->getTipo() != 6) :
   ?>
-    <a href="<?= url() ?>" class="brand-link" style="border:0">
-      <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo4.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
-    </a>
+   <div class="brand-logo" style="margin-bottom: 20px;">
+    <span class="win-text">WIN</span><span class="highlight">PAY</span>
+    <div class="underline"></div>
+</div>
+
   <?php elseif ($section->getTipo() == 6) : ?>
     <div align="center"><img id="logo-menu" src="<?= url("themes/imgs/logos/logo-icon.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
   <?php endif ?>
@@ -32,7 +173,7 @@
             <li class="nav-item">
               <a href="<?= url() ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
                 <!-- <a href="<?= url() ?>" class="nav-link txt-azul-dark" style="color:#fff"> -->
-                <i class="nav-icon fas fa-th"></i>
+                <span class="material-icons-outlined">home</span>
                 <p>Início </p>
               </a>
             </li>
@@ -41,7 +182,7 @@
           <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("marketplace")) : ?>
             <li class="nav-item" title="Veja produtos para poder se afiliar a eles">
               <a href="<?= url('marketplace') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                <i class="nav-icon fas fa-shopping-cart"></i>
+                <span class="material-icons-outlined">storefront</span>
                 <p>Marketplace</p>
               </a>
             </li>
@@ -87,7 +228,7 @@
                 <a href='#' class='nav-link'>
                 <?php endif; ?>
 
-                <i class="nav-icon fas fa-check-circle txt-branco-octa"></i>
+                <span class="material-icons-outlined">shopping_cart</span>
                 <p class="txt-branco-octa" style="text-shadow:#343a40">
                   Vendas
                   <i class="right fas fa-angle-left"></i>
@@ -177,7 +318,7 @@
               }
               ?>
 
-              <i class="nav-icon fas fa-list txt-branco-octa"></i>
+              <span class="material-icons-outlined">inventory</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Produtos
                 <i class="right fas fa-angle-left"></i>
@@ -226,7 +367,7 @@
             <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("assinaturas")) : ?>
               <li class="nav-item">
                 <a href="<?= url("assinaturas") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                  <i class="fas fa-retweet"></i>
+                  <span class="material-icons-outlined">autorenew</span>
                   <p> Assinaturas</p>
                 </a>
               </li>
@@ -248,7 +389,7 @@
                 echo "<a href='#' class='nav-link'>";
               }
               ?>
-              <i class="nav-icon fas fa-money-check txt-branco-octa"></i>
+              <span class="material-icons-outlined">attach_money</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Comissões e Saques
                 <i class="fas fa-angle-left right"></i>
@@ -318,7 +459,7 @@
               }
               ?>
 
-              <i class="nav-icon fas fa-cog txt-branco-octa"></i>
+              <span class="material-icons-outlined">settings</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Configurações
                 <i class="fas fa-angle-left right"></i>
@@ -379,7 +520,7 @@
               }
               ?>
 
-              <i class="nav-icon fas fa-wrench txt-branco-octa"></i>
+              <span class="material-icons-outlined">build</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Ferramentas
                 <i class="fas fa-angle-left right"></i>
@@ -466,7 +607,7 @@
               }
               ?>
 
-              <i class="nav-icon fas fa-chart-bar txt-branco-octa"></i>
+              <span class="material-icons-outlined">bar_chart</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Relatórios
                 <i class="fas fa-angle-left right"></i>
@@ -519,7 +660,7 @@
             }
             ?>
 
-            <i class="nav-icon fas fa-chart-pie txt-branco-octa"></i>
+            <span class="material-icons-outlined">pie_chart</span>
             <p class="txt-branco-octa" style="text-shadow:#343a40">
               Painel WINPAY
               <i class="fas fa-angle-left right"></i>
