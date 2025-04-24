@@ -1,4 +1,4 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: linear-gradient(to bottom, #0b0024, #b73234, #b73234)">
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: linear-gradient(to bottom, #121212, #121212);">
   <?php if (@$_SESSION["tipo"] != 6) : ?>
     <a href="<?= url() ?>" class="brand-link" style="border:0">
       <div align="center"><img src="<?= url("themes/imgs/logos/logo4.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
