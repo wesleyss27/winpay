@@ -29,7 +29,7 @@
         </button>
       </div>
       <h5 class="mb-1">Total em conta</h5>
-      <h3 id="totalValue" class="hidden-value">R$ <?= formataNumero($valorTotal) ?></h3>
+      <h3 id="totalValue" class="hidden-value">R$ <?= formataNumero($valorPago) ?></h3>
       <small class="d-block">Soma do valor disponível + recebimentos</small>
     </div>
   </div>
