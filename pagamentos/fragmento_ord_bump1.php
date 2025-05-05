@@ -97,6 +97,8 @@ endforeach;
             parcelamento();
         }
 
+        console.log("id", id, "totalprod", totalprod, "cupom_desconto", cupom_desconto);
+
         if ((id === 1 || id === 0) && $("#resultado_cartao").length > 0) {
             tab = "#resultado_cartao";
             form = "#form_cartao ";
