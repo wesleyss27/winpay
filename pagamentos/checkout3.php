@@ -532,6 +532,111 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     endif;
     ?>
 
+<style>
+  body {
+    background-color: #121212;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .cabecalho-novo {
+    background-color: #1E1E1E;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  }
+
+  .titulo-secao {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #00C853;
+  }
+
+  .corpo {
+    background-color: #1E1E1E;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+  }
+
+  .form-control, .newform, select {
+    background-color: #2A2A2A;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  .form-control:focus, .newform:focus, select:focus {
+    border-color: #00C853;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,200,83,0.5);
+  }
+
+  .btn-pagamento {
+    background: linear-gradient(90deg, #00C853, #64DD17);
+    color: #fff;
+    border: none;
+    padding: 0.75rem;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .btn-pagamento:hover {
+    background: linear-gradient(90deg, #00E676, #76FF03);
+  }
+
+  .nav-tabs .nav-link {
+    background-color: #1E1E1E;
+    color: #ccc;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-right: 5px;
+  }
+
+  .nav-tabs .nav-link.active {
+    background-color: #00C853;
+    color: #000;
+    font-weight: bold;
+  }
+
+  label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+
+  small {
+    color: #aaa;
+  }
+
+  .total {
+    font-size: 1.2rem;
+    color: #00E676;
+    font-weight: bold;
+  }
+  .resumo {
+    background-color: #1E1E1E;
+  }
+
+  .resumo hr {
+    border-top: 1px solid #333;
+  }
+
+  .container-75{
+    background-color: #1E1E1E;
+  }
+
+  .imagem-produto {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  }
+</style>
+
 </head>
 <!-- FIM DO HEAD -->
 

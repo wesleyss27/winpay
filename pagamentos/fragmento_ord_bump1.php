@@ -97,18 +97,20 @@ endforeach;
             parcelamento();
         }
 
-        if (id == 1 || id == 0) {
+        if ((id === 1 || id === 0) && $("#resultado_cartao").length > 0) {
             tab = "#resultado_cartao";
             form = "#form_cartao ";
-        } else if (id == 2) {
+        } else if (id === 2 && $("#resultado_pix").length > 0) {
             tab = "#resultado_pix";
             tab2 = "#txt_valor_pix";
             form = "#form_pix ";
-        } else {
+        } else if ($("#resultado_boleto").length > 0) {
             tab = "#resultado_boleto";
             tab2 = "#txt_valor_boleto";
-            form = "#form_boleto "
-
+            form = "#form_boleto ";
+        } else {
+            console.warn("Forma de pagamento não disponível para id:", id);
+            return; // Impede que continue com form/tab inválidos
         }
 
         // Pega valor total dos order bumps selecionados
