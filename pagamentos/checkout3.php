@@ -282,7 +282,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
         echo "<!-- FIM COOKIES AFILIADOS -->";
 
-    } elseif($checkout->pixel_facebook || $checkout->pixel_facebook_api ){
+    } else if($checkout->pixel_facebook || $checkout->pixel_facebook_api ){
 
         echo "<!-- COOKIES PRODUTOR -->";
 
@@ -315,7 +315,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
             }else {
                 echo "
                     <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel.php?pixel=$pixel2&valor=$valor") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel.php?pixel=$pixel2&ev=InitiateCheckout&valor=$valor") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
                 ";
             }
             
@@ -1519,14 +1519,14 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                                     Caso expire, <a href="" id="link-pix">clique aqui</a>
                                 </div>
 
-                                <div id="qrcode" style="margin:15px auto;"></div>
+                                <!-- <div id="qrcode" style="margin:15px auto;"></div>
 
                                 <div class="instrucao_pix row" style="font-size: 14px">
                                     <div class="col-md-6"><input type="text" id="inp-copiar" class="form-control newform form-control-sm" readonly></div>
                                     <div class="col-md-6"><button type="button" class="form-control btn btn-info btn-sm" id="copiar">COPIAR CÓDIGO</button></div>
-                                </div>
+                                </div> 
                                 <br>
-                                <button id="btn-pix-confirmar" class="btn form-control pagamento btn-pagamento">Finalizar Compra</button>
+                                <button id="btn-pix-confirmar" class="btn form-control pagamento btn-pagamento">Finalizar Compra</button> -->
                             </form>
                         </div>
                         <!-- FIM TAB PIX -->
@@ -1543,6 +1543,67 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
         <!-- FIM DADOS REDROCKET -->
     </div>
     <!-- FIM CONTAINER PRINCIPAL -->
+
+    <div id="pix-page" style="display: none; padding: 40px; background: #f7f7f7; min-height: 100vh;">
+    <div class="text-center mb-4">
+        <h2 style="color: #28a745; font-weight: bold;">Compra com Pix</h2>
+        <p style="font-size: 15px; color: #333;">Siga as instruções para efetuar o pagamento via Pix</p>
+    </div>
+
+    <div class="row justify-content-center align-items-start" style="max-width: 1000px; margin: auto;">
+        <!-- LADO ESQUERDO - Instruções -->
+        <div class="col-md-6 mb-4">
+            <h3 style="font-weight: bold;">Falta pouco! Siga os passos abaixo para realizar o pagamento</h3>
+            <ol style="font-size: 15px; line-height: 1.6;">
+                <li><strong>Pagar com QR code:</strong> aponte a câmera do seu celular para o código QR Code</li>
+                <li><strong>Finalize o pagamento</strong> após verificar as informações</li>
+                <li><strong>Ou use Pix Copia e Cola:</strong> copie o código abaixo</li>
+            </ol>
+            <input type="text" class="form-control mb-3" id="inp-copiar" readonly style="background: #f0f0f0;">
+            <button class="btn btn-warning btn-lg" onclick="copiarPix()" style="font-weight: 500;">Copiar Código Pix</button>
+        </div>
+
+        <!-- LADO DIREITO - QR Code e Ações -->
+        <div class="col-md-6 text-center bg-white p-4 rounded" style="box-shadow: 0 0 15px rgba(0,0,0,0.05);">
+            <p style="font-size: 14px;">Sua oferta encerra em <span id="contador_pix" style="color: red; font-weight: bold;">05:00</span></p>
+            <p class="mb-2"><strong>Aponte a câmera aqui</strong></p>
+            <div id="qrcode" style="margin: 10px auto; width: 220px; height: 220px;"></div>
+            <p class="mt-3"><strong>Valor do Pix: R$ <?= number_format($preco, 2, ",", ".") ?></strong></p>
+            <button id="btn-pix-confirmar" class="btn btn-success btn-lg mt-3" style="display: none;">Já fiz o Pagamento</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- JS necessário -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+<<script>
+    function iniciarContador(segundos) {
+        const el = document.getElementById("contador_pix");
+        let restante = segundos;
+        const intervalo = setInterval(() => {
+            const min = String(Math.floor(restante / 60)).padStart(2, "0");
+            const seg = String(restante % 60).padStart(2, "0");
+            el.textContent = `${min}:${seg}`;
+            restante--;
+            if (restante < 0) clearInterval(intervalo);
+        }, 1000);
+    }
+
+    function copiarPix() {
+        const input = document.getElementById("inp-copiar");
+        if (input && input.value) {
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert("Código Pix copiado!");
+            });
+        } else {
+            alert("Código Pix ainda não carregado.");
+        }
+    }
+</script>
+
     <div class="container-75">
         <div class="row">
             <div class="col-md-12">
@@ -1574,20 +1635,20 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="container-75">
             <div class="center pt-4">
                 <img height="70" src="<?= url("pagamentos/imgs/logo.png") ?>" alt="COMPRA SEGURA - COMPRE COM TOTAL SEGURANÇA" />
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="rodape2">
         <div class="container-75">
             <br>
             <small>
                 <br />
-                <span>Esta compra será processada pela WinPay © 2024 - Todos os direitos reservados.</span>
+                <span>Esta compra será processada pela WinPay © 2025 - Todos os direitos reservados.</span>
                 <hr />
                 <span>
                     ** pode haver incidencia de taxa de juros <br>
@@ -2773,36 +2834,29 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                         if (data[1].msg == "Venda salva com sucesso" && data[1].status_transacao) {
                             $("#cpf").removeClass('input-error');
 
-                            // Clear Previous QR Code
-                            $('#qrcode').empty();
+                            // ESCONDE A PÁGINA ATUAL E MOSTRA A TELA PIX
+                            document.querySelector(".container-75")?.style.setProperty("display", "none");
+                            document.body.querySelector(".row.mt-4").style.display = "none";
+                            document.getElementById("pix-page").style.display = "block";
+                            iniciarContador(300);
 
-                            // Set Size to Match User Input
-                            $('#qrcode').css({
-                                'width': 200,
-                                'height': 200
-                            })
-
-                            // Generate and Output QR Code
-                            $('#qrcode').qrcode({
-                                width: 200,
-                                height: 200,
+                            // GERA E EXIBE O QR CODE
+                            $('#qrcode').empty().qrcode({
+                                width: 220,
+                                height: 220,
                                 text: data[1].qr_code
                             });
 
-                            $("#btn-pix").hide();
-                            $("#aviso_pix").hide();
-                            $(".instrucao_pix").show();
-                            $("#inp-copiar").attr("value", data[1].qr_code);
+                            // EXIBE O CÓDIGO PIX PARA COPIA E BOTÃO
+                            $("#inp-copiar").val(data[1].qr_code);
                             $("#btn-pix-confirmar").show();
 
-                            $("#link-pix").attr("href", "<?= url("checkout/$checkout->codigo/") ?>" + data[1].venda);
-
-                            $("#btn-pix-confirmar").click((e) => {
+                            // REDIRECIONA AO FINALIZAR COMPRA
+                            $("#btn-pix-confirmar").off("click").on("click", function (e) {
                                 e.preventDefault();
                                 location.href = "<?= url("checkout/finalizar-compra/") ?>" + data[1].venda;
                             });
-
-                        } else if (data[1].msg == "CPF inválido") {
+                        }else if (data[1].msg == "CPF inválido") {
                             $("#cpf").addClass('input-error');
                             // alert("CPF inválido. Verifique se digitou os números do CPF corretamente e tente novamente");
                             load("close");
