@@ -99,10 +99,11 @@ endforeach;
 
         console.log("id", id, "totalprod", totalprod, "cupom_desconto", cupom_desconto);
 
-        if ($("#resultado_cartao").length > 0) {
+        // Detecta qual forma de pagamento está disponível e usa
+        if ($("#resultado_cartao").length > 0 && (id === 0 || id === 1)) {
             tab = "#resultado_cartao";
             form = "#form_cartao ";
-        } else if ($("#resultado_pix").length > 0) {
+        } else if ($("#resultado_pix").length > 0 && (id === 2 || id === 1 || id === 0)) {
             tab = "#resultado_pix";
             tab2 = "#txt_valor_pix";
             form = "#form_pix ";
@@ -111,9 +112,10 @@ endforeach;
             tab2 = "#txt_valor_boleto";
             form = "#form_boleto ";
         } else {
-            console.warn("Nenhuma forma de pagamento disponível.");
+            console.warn("Nenhuma forma de pagamento visível no DOM para o id:", id);
             return;
         }
+
 
 
 
