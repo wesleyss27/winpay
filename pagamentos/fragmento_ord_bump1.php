@@ -99,11 +99,10 @@ endforeach;
 
         console.log("id", id, "totalprod", totalprod, "cupom_desconto", cupom_desconto);
 
-        if ((id === 1 || id === 0) && $("#resultado_cartao").length > 0) {
-        tab = "#resultado_cartao";
-        form = "#form_cartao ";
-        } else if ((id === 2 || id === 1 || id === 0) && $("#resultado_pix").length > 0) {
-            // Corrigido: aceita id 0 como Pix
+        if ($("#resultado_cartao").length > 0) {
+            tab = "#resultado_cartao";
+            form = "#form_cartao ";
+        } else if ($("#resultado_pix").length > 0) {
             tab = "#resultado_pix";
             tab2 = "#txt_valor_pix";
             form = "#form_pix ";
@@ -112,9 +111,11 @@ endforeach;
             tab2 = "#txt_valor_boleto";
             form = "#form_boleto ";
         } else {
-            console.warn("Forma de pagamento não disponível para id:", id);
+            console.warn("Nenhuma forma de pagamento disponível.");
             return;
         }
+
+
 
 
         // Pega valor total dos order bumps selecionados
