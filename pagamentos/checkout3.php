@@ -1669,11 +1669,11 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
         </div>
 
         <!-- LADO DIREITO - QR Code e Ações -->
-        <div class="col-md-6 text-center p-4 rounded" style="box-shadow: 0 0 15px rgba(0,0,0,0.05); background: #121212;">
+        <div class="col-md-6 text-center p-4 rounded" style="box-shadow: 0 0 15px rgba(0,0,0,0.05); background: #fff; color: black">
             <p style="font-size: 14px;">Sua oferta encerra em <span id="contador_pix" style="color: red; font-weight: bold;">05:00</span></p>
             <p class="mb-2"><strong>Aponte a câmera aqui</strong></p>
             <div id="qrcode" style="margin: 10px auto; width: 220px; height: 220px;"></div>
-            <p class="mt-3"><strong>Valor do Pix: R$ <?= number_format($preco, 2, ",", ".") ?></strong></p>
+            <p class="mt-3;"><strong>Valor do Pix: R$ <?= number_format($preco, 2, ",", ".") ?></strong></p>
             <button id="btn-pix-confirmar" class="btn btn-success btn-lg mt-3" style="display: none;">Já fiz o Pagamento</button>
         </div>
     </div>
