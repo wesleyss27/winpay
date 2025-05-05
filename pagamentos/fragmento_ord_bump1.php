@@ -100,10 +100,10 @@ endforeach;
         console.log("id", id, "totalprod", totalprod, "cupom_desconto", cupom_desconto);
 
         if ((id === 1 || id === 0) && $("#resultado_cartao").length > 0) {
-            tab = "#resultado_cartao";
-            form = "#form_cartao ";
-        } else if ((id === 2 || id === 1) && $("#resultado_pix").length > 0) {
-            // Se for Pix ou se só existir Pix (mesmo com id 1)
+        tab = "#resultado_cartao";
+        form = "#form_cartao ";
+        } else if ((id === 2 || id === 1 || id === 0) && $("#resultado_pix").length > 0) {
+            // Corrigido: aceita id 0 como Pix
             tab = "#resultado_pix";
             tab2 = "#txt_valor_pix";
             form = "#form_pix ";
@@ -118,9 +118,10 @@ endforeach;
 
 
         // Pega valor total dos order bumps selecionados
-        total_order_bump = $(form + 'input[class="dias"]:checked').get().reduce(function(tot, el) {
-            return tot + Number(el.value);
-        }, 0);
+
+        total_order_bump = $('input.dias:checked').get().reduce(function (tot, el) {
+        return tot + Number(el.value);
+    }, 0);
 
         // Pegar valor do frete selecionado
         // Caso Checkout seja Modelo novo (modelo 4) - Aba de frete não
