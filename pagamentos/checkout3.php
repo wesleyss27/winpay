@@ -1649,10 +1649,10 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     </div>
     <!-- FIM CONTAINER PRINCIPAL -->
 
-    <div id="pix-page" style="display: none; padding: 40px; background: #f7f7f7; min-height: 100vh;">
+    <div id="pix-page" style="display: none; padding: 40px; background: #1E1E1E; min-height: 100vh;">
     <div class="text-center mb-4">
         <h2 style="color: #28a745; font-weight: bold;">Compra com Pix</h2>
-        <p style="font-size: 15px; color: #333;">Siga as instruções para efetuar o pagamento via Pix</p>
+        <p style="font-size: 15px; color: #fff;">Siga as instruções para efetuar o pagamento via Pix</p>
     </div>
 
     <div class="row justify-content-center align-items-start" style="max-width: 1000px; margin: auto;">
@@ -1664,12 +1664,12 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 <li><strong>Finalize o pagamento</strong> após verificar as informações</li>
                 <li><strong>Ou use Pix Copia e Cola:</strong> copie o código abaixo</li>
             </ol>
-            <input type="text" class="form-control mb-3" id="inp-copiar" readonly style="background: #f0f0f0;">
+            <input type="text" class="form-control mb-3" id="inp-copiar" readonly style="background: #000000;">
             <button class="btn btn-warning btn-lg" onclick="copiarPix()" style="font-weight: 500;">Copiar Código Pix</button>
         </div>
 
         <!-- LADO DIREITO - QR Code e Ações -->
-        <div class="col-md-6 text-center bg-white p-4 rounded" style="box-shadow: 0 0 15px rgba(0,0,0,0.05);">
+        <div class="col-md-6 text-center p-4 rounded" style="box-shadow: 0 0 15px rgba(0,0,0,0.05); background: #121212;">
             <p style="font-size: 14px;">Sua oferta encerra em <span id="contador_pix" style="color: red; font-weight: bold;">05:00</span></p>
             <p class="mb-2"><strong>Aponte a câmera aqui</strong></p>
             <div id="qrcode" style="margin: 10px auto; width: 220px; height: 220px;"></div>
