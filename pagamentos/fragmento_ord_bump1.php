@@ -136,6 +136,7 @@ endforeach;
         frete = parseFloat(frete);
         totalprod = parseFloat(totalprod);
         total_order_bump = parseFloat(total_order_bump);
+        console.log("total_order_bump", total_order_bump, "totalprod", totalprod, "frete", frete);
         cupom_desconto = parseFloat(cupom_desconto);
         tt = (total_order_bump + totalprod + frete - cupom_desconto).toLocaleString("pt-BR", {
             style: "currency",
