@@ -101,13 +101,16 @@ endforeach;
 
         // Detecta qual forma de pagamento está disponível e usa
         if ($("#resultado_cartao").length > 0 && (id === 0 || id === 1)) {
+            console.log("resultado_cartao")
             tab = "#resultado_cartao";
             form = "#form_cartao ";
         } else if ($("#resultado_pix").length > 0 && (id === 2 || id === 1 || id === 0)) {
+            console.log("resultado_pix")
             tab = "#resultado_pix";
             tab2 = "#txt_valor_pix";
             form = "#form_pix ";
         } else if ($("#resultado_boleto").length > 0) {
+            console.log("resultado_boleto")
             tab = "#resultado_boleto";
             tab2 = "#txt_valor_boleto";
             form = "#form_boleto ";
