@@ -808,8 +808,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 <div class="header">
                     <?php if (@$banner != "") : ?>
                         <img class="banner-checkout" src="<?= url("uploads/checkout/" . @$banner); ?>" alt="Banner Checkout">
-                    <?php else : ?>
-                        <img class="banner-checkout" src="<?= url("pagamentos/imgs/banner-checkout-rr.png"); ?>" alt="">
+                    
                     <?php endif; ?>
 
                     <?php if (@$aviso != "") : ?>
