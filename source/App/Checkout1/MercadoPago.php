@@ -203,7 +203,7 @@ class MercadoPago
                 "items": [
                 {
                     "id": "' . @$data["id"] . '",
-                    "title": "teste testes testres testes teste",
+                    "title": "' . @$data["nome_produto"] . '",
                     "description": "' . @$data["descricao"] . '",
                     "picture_url": "' . @$data["foto"] . '",
                     "quantity": 1,

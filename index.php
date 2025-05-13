@@ -680,6 +680,9 @@ $router->group("notificacoes");
 $router->get("/", "AppNotificacao:notificacoes", "notificacao.notificacao");
 $router->get("/p/{page}", "AppNotificacao:notificacoes", "notificacao.notificacao");
 $router->post("/", "AppNotificacao:postbackNotificacao", "notificacao.postback");
+$router->get("/fcm", "AppNotificacao:painelFcm", "notificacao.fcm");
+$router->post("/fcm", "AppNotificacao:enviarFcm", "notificacao.fcm.enviar");
+
 
 
 /*

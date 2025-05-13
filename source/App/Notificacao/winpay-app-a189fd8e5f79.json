@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "winpay-app",
+  "private_key_id": "a189fd8e5f79f010f5fce5bb109b50c1b1be87ba",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDS7cdYMezoLJvK\nvzy4rcmm+1p6A4noPiKuVcGrBUoOwfldJkIjWFx+Zz6/9PDE25WDndH8NB0aCz+I\nrVzTsmAIQDO2DhMiw7LCAEGJzv1zd3R5W3IQrFXPEs9X+ByhuCos/ppohQYNWYzL\nMT+IAnGsJX1Z/M8pQ74r+HCuoONsvpjeIqAIENZJUZuDmJsL6zkruGHt0wlpQMtJ\nRMdOSyUg1+J4iGTJdmvVXxccya37EeSeZrW/xdtakWENhMwOMsB1YTLU5LTl0X31\nNZb0sqY656bWlW68tLPNbvPab1Goi77ELUifPAZe3XVOAdybfaRcjMCwDAST1AIE\ne2G6CqlbAgMBAAECggEAT4K7mObk/5ZFOfXBzXoRYEUy03i/BRFbIG2KPk4Vnx+G\nwRLZbppx72I6+MA7/HEr2LvmupPofndMAVkce16rraCJ/bArjXjIyzGuguTIjLy0\nZsTOaDOWeyMDjw0jueCC4YguK4UthV3C4ZuUb9BAClztdj0C2HLFXqzdyS4z3LsD\nDz8wN+6RtwM6Uw9BSxqxE0peKtfdPfHRe+a+cub0h2N65IBJPpmbR0FixTcZ4uZd\nnoOEWWOy/KJdwVVHvwcVl7xqu7j7Cn2dFxc5E8yjK5aWDigbsNYm1lyr2S90KzyO\nSJP1JG1IsbeN/Rgu4ZP/EsQ82RM01m44PgokGjA4iQKBgQDrWsJAjjP/CowW22pZ\nM/zjmbs5LOIFWUBlogFN1MN6yBnpLYhGXpagE4C4iUYmmhUoPBrVQ7RqwCuJoanL\nY8HYWxGqkVISJMe/8J/s62/2FIuj7IYt8ijiX1faGu193NoIFXAlH7vV4dd8lfg1\nTRj6bYvY5JzUziBFdyvSZ4lViQKBgQDlboD76s46adAO+5e6ZEfX8jCKwTNAgkSe\nho1RsmJ8TCF/U6QToZ2WCiPcKHsjq8fy/YZmg5SWt9LYeeltJb758ubsXon4UUBL\ncrq6pE6UUFnJgkBvXa9JfVlR4hVn+iw79qWTyC3FJ1v5Ddunm/UqxdiAPTa+OVN7\nmOWx+zvywwKBgQC7eTQ7EAtDITeuDWGNZOgQtKh6RtJTyGCPlJjNUqnT6AkbwPVI\neJgrMt3aIR8MKLipsBb/wkq4rhMAMxJ5vSDwIrrTz6Y8ZafnsNjzdCdfMcZ58TKA\n7uC6UZA9YC3FkGLtBYarS7foC1oHF777VkqLUS+QuapjqT3zl5YEqAyxYQKBgQCl\n2MFoWQ2GcCK0Ee5WEFNWqH2qb4oq4X/U0BKrsbU7gJTeQ4nhnvwZD29on+KToIND\nBTz4MblhUbQaQ9YWzihE6e8/gf9d/u3pHCAa9tbOo16kKYGGf0RMbU35wOIUbWU4\nW0zJjPR5BcCYQgo8GKKarrWXzagazbmpKJcxlxh4nQKBgQDG+boBeHkYXAmbQoKo\nKFfqMs0UdGz/LEY4Ikt+6Pdcn1o9+Xwa72KPHwPU/jQjIROpMHsmIHJY5EF+gYXl\ndZjG7no7WwouVqCSOfbHhPRD4WD4BrubzZWlk0zIw82Q4vo/x1/qMV8o2mNW9Op6\nbysc9FaxySBLXEH7i9klNsLWYA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@winpay-app.iam.gserviceaccount.com",
+  "client_id": "118232661499270158261",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40winpay-app.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -1,7 +1,7 @@
 version: "3"
 services:
   php-apache:
-    image: misaelsilva777/php-apache-redrocket:1.0
+    image: wesleyss30/php-apache:1.0
     container_name: php-apache
     volumes:
       - ./:/var/www/html

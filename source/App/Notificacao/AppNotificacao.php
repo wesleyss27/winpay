@@ -233,4 +233,84 @@ class AppNotificacao
             echo $pixel->fail()->getMessage();
         }
     }
+
+    public function painelFcm(): void
+    {
+        echo $this->view->render("notificacao_fcm", [
+            "title" => "Painel FCM Manual",
+            "token" => "",
+            "titleMsg" => "",
+            "body" => "",
+            "result" => null,
+            "error" => null
+        ]);
+    }
+
+    public function enviarFcm(): void
+    {
+        $token = $_POST['token'] ?? '';
+        $titleMsg = $_POST['title'] ?? '';
+        $body = $_POST['body'] ?? '';
+        $result = null;
+        $error = null;
+
+        try {
+            $result = $this->enviarNotificacaoFcm($token, $titleMsg, $body);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+        }
+
+        echo $this->view->render("notificacao_fcm", [
+            "title" => "Painel FCM Manual",
+            "token" => $token,
+            "titleMsg" => $titleMsg,
+            "body" => $body,
+            "result" => $result,
+            "error" => $error
+        ]);
+    }
+
+    private function enviarNotificacaoFcm(string $targetToken, string $title, string $body)
+    {
+        $serviceAccountPath = __DIR__ . "/winpay-app-a189fd8e5f79.json";
+        $projectId = 'winpay-app'; // substitua aqui
+
+        $scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+        $credentials = new \Google\Auth\Credentials\ServiceAccountCredentials($scopes, $serviceAccountPath);
+        $authToken = $credentials->fetchAuthToken()['access_token'];
+
+        $url = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
+
+        $message = [
+            'message' => [
+                'token' => $targetToken,
+                'notification' => [
+                    'title' => $title,
+                    'body' => $body,
+                ],
+                'android' => ['priority' => 'high'],
+                'apns' => [
+                    'headers' => ['apns-priority' => '10'],
+                    'payload' => [
+                        'aps' => [
+                            'alert' => ['title' => $title, 'body' => $body],
+                            'sound' => 'default'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->post($url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $authToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $message,
+        ]);
+
+        return $response->getBody()->getContents();
+    }
+
 }

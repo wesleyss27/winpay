@@ -3,8 +3,22 @@
 
   use Source\Models\Notificacao\Notificacao;
 
-  $ultimas = (new Notificacao())->find("usuario = " . $_SESSION["id"])->limit(5)->order("id DESC")->fetch(true);
-  $conta = (new Notificacao())->find("lida = 0 and usuario = " . $_SESSION["id"])->count();
+  $id = $_SESSION["id"] ?? null;
+
+  $ultimas = [];
+  $conta = 0;
+
+  if ($id) {
+    $ultimas = (new Notificacao())
+      ->find("usuario = :id", "id={$id}")
+      ->limit(5)
+      ->order("id DESC")
+      ->fetch(true);
+
+    $conta = (new Notificacao())
+      ->find("lida = 0 AND usuario = :id", "id={$id}")
+      ->count();
+  }
   ?>
 
   <li class="nav-item dropdown notificacao">
