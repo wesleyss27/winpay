@@ -878,7 +878,7 @@ class AppCheckout
             // $stripe = new Stripe;
             // $transacao = $stripe->compraCartao($data);
 
-            // var_dump($transacao);
+            var_dump($transacao);
             $data["transacao"] = @$transacao->id;
             $data["status_transacao"] = @$status_transacaoM[@$transacao->status];
             // $data["status_transacao"] = @$status_stripe[@$transacao->status];
