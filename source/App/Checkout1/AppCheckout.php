@@ -879,6 +879,7 @@ class AppCheckout
             // $transacao = $stripe->compraCartao($data);
 
             var_dump($transacao);
+            error_log(json_encode($transacao, true));
             $data["transacao"] = @$transacao->id;
             $data["status_transacao"] = @$status_transacaoM[@$transacao->status];
             // $data["status_transacao"] = @$status_stripe[@$transacao->status];
