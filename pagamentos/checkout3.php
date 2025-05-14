@@ -1867,7 +1867,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
         // function cardToken(key) {
         const createCardToken = async (event) => {
             const key = "<?= @$nome_adquirente == "mercadopago" ? @$checkout->dataAdquirente()->chave : "" ?>";
-            const mp = new MercadoPago("APP_USR-5cc34382-6e93-4250-8447-f98bce01127e");
+            const mp = new MercadoPago("APP_USR-e6d07407-d748-422f-84d2-d7ad202122cf");
 
             const formElement = document.getElementById("form_cartao");
             var documento = $("#cpf").val();
