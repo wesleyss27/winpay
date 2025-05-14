@@ -185,7 +185,7 @@ function validaCartao(cartao) {
             nCheck += nDigit;
             bEven = !bEven;
         }
-        if (!(nCheck % 10) == 0) {
+        if (nCheck % 10 !== 0) {
             $("#numcart").addClass('input-error')
 
             // alert("Cartao inválido");
