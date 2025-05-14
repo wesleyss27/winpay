@@ -105,6 +105,7 @@ class MercadoPago
                 "email": "' . @$data["email"] . '"
             }
         }';
+        error_log(json_encode($dados, true));
         // var_dump(@$dados["json"]);
         // exit;
         return $this->executa("POST", $dados["json"]);
