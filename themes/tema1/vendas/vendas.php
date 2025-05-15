@@ -565,7 +565,7 @@ function dadosEndereco($venda)
 
                 if( $venda->forma_pagamento == 3 && ( 1 == $venda->status_transacao && 4 != $venda->status_transacao ) ) {
                   $data_vencimento = new DateTime($venda->created_at);
-                  $data_vencimento->add(new DateInterval('PT15M'));
+                  $data_vencimento->add(new DateInterval('PT5H'));
                   $data_atual = new DateTime();
   
           
