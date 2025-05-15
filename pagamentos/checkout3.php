@@ -635,6 +635,23 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255,255,255,0.1);
   }
+
+  #pix-page.active {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 40px;
+    background: #1E1E1E;
+    min-height: 100vh;
+}
+
+#pix-page .row {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
 </style>
 
 </head>
@@ -1205,7 +1222,8 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
                                 <div class="check-line">
                                     <label for="numcart">NÚMERO DO CARTÂO:</label><br />
-                                    <input type="tel" id="numcart" name="numcart" placeholder="Somente números" class="form-control newform cartao" maxlength="16" onblur="limpaNum(this.id); return validaCartao(value)" onkeypress="return allowOnlyNumbers(event)">
+                                    <input type="tel" id="numcart" name="numcart" placeholder="Somente números" class="form-control newform cartao"
+                                    maxlength="19" oninput="formatarCartao(this)" onblur="validaCartao(this.value)">
                                 </div>
 
                                 <div class="check-line">
@@ -2942,6 +2960,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                             document.querySelector(".container-75")?.style.setProperty("display", "none");
                             document.body.querySelector(".row.mt-4").style.display = "none";
                             document.getElementById("pix-page").style.display = "block";
+                            window.scrollTo({ top: 0, behavior: "smooth" });
                             iniciarContador(300);
 
                             // GERA E EXIBE O QR CODE

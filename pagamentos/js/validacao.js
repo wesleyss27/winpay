@@ -159,46 +159,47 @@ function validarCNPJ(cnpj, id, msg) {
 }
 
 var cont = 0;
-function validaCartao(cartao) {
+function formatarCartao(input) {
+    let valor = input.value.replace(/\D/g, ''); // remove tudo que não for número
+    valor = valor.substring(0, 16); // limita a 16 dígitos
 
-    if (cartao.length < 14 || cartao.length > 16) {
+    // insere espaços a cada 4 dígitos
+    valor = valor.replace(/(.{4})/g, '$1 ').trim();
+
+    input.value = valor;
+}
+
+function validaCartao(cartao) {
+    let numero = cartao.replace(/\s/g, ''); // remove espaços
+
+    if (numero.length < 14 || numero.length > 16) {
+        $("#numcart").addClass('input-error');
         validaTitular(false, "numcart");
         disabled(false, "cart");
         pendencias(false, "pendenciasCart");
-        // $("#numcart").focus();
-
-        if (cont == 0) {
-            cont = 1;
-            $("#numcart").addClass('input-error')
-            // alert("Cartão inválido. Verifique os digitos!");
-        }
         return false;
-    }
-    else {
+    } else {
         let nCheck = 0, bEven = false;
-        for (var n = cartao.length - 1; n >= 0; n--) {
-            var cDigit = cartao.charAt(n), nDigit = parseInt(cDigit, 10);
-
-            if (bEven && (nDigit *= 2) > 9) {
-                nDigit -= 9;
-            }
+        for (let n = numero.length - 1; n >= 0; n--) {
+            let nDigit = parseInt(numero.charAt(n), 10);
+            if (bEven && (nDigit *= 2) > 9) nDigit -= 9;
             nCheck += nDigit;
             bEven = !bEven;
         }
-        if (nCheck % 10 !== 0) {
-            $("#numcart").addClass('input-error')
 
-            // alert("Cartao inválido");
+        if (nCheck % 10 !== 0) {
+            $("#numcart").addClass('input-error');
             validaTitular(false, "numcart");
             disabled(false, "cart");
             pendencias(false, "pendenciasCart");
             return false;
-        }
-        else {
+        } else {
+            $("#numcart").removeClass('input-error'); // <-- REMOVE AQUI
             validaTitular(true, "numcart");
             disabled(true, "cart");
             pendencias(true, "pendenciasCart");
-            bandeiraCartao(cartao)
+            bandeiraCartao(numero);
+            return true;
         }
     }
 }

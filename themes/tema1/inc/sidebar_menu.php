@@ -231,7 +231,7 @@
                 <span class="material-icons-outlined">shopping_cart</span>
                 <p class="txt-branco-octa" style="text-shadow:#343a40">
                   Vendas
-                  <i class="right fas fa-angle-left"></i>
+                  <i class="right fas fa-caret-left"></i>
                 </p>
                 </a>
 
@@ -321,7 +321,7 @@
               <span class="material-icons-outlined">inventory</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Produtos
-                <i class="right fas fa-angle-left"></i>
+                <i class="right fas fa-caret-left"></i>
               </p>
               </a>
               <ul class="nav nav-treeview">
@@ -392,7 +392,7 @@
               <span class="material-icons-outlined">attach_money</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Comissões e Saques
-                <i class="fas fa-angle-left right"></i>
+                <i class="right fas fa-caret-left"></i>
               </p>
               </a>
               <ul class="nav nav-treeview">
@@ -462,7 +462,7 @@
               <span class="material-icons-outlined">settings</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Configurações
-                <i class="fas fa-angle-left right"></i>
+                <i class="right fas fa-caret-left"></i>
               </p>
               </a>
               <ul class="nav nav-treeview">
@@ -523,7 +523,7 @@
               <span class="material-icons-outlined">build</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Ferramentas
-                <i class="fas fa-angle-left right"></i>
+                <i class="right fas fa-caret-left"></i>
               </p>
               </a>
 
@@ -610,7 +610,7 @@
               <span class="material-icons-outlined">bar_chart</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Relatórios
-                <i class="fas fa-angle-left right"></i>
+                <i class="right fas fa-caret-left"></i>
               </p>
               </a>
 
@@ -663,7 +663,7 @@
             <span class="material-icons-outlined">pie_chart</span>
             <p class="txt-branco-octa" style="text-shadow:#343a40">
               Painel WINPAY
-              <i class="fas fa-angle-left right"></i>
+              <i class="right fas fa-caret-left"></i>
             </p>
             </a>
 

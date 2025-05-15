@@ -388,7 +388,7 @@ $modelo_checkout = array(
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <div class="modal-header">
+            <div class="modal-header" style="background:rgb(2, 2, 2)">
                 <h3 class="card-title"><i class="fa fa-info-circle"></i> Checkout</h3>
                 <button type="button" class="close" data-dismiss="modal"> &times;</button>
             </div>
