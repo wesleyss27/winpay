@@ -199,7 +199,6 @@ class MercadoPago
         $dados["json"] = '{
             "transaction_amount": ' . (@$data["preco"] / 100) . ',
             "payment_method_id": "pix",
-            "date_of_expiration": "' . date('c', strtotime('+5 hours')) . '",
             "notification_url": "https://app.winpay.digital/webhook/mercadopago",
             "additional_info": {
                 "items": [
