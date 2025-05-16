@@ -203,9 +203,11 @@ if ($_SESSION["tipo"] == 6) {
               <!-- Pequena legenda opcional -->
               <small class="text-center d-block mb-2">Clique em uma opção para ocultar</small>
 
+              <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
               <!-- Área do gráfico -->
               <div class="chart-container">
-                <canvas id="areaChart"></canvas>
+                <!-- <canvas id="areaChart"></canvas> -->
+                <div id="grafico-vendas" style="width: 100%; height: 100%;"></div>
               </div>
             </div>
 
@@ -529,6 +531,30 @@ if ($_SESSION["tipo"] == 6) {
       }
     }
     ?>
+
+    <?php
+      $vendasAtual = array_fill(1, 31, 0);
+      $vendasAnterior = array_fill(1, 31, 0);
+
+      // Mês Atual
+      if (!empty($vendasAtualSomaProdAfi) && is_iterable($vendasAtualSomaProdAfi)) {
+          foreach ($vendasAtualSomaProdAfi as $item) {
+              $dia = (int)$item->dia;
+              $vendasAtual[$dia] = round((float)$item->soma, 2);
+          }
+      }
+
+      // Mês Anterior
+      if (!empty($vendasAnteriorSomaProdAfi) && is_iterable($vendasAnteriorSomaProdAfi)) {
+          foreach ($vendasAnteriorSomaProdAfi as $item) {
+              $dia = (int)$item->dia;
+              $vendasAnterior[$dia] = round((float)$item->soma, 2);
+          }
+      }
+
+      $labels = range(1, 31);
+    ?>
+
   </div>
 </div>
 
@@ -580,8 +606,8 @@ if ($_SESSION["tipo"] == 6) {
   // if (<?= $_SESSION["tipo"] ?> != 5 && <?= $_SESSION["tipo"] ?> != 6)
   //   $('#modalUpsell').modal('show');
 
-  $(function() {
-    /* ChartJS - Gráfico de Vendas Modernizado */
+  /*$(function() {
+    /* ChartJS - Gráfico de Vendas Modernizado 
 
     var canvasVendas = $('#areaChart').get(0).getContext('2d');
 
@@ -676,7 +702,99 @@ if ($_SESSION["tipo"] == 6) {
         data: dadosVendas,
         options: opcoesVendas
     });
-});
+});*/
+
+
+$(function () {
+        const chartDom = document.getElementById('grafico-vendas');
+        const myChart = echarts.init(chartDom);
+
+        const option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data: ['Mês Atual', 'Mês Anterior'],
+                top: 'bottom',
+                textStyle: {
+                    color: '#999'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '10%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: <?= json_encode(range(1, 31)) ?>,
+                    axisLabel: { color: '#A0AEC0' },
+                    axisLine: { lineStyle: { color: '#ccc' } }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    axisLabel: { color: '#A0AEC0' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                }
+            ],
+            series: [
+                {
+                    name: 'Mês Atual',
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: {
+                        width: 2
+                    },
+                    showSymbol: false,
+                    areaStyle: {
+                        opacity: 0.8,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#f3be12' },
+                            { offset: 1, color: 'rgba(243, 190, 18, 0.1)' }
+                        ])
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: <?= json_encode(array_values($vendasAtual)) ?>
+                },
+                {
+                    name: 'Mês Anterior',
+                    type: 'line',
+                    smooth: true,
+                    lineStyle: {
+                        width: 2
+                    },
+                    showSymbol: false,
+                    areaStyle: {
+                        opacity: 0.8,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#4c90cb' },
+                            { offset: 1, color: 'rgba(160,197,228,0.1)' }
+                        ])
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: <?= json_encode(array_values($vendasAnterior)) ?>
+                }
+            ]
+        };
+
+        myChart.setOption(option);
+        window.addEventListener('resize', () => myChart.resize());
+    });
 
 </script>
 

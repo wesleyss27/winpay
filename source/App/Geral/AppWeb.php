@@ -77,12 +77,48 @@ class AppWeb
         $ontem = $comissoes->find("tipo = 1 AND usuario = $usuario AND data_pedido = '" . date("Y-m-d", strtotime("-1 day")) . "'", null, "SUM(valor) as valor")->fetch();
         $mes = $comissoes->find("usuario = $usuario AND tipo = 1 AND data_pedido BETWEEN $mesAtual", null, "SUM(valor)")->fetch();
 
+        $mesAnteriorInicio = date("Y-m-01", strtotime("-1 month"));
+        $mesAnteriorFim = date("Y-m-t", strtotime("-1 month"));
+
+        $vendasAnteriorSomaProdAfi = (new Venda())->find(
+            "(produtor = :usuario OR afiliado = :usuario)
+            AND status_transacao = 4
+            AND created_at BETWEEN :inicio AND :fim",
+            "usuario={$usuario}&inicio={$mesAnteriorInicio}&fim={$mesAnteriorFim}",
+            "DAY(created_at) AS dia, 
+            SUM(CASE 
+                    WHEN produtor = {$usuario} THEN comissao_produtor
+                    WHEN afiliado = {$usuario} THEN comissao_afiliado
+                    ELSE 0
+                END) AS soma"
+        )->group("dia")->order("dia ASC")->fetch(true);
+
+        $mesAtualInicio = date("Y-m-01");
+        $mesAtualFim = date("Y-m-d");
+
+        $vendasAtualSomaProdAfi = (new Venda())->find(
+            "(produtor = :usuario OR afiliado = :usuario)
+            AND status_transacao = 4
+            AND created_at BETWEEN :inicio AND :fim",
+            "usuario={$usuario}&inicio={$mesAtualInicio}&fim={$mesAtualFim}",
+            "DAY(created_at) AS dia, 
+            SUM(CASE 
+                    WHEN produtor = {$usuario} THEN comissao_produtor
+                    WHEN afiliado = {$usuario} THEN comissao_afiliado
+                    ELSE 0
+                END) AS soma"
+        )->group("dia")->order("dia ASC")->fetch(true);
+
+
+    
         foreach ($mes->data() as $mes) null;
 
         echo $this->view->render("home_users", [
             "title" => "WinPay",
             "section" => @$section,
             "permissao" => @$permissao,
+            "vendasAnteriorSomaProdAfi" => @$vendasAnteriorSomaProdAfi,
+            "vendasAtualSomaProdAfi" => @$vendasAtualSomaProdAfi,
             "comissaoAtual" => $comissaoAtual,
             "comissaoAnterior" => $comissaoAnterior,
             "vendasAtual" => $vendasAtual,

@@ -374,7 +374,7 @@
           <span class="modern-info">Total: <?= $abandonadoVendas ?></span>
         </div>
         <div class="col-6 text-right">
-          <!-- Espaço reservado para outros dados se necessário -->
+           Espaço reservado para outros dados se necessário 
         </div>
       </div>
     </div>
