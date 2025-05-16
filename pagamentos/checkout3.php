@@ -1902,7 +1902,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 event.preventDefault();
 
                 const token = await mp.createCardToken({
-                    cardNumber: document.getElementById('numcart').value,
+                    cardNumber: document.getElementById('numcart').value.replace(/\D/g, ''),
                     cardholderName: document.getElementById('titular').value,
                     identificationType: documento,
                     identificationNumber: document.getElementById('cpf').value,
