@@ -171,6 +171,21 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+
+    <!-- Título mostrado na pré-visualização -->
+    <meta property="og:title" content="Pague com Pix - Checkout WinPay">
+
+    <!-- Deixar os outros campos em branco para ocultar -->
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+
+    <!-- Twitter (opcional) -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pague com Pix - Checkout WinPay">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="">
+
     <title><?= $title; ?></title>
 
     <link rel="icon" href="<?= url("pagamentos/imgs/logo-icon.png"); ?>">
