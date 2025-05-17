@@ -174,7 +174,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <meta name="robots" content="index, follow">
 
     <!-- Título mostrado na pré-visualização -->
-    <meta property="og:title" content="Pague com Pix - Checkout WinPay">
+    <meta property="og:title" content=<?= $title; ?>>
 
     <!-- Deixar os outros campos em branco para ocultar -->
     <meta property="og:description" content="">
@@ -182,7 +182,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
     <!-- Twitter (opcional) -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Pague com Pix - Checkout WinPay">
+    <meta name="twitter:title" content=<?= $title; ?>>
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="">
 
