@@ -177,14 +177,11 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <meta property="og:title" content=<?= $title; ?>>
 
     <!-- Deixar os outros campos em branco para ocultar -->
-    <meta property="og:description" content="">
-    <meta property="og:image" content="">
 
     <!-- Twitter (opcional) -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content=<?= $title; ?>>
     <meta name="twitter:description" content="">
-    <meta name="twitter:image" content="">
 
     <title><?= $title; ?></title>
 
