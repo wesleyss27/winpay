@@ -91,6 +91,239 @@ function diffDate($d1, $d2, $type = '', $sep = '-')
     <!-- Main content -->
     <section class="content">
 
+
+    <?php
+        use Carbon\Carbon;
+
+        $mesAtual = date("Y-m");
+        $mesAnterior = date("Y-m", strtotime("-1 month"));
+
+        function extrairMes($data) {
+            return date("Y-m", strtotime($data));
+        }
+
+        // Vendas e Faturamento mês atual e anterior
+        $vendasMesAtual = array_filter($assinaturas, fn($a) => extrairMes($a->created_at) === $mesAtual);
+        $vendasMesAnterior = array_filter($assinaturas, fn($a) => extrairMes($a->created_at) === $mesAnterior);
+
+        $totalVendasAtual = count($vendasMesAtual);
+        $totalVendasAnterior = count($vendasMesAnterior);
+        $varVendas = $totalVendasAnterior > 0 ? (($totalVendasAtual - $totalVendasAnterior) / $totalVendasAnterior) * 100 : 0;
+
+        $faturadoAtual = array_sum(array_map(fn($a) => $a->valor_plano, $vendasMesAtual));
+        $faturadoAnterior = array_sum(array_map(fn($a) => $a->valor_plano, $vendasMesAnterior));
+        $varFaturado = $faturadoAnterior > 0 ? (($faturadoAtual - $faturadoAnterior) / $faturadoAnterior) * 100 : 0;
+
+        $previsaoProxMes = $faturadoAtual * 1.08;
+        $varPrevisao = $faturadoAnterior > 0 ? (($previsaoProxMes - $faturadoAnterior) / $faturadoAnterior) * 100 : 0;
+
+        // Vendas por plano por mês
+        $porPlano = [];
+        foreach ($assinaturas as $a) {
+            $mes = extrairMes($a->created_at);
+            $plano = $a->dataPlano()->nome ?? 'Desconhecido';
+            if (!isset($porPlano[$mes])) $porPlano[$mes] = [];
+            if (!isset($porPlano[$mes][$plano])) $porPlano[$mes][$plano] = 0;
+            $porPlano[$mes][$plano] += 1;
+        }
+
+        // Faturamento por mês
+        $porMesFaturamento = [];
+        foreach ($assinaturas as $a) {
+            $mes = extrairMes($a->created_at);
+            if (!isset($porMesFaturamento[$mes])) $porMesFaturamento[$mes] = 0;
+            $porMesFaturamento[$mes] += $a->valor_plano;
+        }
+        ksort($porMesFaturamento);
+        $mesesEvolucao = array_map(fn($m) => date("M/Y", strtotime($m . "-01")), array_keys($porMesFaturamento));
+        $valoresEvolucao = array_values($porMesFaturamento);
+
+        // Previsão próxima
+        $mediaCrescimento = 0;
+        for ($i = 1; $i < count($valoresEvolucao); $i++) {
+            if ($valoresEvolucao[$i - 1] > 0) {
+                $mediaCrescimento += ($valoresEvolucao[$i] - $valoresEvolucao[$i - 1]) / $valoresEvolucao[$i - 1];
+            }
+        }
+        $mediaCrescimento = $mediaCrescimento / max(1, count($valoresEvolucao) - 1);
+        $previsaoValor = round(end($valoresEvolucao) * (1 + $mediaCrescimento));
+        $mesesEvolucao[] = date("M/Y", strtotime("+1 month"));
+        $valoresEvolucao[] = $previsaoValor;
+        ?>
+        <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+        <style>
+            .dashboard-container {
+                background: #121212;
+                color: #fff;
+                font-family: 'Inter', sans-serif;
+                padding: 20px;
+                border-radius: 12px;
+                margin-bottom: 30px;
+            }
+
+            .kpi-card {
+                background: #1E1E1E;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                max-width: 500px; /* NOVO: define largura máxima */
+                width: 100%;
+            }
+
+            .kpi-card i {
+                font-size: 30px;
+                color: #FFD700;
+                margin-right: 15px;
+            }
+
+            .kpi-value {
+                font-size: 20px;
+                font-weight: bold;
+                margin-top: 5px;
+            }
+
+            .chart-container {
+                background: #1E1E1E;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+                flex: 1 1 48%; /* ocupa 48% da largura com flex grow e shrink */
+                max-width: 48%;
+                min-width: 320px;
+
+            }
+
+            .ranking-table {
+                width: 100%;
+                color: white;
+                font-size: 14px;
+            }
+
+            .ranking-table th, .ranking-table td {
+                padding: 8px;
+            }
+
+            .bar {
+                height: 8px;
+                background-color: yellow;
+                border-radius: 5px;
+            }
+
+            .label-highlight {
+                font-size: 14px;
+                font-weight: bold;
+                color: #E6E600;
+            }
+
+            .row {
+                gap: 15px; /* apenas se quiser espaçamento horizontal entre colunas */
+            }
+
+            .full-width-chart {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: 1 1 100% !important;
+            }
+
+            .responsive-chart {
+                flex: 1 1 48%;
+                min-width: 300px;
+                margin-bottom: 20px;
+            }
+
+            @media (max-width: 768px) {
+                .responsive-chart {
+                    flex: 1 1 100%;
+                    max-width: 100%;
+                }
+            }
+
+        </style>
+
+        <div class="dashboard-container">
+            <div class="row text-left">
+                <div class="col-md-4 kpi-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div>
+                        <div>Total de Vendas no Mês</div>
+                        <div class="kpi-value"><?= $totalVendasAtual ?> assinaturas</div>
+                        <div class="text-success">↑ <?= number_format($varVendas, 1) ?>% vs mês anterior</div>
+                    </div>
+                </div>
+                <div class="col-md-4 kpi-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div>
+                        <div>Valor Faturado</div>
+                        <div class="kpi-value">R$ <?= number_format($faturadoAtual, 2, ',', '.') ?></div>
+                        <div class="text-success">↑ <?= number_format($varFaturado, 1) ?>% vs mês anterior</div>
+                    </div>
+                </div>
+                <div class="col-md-4 kpi-card">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <div>Previsão Próximo Mês</div>
+                        <div class="kpi-value">R$ <?= number_format($previsaoProxMes, 2, ',', '.') ?></div>
+                        <div class="text-success">↑ <?= number_format($varPrevisao, 1) ?>% vs mês anterior</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container full-width-chart">
+            <h5 class="label-highlight">Volume de Vendas por Plano</h5>
+            <canvas id="graficoVendasPlano" height="100"></canvas>
+        </div>
+
+
+            <div class="d-flex flex-wrap gap-3 justify-content-between">
+
+            <div class="chart-container responsive-chart">
+
+                    <h5 class="label-highlight">Ranking de Planos</h5>
+                    <table class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Receita</th>
+                                <th>Vendas</th>
+                                <th>Participação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $ranking = [];
+                            $totalReceita = 0;
+                            foreach ($assinaturas as $a) {
+                                $nome = $a->dataPlano()->nome ?? 'Desconhecido';
+                                $ranking[$nome]['receita'] = ($ranking[$nome]['receita'] ?? 0) + $a->valor_plano;
+                                $ranking[$nome]['vendas'] = ($ranking[$nome]['vendas'] ?? 0) + 1;
+                                $totalReceita += $a->valor_plano;
+                            }
+                            arsort($ranking);
+                            foreach ($ranking as $nome => $info) {
+                                $percent = round(($info['receita'] / $totalReceita) * 100, 1);
+                                echo "<tr>
+                                        <td>$nome</td>
+                                        <td>R$ " . number_format($info['receita'], 2, ',', '.') . "</td>
+                                        <td>{$info['vendas']}</td>
+                                        <td><div class='bar' style='width: {$percent}%'></div><small> {$percent}%</small></td>
+                                    </tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="chart-container responsive-chart">
+
+
+                    <h5 class="label-highlight">Evolução do Faturamento</h5>
+                    <canvas id="graficoEvolucaoFaturamento" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
         <form action="#" style="font-family:inter; font-size:10px">
             <div class="callout callout-primary">
                 <div class="row">
@@ -330,6 +563,63 @@ function diffDate($d1, $d2, $type = '', $sep = '-')
 </div>
 
 <?= $v->start("scripts") ?>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx1 = document.getElementById("graficoVendasPlano").getContext("2d");
+        new Chart(ctx1, {
+            type: "bar",
+            data: {
+                labels: <?= json_encode(array_keys($porPlano[$mesAtual] ?? [])) ?>,
+                datasets: [
+                    {
+                        label: "Mês Atual",
+                        data: <?= json_encode(array_values($porPlano[$mesAtual] ?? [])) ?>,
+                        backgroundColor: "#FFFF66"
+                    },
+                    {
+                        label: "Mês Anterior",
+                        data: <?= json_encode(array_values($porPlano[$mesAnterior] ?? [])) ?>,
+                        backgroundColor: "#999999"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById("graficoEvolucaoFaturamento").getContext("2d");
+        new Chart(ctx2, {
+            type: "line",
+            data: {
+                labels: <?= json_encode($mesesEvolucao) ?>,
+                datasets: [{
+                    label: "Faturamento",
+                    data: <?= json_encode($valoresEvolucao) ?>,
+                    borderColor: "#FFD700",
+                    backgroundColor: "rgba(255, 215, 0, 0.2)",
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: "#FFD700"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+</script>
+
+
 <script>
     $("#preco").blur(function(e) {
         var valor = $("#preco").val();

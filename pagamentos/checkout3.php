@@ -175,6 +175,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
     <!-- Título mostrado na pré-visualização -->
     <meta property="og:title" content=<?= $title; ?>>
+    <meta property="og:image" content="<?= url("uploads/produtos/$foto") ?>">
 
     <!-- Deixar os outros campos em branco para ocultar -->
 
