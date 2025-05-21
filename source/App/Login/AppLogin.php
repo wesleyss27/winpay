@@ -111,7 +111,7 @@ class AppLogin
     public function cadastro($data)
     {
         echo $this->view->render("cadastro", [
-            "title" => "Cadastro RedRocket",
+            "title" => "Cadastro WinPay",
             "msg" => "",
             "classCss" => ""
         ]);

@@ -16,6 +16,10 @@ use Source\App\Checkout1\MercadoPago;
 use Source\App\Comissao\AppComissao;
 use Source\App\Postback\AppPostback;
 use Source\Models\CartaoCheckoutTransparente\Adquirente;
+use Source\Models\Assinaturas\AssinaturaCadastro;
+use Source\Models\Produtos\Produto;
+use Source\Models\Produtos\Plano;
+use Source\App\Assinaturas\AppAssinaturas;
 
 class AppWebHook
 {
@@ -381,6 +385,7 @@ class AppWebHook
         if (@$response->data->id) {
             $payID = @$response->data->id;
             $venda = (new Venda())->find("transacao = '$payID'")->fetch();
+            $produto = (new Produto())->findById($venda->produto);
             if ($venda) {
                 //$adquirente = (new Adquirente())->find("adquirente = 'mercadopago' AND usuario = " . @$venda->produtor)->fetch();
                 //if (@$adquirente) {
@@ -444,18 +449,64 @@ class AppWebHook
 
                 if (@$venda->plano) {
                     $dados["nomekit"] = $venda->dataPlano()->nome;
-                    $dados["produto"] = $venda->dataPlano()->nome;
+                    $dados["produto"] = $venda->dataPlano()->codigo;
+                    $dados["plano"] = @$venda->dataplano()->codigo;
                 } else {
                     $dados["nomekit"] = $venda->dataProduto()->nome;
                     $dados["produto"] = $venda->dataProduto()->nome;
                 }
-
                 $processos = (new AppProcessos())->processos($dados);
 
                 // REGISTRO DE LOG RECEBIDO PELO MERCADOPAGO
                 $arquivo = fopen('webhook-mercadopago.txt', 'a+');
                 $texto = date("d/m/Y H:i:s") . "\n";
                 $texto .= "dados = {\n";
+
+                if ($produto->tipo_cobranca == 2) {
+                    $assinatura = new AssinaturaCadastro();
+                    $assinatura->venda = $venda->id;
+                    $assinatura->status = 1;
+                    if ($assinatura->save()) {
+                        $dadosAssinatura["assinatura"] = "Assinatura cadastrada";
+
+                        $produtoAssinatura = (new Produto())->find("codigo = " . $dados['produto'])->fetch();
+                        $dadosAssinatura["produto"] = $venda->dataPlano()->id;
+                        $plano = (new Plano())->find("codigo = " . $dados['plano'])->fetch();
+                        $dadosAssinatura["plano"] = $plano->id;
+                        
+                        $periodicidade = array(
+                            "Semanal"       => [7, "days"],
+                            "Mensal"        => [1, "months"],
+                            "Bimestral"     => [2, "months"],
+                            "Trimestral"    => [3, "months"],
+                            "Semestral"     => [6, "months"],
+                            "Anual"         => [1, "years"],
+                            "Trienal"       => [3, "years"]
+                        );
+    
+                        $dadosAssinatura["recorrencia"] = $plano->periodo;
+                       
+                        $limite = $plano->maximo_recorrencia * @$periodicidade[$plano->periodo][0];
+    
+                        if ($plano->maximo_recorrencia > 0)
+                            $dadosAssinatura["data_limite"] = date('Y-m-d', strtotime("+$limite " . @$periodicidade[$plano->periodo][1], strtotime(date('Y-m-d'))));
+    
+                        $proxima = @$periodicidade[$plano->periodo][0];
+                        $dadosAssinatura["venda"] = $dados["venda"];
+                        $dadosAssinatura["produtor"] = $dados["produtor"] ;
+                        $dadosAssinatura["proxima_cobranca"] = date('Y-m-d', strtotime("+$proxima " . @$periodicidade[$plano->periodo][1], strtotime(date('Y-m-d'))));
+                        $dadosAssinatura["valor_plano"] = $plano->preco;
+                        $dadosAssinatura["endereco"] = $venda->dataEndereco()->id;
+                        $dadosAssinatura["comprador"] = $venda->dataComprador()->id;
+                        $dadosAssinatura["forma_pagamento"] = $venda->forma_pagamento;
+                        $dadosAssinatura["assinatura"] = (new AppAssinaturas(null))->cadastroAssinaturas($dadosAssinatura);
+
+                    } else {
+                        $dadosAssinatura["assinatura"] = "Erro ao cadastrar";
+                    }
+                }
+
+                var_dump($dadosAssinatura);
 
                 if ($response) {
                     foreach ($response as $chave => $valor) {
