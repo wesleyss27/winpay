@@ -186,8 +186,6 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
     <title><?= $title; ?></title>
 
-    <link rel="icon" href="<?= url("pagamentos/imgs/logo-icon.png"); ?>">
-
     <link rel="stylesheet" href="<?= url("pagamentos/css/bootstrap.css"); ?>">
   
     <script src="<?= url("pagamentos/js/jquery.slim.js"); ?>"></script>
