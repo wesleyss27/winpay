@@ -462,7 +462,7 @@ class AppWebHook
                 $texto = date("d/m/Y H:i:s") . "\n";
                 $texto .= "dados = {\n";
 
-                if ($produto->tipo_cobranca == 2) {
+                if ($produto->tipo_cobranca == 2 && $venda->status_transacao == 1) {
                     $assinatura = new AssinaturaCadastro();
                     $assinatura->venda = $venda->id;
                     $assinatura->status = 1;
