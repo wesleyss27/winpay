@@ -94,7 +94,7 @@ class AppWeb
         )->group("dia")->order("dia ASC")->fetch(true);
 
         $mesAtualInicio = date("Y-m-01");
-        $mesAtualFim = date("Y-m-d");
+        $mesAtualFim = date("Y-m-d H:i:s");
 
         $vendasAtualSomaProdAfi = (new Venda())->find(
             "(produtor = :usuario OR afiliado = :usuario)
@@ -567,7 +567,7 @@ class AppWeb
 
 
         echo $this->view->render("marketplace", [
-            "title" => "Marketplace RedRockettt",
+            "title" => "Marketplace WinPay",
             "section" => @$section,
             "permissao" => @$permissao,
             "produtos" => $produtos,

@@ -50,7 +50,7 @@ if ($produto->usuario != $section->getId()) {
         <!-- Default box -->
         <section class="card">
             <div class="card-body">
-                Configuração de afiliação somente para transações pela REDROCKET, não incluso para drop.
+                Configuração de afiliação somente para transações pela WinPay, não incluso para drop.
 
                 <?php if ($produto->status == 3 || $produto->status == 4) : ?>
                     <span class="badge bg-danger">Produto REPROVADO/BLOQUEADO</span>
