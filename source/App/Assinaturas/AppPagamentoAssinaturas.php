@@ -502,27 +502,37 @@ class AppPagamentoAssinaturas
         if (@$data["venda"]) {
             $venda = $this->atualizaVenda($data);
         } else {
-            $venda = $this->cadastroVenda($data);
+            $cadastroVenda = $this->cadastroVenda($data);
+            $data["msg"] = $cadastroVenda["msg"];
+            $data["venda"] = $cadastroVenda["venda"];
+            $produto = (new Produto())->findById($data["produto"]);
+            $venda = (new Venda())->findById($data["venda"]);
+            $venda->assinatura = @$data["assinatura"];
+            $venda->save();
         }
 
-        $data["venda"] = $venda["venda"];
-        $dados["venda"] = $venda["venda"];
+        $data["venda"] = $cadastroVenda["venda"];
+        $dados["venda"] = $cadastroVenda["venda"];
         $_SESSION["pagamento"] = $data;
         // echo $venda;
 
-        $dadosPix = $this->dadosPix($data);
-        $urlTransacao = $this->endpoint_pix . "transactions";
-        $transacaoPix = $this->curlPix($urlTransacao, "POST", $dadosPix);
+        $transacao = (new MercadoPago)->compraPix($data);
+
+        //$dadosPix = $this->dadosPix($data);
+        //$urlTransacao = $this->endpoint_pix . "transactions";
+        //$transacaoPix = $this->curlPix($urlTransacao, "POST", $dadosPix);
         // var_dump($dadosPix, $transacaoPix);
-        $urlEfetivacao = $this->endpoint_pix . "payments/{$transacaoPix->payment->nit}";
-        $efetivacao = $this->curlPix($urlEfetivacao, "POST", "{}");
+        //$urlEfetivacao = $this->endpoint_pix . "payments/{$transacaoPix->payment->nit}";
+        //$efetivacao = $this->curlPix($urlEfetivacao, "POST", "{}");
 
-        $dados["qr_code"] = @$efetivacao->payment->qr_code;
-        $dados["nit_pix"] = @$transacaoPix->payment->nit;
+        //$dados["qr_code"] = @$efetivacao->payment->qr_code;
+        $dados["qr_code"] = @$transacao->point_of_interaction->transaction_data->qr_code;
+        $dados["nit_pix"] = @$transacao->point_of_interaction->transaction_data->ticket_url;
 
-        $venda1 = @(new Venda())->findById(@$venda["venda"]);
+        $venda1 = @(new Venda())->findById(@$cadastroVenda["venda"]);
         $venda1->qr_code = @$dados["qr_code"];
         $venda1->nit_pix = @$dados["nit_pix"];
+        $venda1->transacao = @$transacao->id;
         if ($venda1->save()) {
             $dados["msg_pix"] = "Venda atualizada";
         } else {
@@ -539,13 +549,16 @@ class AppPagamentoAssinaturas
         //     $this->notificacao($data);
         // }
 
-        $dados["msg"] = $venda["msg"];
-        $dados["whatsapp"] = @$venda["whatsapp"];
-        $dados["coprodutores"] = @$venda["coprodutores"];
+        $dados["msg"] = $cadastroVenda["msg"];
+        $dados["whatsapp"] = @$cadastroVenda["whatsapp"];
+        $dados["coprodutores"] = @$cadastroVenda["coprodutores"];
         $dados["status_transacao"] = $data["status_transacao"];
         $dados["url"] = url("checkout/obrigado");
-        (new AppProcessos(null))->processos($data);
-        echo json_encode($dados);
+        $_SESSION["pagamento"] = $data;
+        $data["processos"] = (new AppProcessos(null))->cadastroProcessos($data);
+        //(new AppProcessos(null))->processos($data);
+        //echo json_encode($dados);
+        return json_encode($data);
     }
 
     public function dadosPix($data)

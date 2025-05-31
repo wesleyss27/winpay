@@ -209,6 +209,7 @@ $router->post("/editarP", "AppAssinaturas:editarP", "vendas.editarP");
 $router->get("/exportar", "AppAssinaturas:exportar", "vendas.exportar");
 $router->get("/exportar-vendas", "AppAssinaturas:exportarVendas", "vendas.exportarVendas");
 $router->get("/verificar-assinaturas", "AppAssinaturas:verificarAssinaturas", "assinaturas.verificar");
+$router->get("/input-venda", "AppAssinaturas:renderInputVenda", "assinaturas.inputVenda");
 
 
 /*
@@ -559,6 +560,7 @@ $router->get("/pixel-taboola", "AppCheckout:pixelTaboola", "checkout.pixelTabool
 $router->get("/analytics", "AppCheckout:analytics", "checkout.analytics");
 $router->post("/transacao", "AppCheckout:transacao", "checkout.transacao");
 $router->post("/transacao-pix", "AppCheckout:transacaoPix", "checkout.transacaoPix");
+$router->post("/transacao-pix-ass", "AppCheckout:transacaoPixAss", "checkout.transacaoPixAss");
 $router->post("/transacao-boleto", "Bradesco:boleto", "checkout.boleto");
 
 $router->get("/finalizar-compra/", "AppCheckout:finalizarCompra", "checkout.finalizar");

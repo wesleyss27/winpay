@@ -23,6 +23,11 @@
     color: #fff;
 }
 
+.bg-sistema-gradient {
+    background-image: linear-gradient(to right, #121212, #1E1E1E, #121212);
+}
+
+
 .bg-vermelho-1 {
     background: #b73234;
     color: #fff;

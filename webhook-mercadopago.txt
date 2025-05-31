@@ -812,3 +812,33 @@ data {
 }
 **** Venda: 840, Produtor: 6202, Produto: 210 ***
 
+28/05/2025 19:24:13
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113134527696',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 986, Produtor: 6198, Produto: 216 ***
+
+29/05/2025 19:55:16
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113248305848',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 1049, Produtor: 6202, Produto: 210 ***
+

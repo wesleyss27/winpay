@@ -1148,6 +1148,268 @@ class AppCheckout
         var_dump($this->endpoint_pix, $this->token_pix, $this->key_pix);
     }
 
+    public function transacaoPixAss($data)
+    {
+        if ($data["email"] == "") {
+            $data["email"] = $data["email_suporte"];
+        }
+
+        /** 
+         * VALIDAR O CPF
+         */
+        $cpfCount = strlen($data["cpf"]);
+
+        if ($cpfCount <= 11) {
+            $cpf = (new Validacao())->validaCPF($data["cpf"]);
+            $data["documento"] = "CPF";
+            $data["tipo_doc"] = 1;
+
+            if (!$cpf) {
+                $retorno["msg"] = "CPF inválido";
+                echo json_encode($retorno);
+                exit;
+            }
+        } else {
+            $data["documento"] = "CNPJ";
+            $data["tipo_doc"] = 2;
+        }
+
+
+        /** 
+         * LIMPAR CARACTERES DO TELEFONE
+         */
+        $telefone = (new Validacao())->limpaStr($data["telefone"]);
+
+        if (substr($telefone, 0, 2) == "55") {
+            $data["ddd"] = substr($telefone, 2, 2);
+            $data["telefone"] = substr($telefone, 4, 12);
+        } else {
+            $data["ddd"] = substr($telefone, 0, 2);
+            $data["telefone"] = substr($telefone, 2, 12);
+        }
+
+        $data["telefone"] = substr($telefone, 2, 12);
+
+        $data["tipo_doc"] = 1;
+        $data["pais"] = "BR";
+
+        $resultado_bytes = random_bytes(5);
+        $data["protocolo"] = strtoupper(bin2hex($resultado_bytes));
+
+        if( ! empty( $_COOKIE['url'] ) ) {
+            $data['cookie_url'] = $_COOKIE['url'];
+        }
+        $this->logs($data, "dados-enviados");
+
+        /** 
+         * VERIFICA SE CLIENTE TEM CADASTRO
+         */
+        $usuario = (new UsuarioDados());
+        $cadastrado = $usuario->verificaCpf(["cpf" => $data["cpf"]]);
+
+        if ($cadastrado) {
+            $data["id"] = $cadastrado;
+
+            $user = (new Usuario())->find("usuario_dados = $cadastrado")->fetch();
+            $data["usuario"] = $user ? $user->id : null;;
+            $data["comprador"] = $cadastrado;
+        } else {
+            $comprador = (new AppUsuarios(null))->cadastroUsuarioDados($data);
+            $data["comprador"] = $comprador["id"];
+
+            $user = (new Usuario())->find("usuario_dados = {$comprador['id']}")->fetch();
+            $data["usuario"] = $user->id;
+        }
+
+        /** 
+         * CADASTRAR UM ENDEREÇO
+         */
+        $endereco = (new AppUsuarios(null))->cadastroEndereco($data);
+        $data["endereco"] = $endereco;
+
+        if (@$data["meio_pagamento_desconto"]) {
+            $meio_pagamento_desconto = explode(",", $data["meio_pagamento_desconto"]);
+            foreach ($meio_pagamento_desconto as $pagamento) {
+                if ($pagamento == 3 || $pagamento == 10) {
+                    $pix = true;
+                }
+            }
+        }
+
+        // Encontra preço do order_bump selecionado      
+        if (@$data["codigo_order_bump"]) {
+            $planos_orderBump = "";
+            $cod_preco_ordBump = "";
+            $total_ord_bump = 0;
+            $cont_planos = @count($data["codigo_order_bump"]);
+            $i = 1;
+
+            foreach ($data["codigo_order_bump"] as $cod_plano => $valor_plano_orderBump) {
+                // Concatena codigo dos order_bump
+                if ($i < $cont_planos) {
+                    $planos_orderBump .= "$cod_plano,";
+                    $cod_preco_ordBump .= "$cod_plano|$valor_plano_orderBump,";
+                } else {
+                    $planos_orderBump .= "$cod_plano";
+                    $cod_preco_ordBump .= "$cod_plano|$valor_plano_orderBump";
+                }
+                $i++;
+                // Soma o preco total dos order_bump
+                $total_ord_bump += $valor_plano_orderBump;
+            }
+            $data["planos_orderBump"] = $planos_orderBump;
+            $data["cod_preco_ordBump"] = $cod_preco_ordBump;
+            $data["total_ord_bump"] = $total_ord_bump;
+
+        } else {
+            $total_ord_bump = 0;
+        }
+        // Fim Código e preço Order Bump
+
+        if (@$pix && @$data["valor_desconto"] > 0)
+            $val =  ((float) $data["preco"] + (float) @$data["frete"]) - (float) @$data["valor_desconto"] + (float) @$total_ord_bump;
+        else
+            $val =  ((float) $data["preco"] + (float) @$data["frete"] + (float) @$total_ord_bump);
+
+        $preco = explode(".", $val);
+
+        $preco_prod = $data["preco"];
+
+        $data["preco"] = (float) $val * 100;
+
+        $data["valor_bruto"] = (float) $data["preco"] / 100;
+        $data["valor_juros"] = 0.00;
+        $data["valor_frete"] = @$data["frete"];
+        $data["taxa_juros"] = 0;
+
+        $valProd = (float) $preco_prod + (float) @$data["frete"];
+        $data["valor_redrocket"] = number_format((((float) $valProd - (float) @$data["valor_desconto"] + (float) @$total_ord_bump) * ((float) $data["taxa_redrocket"] / 100)) + 1, 2);
+        $data["valor_liquido"] = (float) $valProd - (float) $data["valor_redrocket"] - (float) @$data["valor_frete"] + (float) @$total_ord_bump;
+
+        $data["valor_desconto"] = @$data["valor_desconto"];
+
+        $data["parcela"] = 1;
+        $data["data_ultimo_evento"] = date("Y-m-d H:i:s");
+
+        $data["status_transacao"] = 1;
+        $data["forma_pagamento"] = 3;
+
+        $ip = (string) $_SERVER['REMOTE_ADDR'];
+
+        // SPLIT DE PAGAMENTOS
+        if (@$data["valor_frete"]) {
+            $data["tx_frete"] = (float) @$data["valor_frete"] - ((float) @$data["valor_frete"] * (float) $data["taxa_redrocket"] / 100);
+        }
+        $data = $this->splitPagamento($data);
+        
+        if (@$data["venda"]) {
+            $venda = $this->atualizaVenda($data);
+        } else {
+            $venda = $this->cadastroVenda($data);
+        }
+
+        $data["venda"] = @$venda["venda"];
+        $dados["venda"] = @$venda["venda"];
+        $dados["postback"] = @$venda["postback"];
+
+        $produto = (new Produto())->findById($data["produto"]);
+        $vendaAss = (new Venda())->findById($data["venda"]);
+        if ($produto->tipo_cobranca == 2) {
+            $assinatura = new AssinaturaCadastro();
+            $assinatura->venda = $vendaAss->id;
+            $assinatura->status = 1;
+            if ($assinatura->save()) {
+                $data["assinatura"] = "Assinatura cadastrada";
+                
+                $periodicidade = array(
+                    "Semanal"       => [7, "days"],
+                    "Mensal"        => [1, "months"],
+                    "Bimestral"     => [2, "months"],
+                    "Trimestral"    => [3, "months"],
+                    "Semestral"     => [6, "months"],
+                    "Anual"         => [1, "years"],
+                    "Trienal"       => [3, "years"]
+                );
+
+                
+                if (@$data["plano"]) $plano = (new Plano())->findById($data["plano"]);
+                $limite = $plano->maximo_recorrencia * @$periodicidade[$plano->periodo][0];
+                $data["recorrencia"] = $plano->periodo;
+
+                if ($plano->maximo_recorrencia > 0)
+                    $data["data_limite"] = date('Y-m-d', strtotime("+$limite " . @$periodicidade[$plano->periodo][1], strtotime(date('Y-m-d'))));
+
+                $proxima = @$periodicidade[$plano->periodo][0];
+                if (!empty($data["gerar_cobranca"])) {
+                    // Gera a cobrança: calcula a próxima cobrança automaticamente com base no plano
+                    $data["proxima_cobranca"] = date('Y-m-d',strtotime("+$proxima " . @$periodicidade[$plano->periodo][1], strtotime(date('Y-m-d')))
+                    );
+                } else {
+                    // Não gera cobrança: usa a data informada manualmente no input
+                    $data["proxima_cobranca"] = $data["proxima_cobranca_input"] ?? date('Y-m-d');
+                }
+                $data["valor_plano"] = $plano->preco;
+                $data["assinatura"] = (new AppAssinaturas(null))->cadastroAssinaturas($data);
+
+            } else {
+                $data["assinatura"] = "Erro ao cadastrar";
+            }
+        }
+        $_SESSION["pagamento"] = $data;
+        
+        if (!empty($data["gerar_cobranca"])) {
+            $transacao = (new MercadoPago)->compraPix($data);
+        
+            $dados["qr_code"] = @$transacao->point_of_interaction->transaction_data->qr_code;
+        
+            $dados["meio_pagamento"] = "PagarMe";
+        
+            $venda1 = @(new Venda())->findById(@$venda["venda"]);
+            $venda1->qr_code = @$dados["qr_code"];
+            $venda1->transacao = @$transacao->id;
+            $venda1->status_transacao = 1;
+            $venda1->meio_pagamento = @$dados["meio_pagamento"];
+        
+            if ($venda1->save()) {
+                // VERIFICA SE A VENDA SERÁ ENVIADA PARA O TELEVENDAS
+                $venda_prod = (new Venda())->findById(@$data["venda"]);
+                $produto = (new Produto())->findById(@$venda_prod->produto);
+                if (@$produto && @$produto->habilitar_televendas == 1) {
+                    $dataVenda["venda"] = $venda_prod->id;
+                    $this->enviarTelevendas(@$dataVenda);
+                }
+                $dados["msg_pix"] = "Venda atualizada";
+        
+                $produto = (new Produto())->findById($data["produto"]);
+                if ($produto->tipo_cobranca == 2 && $venda1->status_transacao != 5) {
+                    $assinatura = new AssinaturaCadastro();
+                    $assinatura->venda = $venda1->id;
+                    $assinatura->status = 1;
+                    if ($assinatura->save()) {
+                        $dados["assinatura"] = "Assinatura cadastrada";
+                    } else {
+                        $dados["assinatura"] = "Erro ao cadastrar";
+                    }
+                }
+            } else {
+                $dados["msg_pix"] = $venda1->fail()->getMessage();
+            }
+        } else {
+            $dados["msg_pix"] = "Assinatura criada sem cobrança.";
+        }
+        
+
+        $dados["msg"] = @$venda["msg"];
+        $dados["whatsapp"] = @$venda["whatsapp"];
+        $dados["coprodutores"] = @$venda["coprodutores"];
+        $dados["status_transacao"] = @$data["status_transacao"];
+        $dados["url"] = url("checkout/obrigado");
+
+        $_SESSION["pagamento"] = @$data;
+        
+        echo json_encode($dados);
+    }
+
     public function transacaoPix($data)
     {
 

@@ -15,6 +15,8 @@ use Source\Models\Usuarios\UsuarioDados;
 use Source\Models\Vendas\Venda;
 use Source\Models\Produtos\Produto;
 use Source\Models\Produtos\Plano;
+use Source\Models\Checkout\Checkout;
+use Source\Models\CoProdutor\CoProdutor;
 use Source\App\Sessao\AppSessao;
 use Source\App\Assinaturas\AppPagamentoAssinaturas;
 use Source\App\Postback\AppPostback;
@@ -399,8 +401,11 @@ class AppAssinaturas
                 echo "**********************************************************<br>";
                 echo "****     <b>Assinatura: $assinatura->id </b><br>";
                 echo "**********************************************************<br>";
-
-                $venda = $pagamentoAssinaturas->transacao($data);
+                if ($assinatura->pagamento == 1) {
+                    $venda = $pagamentoAssinaturas->transacao($data);
+                } else {
+                    $venda = $pagamentoAssinaturas->transacaoPix($data);
+                }
 
                 echo "***   <b>Dados venda<b><br>";
                 var_dump($venda);
@@ -423,6 +428,7 @@ class AppAssinaturas
                     "Trienal"       => [3, "years"]
                 );
                 $proxima = $periodicidade[$assinatura->recorrencia][0];
+                echo "$proxima - 1<br>";
 
                 if ($venda->status_transacao == 5) {
                     $proxima_cobranca = date('Y-m-d', strtotime("+1 day", strtotime(date('Y-m-d'))));
@@ -453,4 +459,143 @@ class AppAssinaturas
             echo "Nenhuma cobrança para hoje";
         }
     }
+
+    public function renderInputVenda($data)
+{
+    $this->sessao = (new AppSessao())->verificaSeLogado();
+
+    $usuarioId = $_SESSION["id"];
+    $produtos = (new Produto())->find("usuario = :uid", "uid={$usuarioId}")->order("nome ASC")->fetch(true);
+
+    $planosPorProduto = [];
+    $checkoutPorProduto = [];
+    $taxaPorProduto = [];
+    $valorRedrocketPorProduto = [];
+    $valorLiquidoPorProduto = [];
+    $comissaoProdutorPorProduto = [];
+    $coprodutoresPorProduto = [];
+    $comissaoCoprodutorPorProduto = [];
+    $somaCoprodutorPorProduto = [];
+    $taxaTransacaoPorProduto = [];
+
+    foreach ($produtos as $produto) {
+        $planos = (new Plano())->find("produto = :pid AND ativo = 1 AND privado = 0", "pid={$produto->id}")->fetch(true);
+
+        $planosPorProduto[$produto->id] = array_map(function($plano) {
+            return [
+                'id' => $plano->id,
+                'nome' => $plano->nome,
+                'usuario' => $plano->usuario,
+                'preco' => $plano->preco
+            ];
+        }, $planos ?: []);
+
+        $checkout = (new Checkout())->find("produto = :pid", "pid={$produto->id}")->fetch();
+        $checkoutPorProduto[$produto->id] = $checkout;
+
+        $usuario = (new Usuario())->findById($usuarioId);
+        $taxa = (new Taxa())->findById(1);
+
+        if ($usuario && $usuario->taxa_redrocket) {
+            $taxa_transacao = $produto->tipo_cobranca == 1 ? $usuario->taxa_redrocket : $usuario->taxa_assinatura;
+        } else {
+            $taxa_transacao = $produto->tipo_cobranca == 1 ? $taxa->taxa_redrocket : $taxa->taxa_assinatura;
+        }
+        if (@$_GET["ec"] && $usuario->assinatura_ecommerce == "taxa") {
+            $taxa_transacao += $usuario->taxa_ecommerce;
+        }
+    
+        $taxaTransacaoPorProduto[$produto->id] = $taxa_transacao;
+        $taxa_redrocket = $taxa ? $taxa->taxa_redrocket : 0;
+        $meio_pagamento_desconto = @$taxa->meio_pagamento_desconto ?? 0;
+
+        $taxaPorProduto[$produto->id] = $taxa_redrocket;
+
+        if (!empty($planos)) {
+            $plano = $planos[0]; // assume primeiro plano como padrão
+            $preco = $plano->preco;
+
+            $valor_redrocket = number_format(($preco * ($taxa_redrocket / 100)) + 1, 2, ".", "");
+            $valor_liquido = $preco - $valor_redrocket;
+
+            // === INÍCIO: lógica coprodutores ===
+            $usuario = (new Usuario())->findById($usuarioId);
+            $valorOcta = number_format(($plano->preco * ($usuario->taxa_redrocket / 100)) + 1, 2);
+
+            $coprodutores = "";
+            $comissao_coprodutor = "";
+            $somaCoprodutor = 0;
+
+            $coproducao = (new CoProdutor())->find("produto = {$produto->id} AND aceito = 1")->fetch(true);
+
+            if (@$plano->habilitar_comissao_coprodutores) {
+                $cop = explode(",", $plano->comissao_coprodutores);
+                if ($cop) {
+                    foreach ($cop as $cop1) {
+                        $cop2 = explode("|", $cop1);
+                        $coprodutores .= "/$cop2[0]/";
+                        if (@$cop2[1] == 0) {
+                            $comissao_cop = number_format(($plano->preco - $valorOcta) * (@$cop2[2] / 100), 2);
+                        } else {
+                            $comissao_cop = number_format($cop2[2], 2);
+                        }
+                        $comissao_coprodutor .= "/$comissao_cop/";
+                        $somaCoprodutor += $comissao_cop;
+                    }
+                }
+            } elseif ($coproducao) {
+                foreach ($coproducao as $coprodutor) {
+                    $coprodutores .= "/{$coprodutor->co_produtor}/";
+                    if ($coprodutor->tipo_comissao == 0) {
+                        $comissao_cop = number_format(($plano->preco - $valorOcta) * ($coprodutor->comissao / 100), 2);
+                    } else {
+                        $comissao_cop = number_format($coprodutor->comissao, 2);
+                    }
+                    $comissao_coprodutor .= "/$comissao_cop/";
+                    $somaCoprodutor += $comissao_cop;
+                }
+            }
+            // === FIM: lógica coprodutores ===
+
+            $comissao_afiliado = 0; // Se quiser calcular também.
+
+            $resto = $valor_liquido - $somaCoprodutor - $comissao_afiliado;
+            $comissao_produtor = max($resto, 0);
+
+            $valorRedrocketPorProduto[$produto->id] = $valor_redrocket;
+            $valorLiquidoPorProduto[$produto->id] = $valor_liquido;
+            $comissaoProdutorPorProduto[$produto->id] = $comissao_produtor;
+
+            $coprodutoresPorProduto[$produto->id] = $coprodutores;
+            $comissaoCoprodutorPorProduto[$produto->id] = $comissao_coprodutor;
+            $somaCoprodutorPorProduto[$produto->id] = $somaCoprodutor;
+        } else {
+            $valorRedrocketPorProduto[$produto->id] = 0;
+            $valorLiquidoPorProduto[$produto->id] = 0;
+            $comissaoProdutorPorProduto[$produto->id] = 0;
+            $coprodutoresPorProduto[$produto->id] = "";
+            $comissaoCoprodutorPorProduto[$produto->id] = "";
+            $somaCoprodutorPorProduto[$produto->id] = 0;
+        }
+    }
+
+    echo $this->view->render("assinaturas/input-venda", [
+        "title" => "Criar Venda Manual",
+        "produtos" => $produtos,
+        "planosPorProduto" => $planosPorProduto,
+        "checkoutPorProduto" => $checkoutPorProduto,
+        "taxaPorProduto" => $taxaPorProduto,
+        "taxaTransacaoPorProduto" => $taxaTransacaoPorProduto,
+        "valorRedrocketPorProduto" => $valorRedrocketPorProduto,
+        "valorLiquidoPorProduto" => $valorLiquidoPorProduto,
+        "meio_pagamento_desconto" => $meio_pagamento_desconto,
+        "comissaoProdutorPorProduto" => $comissaoProdutorPorProduto,
+        "coprodutoresPorProduto" => $coprodutoresPorProduto,
+        "comissaoCoprodutorPorProduto" => $comissaoCoprodutorPorProduto,
+        "somaCoprodutorPorProduto" => $somaCoprodutorPorProduto
+    ]);
+}
+
+
+
 }

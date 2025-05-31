@@ -457,6 +457,9 @@ function diffDate($d1, $d2, $type = '', $sep = '-')
             <!-- </div> -->
 
             <a class="btn btn-primary btn-sm" href="<?= url("assinaturas/extrato") ?>">Outras infomações</a>
+            <a class="btn btn-success btn-sm ml-2" href="<?= url("assinaturas/input-venda") ?>">
+                <i class="fas fa-plus"></i> Adicionar Assinatura
+            </a>
 
             <!-- <div class="card-body" style="background: #f4f6f9"> -->
             <script>
@@ -464,7 +467,7 @@ function diffDate($d1, $d2, $type = '', $sep = '-')
             </script>
             <div style="overflow-x: auto;">
 
-                <div class="mobile-n card card-body bg-azul-gradient" style="font-size:13px; font-family:inter">
+                <div class="mobile-n card card-body bg-sistema-gradient" style="font-size:13px; font-family:inter">
                     <div class="row">
                         <!-- <div class="col">ID</div> -->
                         <div class="col">ID</div>
