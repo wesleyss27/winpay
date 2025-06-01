@@ -811,34 +811,78 @@ $(function () {
         window.addEventListener('resize', () => myChart.resize());
     });
 
-    const userId = <?= $_SESSION["id"] ?? 'null' ?>; // substitua por seu campo real do ID do usuário
+    const userId = <?= $_SESSION["id"] ?? 'null' ?>;
+    let swRegistration = null;
+
+    // Detecta se é iPhone
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
     if ('serviceWorker' in navigator && 'PushManager' in window) {
-      navigator.serviceWorker.register('/sw.js').then(function(registration) {
-        console.log('Service Worker registrado com sucesso:', registration);
+      navigator.serviceWorker.register('/sw.js')
+        .then(function (registration) {
+          console.log('✅ Service Worker registrado:', registration);
+          swRegistration = registration;
 
-        Notification.requestPermission().then(function(permission) {
-          if (permission === 'granted') {
-            registration.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: 'BPVzsIRnzg3Vu6vEQ2RsYEZ_5TF-ow515Sk3kKMOhRcr5F-jL9IRcpIC0Nat_3nv2o8dvJzBIUYytAjP8LzJpeM'
-            }).then(function(subscription) {
-              fetch('/salvar-token', {
-                method: 'POST',
-                body: JSON.stringify({
-                  userId: userId,
-                  subscription: subscription
-                }),
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-              });
+          // Se **não** for iPhone, já pede permissão automática
+          if (!isIOS) {
+            Notification.requestPermission().then(function (permission) {
+              if (permission === 'granted') {
+                registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: 'BPVzsIRnzg3Vu6vEQ2RsYEZ_5TF-ow515Sk3kKMOhRcr5F-jL9IRcpIC0Nat_3nv2o8dvJzBIUYytAjP8LzJpeM'
+                }).then(function (subscription) {
+                  fetch('/salvar-token', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      userId: userId,
+                      subscription: subscription
+                    }),
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  });
+                });
+              }
             });
+          } else {
+            // Se for iPhone, exibe o botão
+            document.getElementById('notificacaoWrapper').style.display = 'block';
           }
-        });
-      }).catch(console.error);
+        })
+        .catch(console.error);
     }
 
+    // Evento para o botão (somente iPhone)
+    document.getElementById('permitirNotificacao')?.addEventListener('click', async () => {
+      if (!swRegistration) {
+        console.warn('⚠️ Service Worker ainda não registrado');
+        return;
+      }
+
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const subscription = await swRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: 'BPVzsIRnzg3Vu6vEQ2RsYEZ_5TF-ow515Sk3kKMOhRcr5F-jL9IRcpIC0Nat_3nv2o8dvJzBIUYytAjP8LzJpeM'
+        });
+
+        await fetch('/salvar-token', {
+          method: 'POST',
+          body: JSON.stringify({
+            userId: userId,
+            subscription: subscription
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        alert('🔔 Notificações ativadas com sucesso!');
+        document.getElementById('notificacaoWrapper').style.display = 'none';
+      } else {
+        alert('❌ Permissão negada.');
+      }
+    });
     
 
 
