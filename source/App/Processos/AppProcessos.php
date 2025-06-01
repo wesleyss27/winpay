@@ -22,6 +22,8 @@ use Source\App\Postback\AppPostback;
 use Source\App\ChatGuru\AppChatGuru;
 use stdClass;
 use Source\Models\Leadlovers\Leadlovers;
+use Source\App\Checkout1\AppProcessos as CheckoutAppProcessos;
+
 
 class AppProcessos
 {
@@ -469,6 +471,17 @@ class AppProcessos
                 6 => ""
             ),
         );
+
+        // 🔔 Enviar notificação push apenas se for pixGerado (pagamento = 3, status = 1)
+        if ((int)$pagamento === 3 && (int)$status === 1) {
+            $titulo = "PIX gerado com sucesso!";
+            $mensagemPush = "Pedido gerado para o produto: {$data["produto"]} - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+
+            $checkoutApp = new CheckoutAppProcessos(null);
+            
+            $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
+            error_log("aaaaaaaaaaa");
+        }
 
         // echo $pagamento, $status;
         $msg = @$mensagem[@$pagamento][@$status];

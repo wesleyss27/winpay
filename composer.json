@@ -43,6 +43,7 @@
         "pusher/pusher-php-server": "^4.1",
         "picqer/php-barcode-generator": "^2.0",
         "sendgrid/sendgrid": "^7.9",
-        "aws/aws-sdk-php": "^3.197.0"
+        "aws/aws-sdk-php": "^3.197.0",
+        "minishlink/web-push": "^7.0"
     }
 }

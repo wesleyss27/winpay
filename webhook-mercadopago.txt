@@ -842,3 +842,78 @@ data {
 }
 **** Venda: 1049, Produtor: 6202, Produto: 210 ***
 
+31/05/2025 22:59:42
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113496519590',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 1078, Produtor: 6198, Produto: 216 ***
+
+31/05/2025 23:00:57
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113496519590',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 1078, Produtor: 6198, Produto: 216 ***
+
+31/05/2025 23:16:04
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113496519590',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 1078, Produtor: 6198, Produto: 216 ***
+
+31/05/2025 23:17:50
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113496519590',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 1078, Produtor: 6198, Produto: 216 ***
+
+31/05/2025 23:18:06
+dados = {
+'action': 'payment.updated',
+'api_version': 'v1',
+data {
+ 'id' = '113496519590',
+ } 
+'date_created': '2024-12-03T01:10:26Z',
+'id': '117475780327',
+'live_mode': '1',
+'type': 'payment',
+'user_id': '2089151881',
+}
+**** Venda: 1078, Produtor: 6198, Produto: 216 ***
+

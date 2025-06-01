@@ -796,6 +796,37 @@ $(function () {
         window.addEventListener('resize', () => myChart.resize());
     });
 
+    const userId = <?= $_SESSION["id"] ?? 'null' ?>; // substitua por seu campo real do ID do usuário
+
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('Service Worker registrado com sucesso:', registration);
+
+        Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+            registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BPVzsIRnzg3Vu6vEQ2RsYEZ_5TF-ow515Sk3kKMOhRcr5F-jL9IRcpIC0Nat_3nv2o8dvJzBIUYytAjP8LzJpeM'
+            }).then(function(subscription) {
+              fetch('/salvar-token', {
+                method: 'POST',
+                body: JSON.stringify({
+                  userId: userId,
+                  subscription: subscription
+                }),
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
+            });
+          }
+        });
+      }).catch(console.error);
+    }
+
+    
+
+
 </script>
 
 <?= $v->end(); ?>

@@ -1,5 +1,52 @@
 <?php
 
+// Endpoint especial para salvar token de push notification
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === '/salvar-token') {
+    header('Content-Type: application/json');
+
+    try {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!$data || !isset($data['userId'], $data['subscription'])) {
+            throw new Exception("Dados inválidos: userId e subscription são obrigatórios.");
+        }
+
+        $userId = $data['userId'];
+        $subscription = json_encode($data['subscription'], JSON_UNESCAPED_UNICODE);
+
+        $dbPath = __DIR__ . '/db.sqlite';
+        $pdo = new PDO('sqlite:' . $dbPath);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Criação automática da tabela
+        $pdo->exec("CREATE TABLE IF NOT EXISTS push_subscriptions (
+            user_id TEXT PRIMARY KEY,
+            subscription TEXT NOT NULL
+        )");
+
+        // Salvar ou atualizar
+        $stmt = $pdo->prepare("INSERT OR REPLACE INTO push_subscriptions (user_id, subscription) VALUES (:user_id, :subscription)");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':subscription' => $subscription
+        ]);
+
+        echo json_encode([
+            'status' => $userId,
+            'mensagem' => 'Assinatura salva com sucesso!',
+            'caminho_banco' => realpath($dbPath)
+        ]);
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'status' => 'erro',
+            'mensagem' => $e->getMessage()
+        ]);
+    }
+
+    exit; // Finaliza aqui, para não continuar o fluxo normal da aplicação
+}
+
 //CHAMA O AUTOLOAD
 require __DIR__ . "/vendor/autoload.php";
 
@@ -545,6 +592,10 @@ $router->get("/", "AppAnalytics:analytics", "analytics.home");
 * NAMESPACE Source\App\Checkout1
 */
 $router->namespace("Source\App\Checkout1");
+
+$router->group("processos");
+$router->get("/notificar", "AppProcessos:formNotificacaoTodos", "processos.notificar");
+$router->post("/notificar-todos", "AppProcessos:notificarTodosDisparar", "processos.dispararNotificacaoTodos");
 
 $router->group("checkout");
 $router->get("/", "AppCheckout:home", "checkout.home"); // REDIRECIONAR PARA ECOMMERCE
