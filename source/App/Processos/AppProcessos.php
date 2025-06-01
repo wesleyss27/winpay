@@ -482,6 +482,15 @@ class AppProcessos
             $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
         }
 
+        // 🔔 Enviar notificação push para pixGeradoPago (pagamento = 3, status = 4)
+        if ((int)$pagamento === 3 && (int)$status === 4) {
+            $titulo = "Pagamento PIX confirmado!";
+            $mensagemPush = "O pedido do produto {$data["produto"]} foi pago via PIX. Valor: R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+
+            $checkoutApp = new CheckoutAppProcessos(null);
+            $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
+        }
+
         // echo $pagamento, $status;
         $msg = @$mensagem[@$pagamento][@$status];
 
