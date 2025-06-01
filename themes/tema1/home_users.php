@@ -95,6 +95,12 @@ if ($_SESSION["tipo"] == 6) {
         <small>*Dados referentes a sua comissão</small> -->
 
         <div class="row">
+        <div id="notificacaoWrapper" style="display: none; padding: 10px; text-align: center;">
+          <button id="permitirNotificacao" class="btn btn-warning">
+            <span class="material-icons" style="color: black; vertical-align: middle;">notifications</span>
+            <span style="margin-left: 6px;">Ativar Notificações</span>
+          </button>
+        </div>
           <div class="col-md-8"></div>
           <div class="col-md-4 text-right">
             <div class="btn-group">
@@ -559,6 +565,15 @@ if ($_SESSION["tipo"] == 6) {
 </div>
 
 <?= $v->start("scripts"); ?>
+<script>
+  function isIphone() {
+    return /iPhone/.test(navigator.userAgent) && !window.MSStream;
+  }
+
+  if (isIphone()) {
+    document.getElementById('notificacaoWrapper').style.display = 'block';
+  }
+</script>
 <script>
   function load(action, tempo = 1000) {
     var load_div = $(".ajax_load");

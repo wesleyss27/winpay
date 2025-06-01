@@ -480,7 +480,6 @@ class AppProcessos
             $checkoutApp = new CheckoutAppProcessos(null);
             
             $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
-            error_log("aaaaaaaaaaa");
         }
 
         // echo $pagamento, $status;

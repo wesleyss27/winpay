@@ -1,0 +1,28 @@
+{
+    "name": "WinPay",
+    "short_name": "App",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#FFD700",
+    "orientation": "portrait",
+    "icons": [
+      {
+        "src": "themes/tema1/images/icon-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "themes/tema1/images/icon-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      },
+      {
+        "src": "themes/tema1/images/con-192-maskable.png",
+        "type": "image/png",
+        "sizes": "192x192",
+        "purpose": "maskable"
+      }
+    ]
+  }
+  

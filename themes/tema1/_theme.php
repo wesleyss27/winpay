@@ -14,6 +14,15 @@ if (@$_GET["action"] == "sair") {
 
 <?= $v->insert("inc/header"); ?>
 <title><?= $title ?></title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#FFD700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WinpPay">
+<link rel="apple-touch-icon" href="themes/tema1/images/icon-192.png">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
