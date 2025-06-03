@@ -475,7 +475,8 @@ class AppProcessos
         // 🔔 Enviar notificação push apenas se for pixGerado (pagamento = 3, status = 1)
         if ((int)$pagamento === 3 && (int)$status === 1) {
             $titulo = "PIX gerado com sucesso!";
-            $mensagemPush = "Pedido gerado para o produto: {$data["produto"]} - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+            //$mensagemPush = "Pedido gerado para o produto: {$data["produto"]} - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+            $mensagemPush = "Pedido gerado - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
 
             $checkoutApp = new CheckoutAppProcessos(null);
             
@@ -485,7 +486,21 @@ class AppProcessos
         // 🔔 Enviar notificação push para pixGeradoPago (pagamento = 3, status = 4)
         if ((int)$pagamento === 3 && (int)$status === 4) {
             $titulo = "Pagamento PIX confirmado!";
-            $mensagemPush = "O pedido do produto {$data["produto"]} foi pago via PIX. Valor: R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+            //$mensagemPush = "O pedido do produto {$data["produto"]} foi pago via PIX. Valor: R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+            $mensagemPush = "O pedido foi pago via PIX. Valor: R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+            $checkoutApp = new CheckoutAppProcessos(null);
+            $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
+        }
+
+        // 🔔 Enviar notificação push para venda realizada com cartão (pagamento = 1, status = 4)
+        if ((int)$pagamento === 1 && (int)$status === 4) {
+            $titulo = "Parabéns! Venda realizada";
+            
+            if (@$data["comissao"]) {
+                $mensagemPush = "Sua comissão: R$ " . number_format($data["comissao"], 2, ",", ".");
+            } else {
+                $mensagemPush = "O pedido foi pago. Valor: R$ " . number_format($data["valor_produto"], 2, ",", ".");
+            }
 
             $checkoutApp = new CheckoutAppProcessos(null);
             $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
