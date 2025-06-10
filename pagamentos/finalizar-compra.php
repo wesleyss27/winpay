@@ -1033,11 +1033,23 @@ $obrigado = array(
 ?>
 
 <!-- <a class="btn btn-outline-primary" data-toggle="modal" data-target="#modalBoleto" style="font-family:inter" id="cadastro">Cadastrar <i class="fa fa-chevron-right"></i> </a> -->
+<?php
+$mostrarObrigado = ($venda->status_transacao != 5 && $venda->status_transacao != 6 && $venda->status_transacao != 7);
+$srcObrigado = @$obrigado[$venda->forma_pagamento];
+?>
 
-<?php if ($venda->status_transacao != 5 && $venda->status_transacao != 6 && $venda->status_transacao != 7) : ?>
-    <div class="obrigado">
-        <!-- <?= $venda->forma_pagamento . $venda->id ?> -->
-        <iframe class="scroll" src="<?= @$obrigado[$venda->forma_pagamento]; ?>" frameborder="0" width="100%"></iframe>
+<?php if ($mostrarObrigado && !empty($srcObrigado)) : ?>
+    <div style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        z-index: 9999;
+        overflow: hidden;
+    ">
+        <iframe src="<?= $srcObrigado; ?>" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
     </div>
 <?php endif; ?>
 
