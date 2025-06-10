@@ -12,7 +12,7 @@ class File
         // echo " - " . $files["size"];
 
         $extensao = strtolower(pathinfo(@$files["name"], PATHINFO_EXTENSION));
-        echo $extensao;
+        //echo $extensao;
         $nome = explode(".", @$files["name"]);
 
         if (
