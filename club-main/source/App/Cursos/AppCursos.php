@@ -299,7 +299,7 @@ class AppCursos
             $cursos->imagem = $files->upload($_FILES["imagem"], $this->pastaCursos);
         }
 
-        echo $data["liberacao"];
+        //echo $data["liberacao"];
 
         if ($cursos->save()) {
             $msg = "Salvo com sucesso";
