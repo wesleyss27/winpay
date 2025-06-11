@@ -407,6 +407,7 @@ class AppPostback
                 $eventos = $postback->returnEventos();
 
                 if(@$venda){
+                    error_log("postback tem venda");
                     foreach ($eventos as $evento) {
                         if($status == $evento){
                             $retorno .= "Evento '" . $status_transacao[@$evento] . "' - Resposta: '";
