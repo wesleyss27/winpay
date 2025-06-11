@@ -361,6 +361,7 @@ class AppPostback
                 }
 
             $response = curl_exec($curl);
+            error_log("Postback: " . $postback->url . " - " . $response);
 
             curl_close($curl);
             //return $response;
@@ -407,7 +408,6 @@ class AppPostback
                 $eventos = $postback->returnEventos();
 
                 if(@$venda){
-                    error_log("postback tem venda");
                     foreach ($eventos as $evento) {
                         if($status == $evento){
                             $retorno .= "Evento '" . $status_transacao[@$evento] . "' - Resposta: '";
