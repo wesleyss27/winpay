@@ -484,8 +484,6 @@ class AppWebHook
                 echo "venda $venda->id, usuario $venda->produtor, produto $venda->produto <br>";
                 $bling = (new AppBling(null))->criarPedido(["venda" => $venda->id, "usuario" => $venda->produtor, "produto" => $venda->produto]);
                 $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
-                error_log("Venda: $venda->id, Produtor: $venda->produtor, Produto: $venda->produto, Status: $status_transacao[$status]");
-                error_log("postback: " . json_encode($postback));
             } else {
                 echo "Não tem venda";
             }
