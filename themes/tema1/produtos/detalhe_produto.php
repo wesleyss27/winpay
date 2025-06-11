@@ -374,9 +374,9 @@ if ($_SESSION["tipo"] == 6) {
                                     <div class="row">
                                         <!-- DADOS PESSOAIS -->
                                         <div class="col-md-6">
-                                            <div class="bg-light alert">
+                                            <div class="text-white">
                                                 <h4>Dados Pessoais</h4>
-                                                <table class="table">
+                                                <table class="table text-white">
                                                     <tr>
                                                         <th>Nome</th>
                                                         <td><?= $produto->dataProdutor()->nome; ?></td>
@@ -395,7 +395,7 @@ if ($_SESSION["tipo"] == 6) {
                                                     <tr>
                                                         <th>Telefone</th>
                                                         <td>
-                                                            <a style="color:#0056b3" href="<?= "https://api.whatsapp.com/send?phone=55$usuario->telefone"; ?>" target="_blank">
+                                                            <a style="color:#00ff00" href="<?= "https://api.whatsapp.com/send?phone=55$usuario->telefone"; ?>" target="_blank">
                                                                 <i class='fab fa-whatsapp' style='color: green'></i>
                                                                 <?= $usuario->telefone ?>
                                                             </a>
