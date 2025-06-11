@@ -294,6 +294,7 @@ $json = array(
         var json = $("#json").val();
         var chave_unica = $("#chave_unica").val();
         console.log(url, json, chave_unica);
+        console.log("testando");
 
         $.ajax({
             url: "<?= $router->route("postback.testar") ?>",
