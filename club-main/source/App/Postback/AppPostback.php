@@ -239,7 +239,7 @@ class AppPostback
             $telefone_comprador        = $venda->endereco ? @$venda->dataEndereco()->telefone : @$venda->dataComprador()->telefone;
             $email_comprador           = $venda->endereco ? @$venda->dataEndereco()->email : @$venda->dataComprador()->email;
             $cpf_cnpj_raw              = $venda->endereco ? @$venda->dataEndereco()->cpf_cnpj : @$venda->dataComprador()->cpf_cnpj;
-            $cpf_cnpj_comprador        = str_pad(preg_replace('/\D/', '', $cpf_cnpj_raw), strlen($cpf_cnpj_raw) <= 11 ? 11 : 14, '0', STR_PAD_LEFT);
+            $cpf_cnpj_comprador = str_pad(preg_replace('/\D/', '', $cpf_cnpj_raw), 11, '0', STR_PAD_LEFT);
             $cep_comprador             = $venda->endereco ? @$venda->dataEndereco()->cep : @$venda->dataComprador()->cep_entrega;
             $rua_comprador             = $venda->endereco ? @$venda->dataEndereco()->rua : @$venda->dataComprador()->rua_entrega;
             $numero_comprador          = $venda->endereco ? @$venda->dataEndereco()->numero : @$venda->dataComprador()->numero_entrega;
