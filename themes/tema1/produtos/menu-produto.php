@@ -24,14 +24,14 @@
 <?php endif ?>
 
 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("upsell_produto")) : ?>
-    <a href="<?= url("produtos/upsell/") . $produto->id; ?>">Upsell <span class="badge bg-vermelho-gradient">Novo</span></a>
+    <a href="<?= url("produtos/upsell/") . $produto->id; ?>">Upsell <!--< <span class="badge bg-vermelho-gradient">Novo</span> --> </a>
 <?php endif ?>
 
 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("cupom_desconto")) : ?>
-    <a href="<?= url("produtos/cupons/") . $produto->id; ?>">Cupom de Desconto <span class="badge bg-vermelho-gradient">Novo</span></a><br>
+    <a href="<?= url("produtos/cupons/") . $produto->id; ?>">Cupom de Desconto <!--< <span class="badge bg-vermelho-gradient">Novo</span> --> </a><br>
 <?php endif ?>
 
 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("notificacao_checkout")) : ?>
-    <a href="<?= url("produtos/notificacoes/") . $produto->id; ?>">Notificações Checkout <span class="badge bg-vermelho-gradient">Novo</span></a>
+    <a href="<?= url("produtos/notificacoes/") . $produto->id; ?>">Notificações Checkout <!--<span class="badge bg-vermelho-gradient">Novo</span> --> </a>
 <?php endif ?>
 <!-- <a href="<?= url("produtos/televendas/") . $produto->id; ?>">Televendas <span class="badge bg-azul-dark">Em Breve</span></a>  -->

@@ -123,7 +123,7 @@ $modelo_checkout = array(
 
                     <div style="overflow: auto">
                         <table class="table table-striped" style="font-family:inter; font-size:13px;">
-                            <thead class="bg-azul-gradient">
+                            <thead>
                                 <tr>
                                     <th scope="col">Código</th>
                                     <th scope="col">Nome</th>
