@@ -372,162 +372,116 @@ if ($_SESSION["tipo"] == 6) {
                                 <div class="tab-pane fade show active" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab">
 
                                     <div class="row">
-                                        <!-- DADOS PESSOAIS -->
-                                        <div class="col-md-6">
-                                            <div class="text-white">
-                                                <h4>Dados Pessoais</h4>
-                                                <table class="table text-white">
-                                                    <tr>
-                                                        <th>Nome</th>
-                                                        <td><?= $produto->dataProdutor()->nome; ?></td>
-                                                    </tr>
+                                        <!-- Dados Pessoais -->
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card bg-dark text-white border-light shadow-sm">
+                                                <div class="card-header border-bottom">
+                                                    <h5 class="mb-0">Dados Pessoais</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <strong>Nome:</strong><br>
+                                                        <?= $produto->dataProdutor()->nome; ?>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong><?= $tipo_doc[$usuario->tipo_doc]; ?>:</strong><br>
+                                                        <?= $usuario->cpf_cnpj; ?>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>Email:</strong><br>
+                                                        <?= $usuario->email; ?>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>Telefone:</strong><br>
+                                                        <a href="https://api.whatsapp.com/send?phone=55<?= $usuario->telefone; ?>" class="text-success" target="_blank">
+                                                            <i class="fab fa-whatsapp"></i> <?= $usuario->telefone ?>
+                                                        </a>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>Endereço:</strong><br>
+                                                        <?= "{$usuario->rua}, {$usuario->numero}, {$usuario->bairro}" ?><br>
+                                                        <?= "{$usuario->cidade} - {$usuario->estado}" ?>
+                                                    </div>
 
-                                                    <tr>
-                                                        <th><?= $tipo_doc[$usuario->tipo_doc]; ?></th>
-                                                        <td><?= $usuario->cpf_cnpj; ?></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th>Email</th>
-                                                        <td><?= $usuario->email; ?></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th>Telefone</th>
-                                                        <td>
-                                                            <a style="color:#00ff00" href="<?= "https://api.whatsapp.com/send?phone=55$usuario->telefone"; ?>" target="_blank">
-                                                                <i class='fab fa-whatsapp' style='color: green'></i>
-                                                                <?= $usuario->telefone ?>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th>Endereço</th>
-                                                        <td>
-                                                            <?= $usuario->rua; ?>, <?= $usuario->numero; ?>, <?= $usuario->bairro; ?><br>
-                                                            <?= $usuario->cidade; ?> - <?= $usuario->estado; ?>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-
-                                            <div>
-                                                <?php if ($produto->observacao != "") : ?>
-                                                    <b>Observação:</b>
-                                                    <pre style="font-family: inter"><?= $produto->observacao ?></pre>
-                                                <?php endif; ?>
-
-                                                <div class="bg-light alert">
-                                                    <form action="<?= $router->route("produtos.editarStatus") ?>" method="post">
-                                                        <b>Adicionar observação: </b><small>(opcional)</small>
-                                                        <textarea name="observacao" id="observacao" class="form-control" cols="30" rows="4"></textarea><br>
-
-                                                        <br>
-
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <input type="hidden" name="id" value="<?= $produto->id; ?>">
-                                                                <label>Status </label>
-
-                                                                <select name="status" id="status" class="form-control">
-                                                                    <option value="">Status</option>
-                                                                    <?php if ($produto->excluir != 1) : ?>
-                                                                        <option value="2" <?= $produto->status == 2 ? "selected" : "" ?>>APROVADO</option>
-                                                                        <option value="3" <?= $produto->status == 3 ? "selected" : "" ?>>REPROVADO</option>
-                                                                        <option value="4" <?= $produto->status == 4 ? "selected" : "" ?>>BLOQUEADO</option>
-                                                                    <?php endif ?>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <label>Integrar com Logística St4rt? </label>
-
-                                                                <select name="st4rt" id="st4rt" class="form-control">
-                                                                    <?php if ($produto->excluir != 1) : ?>
-                                                                        <option value="0" <?= $produto->st4rt == 0 ? "selected" : "" ?>>Não</option>
-                                                                        <option value="1" <?= $produto->st4rt == 1 ? "selected" : "" ?>>Sim</option>
-                                                                    <?php endif ?>
-                                                                </select>
-                                                            </div>
+                                                    <?php if ($produto->observacao != "") : ?>
+                                                        <div class="mb-3">
+                                                            <strong>Observação:</strong>
+                                                            <pre class="bg-secondary p-2 rounded text-white"><?= $produto->observacao ?></pre>
                                                         </div>
-
-                                                        <br>
-
-                                                        <?php if ($produto->excluir != 1) : ?>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <button class="btn bg-vermelho-gradient form-control" id="atualizar">Atualizar</button>
-                                                                </div>
-                                                            </div>
-                                                        <?php endif ?>
-                                                    </form>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
 
+                                            <!-- Formulário de atualização -->
+                                            <?php if ($produto->excluir != 1) : ?>
+                                                <div class="card bg-light mt-3">
+                                                    <div class="card-body">
+                                                        <form action="<?= $router->route("produtos.editarStatus") ?>" method="post">
+                                                            <input type="hidden" name="id" value="<?= $produto->id; ?>">
+
+                                                            <div class="mb-2">
+                                                                <label for="observacao"><strong>Adicionar observação</strong> <small>(opcional)</small></label>
+                                                                <textarea name="observacao" class="form-control" rows="4"></textarea>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label for="status">Status</label>
+                                                                    <select name="status" class="form-select">
+                                                                        <option value="">Selecione</option>
+                                                                        <option value="2" <?= $produto->status == 2 ? "selected" : "" ?>>APROVADO</option>
+                                                                        <option value="3" <?= $produto->status == 3 ? "selected" : "" ?>>REPROVADO</option>
+                                                                        <option value="4" <?= $produto->status == 4 ? "selected" : "" ?>>BLOQUEADO</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label for="st4rt">Integrar com Logística St4rt?</label>
+                                                                    <select name="st4rt" class="form-select">
+                                                                        <option value="0" <?= $produto->st4rt == 0 ? "selected" : "" ?>>Não</option>
+                                                                        <option value="1" <?= $produto->st4rt == 1 ? "selected" : "" ?>>Sim</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="d-grid">
+                                                                <button class="btn btn-danger">Atualizar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            <?php endif ?>
                                         </div>
-                                        <!-- FIM DADOS PESSOAIS -->
 
-                                        <!-- DADOS PRODUTO -->
-                                        <div class="col-md-6">
-                                            <h4>Informações do produto</h4>
-                                            <table class="table">
-                                                <tr>
-                                                    <th>Cliente St4rt</th>
-                                                    <td><?= $simOuNao[$produto->dataProdutor()->cliente_st4rt]; ?></td>
-                                                </tr>
+                                        <!-- Informações do Produto -->
+                                        <div class="col-md-6 mb-4">
+                                            <div class="card bg-dark text-white border-light shadow-sm">
+                                                <div class="card-header border-bottom">
+                                                    <h5 class="mb-0">Informações do Produto</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="list-group list-group-flush text-white">
+                                                        <li class="list-group-item bg-dark"><strong>Cliente St4rt:</strong> <?= $simOuNao[$produto->dataProdutor()->cliente_st4rt]; ?></li>
+                                                        <li class="list-group-item bg-dark"><strong>Tipo de produto:</strong> <?= $tipoProduto[$produto->tipo_produto]; ?></li>
 
-                                                <tr>
-                                                    <th>Tipo de produto</th>
-                                                    <td><?= $tipoProduto[$produto->tipo_produto]; ?></td>
-                                                </tr>
+                                                        <?php if ($produto->tipo_produto == 8) : ?>
+                                                            <li class="list-group-item bg-dark"><strong>Link de rastreio:</strong> <a href="<?= @$produto->link_rastreio ?>" class="text-info" target="_blank"><?= @$produto->link_rastreio ?></a></li>
+                                                        <?php endif; ?>
 
-                                                <?php if ($produto->tipo_produto == 8) : ?>
-                                                    <tr>
-                                                        <th>Link de rastreio</th>
-                                                        <td><a href="<?= @$produto->link_rastreio ?>" target="_blank"><?= @$produto->link_rastreio ?></a></td>
-                                                    </tr>
-                                                <?php endif; ?>
+                                                        <?php if ($produto->tipo_produto == 11) : ?>
+                                                            <li class="list-group-item bg-dark"><strong>Link de acesso membros:</strong> <a href="<?= @$produto->url_membros ?>" class="text-info" target="_blank"><?= @$produto->url_membros ?></a></li>
+                                                        <?php endif; ?>
 
-                                                <?php if ($produto->tipo_produto == 11) : ?>
-                                                    <tr>
-                                                        <th>Link de acesso membros</th>
-                                                        <td><a href="<?= @$produto->url_membros ?>" target="_blank"><?= @$produto->url_membros ?></a></td>
-                                                    </tr>
-                                                <?php endif; ?>
+                                                        <li class="list-group-item bg-dark"><strong>Documento técnico:</strong> <a href="<?= url("uploads/documentos/") . $produto->documentos ?>" class="text-info" target="_blank"><?= $produto->documentos ?></a></li>
 
-                                                <tr>
-                                                    <th>Documento técnico</th>
-                                                    <td><a href="<?= url("uploads/documentos/") . $produto->documentos ?>" target="_blank"><?= $produto->documentos ?></a></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>Visualização no marketplace</th>
-                                                    <td><?= @$simOuNao[$produto->visualizacao] ?></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>Página de obrigado boleto</th>
-                                                    <td><a href="<?= @$produto->obrigado_boleto ?>" target="_blank"><?= @$produto->obrigado_boleto ?></a></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>Página de obrigado cartão</th>
-                                                    <td><a href="<?= @$produto->obrigado_cartao ?>" target="_blank"><?= @$produto->obrigado_cartao ?></a></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>Página de obrigado análise</th>
-                                                    <td><a href="<?= @$produto->obrigado_analise ?>" target="_blank"><?= @$produto->obrigado_analise ?></a></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>Documento técnico</th>
-                                                    <td><a href="<?= url("uploads/documentos/") . $produto->documentos ?>" target="_blank"><?= $produto->documentos ?></a></td>
-                                                </tr>
-                                            </table>
+                                                        <li class="list-group-item bg-dark"><strong>Visualização no marketplace:</strong> <?= @$simOuNao[$produto->visualizacao] ?></li>
+                                                        <li class="list-group-item bg-dark"><strong>Página de obrigado boleto:</strong> <a href="<?= @$produto->obrigado_boleto ?>" class="text-info" target="_blank"><?= @$produto->obrigado_boleto ?></a></li>
+                                                        <li class="list-group-item bg-dark"><strong>Página de obrigado cartão:</strong> <a href="<?= @$produto->obrigado_cartao ?>" class="text-info" target="_blank"><?= @$produto->obrigado_cartao ?></a></li>
+                                                        <li class="list-group-item bg-dark"><strong>Página de obrigado análise:</strong> <a href="<?= @$produto->obrigado_analise ?>" class="text-info" target="_blank"><?= @$produto->obrigado_analise ?></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- FIM DADOS PRODUTOS -->
+
                                     </div>
 
                                 </div>
