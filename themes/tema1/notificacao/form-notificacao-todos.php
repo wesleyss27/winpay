@@ -152,7 +152,7 @@ function enviarWebhook() {
 
     resposta.textContent = "Enviando...";
 
-    fetch("https://bjjsoaadpfowefidvjin.supabase.co/functions/v1/webhook-pagamento", {
+    fetch("https://sistemanacional.winpay.digital/webhook", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

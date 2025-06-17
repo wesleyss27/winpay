@@ -75,6 +75,7 @@ class AppProcessos
 
         // EMAIL COMPRADOR
         $emailComprador = $this->emailComprador($venda);
+        error_log("Email enviado para o comprador: " . $emailComprador);
         $nomeComprador = $venda->dataEndereco()->nome;
         $data["nome"] = $venda->dataEndereco()->nome;
         $sms = $this->notificacaoSms($data);
