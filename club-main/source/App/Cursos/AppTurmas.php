@@ -417,7 +417,7 @@ class AppTurmas
         $usuario->senha = password_hash(@$data['senha'],  PASSWORD_DEFAULT, ["cost" => 10]);
         $usuario->status = 1;
         $usuario->ativo = 1;
-        $usuario->tipo_usuario = 5;
+        $usuario->tipo_usuario = 6;
         $usuario->taxa_saque = 7.5;
         $usuario->taxa_redrocket = 7.5;
         $usuario->taxa_assinatura = 7.5;

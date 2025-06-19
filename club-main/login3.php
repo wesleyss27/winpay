@@ -9,15 +9,16 @@ if ($url_atual == "http://localhost") {
   $redirect = @$_GET["redirect"];
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - WinPay</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 
@@ -26,20 +27,36 @@ if ($url_atual == "http://localhost") {
       background-color: #121212;
       color: white;
       font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .login-container {
-      max-width: 400px;
-      margin: 60px auto;
-      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 30px;
       background: #1e1e1e;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
     .login-container h3 {
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       text-align: center;
+    }
+
+    .login-container .logo {
+      width: 80px;
+      margin: 0 auto 15px;
+      display: block;
     }
 
     .form-group label {
@@ -50,10 +67,18 @@ if ($url_atual == "http://localhost") {
       background-color: #2a2a2a;
       border: 1px solid #444;
       color: white;
+      border-radius: 8px;
     }
 
     .form-control::placeholder {
       color: #aaa;
+    }
+
+    .input-group-text {
+      background-color: #2a2a2a;
+      border: 1px solid #444;
+      color: #FFD700;
+      border-radius: 8px 0 0 8px;
     }
 
     .btn-primary {
@@ -62,13 +87,13 @@ if ($url_atual == "http://localhost") {
       color: black;
       font-weight: bold;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       padding: 10px;
+      transition: background-color 0.3s ease;
     }
 
     .btn-primary:hover {
       background-color: #e6c200;
-      color: black;
     }
 
     .login-links {
@@ -86,18 +111,16 @@ if ($url_atual == "http://localhost") {
       color: white;
     }
 
-    .modal-header {
-      border-bottom: 1px solid #444;
-    }
-
+    .modal-header,
     .modal-footer {
-      border-top: 1px solid #444;
+      border-color: #444;
     }
   </style>
 </head>
 <body>
 
 <div class="login-container">
+  <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Logo" class="logo">
   <h3>Acesse sua conta</h3>
 
   <?= $v->insert("themes/tema1/fragmentos/msg-cadastrar-editar", []); ?>
@@ -107,12 +130,22 @@ if ($url_atual == "http://localhost") {
 
     <div class="form-group">
       <label for="email">Email ou login</label>
-      <input type="text" name="email" class="form-control" placeholder="Digite seu email ou login" required>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-user"></i></span>
+        </div>
+        <input type="text" name="email" class="form-control" placeholder="Digite seu email ou login" required>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="senha">Senha</label>
-      <input type="password" name="senha" class="form-control" placeholder="Digite sua senha" required>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-lock"></i></span>
+        </div>
+        <input type="password" name="senha" class="form-control" placeholder="Digite sua senha" required>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary">Entrar</button>
@@ -124,7 +157,7 @@ if ($url_atual == "http://localhost") {
   </form>
 </div>
 
-<!-- Modal "Esqueceu a senha" -->
+<!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

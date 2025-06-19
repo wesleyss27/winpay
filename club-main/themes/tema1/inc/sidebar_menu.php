@@ -138,11 +138,14 @@
 <aside id="aside" class="main-sidebar sidebar-dark-primary elevation-4 bg-black">
   <?php if ($_SESSION["tipo"] != 6) : ?>
     <div class="brand-logo-sidebar">
-  <span class="brand-title">WIN <span class="highlight">HUB</span></span>
-</div>
+      <span class="brand-title">WIN <span class="highlight">HUB</span></span>
+    </div>
 
   <?php elseif ($_SESSION["tipo"] == 6) : ?>
-    <div align="center"><img src="<?= url("themes/imgs/logo5.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div>
+    <div class="brand-logo-sidebar">
+      <span class="brand-title">WIN <span class="highlight">HUB</span></span>
+    </div>
+    <!-- <div align="center"><img src="<?= url("themes/imgs/logo5.png") ?>" style="width:145px; margin-top:10px; margin-left:-20px"></div> -->
   <?php endif ?>
   <div class="sidebar">
 

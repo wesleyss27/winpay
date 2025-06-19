@@ -1,6 +1,171 @@
 <?php $v->layout("_theme"); ?>
+<style>
+/* Fundo geral */
+body, .content-wrapper, .main-panel, .content {
+  background-color: #000 !important;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Cards */
+.card {
+  background-color: #141414;
+  border: 1px solid #222;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(217, 192, 0, 0.05);
+}
+
+/* Header do card */
+.card-header {
+  background-color: #141414;
+  border-bottom: 1px solid #333;
+}
+
+/* Títulos */
+.title, .card-title, h3, h4 {
+  color: rgb(217, 192, 0);
+  font-weight: 600;
+}
+
+/* Inputs com fundo branco */
+input.form-control,
+select.form-control,
+textarea.form-control {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+
+input.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: #666;
+}
+
+input.form-control:focus,
+select.form-control:focus,
+textarea.form-control:focus {
+  border-color: rgb(217, 192, 0);
+  box-shadow: 0 0 0 2px rgba(217, 192, 0, 0.4);
+}
+
+/* Inputs readonly */
+input[readonly],
+select[readonly] {
+  background-color: #ddd;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 8px 8px 0 0;
+  margin-right: 5px;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: rgb(217, 192, 0);
+  color: #000;
+  border: 1px solid rgb(217, 192, 0);
+}
+
+/* Botões */
+.btn-primary {
+  background-color: rgb(217, 192, 0);
+  border-color: rgb(217, 192, 0);
+  color: #000;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: rgba(217, 192, 0, 0.9);
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+/* Modal */
+.modal-content {
+  background-color: #141414;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 12px;
+}
+
+/* Avatar */
+.avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid #000;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  object-fit: cover;
+}
+
+/* Outros */
+a {
+  color: rgb(217, 192, 0);
+}
+
+a:hover {
+  color: rgba(217, 192, 0, 0.8);
+}
+
+small {
+  color: #aaa;
+  font-style: italic;
+}
+
+.author {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .card .avatar {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+
+  .card-user .avatar {
+    width: 124px;
+    height: 124px;
+    border: 4px solid #3aaa3a;
+    border-bottom-color: transparent;
+    background-color: transparent;
+    position: relative;
+  }
+
+  
+.txt-topo {
+    color: #fff;
+}
+</style>
+
+
 
 <?php
+
+
 
 $tipo_usuario = array(
   1 => "MASTER",
@@ -34,8 +199,6 @@ $grupo = array(
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
 
-  <!-- CSS Files -->
-  <link href="<?= url("themes/tema1/dist/css/perfil/black.css?" . time()) ?>" rel="stylesheet" />
 
   <section class="content">
     <div class="main-panel">
@@ -44,7 +207,7 @@ $grupo = array(
       <style>
         .topo {
           background: url('<?= url("themes/imgs/topo-perfil.png") ?>') no-repeat;
-          background-color: #2AAADE;
+          background-color: rgb(217, 192, 0);
           background-size: 85em;
           background-position: center -100px;
           padding: 2em 0;

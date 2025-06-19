@@ -1,4 +1,63 @@
-  
+<style>
+/* Footer fundo preto */
+.main-footer {
+  background-color: #000;
+  color: #fff;
+  border-top: 1px solid #333;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.main-footer a {
+  color: rgb(217, 192, 0);
+  text-decoration: none;
+}
+
+.main-footer a:hover {
+  text-decoration: underline;
+  color: rgba(217, 192, 0, 0.8);
+}
+
+.main-footer b {
+  color: rgb(217, 192, 0);
+}
+
+/* Sidebar fundo preto */
+.control-sidebar {
+  background-color: #000 !important;
+  color: #fff;
+}
+
+.control-sidebar h5,
+.control-sidebar h6 {
+  color: rgb(217, 192, 0);
+}
+
+.control-sidebar a {
+  color: rgb(217, 192, 0);
+}
+
+.control-sidebar a:hover {
+  color: rgba(217, 192, 0, 0.8);
+}
+
+/* Texto oculto para responsividade */
+span.oculta {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  span.oculta {
+    display: inline;
+  }
+
+  span.versao {
+    display: none;
+  }
+}
+</style>
+
   
   <footer class="main-footer">
     <a href="<?= url("termos-uso") ?>" target="_blank">Termos e Políticas</a>

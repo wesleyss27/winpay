@@ -26,6 +26,188 @@ foreach ($all_aulas as $aul_key => $aul_val) {
   }
 }
 ?>
+
+<style>
+/* Fundo geral */
+body, .content-wrapper, .container-fluid, .header, .card {
+  background-color: #000 !important;
+  color: #fff;
+}
+
+/* Player de vídeo */
+.video_platform iframe {
+  border-radius: 12px;
+  border: none;
+}
+
+/* Sidebar (playlist de aulas) */
+.playlist-item {
+  background-color: #141414;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  transition: background-color 0.3s ease;
+}
+
+.playlist-item:hover {
+  background-color: #1f1f1f;
+}
+
+.playlist-item.active {
+  background-color: rgb(217, 192, 0);
+  color: #000;
+  font-weight: bold;
+}
+
+.playlist-item.active div,
+.playlist-item.active span {
+  color: #000 !important;
+}
+
+/* Texto na playlist */
+.playlist-item .col {
+  color: #fff;
+}
+
+/* Barra de progresso */
+.progress {
+  background-color: #333;
+  border-radius: 20px;
+}
+
+.progress-bar {
+  background-color: rgb(217, 192, 0);
+  color: #000;
+  font-weight: 600;
+}
+
+/* Botões */
+.btn {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+}
+
+.btn-primary,
+.btn-success {
+  background-color: rgb(217, 192, 0);
+  border-color: rgb(217, 192, 0);
+  color: #000;
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: rgba(217, 192, 0, 0.9);
+}
+
+.btn-gray {
+  background-color: #1f1f1f;
+  border-color: #333;
+  color: #fff;
+}
+
+.btn-gray:hover {
+  background-color: #333;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background: none;
+}
+
+.breadcrumb-item a {
+  color: rgb(217, 192, 0);
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+/* Títulos */
+h1, h2, h5, h4 {
+  color: rgb(217, 192, 0);
+  font-weight: 600;
+}
+
+/* Textos */
+p, .comment-text, .comment-time {
+  color: #ccc;
+}
+
+/* Área de materiais extras */
+.card-body div[style*="padding: 15px"] {
+  background-color: #141414 !important;
+  color: #fff;
+  border-radius: 10px;
+}
+
+/* Comentários */
+.comentario, .resposta {
+  border-radius: 10px;
+  background-color: #141414 !important;
+  padding: 10px;
+  color: #fff;
+}
+
+/* Input, textarea */
+textarea, input {
+  background-color: #fff;
+  color: #000;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+textarea:focus, input:focus {
+  border-color: rgb(217, 192, 0);
+  box-shadow: 0 0 0 2px rgba(217, 192, 0, 0.4);
+}
+
+/* Avatar */
+.avatar img, .avatar-img {
+  border-radius: 50%;
+  border: 2px solid rgb(217, 192, 0);
+}
+
+/* Estrelas */
+.estrela {
+  color: #bbb;
+  cursor: pointer;
+}
+
+.estrela:hover, .estrela.active {
+  color: #FFD700;
+}
+
+/* Scroll playlist */
+.scrollbar {
+  overflow-y: auto;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .m-none {
+    display: none;
+  }
+
+  .playlist-item .col {
+    font-size: 14px;
+  }
+}
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 

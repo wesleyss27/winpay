@@ -1,5 +1,132 @@
 <?php $v->layout("_theme"); ?>
 
+<style>
+body, .content-wrapper, .main-content, .container, .content {
+  background-color: #000 !important;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Card lateral (box com img, descrição e progresso) */
+.sticky-top {
+  background-color: #141414;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(217, 192, 0, 0.05);
+}
+
+.sticky-top img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+h2, h5, h4 {
+  color: rgb(217, 192, 0);
+  font-weight: 600;
+}
+
+p {
+  color: #aaa;
+}
+
+/* Progress Bar */
+.progress {
+  background-color: #333;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background-color: rgb(217, 192, 0);
+  color: #000;
+  font-weight: 600;
+}
+
+/* Botões */
+.btn {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-success {
+  background-color: rgb(217, 192, 0);
+  border-color: rgb(217, 192, 0);
+  color: #000;
+}
+
+.btn-success:hover {
+  background-color: rgba(217, 192, 0, 0.9);
+}
+
+.btn-primary {
+  background-color: rgb(217, 192, 0);
+  border-color: rgb(217, 192, 0);
+  color: #000;
+}
+
+.btn-primary:hover {
+  background-color: rgba(217, 192, 0, 0.9);
+}
+
+a {
+  color: rgb(217, 192, 0);
+}
+
+a:hover {
+  color: rgba(217, 192, 0, 0.8);
+}
+
+/* Seção dos módulos */
+.col-lg-8 {
+  background-color: #141414;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Accordion */
+.accordion {
+  background-color: #1e1e1e;
+  color: #fff;
+  cursor: pointer;
+  padding: 14px 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.3s;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.accordion:hover {
+  background-color: #333;
+}
+
+.accordion.active {
+  background-color: rgb(217, 192, 0);
+  color: #000;
+}
+
+.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: #141414;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .sticky-top {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 

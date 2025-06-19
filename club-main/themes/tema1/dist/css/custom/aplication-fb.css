@@ -66,7 +66,7 @@ sub {
     bottom: -0.25em;
 }
 a {
-    color: #2c7be5;
+    color: rgb(217, 192, 0);
     background-color: transparent;
 }
 a,
@@ -74,7 +74,7 @@ a:hover {
     text-decoration: none;
 }
 a:hover {
-    color: #1657af;
+    color: #f6f8fa;
 }
 a:not([href]):not([class]),
 a:not([href]):not([class]):hover {
@@ -903,14 +903,10 @@ fieldset:disabled a.btn {
     pointer-events: none;
 }
 .btn-primary {
-    background: #3aaa3a;
-    background-image: -webkit-linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
-    background-image: -o-linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
-    background-image: -moz-linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
-    background-image: linear-gradient(to bottom left, #3aaa3a, #39aa7e, #3aaa3a);
+    background: rgb(217, 192, 0);
     background-size: 210% 210%;
     background-position: top right;
-    background-color: #3aaa3a;
+    background-color: rgb(217, 192, 0);
     transition: all 0.15s ease;
     box-shadow: none;
     color: #ffffff;
@@ -1362,7 +1358,7 @@ input[type="submit"].btn-block {
     padding: 0.375rem 1.5rem;
     clear: both;
     font-weight: 400;
-    color: #6e84a3;
+    color: rgb(217, 192, 0);
     text-align: inherit;
     white-space: nowrap;
     background-color: transparent;
@@ -1372,7 +1368,7 @@ input[type="submit"].btn-block {
 .dropdown-item:active,
 .dropdown-item:focus,
 .dropdown-item:hover {
-    color: #12263f;
+    color: #f0f2f5;
     text-decoration: none;
     background-color: transparent;
 }
@@ -2170,20 +2166,13 @@ input[type="submit"].btn-block {
     border-radius: 0.5rem;
 }
 .card-produtos {
-  position: relative;
-  display: inline-block;
-  flex-direction: column;
-  min-width: 0px;
-  max-height: 500px;
-  word-wrap: break-word;
-  background-color: #ffffff;
-  background-clip: border-box;
-  border-radius: 5px;
-  box-sizing: border-box;
-  margin: 10px 10px;
-  box-shadow: 0 5px 5px 0 #dae9ff;
-  
-}
+    position: relative;
+    background-color: #141414;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
 .card > hr {
     margin-right: 0;
     margin-left: 0;
@@ -2391,7 +2380,7 @@ a.badge:hover {
 .badge:empty {
     display: none;
 }
-. .badge {
+.badge {
     position: relative;
     top: -1px;
 }
@@ -2997,7 +2986,7 @@ button.bg-white:hover {
     background-color: #e6e6e6 !important;
 }
 .bg-white {
-    background-color: #fff !important;
+    background-color: #070e17 !important;
 }
 .border {
     border: 1px solid #e3ebf6 !important;
