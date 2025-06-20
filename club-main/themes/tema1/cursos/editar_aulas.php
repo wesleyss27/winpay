@@ -121,7 +121,7 @@ if ($_SESSION["tipo"] == 6) {
                     <div class="col-lg-12 col-md-12 col-12 form-group">
                         <div class="form-group">
                             <label for="formGroupExampleInput">Conteúdo da aula</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" placeholder="Módulo 1" name="aulas_descricao" required><?= @$aulass[0]->descricao; ?></textarea>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" placeholder="Módulo 1" name="aulas_descricao"><?= @$aulass[0]->descricao; ?></textarea>
                         </div>
                     </div>
                     <?php
@@ -496,6 +496,7 @@ if ($_SESSION["tipo"] == 6) {
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
+
 <script>
   // Inicializa o TinyMCE
   tinymce.init({
@@ -506,15 +507,18 @@ if ($_SESSION["tipo"] == 6) {
     height: 300
   });
 
-  // 🔥 Validação do conteúdo TinyMCE antes do submit
+  // Validação do conteúdo TinyMCE antes do submit
   $('form').on('submit', function(e) {
-    tinymce.triggerSave(); // 🔸 Isso garante que o conteúdo vá para o textarea
+    tinymce.triggerSave(); // 🔸 Garante que o conteúdo volte para o textarea oculto
+
     const content = tinymce.get('exampleFormControlTextarea1').getContent({format: 'text'}).trim();
+
     if (content === '') {
-      alert('O conteúdo da aula é obrigatório.');
+      alert('O campo "Conteúdo da aula" é obrigatório.');
       e.preventDefault();
     }
   });
 </script>
+
 
 <?= $v->end() ?>
