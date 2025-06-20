@@ -336,7 +336,7 @@ class AppProdutosTelevendas
         $produto->membros = @$data["membros"] ? $data["membros"] : NULL;
 
         if ($produto->membros == "octaclube")
-            $produto->url_membros = "https://club.redrocketpay.com";
+            $produto->url_membros = "https://club.winpay.digital";
         else
             $produto->url_membros = @$data["url_membros"] ? $data["url_membros"] : NULL;
 
@@ -447,7 +447,7 @@ class AppProdutosTelevendas
         $produto->membros = @$data["membros"] ? $data["membros"] : NULL;
 
         if ($produto->membros == "octaclube")
-            $produto->url_membros = "https://club.redrocketpay.com";
+            $produto->url_membros = "https://club.winpay.digital";
         else
             $produto->url_membros = @$data["url_membros"] ? $data["url_membros"] : NULL;
 

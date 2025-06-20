@@ -180,12 +180,12 @@ if ($produto->usuario != $section->getId()) {
                 <div class="col-md-12">
                   <div class="row bg-azul-gradient card card-body">
                     <label for="octa">
-                      <input type="radio" name="membros" id="octa" value="octaclube" <?= ($produto->membros == "octaclube") ? 'checked' : '' ?>> RedClube
+                      <input type="radio" name="membros" id="octa" value="octaclube" <?= ($produto->membros == "octaclube") ? 'checked' : '' ?>> WinPay
                       <img src="<?= url("themes/imgs/logos/logo2-2.png") ?>" alt="" width="100%">
                     </label>
                   </div>
                 </div>
-                Após cadastrar o produto, acesse <a href="https://club.redrocketpay.com" target="_blank">https://club.redrocketpay.com</a> para configurar seu curso na REDROCKET
+                Após cadastrar o produto, acesse <a href="https://club.winpay.digital" target="_blank">https://club.winpay.digital</a> para configurar seu curso na REDROCKET
               </div>
 
               <div class="col-md-4">

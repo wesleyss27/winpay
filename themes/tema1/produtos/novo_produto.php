@@ -182,7 +182,7 @@ if ($_SESSION["tipo"] == 6) {
                       </label>
                     </div>
                   </div>
-                  Após cadastrar o produto, acesse <a href="https://club.redrocketpay.com" target="_blank">https://club.redrocketpay.com</a> para configurar seu curso na REDROCKET
+                  Após cadastrar o produto, acesse <a href="https://club.winpay.digital" target="_blank">https://club.winpay.digital</a> para configurar seu curso na REDROCKET
                 </div>
 
                 <div class="col-md-4">
