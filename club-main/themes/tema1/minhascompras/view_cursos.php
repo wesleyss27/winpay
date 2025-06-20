@@ -1,14 +1,12 @@
 <?php $v->layout("_theme"); ?>
 
 <style>
-/* Estilo Geral */
 body, .content-wrapper, .main-content, .container, .content {
   background-color: #000 !important;
   color: #fff;
   font-family: 'Poppins', sans-serif;
 }
 
-/* Card lateral (progresso, imagem, descrição) */
 .sticky-top {
   background-color: #141414;
   border-radius: 12px;
@@ -22,7 +20,6 @@ body, .content-wrapper, .main-content, .container, .content {
   margin-bottom: 15px;
 }
 
-/* Títulos */
 h2, h5, h4, h3 {
   color: rgb(217, 192, 0);
   font-weight: 600;
@@ -32,7 +29,6 @@ p {
   color: #aaa;
 }
 
-/* Progress Bar */
 .progress {
   background-color: #333;
   border-radius: 20px;
@@ -45,7 +41,6 @@ p {
   font-weight: 600;
 }
 
-/* Botões */
 .btn {
   border-radius: 8px;
   padding: 8px 16px;
@@ -63,7 +58,6 @@ p {
   background-color: rgba(217, 192, 0, 0.9);
 }
 
-/* Links */
 a {
   color: rgb(217, 192, 0);
 }
@@ -72,7 +66,6 @@ a:hover {
   color: rgba(217, 192, 0, 0.8);
 }
 
-/* Área dos módulos */
 .modulos-area {
   background-color: #141414;
   border-radius: 12px;
@@ -81,17 +74,7 @@ a:hover {
   color: #fff;
 }
 
-/* Corrige fundo branco de cards */
-.modulos-area .card,
-.modulos-area .card-body,
-.modulos-area .list-group-item {
-  background-color: #1e1e1e !important;
-  color: #fff !important;
-  border-color: #333 !important;
-}
-
-/* Accordion dos módulos */
-.modulos-area .accordion {
+.accordion {
   background-color: #1e1e1e;
   color: #fff;
   cursor: pointer;
@@ -105,16 +88,16 @@ a:hover {
   margin-bottom: 10px;
 }
 
-.modulos-area .accordion:hover {
+.accordion:hover {
   background-color: #333;
 }
 
-.modulos-area .accordion.active {
+.accordion.active {
   background-color: rgb(217, 192, 0);
   color: #000;
 }
 
-.modulos-area .panel {
+.panel {
   padding: 0 18px;
   display: none;
   background-color: #141414;
@@ -123,7 +106,36 @@ a:hover {
   margin-bottom: 15px;
 }
 
-/* Responsivo */
+.aula-item {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.aula-item:hover {
+  background-color: #2a2a2a;
+  color: rgb(217, 192, 0);
+  border-color: rgb(217, 192, 0);
+  transform: translateY(-2px);
+}
+
+.aula-item i {
+  margin-right: 10px;
+  color: rgb(217, 192, 0);
+}
+
+.aula-item span {
+  flex: 1;
+  font-weight: 500;
+}
+
 @media (max-width: 768px) {
   .sticky-top {
     margin-bottom: 20px;
@@ -131,10 +143,8 @@ a:hover {
 }
 </style>
 
-<!-- Content Wrapper -->
 <div class="content-wrapper">
-
-  <section class="content" id="menu-content">
+  <section class="content">
     <div class="main-content px-md-5">
       <div class="container pt-3 pt-md-5 pt-lg-6">
         <div class="row mx-lg-n4 mb-lg-5">
@@ -143,13 +153,10 @@ a:hover {
           <div class="col-lg-4 px-lg-4">
             <div class="sticky-top mb-4 mb-md-0 py-md-5">
               <?php
-              $img = !empty($cursos->imagem) 
-                ? url("uploads/cursos/" . $cursos->imagem) 
-                : url("uploads/cursos/default.png");
+              $img = !empty($cursos->imagem) ? url("uploads/cursos/" . $cursos->imagem) : url("uploads/cursos/default.png");
               ?>
 
-              <img src="<?= $img; ?>">
-              <br><br>
+              <img src="<?= $img; ?>"><br><br>
 
               <?php
               $aulasTotal = $aulaObj->find("curso = $cursos->id")->count();
@@ -158,7 +165,7 @@ a:hover {
               ?>
 
               <div class="progress" style="height: 20px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: <?= $porcent ?>%;" aria-valuenow="<?= $porcent ?>" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" role="progressbar" style="width: <?= $porcent ?>%;" aria-valuenow="<?= $porcent ?>" aria-valuemin="0" aria-valuemax="100">
                   <?= "$aulasConcluidas/$aulasTotal" ?>
                 </div>
               </div>
@@ -172,7 +179,6 @@ a:hover {
 
               <h2><?= $title ?></h2>
               <p><?= $cursos->descricao; ?></p>
-
             </div>
           </div>
 
@@ -180,22 +186,37 @@ a:hover {
           <div class="col-lg-8 px-lg-4 modulos-area">
             <?php
             if (!empty($modulos)) :
-              foreach ($modulos as $modulos) :
-                $semana = $turma 
-                  ? floor((strtotime(date("Y-m-d H:i:s")) - strtotime($turma->created_at)) / (60 * 60 * 24)) 
-                  : 1;
+              foreach ($modulos as $modulo) :
+                $semana = $turma ? floor((strtotime(date("Y-m-d H:i:s")) - strtotime($turma->created_at)) / (60 * 60 * 24)) : 1;
 
-                if ($cursos->liberacao == 1) {
-                  $v->insert("minhascompras/ver-modulos", ["modulos" => $modulos, "aulas" => $aulas]);
-                } elseif ($cursos->liberacao == 3) {
-                  if ($semana < 7) {
-                    $v->insert("minhascompras/ver-modulos", ["modulos" => $modulos, "aulas" => $aulas]);
-                    break;
-                  } else {
-                    $v->insert("minhascompras/ver-modulos", ["modulos" => $modulos, "aulas" => $aulas]);
-                  }
-                }
+                if (
+                  $cursos->liberacao == 1 ||
+                  ($cursos->liberacao == 3 && $semana >= 7) ||
+                  is_null($turma)
+                ) :
+            ?>
+                  <div class="mb-3">
+                    <button class="accordion"><?= $modulo->nome; ?></button>
+                    <div class="panel">
+                      <?php
+                      foreach ($aulas as $aula) :
+                        if ($aula->modulo == $modulo->id) :
+                      ?>
+                          <div class="aula-item" onclick="window.location.href='<?= url('minhas-compras/viewaulas/' . $aula->id) ?>'"                          >
+                            <i class="fa fa-play-circle"></i>
+                            <span><?= $aula->nome ?></span>
+                          </div>
+                      <?php
+                        endif;
+                      endforeach;
+                      ?>
+                    </div>
+                  </div>
+            <?php
+                endif;
               endforeach;
+            else :
+              echo "<p style='color: #888;'>Nenhum módulo encontrado.</p>";
             endif;
             ?>
           </div>
@@ -204,9 +225,7 @@ a:hover {
       </div>
     </div>
   </section>
-
 </div>
-<!-- End Content Wrapper -->
 
 <?= $v->start("scripts") ?>
 <script>
@@ -217,41 +236,5 @@ a:hover {
       panel.style.display = (panel.style.display === "block") ? "none" : "block";
     });
   });
-
-  $(document).ready(function() {
-    $(".course_action, .module_action, .aulas_action").click(function() {
-      $(this).next('.action').toggle();
-    });
-  });
-
-  function excluir_aula(id) {
-    if (confirm("Você realmente deseja excluir esta aula?")) {
-      $.post("<?= $router->route("appcursos.urlExcluirAula") ?>", { id: id })
-        .done(function(callback) {
-          if (callback == "1") location.reload();
-          else alert("Erro ao excluir.");
-        });
-    }
-  }
-
-  function excluir_module(id) {
-    if (confirm("A exclusão deste módulo também pode afetar outras aulas.")) {
-      $.post("<?= $router->route("appcursos.urlExcluirModule") ?>", { id: id })
-        .done(function(callback) {
-          if (callback == "1") location.reload();
-          else alert("Erro ao excluir.");
-        });
-    }
-  }
-
-  function excluir_cursos(id) {
-    if (confirm("Tem certeza de que deseja excluir este curso? Pode afetar módulos e aulas.")) {
-      $.post("<?= $router->route("appcursos.urlExcluirCursos") ?>", { id: id })
-        .done(function(callback) {
-          if (callback == "1") window.location.href = "<?= $router->route("appcursos.home") ?>";
-          else alert("Erro ao excluir.");
-        });
-    }
-  }
 </script>
 <?= $v->end() ?>
