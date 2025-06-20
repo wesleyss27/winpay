@@ -495,4 +495,26 @@ if ($_SESSION["tipo"] == 6) {
         $('.filelabel').css('display', 'block');
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.3/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+  // Inicializa o TinyMCE
+  tinymce.init({
+    selector: '#exampleFormControlTextarea1',
+    plugins: 'lists link image code table',
+    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image | code',
+    menubar: false,
+    height: 300
+  });
+
+  // 🔥 Validação do conteúdo TinyMCE antes do submit
+  $('form').on('submit', function(e) {
+    tinymce.triggerSave(); // 🔸 Isso garante que o conteúdo vá para o textarea
+    const content = tinymce.get('exampleFormControlTextarea1').getContent({format: 'text'}).trim();
+    if (content === '') {
+      alert('O conteúdo da aula é obrigatório.');
+      e.preventDefault();
+    }
+  });
+</script>
+
 <?= $v->end() ?>
