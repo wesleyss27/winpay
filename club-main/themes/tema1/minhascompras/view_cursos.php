@@ -76,7 +76,7 @@ a:hover {
 
 .accordion {
   background-color: #1e1e1e;
-  color: #fff;
+  color: rgb(217, 192, 0);
   cursor: pointer;
   padding: 14px 18px;
   width: 100%;
@@ -86,6 +86,9 @@ a:hover {
   transition: 0.3s;
   border-radius: 8px;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .accordion:hover {
@@ -95,6 +98,14 @@ a:hover {
 .accordion.active {
   background-color: rgb(217, 192, 0);
   color: #000;
+}
+
+.accordion .icon {
+  transition: transform 0.3s ease;
+}
+
+.accordion.active .icon {
+  transform: rotate(180deg);
 }
 
 .panel {
@@ -196,13 +207,16 @@ a:hover {
                 ) :
             ?>
                   <div class="mb-3">
-                    <button class="accordion"><?= $modulo->nome; ?></button>
+                    <button class="accordion">
+                      <?= $modulo->nome; ?>
+                      <span class="icon">▼</span>
+                    </button>
                     <div class="panel">
                       <?php
                       foreach ($aulas as $aula) :
                         if ($aula->modulo == $modulo->id) :
                       ?>
-                          <div class="aula-item" onclick="window.location.href='<?= url('minhas-compras/viewaulas/' . $aula->id) ?>'"                          >
+                          <div class="aula-item" onclick="window.location.href='<?= url('minhas-compras/viewaulas/' . $aula->id) ?>'">
                             <i class="fa fa-play-circle"></i>
                             <span><?= $aula->nome ?></span>
                           </div>
