@@ -281,8 +281,8 @@ class AppTurmas
 
     public function email($data)
     {
-        $data["assunto"] = "Bem vindo ao Club RedRocket";
-        $data["mensagem"] = "<h2>Bem vindo ao Club RedRocket!</h2>";
+        $data["assunto"] = "Bem vindo ao Club Winpay";
+        $data["mensagem"] = "<h2>PARABÉNS PELA SUA COMPRA !!!</h2>";
         $data["mensagem"] .= "Olá " . @$data["nome"] . ", tudo bem?
         Você foi adicionado ao curso " . @$data["nome_curso"] . ".<br><br>
         Seu usuário cadastrado é:<br>
