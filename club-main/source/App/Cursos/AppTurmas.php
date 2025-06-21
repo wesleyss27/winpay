@@ -139,7 +139,7 @@ class AppTurmas
                             $data["nome_curso"] = $curso->nome;
 
                             echo "$turma->curso <br>";
-                            $turma->created_at = time();
+                            $turma->created_at = date('Y-m-d H:i:s');
 
                             if ($turma->save()) {
                                 echo "Salvo com sucesso<br>";
