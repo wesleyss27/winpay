@@ -197,44 +197,45 @@ a:hover {
           <div class="col-lg-8 px-lg-4 modulos-area">
             <?php
             if (!empty($modulos)) :
-              foreach ($modulos as $modulo) :
-                $semana = $turma ? floor((strtotime(date("Y-m-d H:i:s")) - strtotime($turma->created_at)) / (60 * 60 * 24)) : 1;
+                $first = true; // ✅ Controla o primeiro módulo
+                foreach ($modulos as $modulo) :
+                    $semana = $turma ? floor((strtotime(date("Y-m-d H:i:s")) - strtotime($turma->created_at)) / (60 * 60 * 24)) : 1;
 
-                if (
-                  $cursos->liberacao == 1 ||
-                  ($cursos->liberacao == 3 && $semana >= 7) ||
-                  is_null($turma)
-                ) :
+                    if (
+                        $cursos->liberacao == 1 ||
+                        ($cursos->liberacao == 3 && $semana >= 7) ||
+                        is_null($turma)
+                    ) :
             ?>
-                  <div class="mb-3">
-                    <button class="accordion">
-                      <?= $modulo->nome; ?>
-                      <span class="icon">▼</span>
-                    </button>
-                    <div class="panel">
-                      <?php
-                      foreach ($aulas as $aula) :
-                        if ($aula->modulo == $modulo->id) :
-                      ?>
-                          <div class="aula-item" onclick="window.location.href='<?= url('minhas-compras/viewaulas/' . $aula->id) ?>'">
-                            <i class="fa fa-play-circle"></i>
-                            <span><?= $aula->nome ?></span>
-                          </div>
-                      <?php
-                        endif;
-                      endforeach;
-                      ?>
-                    </div>
-                  </div>
+                        <div class="mb-3">
+                            <button class="accordion <?= $first ? 'active' : '' ?>">
+                                <?= $modulo->nome; ?>
+                                <span class="icon">▼</span>
+                            </button>
+                            <div class="panel" style="display: <?= $first ? 'block' : 'none' ?>;">
+                                <?php
+                                foreach ($aulas as $aula) :
+                                    if ($aula->modulo == $modulo->id) :
+                                ?>
+                                        <div class="aula-item" onclick="window.location.href='<?= url('minhas-compras/viewaulas/' . $aula->id) ?>'">
+                                            <i class="fa fa-play-circle"></i>
+                                            <span><?= $aula->nome ?></span>
+                                        </div>
+                                <?php
+                                    endif;
+                                endforeach;
+                                ?>
+                            </div>
+                        </div>
             <?php
-                endif;
-              endforeach;
+                        $first = false; // ✅ Após o primeiro, não aplica mais
+                    endif;
+                endforeach;
             else :
-              echo "<p style='color: #888;'>Nenhum módulo encontrado.</p>";
+                echo "<p style='color: #888;'>Nenhum módulo encontrado.</p>";
             endif;
             ?>
-          </div>
-
+        </div>
         </div>
       </div>
     </div>
