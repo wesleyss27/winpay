@@ -102,8 +102,15 @@ class AppTurmas
     public function cadastroAlunoTurma()
     {
         echo "<pre>";
-        $inicio = @$_GET["inicio"] ? @$_GET["inicio"] : date("Y-m-d", strtotime("-1 day"));
-        $fim = @$_GET["fim"] ? @$_GET["fim"] : date("Y-m-d", strtotime("-1 day"));
+        if (@$_GET["inicio"])
+            $inicio = @$_GET["inicio"];
+        else
+            $inicio = date("Y-m-d");
+
+        if (@$_GET["fim"])
+            $fim = @$_GET["fim"];
+        else
+            $fim = date("Y-m-d");
 
         echo "inicio=" . @$inicio . "&fim=" . @$fim . "<br><br>";
 
@@ -132,6 +139,7 @@ class AppTurmas
                             $data["nome_curso"] = $curso->nome;
 
                             echo "$turma->curso <br>";
+                            $turma->created_at = date('Y-m-d H:i:s');
 
                             if ($turma->save()) {
                                 echo "Salvo com sucesso<br>";
