@@ -43,33 +43,30 @@ class Emails
         //     exit;
         // }
 
-        $validar = (new Validacao())->validarEmail(@$data["email"]);
-        if ($validar) {
-            $email = new \SendGrid\Mail\Mail();
-            //$email->setFrom("pedro@redrocketpay.com", "Suporte RedRocket");
-            $email->setFrom("suporte@winpay.digital", "Suporte WinPay");
-            if (@$data["reply"]) {
-                $email->setReplyTo($data["reply"]);
-            }
-
-            $email->setSubject($data["assunto"]);
-            @$email->addTo($data["email"], $data["nome"]);
-            $email->addContent(
-                "text/html",
-                $this->message($data)
-            );
-            
-            $api_key = (new SendGridApi())->findById(1);
-            $sendgrid = new \SendGrid(base64_decode($api_key->api_key));
-            try {
-                $response = @$sendgrid->send($email);
-                return "Email enviado com sucesso - sendgrid.";
-            } catch (Exception $e) {
-                return 'Caught exception: '; //. $e->getMessage() ."\n";
-            }
-        } else {
-            return "Email inválido";
+     
+        $email = new \SendGrid\Mail\Mail();
+        //$email->setFrom("pedro@redrocketpay.com", "Suporte RedRocket");
+        $email->setFrom("suporte@winpay.digital", "Suporte WinPay");
+        if (@$data["reply"]) {
+            $email->setReplyTo($data["reply"]);
         }
+
+        $email->setSubject($data["assunto"]);
+        @$email->addTo($data["email"], $data["nome"]);
+        $email->addContent(
+            "text/html",
+            $this->message($data)
+        );
+        
+        $api_key = (new SendGridApi())->findById(1);
+        $sendgrid = new \SendGrid(base64_decode($api_key->api_key));
+        try {
+            $response = @$sendgrid->send($email);
+            return "Email enviado com sucesso - sendgrid.";
+        } catch (Exception $e) {
+            return 'Caught exception: '; //. $e->getMessage() ."\n";
+        }
+     
     }
 
     public function message($data)
