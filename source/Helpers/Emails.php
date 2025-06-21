@@ -346,22 +346,6 @@ class Emails
             <br><p>Se você ainda tem dúvidas sobre o produto, fique à vontade para entrar em contato 
             no e-mail " . @$data["email_suporte"] . ".</p>
             <br><br><p><a href='mailto:" .  @$data["email_suporte"] . "' class='btn'>Entrar em contato</a></p><br><br>
-            <br>
-            <p style='font-family: Arial, sans-serif; font-size: 18px; text-align: center; margin-bottom: 10px;'>
-                <strong>💬 Entre em contato agora mesmo!</strong><br>
-                Fale diretamente com o <strong>Dr. Fábio</strong> no Telegram para iniciar seu diagnóstico personalizado
-            </p>
-            <br>
-            <table cellpadding='0' cellspacing='0' border='0' align='center' style='margin: 20px auto;'>
-            <tr>
-                <td align='center' bgcolor='#3b82f6' style='border-radius: 8px;'>
-                <a href='https://t.me/Windrfabiobot' target='_blank' style='display: inline-block; padding: 14px 24px; font-size: 16px; color: #ffffff; text-decoration: none; font-family: Arial, sans-serif;'>
-                    💬 Falar com Dr. Fábio no Telegram
-                </a>
-                </td>
-            </tr>
-            </table>
-
         ";
         return $data;
     }

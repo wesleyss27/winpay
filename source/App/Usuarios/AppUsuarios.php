@@ -451,8 +451,10 @@ class AppUsuarios
     public function esqueceuSenha($data)
     {
         $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
-        $data["email"] = $data["email2"];
-        $usuario = (new Usuario())->find("email = :email", "email={$data['email2']}")->fetch();
+        echo json_encode($data);
+        $data["email"] = $data["email"];
+        $usuario = (new Usuario())->find("email = :email", "email={$data['email']}")->fetch();
+        echo json_encode($data);
 
         if (!$usuario) {
             echo "Não existe usuário com esse email";

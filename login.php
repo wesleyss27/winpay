@@ -9,9 +9,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-  
+
   <style>
-    /* 🌙 Fundo escuro elegante */
     body {
       background-color: black;
       color: white;
@@ -32,7 +31,7 @@
       left: 0;
       pointer-events: none;
       background: radial-gradient(circle at top left, rgba(217, 192, 0, 0.2), transparent 50%),
-            radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.15), transparent 50%);
+        radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.15), transparent 50%);
     }
 
     .login-container {
@@ -41,7 +40,6 @@
       max-width: 1200px;
     }
 
-    /* 📌 Lado esquerdo (Texto Motivacional) */
     .login-left {
       flex: 1;
       display: flex;
@@ -77,12 +75,12 @@
       .login-left {
         display: none;
       }
+
       .login-box {
         width: 100%;
       }
     }
 
-    /* 📌 Lado direito (Formulário) */
     .login-box {
       flex: 1;
       background: transparent;
@@ -94,7 +92,6 @@
       height: 700px;
     }
 
-    /* 🔑 Campos de entrada */
     .form-control {
       background: white;
       border: none;
@@ -114,7 +111,7 @@
     }
 
     .label-icon {
-      color: white; /* Mantém o texto branco */
+      color: white;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -123,14 +120,12 @@
     }
 
     .label-icon .material-symbols-outlined {
-      color: rgb(217, 192, 0); /* Ícones na cor PAY */
+      color: rgb(217, 192, 0);
     }
-
 
     .input-group {
       margin-bottom: 25px;
     }
-    
   </style>
 </head>
 
@@ -160,7 +155,8 @@
           <input type="password" name="senha" class="form-control" placeholder="Sua senha" required>
         </div>
         <br>
-        <button type="submit" class="btn btn-primary btn-block" style="background: rgb(217, 192, 0); border-radius: 8px; font-weight: bold; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; outline: none; box-shadow: none; color: black;">
+        <button type="submit" class="btn btn-primary btn-block"
+          style="background: rgb(217, 192, 0); border-radius: 8px; font-weight: bold; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; outline: none; box-shadow: none; color: black;">
           ENTRAR <span class="material-symbols-outlined">arrow_forward</span>
         </button>
 
@@ -170,7 +166,9 @@
           <a href="<?= url('cadastro'); ?>" style="color: white;">Cadastre-se</a>
         </div>
         <div class="text-center mt-2" style="color: white;">
-          <a href="mailto:suporte.oficial@redrocket.com.br?subject=Preciso de Ajuda&body=Ol%C3%A1,%20estou%20com%20problema%20na%20p%C3%A1gina%20<?= $_SERVER["REQUEST_URI"] ?>.%20Estou%20com%20o%20seguinte%20problema:" style="color: white;">Não conseguiu entrar?</a>
+          <a
+            href="mailto:suporte.oficial@redrocket.com.br?subject=Preciso de Ajuda&body=Ol%C3%A1,%20estou%20com%20problema%20na%20p%C3%A1gina%20<?= $_SERVER["REQUEST_URI"] ?>.%20Estou%20com%20o%20seguinte%20problema:"
+            style="color: white;">Não conseguiu entrar?</a>
         </div>
       </form>
     </div>
@@ -181,7 +179,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content" style="background: #1e293b; color: white;">
         <div class="modal-header" style="border-bottom: 1px solid #7e69aa;">
-          <h4 class="modal-title">Esqueceu a senha</h4>
+          <h4 class="modal-title">Esqueceu a senha?</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
@@ -197,12 +195,35 @@
   </div>
 
   <script>
-    $("#salvar").click(function(e) {
+    function salvar(url) {
+      var email = $("#email2").val().trim();
+
+      if (email === "") {
+        alert("Por favor, preencha o email.");
+        return;
+      }
+
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: { email: email },
+        success: function (response) {
+          console.log(response);
+          alert("Se o email estiver cadastrado, você receberá um link para redefinir sua senha.");
+          $('#myModal').modal('hide');
+        },
+        error: function (error) {
+          console.error(error);
+          alert("Ocorreu um erro ao enviar. Tente novamente.");
+        }
+      });
+    }
+
+    $("#salvar").click(function (e) {
       e.preventDefault();
-      var email = $("#email2").val();
-      console.log(email);
       salvar("<?= $router->route('appusuarios.esqueceuSenha') ?>");
     });
   </script>
 </body>
+
 </html>

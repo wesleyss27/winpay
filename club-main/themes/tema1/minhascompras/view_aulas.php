@@ -232,7 +232,7 @@ textarea:focus, input:focus {
                 <?php
                 $url = $aula->link_video;
 
-                if (strpos($url, 'youtube') > 0) {   // https://www.youtube.com/watch?v=YKKMtGhVdhc
+                if (strpos($url, 'youtube') !== false || strpos($url, 'youtu.be') !== false) {   // https://www.youtube.com/watch?v=YKKMtGhVdhc
 
                   $youtube_url = 'https://www.youtube.com/embed/';
 
