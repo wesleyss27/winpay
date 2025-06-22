@@ -59,7 +59,7 @@ class Emails
         );
         
         $api_key = (new SendGridApi())->findById(1);
-        $sendgrid = new \SendGrid(base64_decode($api_key->api_key));
+        $sendgrid = new \SendGrid($api_key->api_key);
         try {
             $response = @$sendgrid->send($email);
             return "Email enviado com sucesso - sendgrid.";
