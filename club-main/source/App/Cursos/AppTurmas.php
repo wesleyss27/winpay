@@ -288,7 +288,7 @@ class AppTurmas
         Você foi adicionado ao curso " . @$data["nome_curso"] . ".<br><br>
         Seu usuário cadastrado é:<br>
         <b>" . @$data["email"] . "</b><br><br><br>
-        <a class='btn' href='#'>Acessar curso</a><br><br><br>
+        <a class='btn' href='https://club.winpay.digital'>Acessar curso</a><br><br><br>
         Bons estudos!
         ";
         // $cadastroUsers = (new Emails())->cadastroUsuario($data);

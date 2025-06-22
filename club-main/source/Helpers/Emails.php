@@ -145,7 +145,7 @@ class Emails
                 <div class="corpo">
                     <!-- https://pay.redrocketpay.com/themes/imgs/topo-redrocket-email.png -->
                     <header>
-                        <h1><img src="https://pay.redrocketpay.com/themes/imgs/cabecalho_redrocket_email_1.jpg" alt="RedRocket" width="100%"></h1>
+                        <h1><img src="https://pay.redrocketpay.com/themes/imgs/cabecalho_redrocket_email_1.jpg" alt="Winpay" width="100%"></h1>
                     </header>
 
                     <div class="mensagem" style="width: 100%; padding: 15px 0; font-family: Arial" ; background: #fff; color: #222>
@@ -158,7 +158,7 @@ class Emails
 
                         <footer style="position: relative; font-size: 13px; text-align: center">
                             <div>
-                                <img src="https://pay.redrocketpay.com/themes/imgs/logos/logo_octa_pay_$(24).png" alt="RedRocket" width="100px">
+                                <img src="https://pay.redrocketpay.com/themes/imgs/logos/logo_octa_pay_$(24).png" alt="Winpay" width="100px">
                             </div>
 
                             <div>
@@ -227,14 +227,14 @@ class Emails
         </style>
             
             <header class="topo center">
-                <h1><img src="https://redrocketpay.com/redrocket/themes/tema2/assets/imgs/RedRocket_H-14.png" alt="RedRocket" height="100px"></h1>
+                <h1><img src="https://redrocketpay.com/redrocket/themes/tema2/assets/imgs/RedRocket_H-14.png" alt="Winpay" height="100px"></h1>
             </header>
 
             <main class="center">
                 <p>' . $data["mensagem"] . '</p>
             </main>
             <footer>
-                <br><br> &copy; Copyright 2020 - ' . $ano . 'RedRocket.
+                <br><br> &copy; Copyright 2020 - ' . $ano . 'Winpay.
             </footer>';
 
         // To send HTML mail, the Content-type header must be set
@@ -243,8 +243,8 @@ class Emails
 
         // Additional headers
         $headers .= 'To: Octa Life <' . $to . '>' . "\r\n";
-        $headers .= 'From: RedRocket <sac@octa.life>' . "\r\n";
-        $headers .= 'Reply: RedRocket <sac@octa.life>' . "\r\n";
+        $headers .= 'From: Winpay <sac@octa.life>' . "\r\n";
+        $headers .= 'Reply: Winpay <sac@octa.life>' . "\r\n";
 
         // Mail it
         if (mail($to, $subject, $message, $headers)) {
@@ -262,7 +262,7 @@ class Emails
         <i>Email automático. Não responder! </i><br><br>
         <h2>Imprima seu boleto do " . $data["produto"] . "</h2><br>
         <p>Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-        <p>N&oacute;s somos a RedRocket, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
+        <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
         <p>Seu pedido n&uacute;mero <strong>" . $data["transacao"] . "</strong> foi realizado com sucesso e
             est&aacute; aguardando pagamento.</p>
         <br>
@@ -294,7 +294,7 @@ class Emails
             <i>Email automático. Não responder! </i><br><br>
             <h2>Nova data de vencimento do seu boleto!</h2><br>
             <p>Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-            <p>N&oacute;s somos a RedRocket, empresa que gerencia os pagamentos do produto <strong>" . $data["nome_produto"] . "</strong>.</p>
+            <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["nome_produto"] . "</strong>.</p>
             <br><p>Seu pedido n&uacute;mero " . $data["transacao"] . " teve alteração na data de vencimento do boleto</p>
             <br><p>Produto: " . $data["nome_produto"] . "</p>
             <p>Valor do produto: R$ " . number_format($data["valor_total"], 2, ",", ".") . "</p>
@@ -332,7 +332,7 @@ class Emails
         $data["mensagem"] = "
             <h2>Recebemos seu pedido do " . $data["produto"] . "</h2>
             <p>Email automático. Não responder! <br><br> Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-            <p>N&oacute;s somos a RedRocket, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
+            <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
             <p>Seu pedido n&uacute;mero <strong>" . $data["transacao"] . "</strong> foi realizado com sucesso.</p>
             <br><p>Produto: " . $data["produto"] . "</p>
             <p>Valor do produto: R$ " . number_format($data["valor_bruto"], 2, ",", ".") . "</p>
@@ -381,7 +381,7 @@ class Emails
         $data["mensagem"]  = "
             <h2>Pagamento Aprovado!</h2><br>
             <p>Email automático. Não responder! <br> Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-            <p>N&oacute;s somos a RedRocket, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
+            <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
             <br><p>Seu pedido n&uacute;mero " . @$data["transacao"] . " foi realizado com sucesso</p>
             <br><p>Produto: " . $data["produto"] . "</p>
             <p>Valor do produto: R$ " . number_format($data["valor_bruto"], 2, ",", ".") . "</p><br>
@@ -401,7 +401,7 @@ class Emails
         $data["mensagem"]  = "
             <h2>Pagamento Em Análise!</h2><br>
             <p>Email automático. Não responder! <br> Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-            <p>N&oacute;s somos a RedRocket, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
+            <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
             <br><p>Seu pedido n&uacute;mero " . @$data["transacao"] . " est&aacute; em processo de an&aacute;lise </p>
             <p>Assim que a operadora do seu cartão aprovar a compra você receberá a confirmação por email. 
             Esse processo pode levar até 3 dias úteis</p>
@@ -423,7 +423,7 @@ class Emails
         $data["mensagem"]  = "
             <h2>Pagamento Reprovado!</h2><br>
             <p>Email automático. Não responder! <br> Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-            <p>N&oacute;s somos a RedRocket, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
+            <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
             <br><p>Seu pedido n&uacute;mero " . $data["transacao"] . "  foi recusado</p>
             <p>Verifique os dados do cart&atilde;o e tente novamente.</p>
             <br><p>Produto: " . @$data["produto"] . "</p>
@@ -570,7 +570,7 @@ class Emails
         $data["assunto"]   = "Novo pedido realizado";
         $data["mensagem"]  = "<h2>Novo pedido aguardando aprovação</h2>";
         $data["mensagem"] .= "<p>Ol&aacute; " . $data["nome"] . ", tudo bem?</p>";
-        $data["mensagem"] .= "<p>Você tem um novo pedido aguardando aprovação. Entre na RedRocket para ver detalhes do pedido</p>";
+        $data["mensagem"] .= "<p>Você tem um novo pedido aguardando aprovação. Entre na Winpay para ver detalhes do pedido</p>";
         $data["mensagem"] .= "<br>";
         $data["mensagem"] .= "<p>Transação: {$data["transacao"]}</p>";
         $data["mensagem"] .= "<p>Produto: {$data["produto"]}</p>";
@@ -601,7 +601,7 @@ class Emails
         if (@$data["plano"])
             $data["mensagem"] .= "<p>Plano: {$data["plano"]}</p>";
 
-        $data["mensagem"] .= "<br>Para mais detalhes, entre na sua conta da RedRocket, vá até Vendas > Abandono de Checkout<br><br>";
+        $data["mensagem"] .= "<br>Para mais detalhes, entre na sua conta da Winpay, vá até Vendas > Abandono de Checkout<br><br>";
         $data["mensagem"] .= "<a href='" . url("abandono") . "'>Abandono de Checkout</a><br><br>";
         return $data;
     }
