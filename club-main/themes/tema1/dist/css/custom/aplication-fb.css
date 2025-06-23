@@ -4701,26 +4701,66 @@ button:focus {
     width: 5.33333rem;
 }
 .comment {
-    margin-bottom: 1rem;
+    background-color: #141414;
+    border-radius: 10px;
+    padding: 15px;
+    color: #fff;
 }
+
 .comment-body {
-    display: inline-block;
-    padding: 1rem 1.25rem;
-    background-color: #f9fbfd;
-    border-radius: 0.5rem;
+    background: transparent;
 }
+
+.avatar img {
+    border-radius: 50%;
+    border: 2px solid #D9C000;
+}
+
+.comment-title {
+    color: #D9C000;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 .comment-time {
-    display: block;
-    margin-bottom: 0.5625rem;
-    font-size: 0.625rem;
-    color: #95aac9;
+    color: #999;
+    font-size: 0.75rem;
 }
+
 .comment-text {
-    font-size: 0.8125rem;
+    color: #ccc;
+    margin-top: 5px;
 }
-.comment-text:last-child {
-    margin-bottom: 0;
+
+.input-resposta {
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #444;
+    background-color: #fff;
+    color: #000;
 }
+
+.input-resposta:focus {
+    border-color: #D9C000;
+    outline: none;
+}
+
+.btn-responder {
+    background: none;
+    color: #D9C000;
+    border: none;
+    cursor: pointer;
+    margin-top: 8px;
+    padding: 0;
+}
+
+.btn-responder:hover {
+    text-decoration: underline;
+}
+
 .header {
     margin-bottom: 2rem;
 }

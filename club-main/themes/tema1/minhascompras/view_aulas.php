@@ -413,7 +413,7 @@ textarea:focus, input:focus {
                       <?php if (@$usuario->foto) : ?>
                         <img src="<?= url_octa("uploads/perfil/{$usuario->foto}"); ?>" alt="" width="40px" height="40px" style="border-radius: 50%">
                       <?php else : ?>
-                        <img width="40" height="40" class="avatar-img rounded-circle" src="https://assets.memberkit.com.br/packs/media/images/avatar-eef650aed8ca06b66e5afb77839b1f0a.png" />
+                        <img width="40" height="40" class="avatar-img rounded-circle" src="https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png" />
                       <?php endif; ?>
                     </div>
                   </div>
@@ -428,142 +428,83 @@ textarea:focus, input:focus {
               </form>
             </div>
             <br>
-
-            <style>
-              .comentario,
-              .resposta {
-                border-radius: 10px;
-                background: #ddd;
-                padding: 10px;
-              }
-            </style>
-            <?php if (@$comentarios) : ?>
+            <?php if ($comentarios) : ?>
               <div class="my-4 comments">
+                  <?php foreach ($comentarios as $comentario) : ?>
+                      <?php 
+                          $respostas = $resposta->find(
+                              "resposta IS NOT NULL AND aula = {$aula->id} AND resposta = {$comentario->id}"
+                          )->fetch(true); 
+                      ?>
 
-                <?php foreach ($comentarios as $comentario) : ?>
-                  <?php $respostas = $resposta->find("resposta IS NOT NULL AND aula = $aula->id AND resposta = $comentario->id")->fetch(true); ?>
-                  <mk-comment inline-template>
-                    <div id="comment_1840465" class="comment my-3 depth-0 comentario" v-if="visible">
-                      <div class="row">
-                        <div class="col-auto">
-                          <div class="avatar avatar-sm">
-                            <?php if (@$comentario->dataAluno()->foto) : ?>
-                              <img src="<?= url_octa("uploads/perfil/{$comentario->dataAluno()->foto}"); ?>" alt="" width="40px" height="40px" style="border-radius: 50%">
-                            <?php else : ?>
-                              <img width="40" height="40" class="avatar-img rounded-circle" src="https://assets.memberkit.com.br/packs/media/images/avatar-eef650aed8ca06b66e5afb77839b1f0a.png" />
-                            <?php endif; ?>
-                          </div>
-                        </div>
-
-                        <div class="col ml-n2">
-                          <div class="comment-body d-block">
-                            <div class="row">
-                              <div class="col">
-                                <h5 class="comment-title"><?= $comentario->dataAluno()->nome ?></h5>
-                              </div>
+                      <div class="comment mb-3">
+                          <div class="row">
                               <div class="col-auto">
-                                <div class="comment-time">
-                                  <?= formataDataHora($comentario->created_at) ?>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="comment-text mb-p" ref="inner">
-                              <p><?= $comentario->comentario ?></p>
-                            </div>
-
-                            <button type="button" id="responder<?= $comentario->id ?>" onclick="responder(<?= $comentario->id ?>)" class="btn btn-sm btn-white">
-                              Responder
-                            </button>
-
-                            <div id="div_responder<?= $comentario->id ?>" style="display: none;">
-                              <form action="<?= $router->route("aulas.comentar") ?>" name="responder<?= $comentario->id ?>" method="post">
-                                <input type="hidden" name="produtor" id="produtor" value="<?= $curso->usuario ?>">
-                                <input type="hidden" name="modulo" id="modulo" value="<?= $aula->modulo ?>">
-                                <input type="hidden" name="curso" id="curso" value="<?= $curso->id ?>">
-                                <input type="hidden" name="aula" id="aula" value="<?= $aula->id ?>">
-                                <input type="hidden" name="resposta" id="resposta" value="<?= $comentario->id ?>">
-
-                                <style>
-                                  .input-resposta {
-                                    width: 100%;
-                                    border-radius: 10px;
-                                    margin: 5px 0;
-                                    padding: 10px;
-                                    border-top: none;
-                                    border-right: none;
-                                    border-left: none;
-                                    border-bottom: 1px solid #eee;
-                                    box-shadow: 2px 2px 2px #dedede;
-                                  }
-                                </style>
-                                <input type="text" name="comentario" id="comentario_resposta<?= $comentario->id ?>" class="input-resposta" placeholder="Deixe seu comentário">
-
-                                <button type="button" class="btn btn-white btn-sm" onclick="cancelar(<?= $comentario->id ?>)">Cancelar</button>
-                                <button type="button" class="btn btn-primary btn-sm" onclick="btnResponder(<?= $comentario->id ?>)">Comentar</button>
-                              </form>
-                            </div>
-
-                          </div>
-
-                          <!-- RESPOSTAS -->
-                          <?php
-                          if ($respostas) :
-                            foreach ($respostas as $resp) :
-
-                          ?>
-                              <mk-comment inline-template>
-                                <div id="comment_1840465" class="comment my-3 depth-0" v-if="visible">
-                                  <div class="row">
-                                    <div class="col-auto">
-                                      <div class="avatar avatar-sm">
-                                        <?php if (@$_SESSION["foto"]) : ?>
-                                          <img src="<?= url_octa("uploads/perfil/{$_SESSION["foto"]}"); ?>" alt="" width="40px" height="40px" style="border-radius: 50%">
-                                        <?php else : ?>
-                                          <img width="40" height="40" class="avatar-img rounded-circle" src="https://assets.memberkit.com.br/packs/media/images/avatar-eef650aed8ca06b66e5afb77839b1f0a.png" />
-                                        <?php endif; ?>
-                                      </div>
-                                    </div>
-
-                                    <div class="col ml-n2">
-                                      <div class="comment-body d-block">
-                                        <div class="row">
-                                          <div class="col">
-                                            <h5 class="comment-title"><?= $resp->dataAluno()->nome ?></h5>
-                                          </div>
-                                          <div class="col-auto">
-                                            <div class="comment-time">
-                                              <?= formataDataHora($resp->created_at) ?>
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        <div class="comment-text mb-p" ref="inner">
-                                          <p><?= $resp->comentario ?></p>
-                                        </div>
-
-                                      </div>
-                                    </div>
+                                  <div class="avatar">
+                                      <img src="<?= $comentario->dataAluno()->foto ? url_octa("uploads/perfil/{$comentario->dataAluno()->foto}") : 'https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png' ?>" width="40" height="40" alt="Avatar">
                                   </div>
-                                </div>
-                              </mk-comment>
-                          <?php
-                            endforeach;
-                          endif;
-                          ?>
-                          <!-- FIM RESPOSTAS -->
-                        </div>
+                              </div>
+                              <div class="col ml-n2">
+                                  <div class="comment-body">
+                                      <div class="d-flex justify-content-between">
+                                          <h5 class="comment-title"><?= $comentario->dataAluno()->nome ?></h5>
+                                          <div class="comment-time"><?= formataDataHora($comentario->created_at) ?></div>
+                                      </div>
+                                      <div class="comment-text"><?= $comentario->comentario ?></div>
+
+                                      <button class="btn-responder" onclick="responder(<?= $comentario->id ?>)">Responder</button>
+
+                                      <div id="div_responder<?= $comentario->id ?>" style="display: none;" class="mt-2">
+                                          <form action="<?= $router->route("aulas.comentar") ?>" method="post">
+                                              <input type="hidden" name="produtor" value="<?= $curso->usuario ?>">
+                                              <input type="hidden" name="modulo" value="<?= $aula->modulo ?>">
+                                              <input type="hidden" name="curso" value="<?= $curso->id ?>">
+                                              <input type="hidden" name="aula" value="<?= $aula->id ?>">
+                                              <input type="hidden" name="resposta" value="<?= $comentario->id ?>">
+
+                                              <input type="text" class="input-resposta" name="comentario" placeholder="Deixe seu comentário">
+
+                                              <button type="button" class="btn btn-sm btn-gray" onclick="cancelar(<?= $comentario->id ?>)">Cancelar</button>
+                                              <button type="button" class="btn btn-sm btn-primary" onclick="btnResponder(<?= $comentario->id ?>)">Comentar</button>
+                                          </form>
+                                      </div>
+                                  </div>
+
+                                  <!-- RESPOSTAS -->
+                                  <?php if ($respostas) : ?>
+                                      <?php foreach ($respostas as $resp) : ?>
+                                          <div class="comment mt-3 ml-5">
+                                              <div class="row">
+                                                  <div class="col-auto">
+                                                      <div class="avatar">
+                                                          <img src="<?= $resp->dataAluno()->foto ? url_octa("uploads/perfil/{$resp->dataAluno()->foto}") : 'https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png' ?>" width="40" height="40" alt="Avatar">
+                                                      </div>
+                                                  </div>
+                                                  <div class="col ml-n2">
+                                                      <div class="comment-body">
+                                                          <div class="d-flex justify-content-between">
+                                                              <h5 class="comment-title"><?= $resp->dataAluno()->nome ?></h5>
+                                                              <div class="comment-time"><?= formataDataHora($resp->created_at) ?></div>
+                                                          </div>
+                                                          <div class="comment-text"><?= $resp->comentario ?></div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      <?php endforeach; ?>
+                                  <?php endif; ?>
+                                  <!-- FIM RESPOSTAS -->
+                              </div>
+                          </div>
                       </div>
-                    </div>
-                  </mk-comment>
-                <?php endforeach ?>
+                  <?php endforeach; ?>
 
-                <a class="btn btn-white btn-block mt-4" href="#">Ver mais</a>
-
+                  <a class="btn btn-white btn-block mt-4" href="#">Ver mais</a>
               </div>
-            <?php else : ?>
-              Nenhum comentário ainda
-            <?php endif; ?>
+          <?php else : ?>
+              <p>Nenhum comentário ainda.</p>
+          <?php endif; ?>
+
 
           </div>
 
