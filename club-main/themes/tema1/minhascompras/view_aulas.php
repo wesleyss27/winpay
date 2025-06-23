@@ -520,17 +520,66 @@ textarea:focus, input:focus {
             <!-- PAGINADOR VOLTAR E PRÓXIMO -->
             <div>
 
-              <div class="col-auto d-flex" style="float:right; margin-bottom: 10px">
-                <!-- <a class="btn btn-white d-inline-flex align-items-center mr-2" title="Hora do Show!" @click.prevent="showOverlay" v-b-tooltip.hover="true" href="#!"><img src="<?= url("themes/tema1/assets/imgs/icons/light.svg") ?>" width="20px"></a> -->
-                <div class="btn-group pagination">
-                  <a class="btn btn-gray" title="Anterior" v-b-tooltip.hover="true" href="<?= $url_l; ?>">
-                    <i class="fas fa-chevron-left"></i>
-                  </a>
-                  <a class="btn btn-gray" title="Próximo" v-b-tooltip.hover="true" href="<?= $url_2; ?>">
-                    <i class="fas fa-chevron-right"></i>
-                  </a>
-                </div>
-              </div>
+            <style>
+              .btn {
+                border-radius: 8px;
+                padding: 8px 16px;
+                font-weight: 600;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                text-decoration: none;
+              }
+
+              .btn:hover {
+                transform: translateY(-2px);
+              }
+
+              .btn-primary {
+                background-color: rgb(217, 192, 0);
+                border: 1px solid rgb(217, 192, 0);
+                color: #000;
+              }
+
+              .btn-primary:hover {
+                background-color: rgba(217, 192, 0, 0.9);
+              }
+
+              .btn-gray {
+                background-color: #1f1f1f;
+                border: 1px solid #333;
+                color: #fff;
+              }
+
+              .btn-gray:hover {
+                background-color: #333;
+              }
+
+              .pagination {
+                display: flex;
+                gap: 10px;
+              }
+            </style>
+
+            <div class="col-auto d-flex pagination" style="float:right; margin-bottom: 10px">
+
+              <?php if ($url_l != url("minhas-compras/viewaulas/" . $id)) : ?>
+                <a class="btn btn-gray" href="<?= $url_l; ?>">
+                  <i class="fas fa-chevron-left"></i> 
+                  <span>Voltar aula</span>
+                </a>
+              <?php endif; ?>
+
+              <?php if ($url_2 != url("minhas-compras/viewaulas/" . $id)) : ?>
+                <a class="btn btn-primary" href="<?= $url_2; ?>">
+                  <span>Próxima aula</span> 
+                  <i class="fas fa-play"></i>
+                </a>
+              <?php endif; ?>
+
+            </div>
+
 
               <div style="clear: both;"></div>
             </div>
