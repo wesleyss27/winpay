@@ -12,7 +12,7 @@
                 "Olá, sou " . $_SESSION["nome"] . " e gostaria de ajuda. Estou com o seguinte problema: ";
     ?>
     Dúvidas, problemas ou sugestões? <a href="mailto:<?= $para ?>?subject=<?= $assunto ?>&body=<?= $mensagem ?>">Entrar em contato</a> -
-    <a href="<?= url("termos-uso") ?>" target="_blank">Termos e Políticas</a>
+    <!-- <a href="<?= url("termos-uso") ?>" target="_blank">Termos e Políticas</a> -->
     <span class="oculta"> &nbsp; &nbsp; <?= date("Y") ?> &copy; WINPAY - <b>Versão</b> 1.1 Beta</span>
     <span class="versao"><br> <?= date("Y") ?> &copy; WINPAY - <b>Versão</b> 1.1 Beta</span>
   </footer>

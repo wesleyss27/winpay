@@ -151,8 +151,8 @@ if ($url_atual == "http://localhost") {
     <button type="submit" class="btn btn-primary">Entrar</button>
 
     <div class="login-links">
-      <a href="#!" data-toggle="modal" data-target="#myModal">Esqueceu sua senha?</a> •
-      <a href="<?= url('cadastro'); ?>">Cadastre-se</a>
+      <a href="#!" data-toggle="modal" data-target="#myModal">Esqueceu sua senha?</a> <!--  • 
+      <a href="<?= url('cadastro'); ?>">Cadastre-se</a> -->
     </div>
   </form>
 </div>

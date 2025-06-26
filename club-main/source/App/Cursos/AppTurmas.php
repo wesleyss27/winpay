@@ -102,19 +102,16 @@ class AppTurmas
     public function cadastroAlunoTurma()
     {
         echo "<pre>";
-        if (@$_GET["inicio"])
-            $inicio = @$_GET["inicio"];
-        else
-            $inicio = date("Y-m-d");
 
-        if (@$_GET["fim"])
-            $fim = @$_GET["fim"];
-        else
-            $fim = date("Y-m-d");
+        $inicio = isset($_GET["inicio"]) && $_GET["inicio"] ? $_GET["inicio"] : date("Y-m-d", strtotime("-2 days"));
+        $fim = isset($_GET["fim"]) && $_GET["fim"] ? $_GET["fim"] : date("Y-m-d");
 
-        echo "inicio=" . @$inicio . "&fim=" . @$fim . "<br><br>";
+        echo "inicio=" . $inicio . "&fim=" . $fim . "<br><br>";
 
-        $vendas = (new Venda())->find("status_transacao = 4 AND aluno = 0 AND data_finalizada BETWEEN '$inicio 00:00:00' AND '$fim 23:59:59'")->fetch(true);
+        $vendas = (new Venda())->find(
+            "status_transacao = 4 AND aluno = 0 AND data_finalizada BETWEEN '$inicio 00:00:00' AND '$fim 23:59:59'"
+        )->fetch(true);
+
 
         if ($vendas) {
             foreach ($vendas as $venda) {

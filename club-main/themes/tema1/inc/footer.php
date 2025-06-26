@@ -60,7 +60,7 @@ span.oculta {
 
   
   <footer class="main-footer">
-    <a href="<?= url("termos-uso") ?>" target="_blank">Termos e Políticas</a>
+    <!-- <a href="<?= url("termos-uso") ?>" target="_blank">Termos e Políticas</a> -->
     <span class="oculta"> &nbsp; &nbsp; <?= date("Y") ?> &copy; WinPay - <b>Versão</b> 1.1 Beta</span>
     <span class="versao"><br> <?= date("Y") ?> &copy; WinPay - <b>Versão</b> 1.1 Beta</span> 
   </footer>
