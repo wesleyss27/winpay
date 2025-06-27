@@ -8,6 +8,197 @@ use Source\Models\Afiliados\Afiliacao;
 <?= $v->start("links"); ?>
 <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/modal.css") ?>">
 <style>
+
+.modern-stats-container {
+      margin: 1.5rem 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg,rgb(5, 5, 5) 0%,rgb(0, 0, 0) 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f4d03f 0%, #f4d03f 100%);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 5px 9px rgba(238, 255, 0, 0.2);
+      border-color: #f4d03f;
+    }
+
+    .stat-header {
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value h2 {
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .category-text {
+      color: #00ff88 !important;
+      font-size: 1.5rem !important;
+    }
+
+    /* Payment cards styling */
+    .payment-card {
+      min-height: 100px;
+    }
+
+    .payment-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      height: 100%;
+    }
+
+    .payment-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .payment-icon.credit-card {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+    }
+
+    .payment-icon.barcode {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+    }
+
+    .payment-icon.pix {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+    }
+
+    .payment-icon i {
+      color: #000;
+      font-size: 24px;
+    }
+
+    .pix-icon {
+      width: 24px;
+      height: 24px;
+      filter: brightness(0);
+    }
+
+    .payment-info {
+      flex: 1;
+    }
+
+    .payment-percentage {
+      background: linear-gradient(135deg, rgb(217, 192, 0) 0%, #f4d03f 100%);
+      color: #000;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .payment-count {
+      color: #fff;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* Financial cards styling */
+    .financial-card .stat-value h2 {
+      color: #f4d03f;
+    }
+
+    .financial-value {
+      font-size: 1.5rem !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .stats-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      
+      .stat-card {
+        padding: 1rem;
+        min-height: 100px;
+      }
+      
+      .stat-value h2 {
+        font-size: 1.5rem;
+      }
+      
+      .payment-count {
+        font-size: 1.5rem;
+      }
+      
+      .payment-icon {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .payment-icon i {
+        font-size: 20px;
+      }
+      
+      .pix-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .payment-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+      
+      .financial-value {
+        font-size: 1.25rem !important;
+      }
+    }
+
  /* Container da Tabela */
 .modern-table-container {
   background: #1e1e1e;
@@ -621,108 +812,102 @@ function dadosEndereco($venda)
     <!-- Default box -->
     <?php if ($vendas) : ?>
       <?php if ($section->getTipo() != 6) : ?>
-        <div class="row" style="margin: 0 0 20px 0">
-          <div class="col-md-3 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-              Total de vendas: <br>
-              <h4><?= $count; ?></h4>
+        <div class="modern-stats-container">
+          <!-- Primera fila de cards -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-label">Total de vendas:</span>
+              </div>
+              <div class="stat-value">
+                <h2><?= $count; ?></h2>
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-3 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-              Sua categoria: <br>
-              <h4><?php echo $nivel[@$nivelUsuario]; ?></h4>
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-label">Sua categoria:</span>
+              </div>
+              <div class="stat-value">
+                <h2 class="category-text"><?php echo $nivel[@$nivelUsuario]; ?></h2>
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-2 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-
-              <div class="row">
-                <div class="col-md-3 col-3" style="margin: 15px 0 0 0;">
-                  <i class="fas fa-credit-card text-success" style="font-size: 30px;"></i>
+            <div class="stat-card payment-card">
+              <div class="payment-header">
+                <div class="payment-icon credit-card">
+                  <i class="fas fa-credit-card"></i>
                 </div>
-
-                <div class="col-md-9 col-9">
-                  <span class="badge bg-warning"><?= number_format($vendasCartao / $count * 100, 2, ",", "."); ?>%</span><br>
-                  <h4><?= $vendasCartao ?></h4>
+                <div class="payment-info">
+                  <span class="payment-percentage"><?= number_format($vendasCartao / $count * 100, 2, ",", "."); ?>%</span>
+                  <h3 class="payment-count"><?= $vendasCartao ?></h3>
                 </div>
               </div>
-
             </div>
-          </div>
 
-          <div class="col-md-2 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-
-              <div class="row">
-                <div class="col-md-3 col-3" style="margin: 15px 0 0 0;">
-                  <i class="fas fa-barcode text-success" style="font-size: 30px;"></i>
+            <div class="stat-card payment-card">
+              <div class="payment-header">
+                <div class="payment-icon barcode">
+                  <i class="fas fa-barcode"></i>
                 </div>
-
-                <div class="col-md-9 col-9">
-                  <span class="badge bg-warning"><?= number_format($vendasBoleto / $count * 100, 2, ",", "."); ?>%</span><br>
-                  <h4><?= $vendasBoleto ?></h4>
+                <div class="payment-info">
+                  <span class="payment-percentage"><?= number_format($vendasBoleto / $count * 100, 2, ",", "."); ?>%</span>
+                  <h3 class="payment-count"><?= $vendasBoleto ?></h3>
                 </div>
               </div>
-
             </div>
-          </div>
 
-          <div class="col-md-2 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-
-              <div class="row">
-                <div class="col-md-3 col-3" style="margin: 15px 0 0 0;">
-                  <img src="<?= url("themes/tema1/images/pix-text-success.png") ?>" title="Pix" width="30px"><br>
+            <div class="stat-card payment-card">
+              <div class="payment-header">
+                <div class="payment-icon pix">
+                  <img src="<?= url("themes/tema1/images/pix-text-success.png") ?>" alt="PIX" class="pix-icon">
                 </div>
-
-                <div class="col-md-9 col-9">
-                  <span class="badge bg-warning"><?= number_format($vendasPix / $count * 100, 2, ",", "."); ?>%</span><br>
-                  <h4><?= $vendasPix ?></h4>
+                <div class="payment-info">
+                  <span class="payment-percentage"><?= number_format($vendasPix / $count * 100, 2, ",", "."); ?>%</span>
+                  <h3 class="payment-count"><?= $vendasPix ?></h3>
                 </div>
               </div>
-
-            </div>
-
-          </div>
-        </div>
-
-        <div class="row" style="margin: 0 0 20px 0">
-          <div class="col-md-3 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-              Valor Vendas: <br>
-              <!-- <h4>< ?= @$somaVendas ? "R$ " . @number_format(@$somaVendas, 2, ",", ".") : "-"; ?></h4> -->
-              <?= @$somaVendas ?>
-            </div>
-
-          </div>
-
-          <div class="col-md-3 center">
-
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-              Tiket Médio: <br>
-              <h4><?= @$somaVendas ? "R$ " . number_format($somaVendas / $count, 2, ",", ".") : "-"; ?></h4>
-            </div>
-
-          </div>
-
-          <!-- valor comissão -->
-          <div class="col-md-3 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-              Valor Comissão: <br>
-              <h4>R$ <?= @number_format(@$somaProdutor->soma_produtor, 2, ",", ".") ?></h4>
             </div>
           </div>
 
-          <div class="col-md-3 center">
-            <div class="card card-body" style="border-bottom: 3px solid #3aaa3a">
-              Tiket Médio Comissão: <br>
-              <h4><?= @$somaProdutor->soma_produtor ? "R$ " . number_format($somaProdutor->soma_produtor / $count, 2, ",", ".") : "-"; ?></h4>
+          <!-- Segunda fila de cards -->
+          <div class="stats-row">
+            <div class="stat-card financial-card">
+              <div class="stat-header">
+                <span class="stat-label">Valor Vendas:</span>
+              </div>
+              <div class="stat-value">
+                <h2 class="financial-value"><?= @$somaVendas ?></h2>
+              </div>
+            </div>
+
+            <div class="stat-card financial-card">
+              <div class="stat-header">
+                <span class="stat-label">Tiket Médio:</span>
+              </div>
+              <div class="stat-value">
+                <h2 class="financial-value"><?= @$somaVendas ? "R$ " . number_format($somaVendas / $count, 2, ",", ".") : "-"; ?></h2>
+              </div>
+            </div>
+
+            <div class="stat-card financial-card">
+              <div class="stat-header">
+                <span class="stat-label">Valor Comissão:</span>
+              </div>
+              <div class="stat-value">
+                <h2 class="financial-value">R$ <?= @number_format(@$somaProdutor->soma_produtor, 2, ",", ".") ?></h2>
+              </div>
+            </div>
+
+            <div class="stat-card financial-card">
+              <div class="stat-header">
+                <span class="stat-label">Tiket Médio Comissão:</span>
+              </div>
+              <div class="stat-value">
+                <h2 class="financial-value"><?= @$somaProdutor->soma_produtor ? "R$ " . number_format($somaProdutor->soma_produtor / $count, 2, ",", ".") : "-"; ?></h2>
+              </div>
             </div>
           </div>
-
         </div>
       <?php endif; ?>
 
