@@ -7,6 +7,267 @@ use Source\Models\Afiliados\Afiliacao;
 
 <?= $v->start("links"); ?>
 <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/modal.css") ?>">
+<style>
+ /* Container da Tabela */
+.modern-table-container {
+  background: #1e1e1e;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  border: 1px solid #2c2c2c;
+}
+
+/* Tabela */
+.modern-table {
+  margin: 0;
+  font-size: 14px;
+  width: 100%;
+  border-collapse: collapse;
+  color: #e5e7eb;
+}
+
+.modern-table thead {
+  background: linear-gradient(135deg,rgb(0, 0, 0),rgb(41, 42, 43));
+  color: #f9fafb;
+}
+
+.modern-table thead th {
+  padding: 16px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border: none;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Corpo da Tabela */
+.modern-table tbody tr {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-bottom: 1px solid #2c2c2c;
+}
+
+.modern-table tbody tr:hover {
+  background-color: #272727;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.modern-table tbody td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  color: #d1d5db;
+}
+
+.modern-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Scroll responsivo */
+.table-responsive-modern {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive-modern::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive-modern::-webkit-scrollbar-track {
+  background: #111827;
+  border-radius: 4px;
+}
+
+.table-responsive-modern::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
+}
+
+.table-responsive-modern::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Badge (status, tags, etc.) */
+.badge-modern {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  background-color: #374151;
+  color: #f9fafb;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Botão de detalhes */
+.btn-details-modern {
+  background: linear-gradient(135deg, rgb(217, 192, 0), rgb(217, 192, 0));
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+  cursor: pointer;
+}
+
+.btn-details-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+}
+
+/* Ícones */
+.status-icon {
+  font-size: 20px;
+  margin: 0;
+  opacity: 0.85;
+  color: #facc15;
+}
+
+/* Links */
+.whatsapp-link {
+  color: #25d366;
+  transition: all 0.2s ease;
+}
+
+.whatsapp-link:hover {
+  color: #128c7e;
+  transform: scale(1.1);
+}
+
+.product-link {
+  color: #60a5fa;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.product-link:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.sale-id-link {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sale-id-link:hover {
+  color: #e5e7eb;
+  text-decoration: underline;
+}
+
+modern-info-alert {
+  background: linear-gradient(135deg, rgb(217, 192, 0) 0%, rgb(217, 192, 0) 100%);
+  border: none;
+  border-left: 4px solid rgb(217, 192, 0);
+  border-radius: 12px;
+  padding: 0;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.modern-info-alert:hover {
+  transform: translateY(-2px);
+
+}
+
+.alert-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem;
+  gap: 1rem;
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.alert-icon i {
+  color: rgb(217, 192, 0);
+  font-size: 18px;
+}
+
+.alert-text {
+  flex: 1;
+  color: rgb(217, 192, 0);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.alert-text strong {
+  color: rgb(217, 192, 0)
+  font-weight: 600;
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modern-info-alert {
+    margin: 1rem 0;
+  }
+  
+  .alert-content {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .alert-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .alert-icon i {
+    font-size: 16px;
+  }
+  
+  .alert-text {
+    font-size: 13px;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .modern-info-alert {
+    background: linear-gradient(135deg, rgb(217, 192, 0) 0%, rgb(217, 192, 0) 100%);
+    border-left-color: rgb(217, 192, 0);
+  }
+  
+  .alert-icon {
+    background: rgba(59, 130, 246, 0.2);
+  }
+  
+  .alert-icon i {
+    color: rgb(217, 192, 0);
+  }
+  
+  .alert-text {
+    color: #dbeafe;
+  }
+  
+  .alert-text strong {
+    color: rgb(217, 192, 0);
+  }
+}
+
+</style>
 <?= $v->end(); ?>
 
 <?php
@@ -510,22 +771,28 @@ function dadosEndereco($venda)
 
       </div>
 
-      <div class="alert bg-info-outline">
-        <i class="fas fa-info-circle text-info" style="font-size: 20px"></i>
-        <?php if (!$pag_coprodutor) : ?>
-          Atenção: Novas vendas levam alguns minutos para aparecerem nesse relatório, após serem realizadas no checkout. <br>
-          Vendas do PIX levam alguns minutos para aparecerem a aprovação.
-        <?php else : ?>
-          Valores atualizados a cada hora
-        <?php endif; ?>
+      <div class="modern-info-alert">
+        <div class="alert-content">
+          <div class="alert-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="alert-text">
+            <?php if (!$pag_coprodutor) : ?>
+              <strong>Atenção:</strong> Novas vendas levam alguns minutos para aparecerem nesse relatório, após serem realizadas no checkout.<br>
+              Vendas do PIX levam alguns minutos para aparecerem a aprovação.
+            <?php else : ?>
+              <strong>Valores atualizados a cada hora</strong>
+            <?php endif; ?>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="modern-table-container">
 
-        <div class="card-body p-0" style="overflow-x: auto">
-          <table class="table table-striped projects" style="font-size:13px">
+      <div class="table-responsive-modern">
+        <table class="modern-table">
             <thead>
-              <tr style="font-family:inter">
+              <tr>
                 <th scope="col">Venda</th>
                 <th scope="col">Comprador</th>
                 <?php if ($section->getTipo() == 6) : ?>
@@ -672,64 +939,84 @@ function dadosEndereco($venda)
 
               ?>
 
-                <tr style="font-family:inter">
+                <tr>
                   <td>
-                    <?php if ($venda->upsell) : ?>
-                      <span class="badge bg-azul-dark">Upsell</span>
-                    <?php endif; ?>
+                  <div style="margin-bottom: 8px;">
+                      <?php if ($venda->upsell) : ?>
+                        <span class="badge-modern bg-azul-dark">Upsell</span>
+                      <?php endif; ?>
 
-                    <?php if (@$venda->planos_order_bump && @$venda->preco_order_bump) : ?>
-                      <span class="badge bg-verde-octa2">Order Bump</span>
-                    <?php endif; ?>
+                      <?php if (@$venda->planos_order_bump && @$venda->preco_order_bump) : ?>
+                        <span class="badge-modern bg-verde-octa2">Order Bump</span>
+                      <?php endif; ?>
 
-                    <?php if ($venda->assinatura) : ?>
-                      <span class="badge bg-verde-octa3">Assinatura</span>
-                    <?php endif; ?>
+                      <?php if ($venda->assinatura) : ?>
+                        <span class="badge-modern bg-verde-octa3">Assinatura</span>
+                      <?php endif; ?>
 
-                    <?php if ($venda->adquirente != "redrocket") : ?>
-                      <span class="badge btn-finalizar-tarde">Drop</span>
-                    <?php endif; ?>
+                      <?php if ($venda->adquirente != "redrocket") : ?>
+                        <span class="badge-modern btn-finalizar-tarde">Drop</span>
+                      <?php endif; ?>
 
-                    <?php if ($venda->ecommerce == 1) : ?>
-                      <span class="badge bg-azul-octa">Ecommerce</span>
-                    <?php endif; ?>
+                      <?php if ($venda->ecommerce == 1) : ?>
+                        <span class="badge-modern bg-azul-octa">Ecommerce</span>
+                      <?php endif; ?>
 
-                    <a href="#" data-toggle="modal" data-target="#myModal<?= $venda->id; ?>">
-                      <small>#<?= $venda->id; ?></small> <br>
-                      <small>#<?= $venda->transacao; ?></small>
+                    <a href="#" data-toggle="modal" data-target="#myModal<?= $venda->id; ?>" class="sale-id-link">
+                      <div style="font-weight: 600; font-size: 12px;">#<?= $venda->id; ?></div>
+                      <div style="font-size: 11px; color:rgb(198, 200, 204);">#<?= $venda->transacao; ?></div>
                     </a>
                   </td>
 
                   <?php if ($section->getTipo() == 1 || $section->getTipo() == 2 || $section->getTipo() == 3 || $section->getTipo() == 6) : ?>
                     <td>
-                      <?= $venda->endereco ? $venda->dataEndereco()->nome : $venda->dataComprador()->nome ?><br>
-                      <?= $venda->endereco ? $venda->dataEndereco()->email : $venda->dataComprador()->email ?><br>
-                      <?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?> <a href='https://api.whatsapp.com/send?phone=55<?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?>' title='Entrar em contato pelo whatsapp' target='_blank'><i class="fab fa-whatsapp" style="color: green"></i></a><br>
+                      <div style="font-weight: 600; margin-bottom: 4px;"><?= $venda->endereco ? $venda->dataEndereco()->nome : $venda->dataComprador()->nome ?></div>
+                      <div style="font-size: 12px; color: rgb(198, 200, 204); margin-bottom: 4px;"><?= $venda->endereco ? $venda->dataEndereco()->email : $venda->dataComprador()->email ?></div>
+                      <div style="font-size: 12px;">
+                        <?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?>
+                        <a href='https://api.whatsapp.com/send?phone=55<?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?>' title='Entrar em contato pelo whatsapp' target='_blank' class="whatsapp-link" style="margin-left: 8px;">
+                          <i class="fab fa-whatsapp"></i>
+                        </a>
+                      </div>
                     </td>
                   <?php elseif ($pag_coprodutor == true || $section->getTipo() == 4 || ($section->getTipo() == 5 && @$af1->liberar_comprador == 1)) : ?>
                     <td>
-                      <?= $venda->endereco ? $venda->dataEndereco()->nome : $venda->dataComprador()->nome ?><br>
-                      <?= $venda->endereco ? $venda->dataEndereco()->email : $venda->dataComprador()->email ?><br>
-                      <?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?> <a href='https://api.whatsapp.com/send?phone=55<?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?>' title='Entrar em contato pelo whatsapp' target='_blank'><i class="fab fa-whatsapp" style="color: green"></i></a><br>
+                      <div style="font-weight: 600; margin-bottom: 4px;"><?= $venda->endereco ? $venda->dataEndereco()->nome : $venda->dataComprador()->nome ?></div>
+                      <div style="font-size: 12px; color: rgb(198, 200, 204); margin-bottom: 4px;"><?= $venda->endereco ? $venda->dataEndereco()->email : $venda->dataComprador()->email ?></div>
+                      <div style="font-size: 12px;">
+                        <?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?>
+                        <a href='https://api.whatsapp.com/send?phone=55<?= $venda->endereco ? $venda->dataEndereco()->telefone : $venda->dataComprador()->telefone ?>' title='Entrar em contato pelo whatsapp' target='_blank' class="whatsapp-link" style="margin-left: 8px;">
+                          <i class="fab fa-whatsapp"></i>
+                        </a>
+                      </div>
                     </td>
                   <?php else : ?>
-                    <td>Dados ocultado pelo produtor</td>
+                    <td style="color: rgb(198, 200, 204) font-style: italic;">Dados ocultado pelo produtor</td>
                   <?php endif; ?>
 
                   <?php if ($section->getTipo() == 1 || $section->getTipo() == 2 || $section->getTipo() == 3 || $section->getTipo() == 6) : ?>
                     <td>
-                      <?= $venda->dataProdutor()->nome ?><br>
-                      <?= $venda->dataProdutor()->email ?>
+                      <div style="font-weight: 600; margin-bottom: 4px;"><?= $venda->dataProdutor()->nome ?></div>
+                      <div style="font-size: 12px; color: rgb(198, 200, 204)"><?= $venda->dataProdutor()->email ?></div>
                     </td>
                   <?php endif ?>
 
                   <?php if ($venda->plano) : ?>
-                    <td><a href="<?= url("produtos/detalhe/$venda->produto") ?>"><?= $venda->dataProduto()->nome ?><br><?= $venda->dataPlano()->nome ?></a></td>
+                    <td>
+                      <a href="<?= url("produtos/detalhe/$venda->produto") ?>" class="product-link">
+                        <div style="font-weight: 600; margin-bottom: 4px;"><?= $venda->dataProduto()->nome ?></div>
+                        <div style="font-size: 12px; color: rgb(198, 200, 204);"><?= $venda->dataPlano()->nome ?></div>
+                      </a>
+                    </td>
                   <?php else : ?>
-                    <td><a href="<?= url("produtos/detalhe/$venda->produto") ?>"><?= $venda->dataProduto()->nome ?></a></td>
+                    <td>
+                      <a href="<?= url("produtos/detalhe/$venda->produto") ?>" class="product-link" style="font-weight: 600;">
+                        <?= $venda->dataProduto()->nome ?>
+                      </a>
+                    </td>
                   <?php endif ?>
 
-                  <td>
+                  <td style="font-weight: 500;">
                     <?php if ($venda->afiliado) :
                       echo $venda->dataAfiliado()->nome;
                     endif;
@@ -737,34 +1024,40 @@ function dadosEndereco($venda)
                   </td>
 
                   <?php if (($_SESSION["tipo"] == 1 || $_SESSION["tipo"] == 2 || $_SESSION["tipo"] == 3) && !$pag_coprodutor) : ?>
-                    <td>R$ <?= number_format($venda->valor_bruto, 2, ",", "."); ?></td>
+                    <td style="font-weight: 700; color: #059669;">R$ <?= number_format($venda->valor_bruto, 2, ",", "."); ?></td>
                   <?php else : ?>
-                    <td>R$ <?= number_format($valorComissao, 2, ",", "."); ?></td>
+                    <td style="font-weight: 700; color: #059669;">R$ <?= number_format($valorComissao, 2, ",", "."); ?></td>
                   <?php endif ?>
-                  <td>
+                  
+                  <td style="text-align: center;">
                     <?php if ($venda->forma_pagamento == 1) : ?>
-                      <h4><i class="fa fa-credit-card <?= @$statusT[$venda->status_transacao] ?>" title="<?= $status_transacao[$venda->status_transacao] ?>"></i></h4>
+                      <i class="fa fa-credit-card status-icon <?= @$statusT[$venda->status_transacao] ?>" title="<?= $status_transacao[$venda->status_transacao] ?>"></i>
                     <?php elseif ($venda->forma_pagamento == 2) : ?>
-                      <h4><i class="fa fa-barcode <?= @$statusT[$venda->status_transacao] ?>" title="<?= $status_transacao[$venda->status_transacao] ?>"></i></h4>
+                      <i class="fa fa-barcode status-icon <?= @$statusT[$venda->status_transacao] ?>" title="<?= $status_transacao[$venda->status_transacao] ?>"></i>
                     <?php elseif ($venda->forma_pagamento == 3) : ?>
-                      <img src="<?= url("themes/tema1/images/pix-" . @$statusT[$venda->status_transacao] . ".png") ?>" title="<?= $status_transacao[$venda->status_transacao] ?>" width="20px"><br>
+                      <img src="<?= url("themes/tema1/images/pix-" . @$statusT[$venda->status_transacao] . ".png") ?>" title="<?= $status_transacao[$venda->status_transacao] ?>" width="24px">
                     <?php endif ?>
-                    <!-- <small>< ?= $status_transacao[$venda->status_transacao] ?></small> -->
                   </td>
-                  <td><?= formataDataHora($venda->created_at); ?>
+                  
+                  <td style="font-size: 12px; color: rgb(198, 200, 204);">
+                    <?= formataDataHora($venda->created_at); ?>
                   </td>
-                  <td><?php
-                      if ($venda->data_finalizada != "") {
-                        echo formataDataHora($venda->data_finalizada);
-                      } elseif ($venda->status_transacao == 5 || $venda->status_transacao == 6 || $venda->status_transacao == 7) {
-                        echo formataDataHora($venda->data_ultimo_evento);
-                      }
-                      ?>
+                  
+                  <td style="font-size: 12px; color: rgb(198, 200, 204);">
+                    <?php
+                    if ($venda->data_finalizada != "") {
+                      echo formataDataHora($venda->data_finalizada);
+                    } elseif ($venda->status_transacao == 5 || $venda->status_transacao == 6 || $venda->status_transacao == 7) {
+                      echo formataDataHora($venda->data_ultimo_evento);
+                    }
+                    ?>
                   </td>
 
-                  <td><a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal<?= $venda->id; ?>"><i class="fas fa-plus"></i></a></td>
-                  <!--td><a class="modalx-slideUp_open" href="#modalx-slideUp<?= $venda->id; ?>"><i class="fas fa-edit"></i></a></td-->
-
+                  <td>
+                    <button class="btn-details-modern" data-toggle="modal" data-target="#myModal<?= $venda->id; ?>">
+                      <i class="fas fa-eye" style="margin-right: 4px;"></i>Ver
+                    </button>
+                  </td>
                 </tr>
 
                 <!--?= $v->insert("vendas/modal-info", [
