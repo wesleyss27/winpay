@@ -449,7 +449,6 @@ use Source\Models\Afiliados\Afiliacao;
 modern-info-alert {
   background: rgb(0, 0, 0);
   border: none;
-  border-left: 4px solid rgb(217, 192, 0);
   border-radius: 12px;
   padding: 0;
   margin: 1.5rem 0;
