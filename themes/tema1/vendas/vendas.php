@@ -22,7 +22,7 @@ use Source\Models\Afiliados\Afiliacao;
     }
 
     .stat-card {
-      background: linear-gradient(135deg,rgb(5, 5, 5) 0%,rgb(0, 0, 0) 100%);
+      background: linear-gradient(135deg, rgb(5, 5, 5) 0%, rgb(0, 0, 0) 100%);
       border-radius: 12px;
       padding: 1.5rem;
       position: relative;
@@ -69,6 +69,7 @@ use Source\Models\Afiliados\Afiliacao;
       font-weight: 700;
       margin: 0;
       line-height: 1.2;
+      word-break: break-word;
     }
 
     .category-text {
@@ -123,6 +124,7 @@ use Source\Models\Afiliados\Afiliacao;
 
     .payment-info {
       flex: 1;
+      min-width: 0;
     }
 
     .payment-percentage {
@@ -134,6 +136,7 @@ use Source\Models\Afiliados\Afiliacao;
       font-weight: 600;
       display: inline-block;
       margin-bottom: 0.5rem;
+      white-space: nowrap;
     }
 
     .payment-count {
@@ -141,6 +144,7 @@ use Source\Models\Afiliados\Afiliacao;
       font-size: 1.75rem;
       font-weight: 700;
       margin: 0;
+      word-break: break-word;
     }
 
     /* Financial cards styling */
@@ -150,13 +154,71 @@ use Source\Models\Afiliados\Afiliacao;
 
     .financial-value {
       font-size: 1.5rem !important;
+      word-break: break-word;
     }
 
     /* Responsive design */
+    @media (max-width: 1024px) {
+      .stats-row {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+    }
+
     @media (max-width: 768px) {
+      .modern-stats-container {
+        margin: 1rem 0;
+      }
+      
+      .stats-row {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 0.75rem;
+      }
+      
+      .stat-card {
+        padding: 1.25rem;
+        min-height: 110px;
+      }
+      
+      /* Remove top stripe on mobile */
+      .stat-card::before {
+        display: none;
+      }
+      
+      .stat-value h2 {
+        font-size: 1.75rem;
+      }
+      
+      .payment-count {
+        font-size: 1.5rem;
+      }
+      
+      .payment-icon {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .payment-icon i {
+        font-size: 22px;
+      }
+      
+      .pix-icon {
+        width: 22px;
+        height: 22px;
+      }
+
+      .payment-header {
+        gap: 0.75rem;
+      }
+
+      .financial-value {
+        font-size: 1.4rem !important;
+      }
+    }
+
+    @media (max-width: 480px) {
       .stats-row {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
+        gap: 0.5rem;
       }
       
       .stat-card {
@@ -168,8 +230,10 @@ use Source\Models\Afiliados\Afiliacao;
         font-size: 1.5rem;
       }
       
-      .payment-count {
-        font-size: 1.5rem;
+      .payment-header {
+        flex-direction: row;
+        gap: 0.75rem;
+        align-items: center;
       }
       
       .payment-icon {
@@ -178,27 +242,56 @@ use Source\Models\Afiliados\Afiliacao;
       }
       
       .payment-icon i {
-        font-size: 20px;
+        font-size: 18px;
       }
       
       .pix-icon {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
       }
-    }
-
-    @media (max-width: 480px) {
-      .payment-header {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
+      
+      .payment-count {
+        font-size: 1.25rem;
       }
       
       .financial-value {
         font-size: 1.25rem !important;
       }
+
+      .stat-label {
+        font-size: 0.8rem;
+      }
+
+      .payment-percentage {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+      }
     }
 
+    @media (max-width: 360px) {
+      .stat-card {
+        padding: 0.75rem;
+      }
+      
+      .stat-value h2 {
+        font-size: 1.25rem;
+      }
+      
+      .payment-count {
+        font-size: 1.1rem;
+      }
+      
+      .financial-value {
+        font-size: 1.1rem !important;
+      }
+    }
+
+
+
+
+
+
+    
  /* Container da Tabela */
 .modern-table-container {
   background: #1e1e1e;
@@ -354,7 +447,7 @@ use Source\Models\Afiliados\Afiliacao;
 }
 
 modern-info-alert {
-  background: linear-gradient(135deg, rgb(217, 192, 0) 0%, rgb(217, 192, 0) 100%);
+  background: rgb(0, 0, 0);
   border: none;
   border-left: 4px solid rgb(217, 192, 0);
   border-radius: 12px;
