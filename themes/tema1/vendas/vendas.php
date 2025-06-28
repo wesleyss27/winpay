@@ -177,6 +177,7 @@ use Source\Models\Afiliados\Afiliacao;
       .stat-card {
         padding: 1.25rem;
         min-height: 110px;
+        text-align: center;
       }
       
       /* Remove top stripe on mobile */
@@ -184,12 +185,25 @@ use Source\Models\Afiliados\Afiliacao;
         display: none;
       }
       
+      .stat-header {
+        text-align: left;
+      }
+      
       .stat-value h2 {
         font-size: 1.75rem;
+        text-align: center;
       }
       
       .payment-count {
         font-size: 1.5rem;
+        text-align: center;
+      }
+      
+      .payment-percentage {
+        text-align: center;
+        display: block;
+        margin: 0 auto 0.5rem auto;
+        width: fit-content;
       }
       
       .payment-icon {
@@ -208,10 +222,16 @@ use Source\Models\Afiliados\Afiliacao;
 
       .payment-header {
         gap: 0.75rem;
+        flex-direction: column;
+      }
+
+      .payment-info {
+        text-align: center;
       }
 
       .financial-value {
         font-size: 1.4rem !important;
+        text-align: center;
       }
     }
 
@@ -231,7 +251,7 @@ use Source\Models\Afiliados\Afiliacao;
       }
       
       .payment-header {
-        flex-direction: row;
+        flex-direction: column;
         gap: 0.75rem;
         align-items: center;
       }
