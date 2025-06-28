@@ -529,8 +529,7 @@ modern-info-alert {
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
   .modern-info-alert {
-    background: linear-gradient(135deg, rgb(217, 192, 0) 0%, rgb(217, 192, 0) 100%);
-    border-left-color: rgb(217, 192, 0);
+    background: rgb(0, 0, 0);;
   }
   
   .alert-icon {
