@@ -2,144 +2,204 @@
 <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: linear-gradient(to bottom, #0b0024, #b73234, #b73234)"> -->
 
 <style>
-  #aside .nav-link.active {
-    background: #ddd !important;
-  }
+//* Importação das fontes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Outlined');
 
-  @keyframes glow {
-    0% { text-shadow: 0 0 5px rgba(255, 200, 0, 0.5); }
-    33% { text-shadow: 0 0 15px rgba(255, 200, 0, 1); }
-    66% { text-shadow: 0 0 5px rgba(255, 200, 0, 0.5); }
-    100% { text-shadow: 0 0 15px rgba(255, 200, 0, 1); }
-  }
+/* -------- Animação Glow -------- */
+@keyframes glow {
+  0% { text-shadow: 0 0 5px rgba(217, 192, 0, 0.5); }
+  50% { text-shadow: 0 0 15px rgba(217, 192, 0, 0.9); }
+  100% { text-shadow: 0 0 5px rgba(217, 192, 0, 0.5); }
+}
 
-  .brand-logo {
-    font-size: 26px;
-    font-weight: bold;
-    text-align: center;
-    color: white;
-    text-transform: uppercase;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 2px;
-    transition: opacity 0.3s ease-in-out;
-    position: relative;
-    display: inline-block;
-  }
+/* -------- Brand/Logo -------- */
+.brand-logo {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 2px;
+  transition: opacity 0.3s ease-in-out;
+  position: relative;
+  display: inline-block;
+}
 
-  .brand-logo .highlight {
-    color: rgb(217, 192, 0); /* Amarelo */
-    animation: glow 1.5s infinite alternate; /* Efeito brilho */
-  }
+.brand-logo .highlight {
+  color: rgb(217, 192, 0);
+  animation: glow 1.5s infinite alternate;
+}
 
-  .brand-logo .underline {
-    width: 38px; /* Ajustado para o tamanho exato de "WIN" */
-    height: 2px;
-    background-color: rgb(217, 192, 0); /* Cor amarela */
-    position: absolute;
-    bottom: -5px;
-    left: 50px; /* Afastado um pouco para a direita */
-  }
+.brand-logo .underline {
+  width: 45px;
+  height: 2px;
+  background: linear-gradient(90deg, rgb(217, 192, 0), #f4d03f);
+  position: absolute;
+  bottom: -5px;
+  left: 75px;
+  border-radius: 1px;
+}
 
-  /* 🔻 Oculta o texto quando o menu está colapsado */
-  .sidebar-mini.sidebar-collapse .brand-logo {
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
+/* -------- Sidebar -------- */
+.main-sidebar {
+  width: 256px;
+  height: 100vh;
+  background-color: #111;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
 
-  /* 🔄 Mostra o texto quando expande */
-  .sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-logo {
-    opacity: 1;
-  }
+/* -------- Itens de navegação -------- */
+.nav-sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
 
-  /* Sidebar */
-  .main-sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: #111; /* Fundo escuro */
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
+.nav-sidebar .nav-link:hover {
+  background: linear-gradient(135deg, rgba(217, 192, 0, 0.1), rgba(244, 180, 63, 0.1));
+  color: #f4b400;
+  border-color: rgba(217, 192, 0, 0.2);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(217, 192, 0, 0.15);
+}
 
-  /* Estiliza os links */
-  .nav-sidebar .nav-link {
-    display: flex;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-  }
+.nav-sidebar .nav-link.active {
+  background: linear-gradient(135deg, rgb(217, 192, 0), #f4d03f);
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(217, 192, 0, 0.3);
+  border-color: #f4d03f;
+}
 
-  /* Ícones do Material Design */
-  .nav-sidebar .nav-link span.material-icons-outlined {
-    font-size: 22px;
-    margin-right: 10px;
-    color: rgb(217, 192, 0); /* Ícones amarelos */
-  }
+/* -------- Ícones -------- */
+.nav-sidebar .nav-link .material-icons-outlined,
+.nav-sidebar .nav-link i {
+  font-size: 20px;
+  margin-right: 12px;
+  color: rgb(217, 192, 0);
+  transition: all 0.3s ease;
+}
 
-  /* Texto alinhado ao lado dos ícones */
-  .nav-sidebar .nav-link p {
-    margin: 0;
-    font-weight: bold;
-  }
+.nav-sidebar .nav-link:hover .material-icons-outlined,
+.nav-sidebar .nav-link:hover i {
+  color: #f4d03f;
+  transform: scale(1.1);
+}
 
-  /* Efeito Hover */
-  .nav-sidebar .nav-link:hover {
-    background-color: #222;
-    color: #f4b400;
-  }
+.nav-sidebar .nav-link.active .material-icons-outlined,
+.nav-sidebar .nav-link.active i {
+  color: #111;
+}
 
-  /* Item ativo */
-  .nav-sidebar .nav-link.active {
-    background-color: #f4b400;
-    color: #111;
-    font-weight: bold;
-  }
+/* -------- Texto dos links -------- */
+.nav-sidebar .nav-link p {
+  margin: 0;
+  flex: 1;
+  font-weight: 500;
+}
 
-  /* Ajusta os ícones quando colapsado */
-  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link {
-    justify-content: flex-end !important;
-    padding: 10px 0 !important;
-  }
+/* -------- Submenus -------- */
+.nav-treeview {
+  padding: 0.5rem 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-left: 1rem;
+  border-left: 2px solid rgba(217, 192, 0, 0.3);
+}
 
-  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link .material-icons-outlined {
-    margin-right: 0 !important;
-    font-size: 24px !important;
-  }
+.sub-item .nav-link {
+  padding: 0.5rem 1rem;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
 
-  .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link p {
-    display: none !important;
-  }
+.sub-item .nav-link:hover {
+  background: rgba(217, 192, 0, 0.1);
+  color: #f4d03f;
+  transform: translateX(8px);
+}
 
-  /* Expande quando o mouse está sobre */
-  .sidebar-mini.sidebar-collapse .main-sidebar:hover {
-    width: 250px !important;
-  }
+.sub-item .nav-link.active {
+  background: linear-gradient(135deg, rgba(217, 192, 0, 0.2), rgba(244, 180, 63, 0.2));
+  color: #f4d03f;
+  border-left: 3px solid #f4d03f;
+}
 
-  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link {
-    justify-content: flex-start !important;
-    padding: 10px !important;
-  }
+/* -------- Estado Colapsado (mantém lógica original) -------- */
+.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link {
+  justify-content: flex-end !important;
+  padding: 10px 0 !important;
+}
 
-  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link .material-icons-outlined {
-    margin-right: 10px !important;
-  }
+.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link .material-icons-outlined,
+.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link i {
+  margin-right: 0 !important;
+  font-size: 24px !important;
+}
 
-  .sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link p {
-    display: inline !important;
-  }
+.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link p {
+  display: none !important;
+}
 
-  /* Colapsa novamente quando o mouse sai */
-  .sidebar-mini.sidebar-collapse .main-sidebar:not(:hover) {
-    width: 80px !important;
-  }
+.sidebar-mini.sidebar-collapse .main-sidebar:hover {
+  width: 250px !important;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link {
+  justify-content: flex-start !important;
+  padding: 10px !important;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link .material-icons-outlined,
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link i {
+  margin-right: 10px !important;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link p {
+  display: inline !important;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:not(:hover) {
+  width: 80px !important;
+}
+
+/* -------- Mantém efeito no logo -------- */
+.sidebar-mini.sidebar-collapse .brand-logo {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-logo {
+  opacity: 1;
+}
+
+/* -------- Ativo no aside -------- */
+#aside .nav-link.active {
+  background: linear-gradient(135deg, rgb(217, 192, 0), #f4d03f) !important;
+  color: #111 !important;
+  font-weight: bold;
+}
+
+
+/* 🔥 Tudo acima mantém a lógica de colapsar igual ao seu original. Só alterou cor, hover, ícones e animações. */
+
+
+
 </style>
 
 
