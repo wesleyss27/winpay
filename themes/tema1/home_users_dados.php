@@ -72,64 +72,235 @@
 
 <!-- Estilos personalizados -->
 <style>
-  /* Estilização dos cards no estilo WinPay */
+  
+/* Modern WinPay Cards Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Estilização dos cards no estilo WinPay modernizado */
+.winpay-card {
+  background: linear-gradient(135deg, rgb(5, 5, 5) 0%, rgb(0, 0, 0) 100%);
+  border-radius: 16px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+
+
+.winpay-card:hover {
+  border-color: rgba(217, 192, 0, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(217, 192, 0, 0.15);
+  background: linear-gradient(135deg, rgb(8, 8, 8) 0%, rgb(3, 3, 3) 100%);
+}
+
+/* Container superior com ícone e botão */
+.winpay-card .d-flex.justify-content-between.align-items-center {
+  margin-bottom: 1rem;
+}
+
+/* Ícones pequenos no canto superior esquerdo */
+.card-icon {
+  font-size: 1.5rem;
+  color: rgb(217, 192, 0);
+  background: rgba(217, 192, 0, 0.1);
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.winpay-card:hover .card-icon {
+  background: rgba(217, 192, 0, 0.15);
+  transform: scale(1.05);
+  color: #f4d03f;
+}
+
+/* Títulos dos cards */
+.winpay-card h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #9CA3AF;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+/* Valor do card */
+.winpay-card h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Pequena legenda abaixo */
+.winpay-card small,
+.winpay-card .text-muted {
+  color: #6B7280 !important;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+
+/* Ocultação dos valores com efeito moderno */
+.hidden-value {
+  filter: blur(6px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.hidden-value::after {
+  content: '●●●●●●●●';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(217, 192, 0, 0.6);
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  filter: none;
+}
+
+/* Estilização do botão de visibilidade modernizado */
+.toggle-visibility {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #9CA3AF;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.toggle-visibility:hover {
+  background: rgba(217, 192, 0, 0.1);
+  border-color: rgba(217, 192, 0, 0.3);
+  color: rgb(217, 192, 0);
+  transform: scale(1.05);
+}
+
+.toggle-visibility:active {
+  transform: scale(0.95);
+}
+
+/* Animação suave para mostrar/ocultar valores */
+.winpay-card h3:not(.hidden-value) {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividade aprimorada */
+@media (max-width: 768px) {
   .winpay-card {
-    background: rgb(0, 0, 0); /* Fundo escuro para manter o estilo */
-    border-radius: 10px; /* Cantos levemente arredondados */
-    color: #ffffff; /* Fonte branca */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-    transition: all 0.2s ease-in-out;
+    border-radius: 12px;
+    margin-bottom: 1rem;
   }
-
-  .winpay-card:hover {
-    border-color: rgb(217, 192, 0);
-    transform: scale(1.02);
+  
+  .winpay-card h3 {
+    font-size: 1.75rem;
   }
-
-  /* Ícones pequenos no canto superior esquerdo */
+  
   .card-icon {
+    width: 42px;
+    height: 42px;
     font-size: 1.3rem;
-    color: #A0AEC0;
   }
-
-  /* Títulos dos cards */
-  h5 {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #A0AEC0;
-  }
-
-  /* Valor do card */
-  h3 {
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-
-  /* Pequena legenda abaixo */
-  .text-muted {
-    color: #A0AEC0 !important;
-    font-size: 0.85rem;
-  }
-
-  /* Ocultação dos valores */
-  .hidden-value {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-  }
-
-  /* Estilização do botão de visibilidade */
+  
   .toggle-visibility {
-    background: none;
-    border: none;
-    color: #A0AEC0;
-    font-size: 1rem;
-    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
   }
+}
 
-  .toggle-visibility:hover {
-    color: #ffffff;
+@media (max-width: 480px) {
+  .winpay-card {
+    padding: 1rem !important;
   }
+  
+  .winpay-card h3 {
+    font-size: 1.5rem;
+  }
+  
+  .winpay-card h5 {
+    font-size: 0.8rem;
+  }
+  
+  .card-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Estados de foco para acessibilidade */
+.toggle-visibility:focus {
+  outline: 2px solid rgba(217, 192, 0, 0.5);
+  outline-offset: 2px;
+}
+
+/* Efeito de carregamento opcional */
+.winpay-card.loading {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Melhorias no gradiente de hover */
+.winpay-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(217, 192, 0, 0.02) 0%, rgba(244, 208, 63, 0.02) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 16px;
+}
+
+.winpay-card:hover::after {
+  opacity: 1;
+}
+
 </style>
 
 <!-- Script para alternar a visibilidade dos valores -->

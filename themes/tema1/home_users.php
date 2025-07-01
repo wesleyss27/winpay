@@ -217,41 +217,7 @@ if ($_SESSION["tipo"] == 6) {
               </div>
             </div>
 
-            <!-- Estilos personalizados -->
-            <style>
-              .winpay-card {
-                background: rgb(30, 36, 51); /* Fundo escuro */
-                border-radius: 10px; /* Cantos arredondados */
-                color: #ffffff; /* Texto branco */
-                border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-                transition: all 0.2s ease-in-out;
-                padding: 20px;
-              }
-
-              .winpay-card:hover {
-                border-color: rgb(217, 192, 0);
-                transform: scale(1.02);
-              }
-
-              /* Título */
-              .card-title {
-                font-size: 1rem;
-                font-weight: bold;
-                color: #A0AEC0;
-              }
-
-              /* Ícone */
-              .fa-chart-area {
-                color: rgb(217, 192, 0);
-              }
-
-              /* Gráfico */
-              .chart-container {
-                width: 100%;
-                height: 200px;
-                position: relative;
-              }
-            </style>
+           
             <!-- /.card -->
               <br>
             <div class="winpay-card p-4">
@@ -314,57 +280,376 @@ if ($_SESSION["tipo"] == 6) {
 
             <!-- Estilos Modernizados -->
             <style>
-              .winpay-card {
-                background: rgb(0, 0, 0); /* Fundo escuro */
-                border-radius: 10px; /* Cantos arredondados */
-                color: #ffffff; /* Texto branco */
-                border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-                transition: all 0.2s ease-in-out;
-                padding: 20px;
-              }
+              
+                /* Modern WinPay Cards Styles */
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-              .winpay-card:hover {
-                border-color: rgb(217, 192, 0);
-                transform: scale(1.02);
-              }
+                /* Estilização dos cards no estilo WinPay modernizado */
+                .winpay-card {
+                  background: linear-gradient(135deg, rgb(5, 5, 5) 0%, rgb(0, 0, 0) 100%);
+                  border-radius: 16px;
+                  color: #ffffff;
+                  border: 1px solid rgba(255, 255, 255, 0.08);
+                  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                  position: relative;
+                  overflow: hidden;
+                  backdrop-filter: blur(10px);
+                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                }
 
-              /* Estilização das estatísticas */
-              .stat-box {
-                background: rgba(255, 255, 255, 0.05);
-                padding: 15px;
-                border-radius: 10px;
-                transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-                margin-bottom: 10px; /* Garante espaçamento entre os cards */
-              }
+                .winpay-card:hover {
+                  border-color: rgba(217, 192, 0, 0.3);
+                  transform: translateY(-4px);
+                  box-shadow: 0 8px 30px rgba(217, 192, 0, 0.15);
+                  background: linear-gradient(135deg, rgb(8, 8, 8) 0%, rgb(3, 3, 3) 100%);
+                }
 
-              .stat-box:hover {
-                transform: scale(1.05);
-                box-shadow: 0 4px 10px rgb(155, 135, 0);
-              }
+                /* Container superior com ícone e botão */
+                .winpay-card .d-flex.justify-content-between.align-items-center {
+                  margin-bottom: 1rem;
+                }
 
-              /* Ajusta a distribuição dos elementos na linha */
-              .row.text-center {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center; /* Centraliza os elementos */
-                gap: 15px; /* Adiciona espaçamento entre os cards */
-              }
+                /* Ícones pequenos no canto superior esquerdo */
+                .card-icon {
+                  font-size: 1.5rem;
+                  color: rgb(217, 192, 0);
+                  background: rgba(217, 192, 0, 0.1);
+                  width: 48px;
+                  height: 48px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  transition: all 0.3s ease;
+                }
 
+                .winpay-card:hover .card-icon {
+                  background: rgba(217, 192, 0, 0.15);
+                  transform: scale(1.05);
+                  color: #f4d03f;
+                }
 
-              /* Títulos das estatísticas */
-              h6 {
-                font-size: 0.9rem;
-                font-weight: bold;
-                color: #A0AEC0;
-              }
+                /* Títulos dos cards */
+                .winpay-card h5 {
+                  font-size: 0.875rem;
+                  font-weight: 600;
+                  color: #9CA3AF;
+                  margin-bottom: 0.5rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  line-height: 1.2;
+                }
 
-              /* Números destacados */
-              h4 {
-                font-size: 1.6rem;
-                font-weight: bold;
-                margin-top: 5px;
-                color: rgb(217, 192, 0);
-              }
+                /* Valor do card */
+                .winpay-card h3 {
+                  font-size: 2rem;
+                  font-weight: 700;
+                  margin-bottom: 0.75rem;
+                  color: #ffffff;
+                  line-height: 1.1;
+                  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                }
+
+                /* Pequena legenda abaixo */
+                .winpay-card small,
+                .winpay-card .text-muted {
+                  color: #6B7280 !important;
+                  font-size: 0.8rem;
+                  font-weight: 500;
+                  line-height: 1.3;
+                  opacity: 0.9;
+                }
+
+                /* Ocultação dos valores com efeito moderno */
+                .hidden-value {
+                  filter: blur(6px);
+                  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                  position: relative;
+                }
+
+                .hidden-value::after {
+                  content: '●●●●●●●●';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  color: rgba(217, 192, 0, 0.6);
+                  font-size: 1.2rem;
+                  letter-spacing: 4px;
+                  filter: none;
+                }
+
+                /* Estilização do botão de visibilidade modernizado */
+                .toggle-visibility {
+                  background: rgba(255, 255, 255, 0.05);
+                  border: 1px solid rgba(255, 255, 255, 0.1);
+                  color: #9CA3AF;
+                  font-size: 0.9rem;
+                  cursor: pointer;
+                  border-radius: 8px;
+                  width: 36px;
+                  height: 36px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  transition: all 0.3s ease;
+                  backdrop-filter: blur(5px);
+                }
+
+                .toggle-visibility:hover {
+                  background: rgba(217, 192, 0, 0.1);
+                  border-color: rgba(217, 192, 0, 0.3);
+                  color: rgb(217, 192, 0);
+                  transform: scale(1.05);
+                }
+
+                .toggle-visibility:active {
+                  transform: scale(0.95);
+                }
+
+                /* Estilização das estatísticas modernizada */
+                .stat-box {
+                  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+                  padding: 1.5rem;
+                  border-radius: 12px;
+                  border: 1px solid rgba(255, 255, 255, 0.05);
+                  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                  margin-bottom: 1rem;
+                  position: relative;
+                  overflow: hidden;
+                  backdrop-filter: blur(5px);
+                }
+
+                .stat-box::before {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  height: 1px;
+                  background: linear-gradient(90deg, transparent, rgba(217, 192, 0, 0.3), transparent);
+                }
+
+                .stat-box:hover {
+                  transform: translateY(-2px) scale(1.02);
+                  box-shadow: 0 8px 25px rgba(217, 192, 0, 0.15);
+                  border-color: rgba(217, 192, 0, 0.2);
+                  background: linear-gradient(135deg, rgba(217, 192, 0, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+                }
+
+                /* Títulos das estatísticas */
+                .stat-box h6 {
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  color: #9CA3AF;
+                  margin-bottom: 0.75rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                  line-height: 1.2;
+                }
+
+                /* Números destacados das estatísticas */
+                .stat-box h4 {
+                  font-size: 1.75rem;
+                  font-weight: 700;
+                  margin-top: 0.5rem;
+                  color: rgb(217, 192, 0);
+                  line-height: 1.1;
+                  text-shadow: 0 2px 4px rgba(217, 192, 0, 0.3);
+                  transition: all 0.3s ease;
+                }
+
+                .stat-box:hover h4 {
+                  color: #f4d03f;
+                  transform: scale(1.05);
+                }
+
+                /* Ajuste da distribuição dos elementos na linha */
+                .winpay-card .row.text-center {
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: center;
+                  gap: 1rem;
+                  margin: 0 -0.5rem;
+                }
+
+                .winpay-card .row.text-center .col-md-4 {
+                  flex: 1;
+                  min-width: 200px;
+                  max-width: 300px;
+                }
+
+                /* Títulos das seções com ícones */
+                .winpay-card h5 i {
+                  color: rgb(217, 192, 0);
+                  margin-right: 0.5rem;
+                  font-size: 1rem;
+                }
+
+                .winpay-card h5 small {
+                  color: #6B7280;
+                  font-weight: 400;
+                  font-size: 0.75rem;
+                  margin-left: 0.5rem;
+                }
+
+                /* Animação suave para mostrar/ocultar valores */
+                .winpay-card h3:not(.hidden-value) {
+                  animation: fadeIn 0.3s ease-in-out;
+                }
+
+                @keyframes fadeIn {
+                  from {
+                    opacity: 0;
+                    transform: translateY(5px);
+                  }
+                  to {
+                    opacity: 1;
+                    transform: translateY(0);
+                  }
+                }
+
+                /* Responsividade aprimorada */
+                @media (max-width: 768px) {
+                  .winpay-card {
+                    border-radius: 12px;
+                    margin-bottom: 1rem;
+                  }
+                  
+                  .winpay-card h3 {
+                    font-size: 1.75rem;
+                  }
+                  
+                  .card-icon {
+                    width: 42px;
+                    height: 42px;
+                    font-size: 1.3rem;
+                  }
+                  
+                  .toggle-visibility {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 0.8rem;
+                  }
+                  
+                  .stat-box {
+                    padding: 1.25rem;
+                    margin-bottom: 0.75rem;
+                  }
+                  
+                  .stat-box h4 {
+                    font-size: 1.5rem;
+                  }
+                  
+                  .winpay-card .row.text-center {
+                    gap: 0.75rem;
+                  }
+                  
+                  .winpay-card .row.text-center .col-md-4 {
+                    min-width: 150px;
+                  }
+                }
+
+                @media (max-width: 480px) {
+                  .winpay-card {
+                    padding: 1rem !important;
+                  }
+                  
+                  .winpay-card h3 {
+                    font-size: 1.5rem;
+                  }
+                  
+                  .winpay-card h5 {
+                    font-size: 0.8rem;
+                  }
+                  
+                  .card-icon {
+                    width: 38px;
+                    height: 38px;
+                    font-size: 1.2rem;
+                  }
+                  
+                  .stat-box {
+                    padding: 1rem;
+                  }
+                  
+                  .stat-box h4 {
+                    font-size: 1.3rem;
+                  }
+                  
+                  .stat-box h6 {
+                    font-size: 0.75rem;
+                  }
+                }
+
+                /* Estados de foco para acessibilidade */
+                .toggle-visibility:focus {
+                  outline: 2px solid rgba(217, 192, 0, 0.5);
+                  outline-offset: 2px;
+                }
+
+                .stat-box:focus-within {
+                  border-color: rgba(217, 192, 0, 0.3);
+                  box-shadow: 0 0 0 2px rgba(217, 192, 0, 0.1);
+                }
+
+                /* Efeito de carregamento opcional */
+                .winpay-card.loading {
+                  animation: pulse 1.5s infinite;
+                }
+
+                .stat-box.loading {
+                  animation: pulse 1.5s infinite;
+                }
+
+                @keyframes pulse {
+                  0%, 100% {
+                    opacity: 1;
+                  }
+                  50% {
+                    opacity: 0.8;
+                  }
+                }
+
+                /* Melhorias no gradiente de hover */
+                .winpay-card::after {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: linear-gradient(135deg, rgba(217, 192, 0, 0.02) 0%, rgba(244, 208, 63, 0.02) 100%);
+                  opacity: 0;
+                  transition: opacity 0.3s ease;
+                  pointer-events: none;
+                  border-radius: 16px;
+                }
+
+                .winpay-card:hover::after {
+                  opacity: 1;
+                }
+
+                /* Efeitos de brilho sutil nos stat-boxes */
+                .stat-box::after {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: linear-gradient(135deg, rgba(217, 192, 0, 0.05) 0%, transparent 50%, rgba(217, 192, 0, 0.05) 100%);
+                  opacity: 0;
+                  transition: opacity 0.3s ease;
+                  pointer-events: none;
+                  border-radius: 12px;
+                }
+
+                .stat-box:hover::after {
+                  opacity: 1;
+                }
+
             </style>
 
             <!-- /.card -->
