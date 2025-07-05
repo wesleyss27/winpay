@@ -45,34 +45,427 @@ if ($_SESSION["tipo"] == 6) {
     <!-- Main content -->
 
     <style>
-      .zoom:hover img {
-        -moz-transform: scale(1.2);
-        -webkit-transform: scale(1.2);
-        transform: scale(1.2);
-      }
+.zoom:hover img {
+  -moz-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
 
-      .mobile-n {
-        display: block;
-      }
+.mobile-n {
+  display: block;
+}
 
-      .desktop-n {
-        display: none;
-      }
+.desktop-n {
+  display: none;
+}
 
-      .hr-mobile {
-        border-bottom: 1px solid #eee;
-        margin: 10px 0;
-      }
+.hr-mobile {
+  border-bottom: 1px solid #eee;
+  margin: 10px 0;
+}
 
-      @media(max-width: 500px) {
-        .mobile-n {
-          display: none;
-        }
+@media(max-width: 500px) {
+  .mobile-n {
+    display: none;
+  }
 
-        .desktop-n {
-          display: block;
-        }
-      }
+  .desktop-n {
+    display: block;
+  }
+}
+
+/* Modal WINPAY - Inputs Corrigidos */
+.modal-fade {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1050 !important;
+  background-color: #000000 !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
+.modal-fade.show {
+  display: flex !important;
+}
+
+.modal-dialog {
+  width: 100% !important;
+  max-width: 900px !important;
+  margin: auto !important;
+  position: relative !important;
+}
+
+.modal-content {
+  background: #000000 !important;
+  border: 2px solid #FFDD00 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #FFDD00, #FFE83D, #FFDD00);
+  animation: pulse 2s infinite;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+  padding: 24px 32px !important;
+  border-bottom: 1px solid #FFDD00 !important;
+}
+
+.card-title {
+  color: #FFDD00 !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.close {
+  background: none !important;
+  border: none !important;
+  color: #FFDD00 !important;
+  font-size: 28px !important;
+  cursor: pointer !important;
+  position: absolute !important;
+  right: 20px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+}
+
+.close:hover {
+  background: rgba(255, 221, 0, 0.2) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+.modal-body {
+  background: #000000 !important;
+  padding: 32px !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #FFDD00;
+  border-radius: 5px;
+}
+
+.card.card-body {
+  background: linear-gradient(145deg, #1a1a1a, #111111) !important;
+  border: 1px solid #333 !important;
+  border-radius: 15px !important;
+  padding: 24px !important;
+  margin-bottom: 20px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 221, 0, 0.1) !important;
+}
+
+.row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.col-md-6 {
+  flex: 1 !important;
+  min-width: 250px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+label {
+  color: #FFDD00 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
+  font-family: 'Inter', sans-serif !important;
+  display: block !important;
+}
+
+.form-control, 
+input.form-control, 
+select.form-control, 
+textarea.form-control {
+  background: #2a2a2a !important;
+  border: 2px solid #444 !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 45px !important;
+  box-sizing: border-box !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-control:focus, 
+input.form-control:focus, 
+select.form-control:focus, 
+textarea.form-control:focus {
+  background: #333333 !important;
+  border-color: #FFDD00 !important;
+  box-shadow: 0 0 0 3px rgba(255, 221, 0, 0.2) !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+.form-control::placeholder {
+  color: #888 !important;
+}
+
+select.form-control {
+  background: #2a2a2a !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FFDD00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 12px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 16px 12px !important;
+  padding-right: 40px !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+select.form-control option {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  padding: 10px !important;
+}
+
+small {
+  color: #aaa !important;
+  font-size: 12px !important;
+  margin-top: 5px !important;
+  line-height: 1.4 !important;
+  display: block !important;
+}
+
+.facebook, .taboola, .google, .token {
+  display: none !important;
+  border-left: 3px solid #FFDD00 !important;
+  padding-left: 20px !important;
+  margin: 20px 0 !important;
+}
+
+.facebook.show, .taboola.show, .google.show, .token.show {
+  display: block !important;
+}
+
+.modal-footer {
+  background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+  padding: 24px 32px !important;
+  border-top: 1px solid #FFDD00 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 15px !important;
+}
+
+.btn {
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  border: none !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: all 0.3s ease !important;
+  min-width: 100px !important;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #FFDD00, #D4B800) !important;
+  color: #000000 !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #FFE83D, #FFDD00) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ff8c00, #ff7700) !important;
+  color: #ffffff !important;
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, #ff9500, #ff8c00) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #666, #444) !important;
+  color: #ffffff !important;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #777, #555) !important;
+  transform: translateY(-2px) !important;
+}
+
+.modal input, .modal select, .modal textarea {
+  background: #2a2a2a !important;
+}
+
+.table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+}
+
+.table thead th {
+  background: linear-gradient(135deg, #1a1a1a, #111111) !important;
+  color: #FFDD00 !important;
+  border-bottom: 2px solid #FFDD00 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 15px 8px !important;
+  font-weight: 600 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif !important;
+  white-space: nowrap !important;
+}
+
+.table tbody td {
+  background: rgba(26, 26, 26, 0.8) !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 12px 8px !important;
+  border-bottom: 1px solid #333 !important;
+  font-size: 13px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.table tbody tr:nth-child(even) td {
+  background: rgba(17, 17, 17, 0.8) !important;
+}
+
+.table tbody tr:hover td {
+  background: rgba(255, 221, 0, 0.1) !important;
+}
+
+.table .btn {
+  min-width: 80px !important;
+  padding: 8px 16px !important;
+  margin: 2px !important;
+}
+
+.platform-icon {
+  width: 28px !important;
+  height: 28px !important;
+  object-fit: contain !important;
+  vertical-align: middle !important;
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+.table tbody td:first-child {
+  width: 80px !important;
+  text-align: center !important;
+}
+
+.table thead th:nth-child(1), .table tbody td:nth-child(1) {
+  width: 80px !important;
+  min-width: 80px !important;
+}
+
+.table thead th:nth-child(2), .table tbody td:nth-child(2) {
+  width: 120px !important;
+  min-width: 120px !important;
+}
+
+.table thead th:nth-child(3), .table tbody td:nth-child(3) {
+  width: 150px !important;
+  min-width: 150px !important;
+}
+
+.table thead th:nth-child(4), .table tbody td:nth-child(4) {
+  width: 100px !important;
+  min-width: 100px !important;
+}
+
+.table thead th:nth-child(5), .table tbody td:nth-child(5) {
+  width: 80px !important;
+  min-width: 80px !important;
+}
+
+.table thead th:nth-child(6), .table tbody td:nth-child(6) {
+  width: 140px !important;
+  min-width: 140px !important;
+}
+
+.table thead th:nth-child(7), .table tbody td:nth-child(7) {
+  width: 140px !important;
+  min-width: 140px !important;
+}
+
+.table thead th:last-child, .table tbody td:last-child {
+  width: 120px !important;
+  min-width: 120px !important;
+}
+
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column !important;
+  }
+
+  .col-md-6 {
+    min-width: 100% !important;
+  }
+
+  .modal-footer {
+    flex-direction: column !important;
+  }
+
+  .btn {
+    width: 100% !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.modal-content *, .card * {
+  background-color: transparent !important;
+}
+
     </style>
 
     <section class="content">
@@ -135,6 +528,14 @@ if ($_SESSION["tipo"] == 6) {
                 <div class="card" style="border-radius: 30px">
                   <a class="btn" data-toggle="modal" data-target="#modal-lg" style="font-family:inter;" id="TikTok">
                     <img src="<?= url('themes/imgs/TikTok2.png') ?>" width="100%">
+                  </a>
+                </div>
+              </div>
+
+              <div class="col-sm-2 text-center zoom">
+                <div class="card" style="border-radius: 30px">
+                  <a class="btn" data-toggle="modal" data-target="#modal-lg" style="font-family:inter;" id="Kwai">
+                    <img src="<?= url('themes/imgs/Kwai.png') ?>" width="100%">
                   </a>
                 </div>
               </div>
@@ -312,6 +713,7 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
                   <option value="GoogleAs">Google Ads</option>
                   <option value="GoogleTagManager">Google Tag Manager</option>
                   <option value="TikTok">TikTok</option>
+                  <option value="Kwai">Kwai</option>
                 </select><br>
               </div>
 
@@ -577,6 +979,23 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
 
   });
 
+  $("#Kwai").click(() => {
+    console.log("kwai");
+    $(".google").hide();
+    $(".taboola").hide();
+    $(".facebook").hide();
+    $(".kwai").show();
+
+    $(".modal-title").html("Cadastrar Planos");
+    $("#salvar").css("display", "inline");
+    $("#cancelar").css("display", "inline");
+    $("#editar").css("display", "none");
+    $("#plataforma option[value=Kwai]").prop("selected", true);
+    cancelar();
+    $(".valor_enviado").css("display", "inline");
+  });
+
+
   $("#plataforma").change((e) => {
 
     var plataforma = $("#plataforma").val();
@@ -597,6 +1016,12 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
       $(".taboola").css("display", "none");
       $(".google").css("display", "none");
       $(".facebook").css("display", "none");
+      $(".valor_enviado").css("display", "inline");
+    } else if (plataforma == "Kwai") {
+      $(".taboola").css("display", "none");
+      $(".google").css("display", "none");
+      $(".facebook").css("display", "none");
+      $(".kwai").css("display", "inline");
       $(".valor_enviado").css("display", "inline");
     } else {
       $(".taboola").css("display", "none");
@@ -718,6 +1143,13 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
         $(".taboola").hide();
         $(".facebook").hide();
         $(".valor_enviado").css("display", "inline");
+        break;
+      case "Kwai":
+        $(".google").hide();
+        $(".taboola").hide();
+        $(".facebook").hide();
+        $(".kwai").show();
+        console.log(6);
         break;
     }
 
