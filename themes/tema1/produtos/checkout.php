@@ -189,6 +189,7 @@ $modelo_checkout = array(
                                             <input type="hidden" name="pixel_google_tag_manager" value="<?= $checkout->pixel_google_tag_manager ?>">
                                             <input type="hidden" name="pixel_taboola" value="<?= $checkout->pixel_taboola ?>">
                                             <input type="hidden" name="pixel_tiktok" value="<?= $checkout->pixel_tiktok ?>">
+                                            <input type="hidden" name="pixel_kwai" value="<?= $checkout->pixel_kwai ?>">
                                             <input type="hidden" name="usar_order_bump" value="<?= $checkout->usar_order_bump ?>">
                                             <input type="hidden" name="titulo_informativo" value="<?= $checkout->titulo_informativo ?>">
                                             <input type="hidden" name="planos_order_bump" value="<?= $checkout->planos_order_bump ?>">
@@ -303,6 +304,7 @@ $modelo_checkout = array(
                                             pixel_google_tag_manager: "<?= $checkout->pixel_google_tag_manager ?>",
                                             pixel_taboola: "<?= $checkout->pixel_taboola ?>",
                                             pixel_tiktok: "<?= $checkout->pixel_tiktok ?>",
+                                            pixel_kwai: "<?= $checkout->pixel_kwai ?>",
                                             privado: "<?= $checkout->privado ?>",
                                             modelo_checkout: "<?= $checkout->modelo_checkout ?>",
                                             adquirente: "<?= $checkout->adquirente ?>",
@@ -1129,6 +1131,22 @@ $modelo_checkout = array(
                                                 </select>
                                             <?php endif; ?>
                                         </div>
+                                   
+                                        <br>
+                                        <div class="col-md-4">
+                                            <img src="<?= url("themes/imgs/Kwai.png") ?>" width='85px' style="border-radius: 20px; margin-bottom: 5px">
+                                            <?php if ($pixel) : ?>
+                                                <select name="pixel_kwai" id="pixel_kwai" class="form-control">
+                                                    <option value="">Selecionar</option>
+                                                    <?php foreach ($pixel as $pixel2) : ?>
+                                                        <?php if ($pixel2->plataforma == "Kwai") : ?>
+                                                            <option value="<?= $pixel2->id ?>"><?= $pixel2->nome ?></option>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            <?php endif; ?>
+                                        </div>
+                                        
                                     </div>
 
                                     <div class="row">
@@ -1638,6 +1656,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         var pixel_google_tag_manager = dados[i]["pixel_google_tag_manager"];
         var pixel_taboola = dados[i]["pixel_taboola"];
         var pixel_tiktok = dados[i]["pixel_tiktok"];
+        var pixel_kwai = dados[i]["pixel_kwai"];
         var privado = dados[i]["privado"];
         var modelo_checkout = dados[i]["modelo_checkout"];
         var adquirente = dados[i]["adquirente"];
@@ -1806,6 +1825,9 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         if (pixel_tiktok)
             $("#pixel_tiktok option[value=" + pixel_tiktok + "]").prop("selected", true);
 
+        if (pixel_kwai)
+            $("#pixel_kwai option[value=" + pixel_kwai + "]").prop("selected", true);
+
         $("#privado option[value=" + privado + "]").prop("selected", true);
 
         $("#cupom").attr("value", cupom);
@@ -1932,6 +1954,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#pixel_google option").prop("selected", false);
         $("#pixel_taboola option").prop("selected", false);
         $("#pixel_tiktok option").prop("selected", false);
+        $("#pixel_kwai option").prop("selected", false);
         $("#privado option").prop("selected", false);
         $("#banner_atual").attr("value", "");
         $("#aviso_atual").attr("value", "");

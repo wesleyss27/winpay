@@ -84,6 +84,12 @@ class Checkout extends DataLayer
             return (new Pixel())->findById($this->pixel_tiktok);
         }
     }
+
+    public function dataPixelKwai(){
+        if ($this->pixel_tiktok) {
+            return (new Pixel())->findById($this->pixel_kwai);
+        }
+    }
     
     public function dataFrete(){
         if ($this->id_frete) {

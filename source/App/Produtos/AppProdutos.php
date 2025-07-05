@@ -1165,6 +1165,7 @@ class AppProdutos
         $checkout->pixel_google_tag_manager = @$data["pixel_google_tag_manager"] ? @$data["pixel_google_tag_manager"] : NULL;
         $checkout->pixel_taboola = @$data["pixel_taboola"] ? $data["pixel_taboola"] : NULL;
         $checkout->pixel_tiktok = @$data["pixel_tiktok"] ? @$data["pixel_tiktok"] : NULL;
+        $checkout->pixel_kwai = @$data["pixel_kwai"] ? @$data["pixel_kwai"] : NULL;
 
         // if(@$data["pixel_facebook"]) $checkout->pixel_facebook = @$data["pixel_facebook"];
         // else $checkout->pixel_facebook = NULL;
