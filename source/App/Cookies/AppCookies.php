@@ -530,7 +530,7 @@ class AppCookies
                 $dado["pixel_kwai"]["id_campanha"] = $campanha->id;
                 $dado["pixel_kwai"]["id_pixel"] = $campanha->dataPixelKwai()->id_pixel;
                 $dado["pixel_kwai"]["boleto"] = $campanha->dataPixelKwai()->boleto;
-                $dado["pixel_tpixel_kwaiiktok"]["executar_checkout"] = $campanha->dataPixelKwai()->executar_checkout;
+                $dado["pixel_kwai"]["executar_checkout"] = $campanha->dataPixelKwai()->executar_checkout;
                 $dado["pixel_kwai"]["valor"] = $campanha->dataPixelKwai()->valor;
                 $dado["pixel_kwai"]["status"] = $campanha->dataPixelKwai()->status;
                 $pixelKwai = json_encode($dado["pixel_kwai"]);
