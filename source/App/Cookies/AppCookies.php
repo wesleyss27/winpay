@@ -258,6 +258,17 @@ class AppCookies
                 $dado["pixel_tiktok"]["status"] = $campanha->dataPixelTikTok()->status;
                 $pixelTikTok = json_encode($dado["pixel_tiktok"]);
             }
+
+            if ($campanha->pixel_kwai) {
+                $dado["pixel_kwai"]["id"] = $campanha->pixel_kwai;
+                $dado["pixel_kwai"]["id_campanha"] = $campanha->id;
+                $dado["pixel_kwai"]["id_pixel"] = $campanha->dataPixelKwai()->id_pixel;
+                $dado["pixel_kwai"]["boleto"] = $campanha->dataPixelKwai()->boleto;
+                $dado["pixel_kwai"]["executar_checkout"] = $campanha->dataPixelKwai()->executar_checkout;
+                $dado["pixel_kwai"]["valor"] = $campanha->dataPixelKwai()->valor;
+                $dado["pixel_kwai"]["status"] = $campanha->dataPixelKwai()->status;
+                $pixelKwai = json_encode($dado["pixel_kwai"]);
+            }
         }
         // var_dump($campanha);
         if (@$codigo) {
@@ -317,6 +328,7 @@ class AppCookies
             $cookies->pixel_google_ads = @$campanha->pixel_google_ads ? $pixelGoogleAds : NULL;
             $cookies->pixel_google_tag_manager = @$campanha->pixel_google_tag_manager ? $pixelGoogleTagManager : NULL;
             $cookies->pixel_tiktok = @$campanha->pixel_tiktok ? $pixelTikTok : NULL;
+            $cookies->pixel_kwai = @$campanha->pixel_kwai ? $pixelKwai : NULL;
 
             $cookies->src = @$src;
             $cookies->utm_source = @$utm_source;
@@ -350,6 +362,7 @@ class AppCookies
             $cookies->pixel_google_ads = @$campanha->pixel_google_ads ? $pixelGoogleAds : NULL;
             $cookies->pixel_google_tag_manager = @$campanha->pixel_google_tag_manager ? $pixelGoogleTagManager : NULL;
             $cookies->pixel_tiktok = @$campanha->pixel_tiktok ? $pixelTikTok : NULL;
+            $cookies->pixel_kwai = @$campanha->pixel_kwai ? $pixelKwai : NULL;
 
             $cookies->src = @$campanha->src;
             $cookies->utm_source = @$utm_source;
@@ -511,6 +524,17 @@ class AppCookies
                 $dado["pixel_tiktok"]["status"] = $campanha->dataPixelTikTok()->status;
                 $pixelTikTok = json_encode($dado["pixel_tiktok"]);
             }
+
+            if ($campanha->pixel_kwai) {
+                $dado["pixel_kwai"]["id"] = $campanha->pixel_kwai;
+                $dado["pixel_kwai"]["id_campanha"] = $campanha->id;
+                $dado["pixel_kwai"]["id_pixel"] = $campanha->dataPixelKwai()->id_pixel;
+                $dado["pixel_kwai"]["boleto"] = $campanha->dataPixelKwai()->boleto;
+                $dado["pixel_tpixel_kwaiiktok"]["executar_checkout"] = $campanha->dataPixelKwai()->executar_checkout;
+                $dado["pixel_kwai"]["valor"] = $campanha->dataPixelKwai()->valor;
+                $dado["pixel_kwai"]["status"] = $campanha->dataPixelKwai()->status;
+                $pixelKwai = json_encode($dado["pixel_kwai"]);
+            }
         }
         // var_dump($campanha);
         if (@$codigo) {
@@ -587,6 +611,7 @@ class AppCookies
             $cookies->pixel_google_ads = @$campanha->pixel_google_ads ? $pixelGoogleAds : NULL;
             $cookies->pixel_google_tag_manager = @$campanha->pixel_google_tag_manager ? $pixelGoogleTagManager : NULL;
             $cookies->pixel_tiktok = @$campanha->pixel_tiktok ? $pixelTikTok : NULL;
+            $cookies->pixel_kwai = @$campanha->pixel_kwai ? $pixelKwai : NULL;
 
             $cookies->src = @$src;
             $cookies->utm_source = @$utm_source;
@@ -620,6 +645,7 @@ class AppCookies
             $cookies->pixel_google_ads = @$campanha->pixel_google_ads ? $pixelGoogleAds : NULL;
             $cookies->pixel_google_tag_manager = @$campanha->pixel_google_tag_manager ? $pixelGoogleTagManager : NULL;
             $cookies->pixel_tiktok = @$campanha->pixel_tiktok ? $pixelTikTok : NULL;
+            $cookies->pixel_kwai = @$campanha->pixel_kwai ? $pixelKwai : NULL;
 
             $cookies->src = @$campanha->src;
             $cookies->utm_source = @$utm_source;

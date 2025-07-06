@@ -1006,6 +1006,7 @@ class AppProdutos
         $checkout->pixel_google_tag_manager = @$data["pixel_google_tag_manager"] ? @$data["pixel_google_tag_manager"] : NULL;
         $checkout->pixel_taboola = @$data["pixel_taboola"] ? @$data["pixel_taboola"] : NULL;
         $checkout->pixel_tiktok = @$data["pixel_tiktok"] ? @$data["pixel_tiktok"] : NULL;
+        $checkout->pixel_kwai = @$data["pixel_kwai"] ? @$data["pixel_kwai"] : NULL;
 
         $data["codigo"] = $checkout->codigo;
 
@@ -2273,6 +2274,7 @@ class AppProdutos
         $campanha->pixel_google_tag_manager = @$data["pixel_google_tag_manager"] ? @$data["pixel_google_tag_manager"] : NULL;
         $campanha->pixel_taboola = @$data["pixel_taboola"] ? $data["pixel_taboola"] : NULL;
         $campanha->pixel_tiktok = @$data["pixel_tiktok"] ? $data["pixel_tiktok"] : NULL;
+        $campanha->pixel_kwai = @$data["pixel_kwai"] ? $data["pixel_kwai"] : NULL;
 
         if ( ! $campanha->save() ) {
             echo $campanha->fail()->getMessage();
@@ -2296,6 +2298,7 @@ class AppProdutos
         $campanha->pixel_google_tag_manager = @$data["pixel_google_tag_manager"] ? @$data["pixel_google_tag_manager"] : NULL;
         $campanha->pixel_taboola = @$data["pixel_taboola"] ? $data["pixel_taboola"] : NULL;
         $campanha->pixel_tiktok = @$data["pixel_tiktok"] ? $data["pixel_tiktok"] : NULL;
+        $campanha->pixel_kwai = @$data["pixel_kwai"] ? $data["pixel_kwai"] : NULL;
 
         if ( ! $campanha->save() ) {
             echo $campanha->fail()->getMessage();

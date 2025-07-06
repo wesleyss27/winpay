@@ -75,6 +75,12 @@ class Campanha extends DataLayer
         }
     }
 
+    public function dataPixelKwai(){
+        if ($this->pixel_kwai) {
+            return (new Pixel())->findById($this->pixel_kwai);
+        }
+    }
+
     /** RETORNA A QUANTIDADE DE VENDAS */
     public function countVendas(){
         return (new Venda())->find("campanha = $this->id")->count();

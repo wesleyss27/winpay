@@ -86,7 +86,7 @@ class Checkout extends DataLayer
     }
 
     public function dataPixelKwai(){
-        if ($this->pixel_tiktok) {
+        if ($this->pixel_kwai) {
             return (new Pixel())->findById($this->pixel_kwai);
         }
     }
