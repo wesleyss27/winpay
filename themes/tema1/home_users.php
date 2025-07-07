@@ -1006,95 +1006,75 @@ if ($_SESSION["tipo"] == 6) {
 
 
 $(function () {
-        const chartDom = document.getElementById('grafico-vendas');
-        const myChart = echarts.init(chartDom);
+  const chartDom = document.getElementById('grafico-vendas');
+  const myChart = echarts.init(chartDom);
 
-        const option = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
-                    }
-                }
-            },
-            legend: {
-                data: ['Mês Atual', 'Mês Anterior'],
-                top: 'bottom',
-                textStyle: {
-                    color: '#999'
-                }
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '10%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: <?= json_encode(range(1, 31)) ?>,
-                    axisLabel: { color: '#A0AEC0' },
-                    axisLine: { lineStyle: { color: '#ccc' } }
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    axisLabel: { color: '#A0AEC0' },
-                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
-                }
-            ],
-            series: [
-                {
-                    name: 'Mês Atual',
-                    type: 'line',
-                    smooth: true,
-                    lineStyle: {
-                        width: 2
-                    },
-                    showSymbol: false,
-                    areaStyle: {
-                        opacity: 0.8,
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: '#f3be12' },
-                            { offset: 1, color: 'rgba(243, 190, 18, 0.1)' }
-                        ])
-                    },
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: <?= json_encode(array_values($vendasAtual)) ?>
-                },
-                {
-                    name: 'Mês Anterior',
-                    type: 'line',
-                    smooth: true,
-                    lineStyle: {
-                        width: 2
-                    },
-                    showSymbol: false,
-                    areaStyle: {
-                        opacity: 0.8,
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: '#4c90cb' },
-                            { offset: 1, color: 'rgba(160,197,228,0.1)' }
-                        ])
-                    },
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: <?= json_encode(array_values($vendasAnterior)) ?>
-                }
-            ]
-        };
+  const option = {
+    backgroundColor: '#1E1E1E',
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: '#2c2c2c',
+      borderColor: '#FFD700',
+      textStyle: { color: '#fff', fontFamily: 'Inter' },
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    legend: {
+      data: ['Mês Atual', 'Mês Anterior'],
+      top: 'top',
+      textStyle: {
+        color: '#FFD700',
+        fontFamily: 'Inter',
+        fontWeight: 500
+      }
+    },
+    grid: {
+      left: '5%',
+      right: '5%',
+      top: '20%',
+      bottom: '15%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: <?= json_encode(range(1, 31)) ?>,
+      axisLine: { lineStyle: { color: '#444' } },
+      axisLabel: { color: '#ccc', fontFamily: 'Inter' }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { lineStyle: { color: '#444' } },
+      axisLabel: { color: '#ccc', fontFamily: 'Inter' },
+      splitLine: { lineStyle: { color: '#333' } }
+    },
+    series: [
+      {
+        name: 'Mês Atual',
+        type: 'bar',
+        barWidth: '40%',
+        itemStyle: { color: '#FFD700' },
+        emphasis: {
+          itemStyle: { color: '#FFE066' }
+        },
+        data: <?= json_encode(array_values($vendasAtual)) ?>
+      },
+      {
+        name: 'Mês Anterior',
+        type: 'bar',
+        barWidth: '40%',
+        itemStyle: { color: '#5DADE2' },
+        emphasis: {
+          itemStyle: { color: '#85C1E9' }
+        },
+        data: <?= json_encode(array_values($vendasAnterior)) ?>
+      }
+    ]
+  };
 
-        myChart.setOption(option);
-        window.addEventListener('resize', () => myChart.resize());
-    });
+  myChart.setOption(option);
+  window.addEventListener('resize', () => myChart.resize());
+});
 
     const userId = <?= $_SESSION["id"] ?? 'null' ?>;
     let swRegistration = null;

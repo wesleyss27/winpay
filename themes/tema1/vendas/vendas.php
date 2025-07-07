@@ -569,6 +569,63 @@ modern-info-alert {
   }
 }
 
+/* Estilo unificado para inputs, selects e filtros do formulário de busca avançada */
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form select {
+  background: #2a2a2a !important;
+  border: 2px solid #444 !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 45px !important;
+  box-sizing: border-box !important;
+  transition: all 0.3s ease !important;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form input[type="date"]:focus,
+form select:focus {
+  background: #333333 !important;
+  border-color: #FFDD00 !important;
+  box-shadow: 0 0 0 3px rgba(255, 221, 0, 0.2) !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+form select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FFDD00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 12px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 16px 12px !important;
+  padding-right: 40px !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+form select option {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+form h6 {
+  color: #FFDD00 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: 'Inter', sans-serif !important;
+  margin-bottom: 8px !important;
+}
+
+
 </style>
 <?= $v->end(); ?>
 
