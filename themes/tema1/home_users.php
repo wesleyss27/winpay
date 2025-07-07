@@ -213,7 +213,7 @@ if ($_SESSION["tipo"] == 6) {
               <!-- Área do gráfico -->
               <div class="chart-container">
                 <!-- <canvas id="areaChart"></canvas> -->
-                <div id="grafico-vendas" style="width: 100%; height: 100%;"></div>
+                <div id="grafico-vendas" style="width: 100%; height: 45vh;"></div>
               </div>
             </div>
 
