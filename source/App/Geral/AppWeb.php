@@ -169,7 +169,12 @@ class AppWeb
             $filtros        = "created_at BETWEEN '" . $start->format('Y-m-d H:i:s') . "' AND '" . $end->format('Y-m-d H:i:s') . "' AND ";
             $filtros_master = "created_at BETWEEN '" . $start->format('Y-m-d H:i:s') . "' AND '" . $end->format('Y-m-d H:i:s'). "'";
         }elseif(@$_GET['busca'] == 'personalizado') {
-            $filtros = "created_at BETWEEN '" . @$_GET['inicio'] . "' AND '" . @$_GET['fim'] . "' AND ";
+            $inicio = $_GET['inicio'] . ' 00:00:00';
+            $fim = $_GET['fim'] . ' 23:59:59';
+
+            $filtros = "created_at BETWEEN '{$inicio}' AND '{$fim}' AND ";
+            $filtros_master = "created_at BETWEEN '{$inicio}' AND '{$fim}'";
+
         }
 
         $filtro_produtor =  $usuario_tipo != 1 ? $filtros . "produtor = $usuario" :  $filtros_master;
