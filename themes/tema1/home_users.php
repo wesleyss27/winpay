@@ -93,6 +93,175 @@ if ($_SESSION["tipo"] == 6) {
         <?php endif ?>
 
         <small>*Dados referentes a sua comissão</small> -->
+        <style>
+          /* Filtros Ultra Modernos - Glassmorphism */
+          .btn-group {
+            display: flex !important;
+            gap: 6px !important;
+            align-items: center !important;
+          }
+
+          .btn-winpay {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            padding: 8px 16px !important;
+            border-radius: 20px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            backdrop-filter: blur(20px) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+            text-align: center !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+
+          .btn-winpay::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255, 221, 0, 0.2), transparent) !important;
+            transition: left 0.5s ease !important;
+          }
+
+          .btn-winpay:hover {
+            background: linear-gradient(145deg, rgba(255, 221, 0, 0.1), rgba(255, 221, 0, 0.05)) !important;
+            border-color: rgba(255, 221, 0, 0.3) !important;
+            color: #FFDD00 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 32px rgba(255, 221, 0, 0.2) !important;
+          }
+
+          .btn-winpay:hover::before {
+            left: 100% !important;
+          }
+
+          .btn-winpay:active {
+            transform: translateY(0) !important;
+            transition: transform 0.1s ease !important;
+          }
+
+          .dropdown-toggle::after {
+            content: '⌄' !important;
+            border: none !important;
+            margin-left: 6px !important;
+            font-size: 10px !important;
+            opacity: 0.6 !important;
+            transition: transform 0.3s ease, opacity 0.3s ease !important;
+          }
+
+          .dropdown-toggle:hover::after {
+            opacity: 1 !important;
+          }
+
+          .dropdown-toggle[aria-expanded="true"]::after {
+            transform: rotate(180deg) !important;
+          }
+
+          .dropdown-menu {
+            background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.95)) !important;
+            border: 1px solid rgba(255, 221, 0, 0.2) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05) inset !important;
+            padding: 20px !important;
+            margin-top: 8px !important;
+            min-width: 280px !important;
+            backdrop-filter: blur(40px) !important;
+          }
+
+          .dropdown-winpay .row {
+            display: flex !important;
+            gap: 12px !important;
+            margin-bottom: 16px !important;
+          }
+
+          .dropdown-winpay .col-6 {
+            flex: 1 !important;
+          }
+
+          .dropdown-winpay label {
+            color: rgba(255, 221, 0, 0.8) !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            margin-bottom: 6px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            font-family: 'Inter', sans-serif !important;
+          }
+
+          .winpay-input {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            padding: 10px 14px !important;
+            color: #ffffff !important;
+            font-size: 13px !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            backdrop-filter: blur(10px) !important;
+          }
+
+          .winpay-input:focus {
+            border-color: rgba(255, 221, 0, 0.5) !important;
+            box-shadow: 0 0 0 3px rgba(255, 221, 0, 0.1), 0 4px 20px rgba(255, 221, 0, 0.1) !important;
+            outline: none !important;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
+          }
+
+          .btn-winpay-sm {
+            background: linear-gradient(145deg, #FFDD00, #E6C700) !important;
+            border: none !important;
+            color: #000000 !important;
+            padding: 10px 20px !important;
+            border-radius: 12px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            position: relative !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 20px rgba(255, 221, 0, 0.3) !important;
+            text-align: center !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+
+          .btn-winpay-sm::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+            transition: left 0.4s ease !important;
+          }
+
+          .btn-winpay-sm:hover {
+            background: linear-gradient(145deg, #FFF200, #FFDD00) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 30px rgba(255, 221, 0, 0.4) !important;
+          }
+
+          .btn-winpay-sm:hover::before {
+            left: 100% !important;
+          }
+
+          .btn-winpay-sm:active {
+            transform: translateY(0) !important;
+          }
+        </style>
 
         <div class="row">
         <div id="notificacaoWrapper" style="display: none; padding: 10px; text-align: center;">
