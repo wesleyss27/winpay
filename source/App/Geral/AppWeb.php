@@ -361,61 +361,86 @@ class AppWeb
 
 
         ####
-        $dados["cartoes"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 1")->count();
+        $whereCartao = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 1"]);
+        $dados["cartoes"] = $vendas->find($whereCartao)->count();
+
         $valorCartao1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 1", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorCartao2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 1", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorCartao"] = @$valorCartao1->valor + @$valorCartao2->valor;
 
-        $dados["cartoesPagos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 1 AND (status_transacao = 4 OR status_transacao = 8)")->count();
+        $whereCartoesPagos = $this->montarWhere([
+            $filtros,
+            $dados_filtro_prod_afiliado,
+            "forma_pagamento = 1",
+            "(status_transacao = 4 OR status_transacao = 8)"
+        ]);
+        $dados["cartoesPagos"] = $vendas->find($whereCartoesPagos)->count();
+        
         $valorCartao1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 1 AND (status_transacao = 4 OR status_transacao = 8)", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorCartao2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 1 AND (status_transacao = 4 OR status_transacao = 8)", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorCartaoPago"] = @$valorCartao1->valor + @$valorCartao2->valor;
 
-        $dados["cartoesCancelados"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 1 AND (status_transacao = 5)")->count();
+        $whereCartoesCancelados = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 1", "status_transacao = 5"]);
+        $dados["cartoesCancelados"] = $vendas->find($whereCartoesCancelados)->count();
         $valorCartao1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 1 AND (status_transacao = 5)", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorCartao2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 1 AND (status_transacao = 5)", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorCartaoCancelado"] = @$valorCartao1->valor + @$valorCartao2->valor;
 
-        $dados["cartoesOutros"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 1 AND (status_transacao = 1 || status_transacao = 2 || status_transacao = 3 || status_transacao = 9)")->count();
-        $dados["cartoesReembolsos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 1 AND (status_transacao = 6 || status_transacao = 7)")->count();
+        $whereCartoesOutros = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 1", "(status_transacao = 1 OR status_transacao = 2 OR status_transacao = 3 OR status_transacao = 9)"]);
+        $dados["cartoesOutros"] = $vendas->find($whereCartoesOutros)->count();
+        $whereCartoesReembolsos = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 1", "(status_transacao = 6 OR status_transacao = 7)"]);
+        $dados["cartoesReembolsos"] = $vendas->find($whereCartoesReembolsos)->count();
 
         ####
-        $dados["boletos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 2")->count();
+        $whereBoletos = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 2"]);
+        $dados["boletos"] = $vendas->find($whereBoletos)->count();
+
         $valorCartao1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 2", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorCartao2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 2", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorBoleto"] = @$valorCartao1->valor + @$valorCartao2->valor;
 
-        $dados["boletosPagos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 2 AND (status_transacao = 4 OR status_transacao = 8)")->count();
+        $whereBoletosPagos = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 2", "(status_transacao = 4 OR status_transacao = 8)"]);
+        $dados["boletosPagos"] = $vendas->find($whereBoletosPagos)->count();
         $valorCartao1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 2 AND (status_transacao = 4 OR status_transacao = 8)", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorCartao2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 2 AND (status_transacao = 4 OR status_transacao = 8)", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorBoletoPago"] = @$valorCartao1->valor + @$valorCartao2->valor;
 
-        $dados["boletosCancelados"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 2 AND (status_transacao = 5)")->count();
+        $whereBoletosCancelados = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 2", "status_transacao = 5"]);
+        $dados["boletosCancelados"] = $vendas->find($whereBoletosCancelados)->count();
         $valorCartao1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 2 AND (status_transacao = 5)", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorCartao2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 2 AND (status_transacao = 5)", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorBoletoCancelado"] = @$valorCartao1->valor + @$valorCartao2->valor;
 
-        $dados["boletosOutros"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 2 AND (status_transacao = 1 || status_transacao = 2 || status_transacao = 3 || status_transacao = 9)")->count();
-        $dados["boletosReembolsos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 2 AND (status_transacao = 6 || status_transacao = 7)")->count();
+        $whereBoletosOutros = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 2", "(status_transacao = 1 OR status_transacao = 2 OR status_transacao = 3 OR status_transacao = 9)"]);
+        $dados["boletosOutros"] = $vendas->find($whereBoletosOutros)->count();
+
+        $whereBoletosReembolsos = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 2", "(status_transacao = 6 OR status_transacao = 7)"]);
+        $dados["boletosReembolsos"] = $vendas->find($whereBoletosReembolsos)->count();
 
         ####
-        $dados["pix"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 3")->count();
+        $wherePix = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 3"]);
+        $dados["pix"] = $vendas->find($wherePix)->count();
         $valorPix1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 3", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorPix2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 3", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorPix"] = @$valorPix1->valor + @$valorPix2->valor;
 
-        $dados["pixPagos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 3 AND (status_transacao = 4 OR status_transacao = 8)")->count();
+        $wherePixPagos = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 3", "(status_transacao = 4 OR status_transacao = 8)"]);
+        $dados["pixPagos"] = $vendas->find($wherePixPagos)->count();
         $valorPix1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 3 AND (status_transacao = 4 OR status_transacao = 8)", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorPix2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 3 AND (status_transacao = 4 OR status_transacao = 8)", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorPixPago"] = @$valorPix1->valor + @$valorPix2->valor;
 
-        $dados["pixCancelados"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 3 AND (status_transacao = 5)")->count();
+        $wherePixCancelados = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 3", "status_transacao = 5"]);
+        $dados["pixCancelados"] = $vendas->find($wherePixCancelados)->count();
         $valorPix1 = $vendas->find($filtros . $dados_filtro_prod . "forma_pagamento = 3 AND (status_transacao = 5)", null, "SUM(comissao_produtor) as valor")->fetch();
         $valorPix2 = $vendas->find($filtros . $dados_filtro_afiliado . "forma_pagamento = 3 AND (status_transacao = 5)", null, "SUM(comissao_afiliado) as valor")->fetch();
         $dados["valorPixCancelado"] = @$valorPix1->valor + @$valorPix2->valor;
 
-        $dados["pixOutros"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 3 AND (status_transacao = 1 || status_transacao = 2 || status_transacao = 3 || status_transacao = 9)")->count();
-        $dados["pixReembolsos"] = $vendas->find($filtros .  $dados_filtro_prod_afiliado . " AND forma_pagamento = 3 AND (status_transacao = 6 || status_transacao = 7)")->count();
+        $wherePixOutros = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 3", "(status_transacao = 1 OR status_transacao = 2 OR status_transacao = 3 OR status_transacao = 9)"]);
+        $dados["pixOutros"] = $vendas->find($wherePixOutros)->count();
+
+        $wherePixReembolsos = $this->montarWhere([$filtros, $dados_filtro_prod_afiliado, "forma_pagamento = 3", "(status_transacao = 6 OR status_transacao = 7)"]);
+        $dados["pixReembolsos"] = $vendas->find($wherePixReembolsos)->count();
 
 
         // *********************************
@@ -518,6 +543,20 @@ class AppWeb
             "saldoPagarme" => $saldoPagarme
         ]);
     }
+
+    private function montarWhere(array $condicoes = []): string
+    {
+        $filtrosLimpos = [];
+
+        foreach ($condicoes as $condicao) {
+            if (!empty(trim($condicao))) {
+                $filtrosLimpos[] = trim($condicao, " AND");
+            }
+        }
+
+        return implode(" AND ", $filtrosLimpos);
+    }
+
 
     public function linksUteis($data)
     {
