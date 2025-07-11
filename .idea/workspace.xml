@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f332d936-9de2-4c3a-8286-a27b8ab08d4d" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/club-main/composer.json" />
+      <option value="$PROJECT_DIR$/vapid-gen/composer.json" />
+    </option>
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/web-token/jwt-key-mgmt" />
+      <path value="$PROJECT_DIR$/vendor/web-token/jwt-signature-algorithm-ecdsa" />
+      <path value="$PROJECT_DIR$/vendor/web-token/jwt-core" />
+      <path value="$PROJECT_DIR$/vendor/web-token/jwt-util-ecc" />
+      <path value="$PROJECT_DIR$/vendor/web-token/jwt-signature" />
+      <path value="$PROJECT_DIR$/vendor/moip/moip-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/minishlink/web-push" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/vendor/sendgrid/sendgrid" />
+      <path value="$PROJECT_DIR$/vendor/spomky-labs/base64url" />
+      <path value="$PROJECT_DIR$/vendor/sendgrid/php-http-client" />
+      <path value="$PROJECT_DIR$/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/sodium_compat" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/aws/aws-crt-php" />
+      <path value="$PROJECT_DIR$/vendor/aws/aws-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/starkbank/ecdsa" />
+      <path value="$PROJECT_DIR$/vendor/pusher/pusher-php-server" />
+      <path value="$PROJECT_DIR$/vendor/league/plates" />
+      <path value="$PROJECT_DIR$/vendor/picqer/php-barcode-generator" />
+      <path value="$PROJECT_DIR$/vendor/coffeecode/datalayer" />
+      <path value="$PROJECT_DIR$/vendor/coffeecode/router" />
+      <path value="$PROJECT_DIR$/vendor/fgrosse/phpasn1" />
+      <path value="$PROJECT_DIR$/vendor/rmccue/requests" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/club-main/vendor/pusher/pusher-php-server" />
+      <path value="$PROJECT_DIR$/club-main/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/club-main/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/club-main/vendor/rmccue/requests" />
+      <path value="$PROJECT_DIR$/club-main/vendor/coffeecode/datalayer" />
+      <path value="$PROJECT_DIR$/club-main/vendor/phenx/php-svg-lib" />
+      <path value="$PROJECT_DIR$/club-main/vendor/coffeecode/router" />
+      <path value="$PROJECT_DIR$/club-main/vendor/phenx/php-font-lib" />
+      <path value="$PROJECT_DIR$/club-main/vendor/sabberworm/php-css-parser" />
+      <path value="$PROJECT_DIR$/club-main/vendor/sendgrid/sendgrid" />
+      <path value="$PROJECT_DIR$/club-main/vendor/sendgrid/php-http-client" />
+      <path value="$PROJECT_DIR$/club-main/vendor/starkbank/ecdsa" />
+      <path value="$PROJECT_DIR$/club-main/vendor/composer" />
+      <path value="$PROJECT_DIR$/club-main/vendor/moip/moip-sdk-php" />
+      <path value="$PROJECT_DIR$/club-main/vendor/dompdf/dompdf" />
+      <path value="$PROJECT_DIR$/club-main/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/club-main/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/club-main/vendor/league/plates" />
+      <path value="$PROJECT_DIR$/club-main/vendor/paragonie/sodium_compat" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/composer" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/web-token/jwt-key-mgmt" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/web-token/jwt-signature-algorithm-ecdsa" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/web-token/jwt-core" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/web-token/jwt-util-ecc" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/minishlink/web-push" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/web-token/jwt-signature" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/fgrosse/phpasn1" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/spomky-labs/base64url" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vapid-gen/vendor/guzzlehttp/promises" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="2zhXzv4OBgsDNpc83P3XRTJEIzS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.26927.60" />
+        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.26927.60" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f332d936-9de2-4c3a-8286-a27b8ab08d4d" name="Changes" comment="" />
+      <created>1752184545446</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1752184545446</updated>
+      <workItem from="1752184547218" duration="82000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -13,6 +13,7 @@ use Source\App\Asaas\AppAsaas;
 use Source\App\Checkout1\PagarMe;
 use Source\App\Sessao\AppSessao;
 use Source\Helpers\Paginador;
+use Source\App\Checkout1\WinPay;
 use Source\Models\CarrinhoAbandonado\CarrinhoAbandonado;
 use Source\Models\Produtos\Produto;
 use Source\Models\Usuarios\UsuarioPremium;
@@ -484,7 +485,8 @@ class AppWeb
         $asaasClientes = (new AppAsaas(null))->verificarCliente($_SESSION["id"]);
         $usuarioPagarme = (new Usuario)->findById($this->section->getId());
 
-        $saldoPagarme = (new PagarMe)->saldo($usuarioPagarme->pagarme_conta);
+        // $saldoPagarme = (new PagarMe)->saldo($usuarioPagarme->pagarme_conta);
+        $saldoPagarme = (new Winpay)->saldo($usuarioPagarme->pagarme_conta);
 
         foreach ($mes->data() as $mes) null;
         foreach ($pendente->data() as $pendente) null;

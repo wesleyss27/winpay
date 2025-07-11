@@ -8,6 +8,7 @@ session_start();
 
 use League\Plates\Engine;
 use Source\App\Checkout1\PagarMe;
+use Source\App\Checkout1\WinPay;
 use Source\Models\Comissao\Comissao;
 use Source\Models\Comissao\Banco;
 use Source\Models\Comissao\Saldo;
@@ -112,7 +113,8 @@ class AppComissao
 
         $primeiroSaque = (new Comissao())->find("usuario = $usuario AND tipo = 2")->count();
 
-        $saldoPagarme = (new PagarMe)->saldo($user->pagarme_conta);
+        //$saldoPagarme = (new PagarMe)->saldo($user->pagarme_conta);
+        $saldoPagarme = (new Winpay)->saldo($user->pagarme_conta);
 
         echo $this->view->render("comissao/comissao", [
             "title" => "Saldos e Extratos",
@@ -127,7 +129,7 @@ class AppComissao
             "pendente" => ! empty( $saldoPagarme->waiting_funds_amount  ) ? $saldoPagarme->waiting_funds_amount / 100 : 0,
             "antecipado" => @$antecipado,
             "comissao" => @$comissao,
-            "saldo" =>  ! empty( $saldoPagarme->available_amount ) ? $saldoPagarme->available_amount / 100 : 0, 
+            "saldo" =>  ! empty( $saldoPagarme->balance ) ? $saldoPagarme->balance / 100 : 0, 
             "usuario" => @$usuarioDados,
             "user" => @$user,
             "saqueMes" => @$saqueMes,
@@ -1762,7 +1764,9 @@ class AppComissao
         if ($banco->save()) {
             $data["nome"] = $data["titular"];
             $data["email"] = $_SESSION["email"];
-            $pagarMe = (new PagarMe)->criarRecebedor($data);
+            //$pagarMe = (new PagarMe)->criarRecebedor($data);
+            $data["id"] = $this->section->getId();
+            $pagarMe = (new WinPay)->criarWallet($data);
 
             $arquivo = fopen(DIRETORIO . "logs/dados-recebedor.txt", 'a+');
 

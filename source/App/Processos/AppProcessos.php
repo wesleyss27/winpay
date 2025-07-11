@@ -23,6 +23,7 @@ use Source\App\ChatGuru\AppChatGuru;
 use stdClass;
 use Source\Models\Leadlovers\Leadlovers;
 use Source\App\Checkout1\AppProcessos as CheckoutAppProcessos;
+use Source\App\Checkout1\WinPay;
 
 
 class AppProcessos
@@ -88,6 +89,16 @@ class AppProcessos
         $data["valor_produto"] = $venda->valor_produto;
         $emailProdutor = $this->disparoEmail($data);
         // echo $venda->dataProdutor()->key_google;
+
+        $data["comissao_produtor"] = $venda->comissao_produtor;
+        $data["comissao_afiliado"] = $venda->comissao_afiliado;
+        $data["afiliado"] = $venda->afiliado;
+        $data["comissao_coprodutores"] = $venda->comissao_coprodutores;
+        $winpayWallet = new WinPay();
+
+
+        $response = $winpayWallet->processarSplitParaWallet($data);
+
         $this->logs($data, "dados");
 
         if (@$venda->dataProdutor()->key_google) {
