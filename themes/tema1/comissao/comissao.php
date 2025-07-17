@@ -143,7 +143,7 @@ if ($_SESSION["tipo"] == 6) {
       <div class="card">
 
         <div class="card-header">
-          <?php if (isset($saldoPagarme) && $saldoPagarme->available_amount > 0) : ?>
+          <?php if (isset($saldoPagarme)) : ?>
             <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-pagarme">
               Solicitar saque
             </button> &nbsp;
