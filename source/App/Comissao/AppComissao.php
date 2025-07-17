@@ -156,8 +156,8 @@ class AppComissao
 
         $usuario = (new Usuario())->findById($this->section->getId());
 
-        $saldoPagarme = (new PagarMe)->saldo($usuario->pagarme_conta);
-        $available_amount = $saldoPagarme->available_amount - 367;
+        $saldoPagarme = (new Winpay)->saldo($usuario->pagarme_conta);
+        $available_amount = $saldoPagarme->balance - 367;
 
         if ( $withdraw_value > $available_amount ) {
             echo "É necessário informar um valor inferior a " . number_format(  sprintf("%.2f", $available_amount / 100), 2, ',', '.');
