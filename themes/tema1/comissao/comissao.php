@@ -358,7 +358,7 @@ if ($_SESSION["tipo"] == 6) {
                   <div class="row">
                     <div class="col-md-4">
                       <label>Seu saldo:</label>
-                      <input type="text" name="valor_total_saque" id='valor_total_saque' class="form-control input-lg" value="<?= @$saldoPagarme->available_amount ? "R$ " . number_format(@$saldoPagarme->available_amount / 100, 2, ",", ".") : "R$ 0,00"; ?>" disabled>
+                      <input type="text" name="valor_total_saque" id='valor_total_saque' class="form-control input-lg" value="<?= @$saldoPagarme->available_amount ? "R$ " . number_format($saldoPagarme->balance, 2, ',', '.') : "R$ 0,00"; ?>" disabled>
                       <span>sem taxa incluída<span>
                     </div>
 
