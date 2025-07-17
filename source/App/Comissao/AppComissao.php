@@ -129,7 +129,7 @@ class AppComissao
             "pendente" => ! empty( $saldoPagarme->waiting_funds_amount  ) ? $saldoPagarme->waiting_funds_amount / 100 : 0,
             "antecipado" => @$antecipado,
             "comissao" => @$comissao,
-            "saldo" =>  number_format($saldoPagarme->balance, 2, ',', '.') : 0, 
+            "saldo" =>  number_format($saldoPagarme->balance, 2, ',', '.'),
             "usuario" => @$usuarioDados,
             "user" => @$user,
             "saqueMes" => @$saqueMes,
