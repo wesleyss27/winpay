@@ -29,6 +29,7 @@ use Source\Helpers\Emails;
 use Source\App\Checkout1\Wirecard;
 use Source\App\Checkout1\PagarMe;
 use Source\App\Checkout1\MercadoPago;
+use Source\App\Checkout1\BsPay;
 use Source\App\Checkout1\Bradesco;
 use Source\App\Checkout1\Cielo;
 use Source\App\Checkout1\Sitef;
@@ -1637,8 +1638,8 @@ class AppCheckout
         // $transacao = $cobrancaAsaas->cobrancaPix($data);
 
         //$transacao = (new PagarMe)->compraPix($data);
-        $transacao = (new MercadoPago)->compraPix($data);
-
+        $transacao = (new BsPay)->compraPix($data);
+        error_log(json_encode($transacao, JSON_PRETTY_PRINT));
         //var_dump($transacao);
         //exit;
 
