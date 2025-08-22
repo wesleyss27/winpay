@@ -359,6 +359,102 @@ class AppWebHook
         }
     }
 
+    public function webhookBspay($data)
+    {
+        date_default_timezone_set("America/Recife");
+
+        header('Content-Type: application/json');
+        // Pega o RAW data da requisição
+        $json = file_get_contents('php://input');
+        // Converte os dados recebidos
+        $response = json_decode($json);
+
+        $status_transacao = array(
+            "PAID" => 4,
+            "PENDING" => 1,
+            "CANCELED" => 5,
+            "CANCELLED" => 5,
+            "REFUNDED" => 6,
+            "CHARGEBACK" => 7
+        );
+
+        if (isset($response->requestBody->transactionId)) {
+            $payID = $response->requestBody->transactionId;
+            $venda = (new Venda())->find("transacao = '$payID'")->fetch();
+
+            if ($venda) {
+                $status = $status_transacao[$response->requestBody->status] ?? null;
+
+                if ($status == 4) {
+                    $finalizada = date("Y-m-d H:i:s");
+                    $ultimo_evento = $finalizada;
+                } else {
+                    $finalizada = null;
+                    $ultimo_evento = date("Y-m-d H:i:s");
+                }
+
+                $venda->status_transacao = $status;
+                $venda->data_finalizada = $finalizada;
+                $venda->data_ultimo_evento = $ultimo_evento;
+
+                if ($venda->save()) {
+                    $msg = "Salvo";
+                } else {
+                    $msg = "{$venda->fail()->getMessage()}";
+                }
+
+                if (@$venda->endereco) {
+                    $dados["nome"] = $venda->dataEndereco()->nome;
+                    $dados["email"] = $venda->dataEndereco()->email;
+                    $dados["telefone"] = $venda->dataEndereco()->telefone;
+                } else {
+                    $dados["nome"] = $venda->dataComprador()->nome;
+                    $dados["email"] = $venda->dataComprador()->email;
+                    $dados["telefone"] = $venda->dataComprador()->telefone;
+                }
+
+                $dados["venda"] = $venda->id;
+                $dados["status_transacao"] = $status;
+                $dados["transacao"] = $payID;
+                $dados["produtor"] = $venda->produtor;
+
+                if (@$venda->afiliado)
+                    $dados["afiliado"] = $venda->afiliado;
+
+                $dados["valor_bruto"] = $venda->valor_bruto;
+                $dados["valor_produto"] = $venda->valor_produto;
+                $dados["valor_desconto"] = $venda->valor_desconto;
+
+                if (@$venda->plano) {
+                    $dados["nomekit"] = $venda->dataPlano()->nome;
+                    $dados["produto"] = $venda->dataPlano()->codigo;
+                    $dados["plano"] = @$venda->dataplano()->codigo;
+                } else {
+                    $dados["nomekit"] = $venda->dataProduto()->nome;
+                    $dados["produto"] = $venda->dataProduto()->nome;
+                }
+
+                (new AppProcessos())->processos($dados);
+
+                // Registro de log
+                $arquivo = fopen('webhook-bspay.txt', 'a+');
+                $texto = date("d/m/Y H:i:s") . "\n";
+                $texto .= json_encode($response, JSON_PRETTY_PRINT) . "\n";
+                fwrite($arquivo, $texto);
+                fclose($arquivo);
+
+                $bling = (new AppBling(null))->criarPedido(["venda" => $venda->id, "usuario" => $venda->produtor, "produto" => $venda->produto]);
+                $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
+
+                echo "Venda {$venda->id}, status atualizado para {$status}.<br>";
+            } else {
+                echo "Não tem venda para a transação {$payID}.<br>";
+            }
+        } else {
+            echo "Dados inválidos recebidos no webhook.<br>";
+        }
+    }
+
     public function webhookMercadoPago($data)
     {
         date_default_timezone_set("America/Recife");

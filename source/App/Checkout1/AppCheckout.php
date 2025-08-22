@@ -1639,19 +1639,21 @@ class AppCheckout
 
         //$transacao = (new PagarMe)->compraPix($data);
         $transacao = (new BsPay)->compraPix($data);
-        error_log(json_encode($transacao, JSON_PRETTY_PRINT));
+        error_log(json_encode($transacao));
         //var_dump($transacao);
         //exit;
 
         // $qrCode = $cobrancaAsaas->qrCodePix($transacao->id);
-        $dados["qr_code"] = @$transacao->point_of_interaction->transaction_data->qr_code;
+        $dados["qr_code"] = @$transacao->qrcode;
         //$dados["qr_code"] = @$transacao->charges[0]->last_transaction->qr_code;
         $dados["meio_pagamento"] = "PagarMe";
 
         $venda1 = @(new Venda())->findById(@$venda["venda"]);
         $venda1->qr_code = @$dados["qr_code"];
 
-        $venda1->transacao = @$transacao->id;
+        error_log(json_encode($venda1->data(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+        $venda1->transacao = @$transacao->transactionId;
         //$venda1->transacao = @$transacao->id;
 
         $venda1->status_transacao = 1;

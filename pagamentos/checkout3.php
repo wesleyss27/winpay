@@ -3021,7 +3021,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
                         var data = data(callback);
                         console.log('numero 1', data[1]);
-                        console.log('numero 0', data[0]);
+                        console.log('numero 0', data[0].qrcode);
                         if (data[1].msg == "Venda salva com sucesso" && data[1].status_transacao) {
                             $("#cpf").removeClass('input-error');
 
@@ -3036,7 +3036,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                             $('#qrcode').empty().qrcode({
                                 width: 220,
                                 height: 220,
-                                text: data[1].qr_code
+                                text: data[0].qrcode
                             });
 
                             // EXIBE O CÓDIGO PIX PARA COPIA E BOTÃO
