@@ -1942,58 +1942,52 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= url("pagamentos/js/qrcode.js?" . time()); ?>"></script>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="https://js.stripe.com/v3"></script>
     <script>
-        //////////// MERCADO PAGO /////////////////
+        /// ===== STRIPE TOKEN (substitui o createCardToken do MP) =====
+        const btnCartao = document.getElementById("btn-cartao");
 
-        // Criação do Token de cartão de crédito
-        //if ("<?= @$nome_adquirente; ?>" == "mercadopago") {
-        const btnMercadoPago = document.getElementById("btn-cartao");
+        btnCartao.addEventListener("click", gerarStripeToken);
 
-        btnMercadoPago.addEventListener("click", e => createCardToken(e));
-        // function cardToken(key) {
-        const createCardToken = async (event) => {
-            const key = "<?= @$nome_adquirente == "mercadopago" ? @$checkout->dataAdquirente()->chave : "" ?>";
-            const mp = new MercadoPago("APP_USR-e6d07407-d748-422f-84d2-d7ad202122cf");
+        async function gerarStripeToken(event) {
+        event.preventDefault();
 
-            const formElement = document.getElementById("form_cartao");
-            var documento = $("#cpf").val();
-            if (documento.length == 14) {
-                documento = "CNPJ";
-            } else {
-                documento = "CPF";
-            }
+        const stripe = Stripe("51L71ZDDz40aT01pjXhBYscU0bP3fe0raUAo2icNluCVAnWztMBLjtqe2rQvbvDIQK0mewU6vzSI5wFBdPA3SrJGk00GXNqjFz7"); // <-- sua chave pública
+        // Coleta dos campos já existentes no seu formulário
+        const numero = document.getElementById('numcart').value.replace(/\D/g, '');
+        const nome   = document.getElementById('titular').value;
+        const cvc    = document.getElementById('cvv').value;
+        const mes    = document.getElementById('mes-val').value;
+        const ano    = document.getElementById('ano-val').value;
 
-            try {
-                const tokenElement = document.getElementById('MPHiddenInputToken');
+        // Cria um token de cartão (tok_...) usando os campos atuais
+        const {token, error} = await stripe.createToken('card', {
+            number: numero,
+            exp_month: mes,
+            exp_year: ano,
+            cvc: cvc,
+            name: nome
+            // opcional: address_zip, address_city, etc.
+        });
 
-                // if (!tokenElement.value) {
-                event.preventDefault();
-
-                const token = await mp.createCardToken({
-                    cardNumber: document.getElementById('numcart').value.replace(/\D/g, ''),
-                    cardholderName: document.getElementById('titular').value,
-                    identificationType: documento,
-                    identificationNumber: document.getElementById('cpf').value,
-                    securityCode: document.getElementById('cvv').value,
-                    cardExpirationMonth: document.getElementById('mes-val').value,
-                    cardExpirationYear: document.getElementById('ano-val').value
-                });
-
-                tokenElement.value = token.id;
-                // console.log("TOKEN", token.id);
-                // tokenMP = $('#MPHiddenInputToken').val();
-
-                if (token.id) {
-                    dadosCartao();
-                } else {
-                    alert("Forma de pagamento indisponível no momento. Por favor, escolha outra forma de pagamento ou tente novamente mais tarde.");
-                    return;
-                }
-            } catch (e) {
-                console.error('error creating card token: ', e)
-            }
+        if (error) {
+            console.error('Stripe token error:', error);
+            alert(error.message || 'Não foi possível gerar o token do cartão.');
+            return;
         }
+
+        // Preenche o mesmo hidden que você já usa
+        const tokenElement = document.getElementById('MPHiddenInputToken');
+        tokenElement.value = token.id; // ex.: tok_1Px...
+
+        // Avança seu fluxo normal
+        if (token.id) {
+            dadosCartao(); // mesma função que você já chama
+        } else {
+            alert("Forma de pagamento indisponível no momento. Tente novamente.");
+        }
+        }
+
         //}
         /////////// FIM MERCADO PAGO /////////////
 

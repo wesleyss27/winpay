@@ -696,6 +696,7 @@ $router->post("/pagarme", "AppWebHook:postbackPagarMe", "webhook.pagarme");
 $router->post("/pagarmev5", "AppWebHook:webhookPagarMe", "webhook.pagarmev5");
 $router->post("/mercadopago", "AppWebHook:webhookMercadopago", "webhook.mercadoPago");
 $router->post("/bspay", "AppWebHook:webhookBspay", "webhook.bspay");
+$router->post("/stripe", "AppWebHook:webhookStripe", "webhook.stripe");
 $router->post("/pagseguro", "AppWebHook:webhookPagseguro", "webhook.pagseguro");
 
 

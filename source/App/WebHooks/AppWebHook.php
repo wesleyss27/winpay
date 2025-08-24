@@ -455,6 +455,171 @@ class AppWebHook
         }
     }
 
+    public function webhookStripe($data)
+    {
+        date_default_timezone_set("America/Recife");
+        header('Content-Type: application/json');
+
+        // 1) RAW body e decode (sem validação de assinatura)
+        $payload = @file_get_contents('php://input');
+        $event   = json_decode($payload);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !$event) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Payload inválido']);
+            return;
+        }
+
+        // 2) Extrai tipo e objeto principal
+        $type = $event->type ?? '';
+        $obj  = $event->data->object ?? null;
+
+        if (!$type || !$obj) {
+            http_response_code(200);
+            echo json_encode(['ignored' => true, 'reason' => 'evento sem type/obj']);
+            return;
+        }
+
+        // 3) Mapeia eventos Stripe -> status_transacao do seu sistema
+        //    1  Aguar. pagamento | 2 Em análise | 3 Pré Autorizada | 4 Finalizada
+        //    5 Cancelada         | 6 Devolvida  | 7 Chargeback     | 10 Antifraude
+        $status        = null;
+        $payID         = null; // usaremos para localizar a venda
+        $finalizada    = null;
+        $ultimo_evento = date("Y-m-d H:i:s");
+        $motivo        = null;
+
+        // Tente obter IDs úteis
+        $paymentIntentId = $obj->id ?? null; // para eventos de payment_intent.*
+        if (isset($obj->payment_intent)) {
+            $paymentIntentId = is_string($obj->payment_intent)
+                ? $obj->payment_intent
+                : ($obj->payment_intent->id ?? $paymentIntentId);
+        }
+        $chargeId = $obj->charges->data[0]->id ?? ($obj->charge ?? null); // para charge.*
+
+        switch ($type) {
+            case 'payment_intent.succeeded':
+                $status     = 4; // Finalizada
+                $payID      = $paymentIntentId;
+                $finalizada = $ultimo_evento;
+                break;
+
+            case 'payment_intent.payment_failed':
+                $status = 5; // Cancelada
+                $payID  = $paymentIntentId;
+                $motivo = $obj->last_payment_error->message ?? 'Pagamento falhou';
+                break;
+
+            case 'payment_intent.canceled':
+                $status = 5; // Cancelada
+                $payID  = $paymentIntentId;
+                $motivo = 'Payment Intent cancelado';
+                break;
+
+            case 'charge.refunded':
+                $status = 6; // Devolvida
+                $payID  = $chargeId;
+                break;
+
+            case 'charge.dispute.created':
+                $status = 7; // Chargeback (disputa aberta)
+                $payID  = $chargeId;
+                $motivo = 'Disputa (chargeback) criada';
+                break;
+
+            default:
+                // Não tratado; só confirma 200 para evitar retries
+                http_response_code(200);
+                echo json_encode(['ignored' => true, 'event' => $type]);
+                return;
+        }
+
+        // 4) Localiza a venda
+        //    Recomendação: salve SEMPRE payment_intent.id em venda->transacao ao criar o pagamento.
+        $venda = null;
+        if (!empty($paymentIntentId)) {
+            $venda = (new \Source\Models\Vendas\Venda())->find("transacao = '{$paymentIntentId}'")->fetch();
+        }
+        if (!$venda && !empty($chargeId)) {
+            $venda = (new \Source\Models\Vendas\Venda())->find("transacao = '{$chargeId}'")->fetch();
+        }
+
+        if ($venda) {
+            // 5) Atualiza venda
+            $venda->status_transacao  = $status;
+            $venda->data_finalizada   = $finalizada;
+            $venda->data_ultimo_evento = $ultimo_evento;
+            if (!empty($motivo)) {
+                $venda->motivo = $motivo;
+            }
+
+            if ($venda->save()) {
+                $msg = "Salvo";
+            } else {
+                $msg = "{$venda->fail()->getMessage()}";
+            }
+
+            // 6) Monta dados e dispara processos (segue seu padrão)
+            if (@$venda->endereco) {
+                $dados["nome"]     = $venda->dataEndereco()->nome;
+                $dados["email"]    = $venda->dataEndereco()->email;
+                $dados["telefone"] = $venda->dataEndereco()->telefone;
+            } else {
+                $dados["nome"]     = $venda->dataComprador()->nome;
+                $dados["email"]    = $venda->dataComprador()->email;
+                $dados["telefone"] = $venda->dataComprador()->telefone;
+            }
+
+            $dados["venda"]            = $venda->id;
+            $dados["status_transacao"] = $status;
+            $dados["transacao"]        = $payID ?? $paymentIntentId ?? $chargeId;
+            $dados["produtor"]         = $venda->produtor;
+
+            if (@$venda->afiliado) { $dados["afiliado"] = $venda->afiliado; }
+
+            $dados["valor_bruto"]    = $venda->valor_bruto;
+            $dados["valor_produto"]  = $venda->valor_produto;
+            $dados["valor_desconto"] = $venda->valor_desconto;
+
+            if (@$venda->plano) {
+                $dados["nomekit"] = $venda->dataPlano()->nome;
+                $dados["produto"] = $venda->dataPlano()->nome;
+            } else {
+                $dados["nomekit"] = $venda->dataProduto()->nome;
+                $dados["produto"] = $venda->dataProduto()->nome;
+            }
+
+            (new \Source\App\Processos\AppProcessos())->processos($dados);
+
+            // 7) Logs simples
+            $arq = fopen('webhook-stripe.txt', 'a+');
+            $txt  = date("d/m/Y H:i:s") . "\n";
+            $txt .= "event: {$type}\n";
+            $txt .= "status: {$status}\n";
+            $txt .= "venda: {$venda->id}\n";
+            $txt .= "payID: " . ($payID ?? '') . "\n";
+            $txt .= "msg: {$msg}\n";
+            $txt .= "-------------------------------------------\n";
+            fwrite($arq, $txt);
+            fclose($arq);
+
+            http_response_code(200);
+            echo json_encode(['ok' => true]);
+            return;
+        }
+
+        // 8) Não achou a venda
+        $arq = fopen('webhook-stripe-notfound.txt', 'a+');
+        $txt = date("d/m/Y H:i:s") . " - venda não encontrada. event={$type} payment_intent={$paymentIntentId} charge={$chargeId}\n";
+        fwrite($arq, $txt);
+        fclose($arq);
+
+        http_response_code(200);
+        echo json_encode(['ok' => true, 'info' => 'venda não encontrada']);
+    }
+
+
     public function webhookMercadoPago($data)
     {
         date_default_timezone_set("America/Recife");

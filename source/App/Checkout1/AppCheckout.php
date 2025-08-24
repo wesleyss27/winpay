@@ -873,7 +873,7 @@ class AppCheckout
 
         if ($data["forma_pagamento"] == 1) {
             //$pagarme = new PagarMe;
-            $pagarme = new MercadoPago;
+            $pagarme = new Stripe;
             $transacao = $pagarme->compraCartao($data);
             
             // $stripe = new Stripe;
