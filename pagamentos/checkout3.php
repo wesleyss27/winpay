@@ -1942,50 +1942,49 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= url("pagamentos/js/qrcode.js?" . time()); ?>"></script>
-    <script src="https://js.stripe.com/v3"></script>
+    <script src="https://js.stripe.com/v2"></script>
     <script>
         /// ===== STRIPE TOKEN (substitui o createCardToken do MP) =====
-        const btnCartao = document.getElementById("btn-cartao");
+        Stripe.setPublishableKey('pk_live_51L71ZDDz40aT01pjXhBYscU0bP3fe0raUAo2icNluCVAnWztMBLjtqe2rQvbvDIQK0mewU6vzSI5wFBdPA3SrJGk00GXNqjFz7');
 
-        btnCartao.addEventListener("click", gerarStripeToken);
+        const btn = document.getElementById('btn-cartao');
+        btn.addEventListener('click', gerarStripeTokenV2);
 
-        async function gerarStripeToken(event) {
-        event.preventDefault();
+        async function gerarStripeTokenV2(e){
+            e.preventDefault();
 
-        const stripe = Stripe("51L71ZDDz40aT01pjXhBYscU0bP3fe0raUAo2icNluCVAnWztMBLjtqe2rQvbvDIQK0mewU6vzSI5wFBdPA3SrJGk00GXNqjFz7"); // <-- sua chave pública
-        // Coleta dos campos já existentes no seu formulário
-        const numero = document.getElementById('numcart').value.replace(/\D/g, '');
-        const nome   = document.getElementById('titular').value;
-        const cvc    = document.getElementById('cvv').value;
-        const mes    = document.getElementById('mes-val').value;
-        const ano    = document.getElementById('ano-val').value;
+            const numero = document.getElementById('numcart').value.replace(/\D/g,'');
+            const nome   = document.getElementById('titular').value;
+            const cvc    = document.getElementById('cvv').value;
+            const mes    = document.getElementById('mes-val').value;        // "01".."12"
+            let   ano    = document.getElementById('ano-val').value;        // "24" ou "2024"
+            if (ano.length === 2) ano = '20' + ano;                          // normaliza para 4 dígitos
 
-        // Cria um token de cartão (tok_...) usando os campos atuais
-        const {token, error} = await stripe.createToken('card', {
+            const cardData = {
             number: numero,
+            cvc: cvc,
             exp_month: mes,
             exp_year: ano,
-            cvc: cvc,
             name: nome
-            // opcional: address_zip, address_city, etc.
-        });
+            // opcional: address_zip, address_line1, etc.
+            };
 
-        if (error) {
-            console.error('Stripe token error:', error);
-            alert(error.message || 'Não foi possível gerar o token do cartão.');
-            return;
-        }
+            Stripe.card.createToken(cardData, function(status, response){
+            if (response.error) {
+                console.error('Stripe v2 error:', response.error.message);
+                alert(response.error.message || 'Não foi possível gerar o token do cartão.');
+                return;
+            }
 
-        // Preenche o mesmo hidden que você já usa
-        const tokenElement = document.getElementById('MPHiddenInputToken');
-        tokenElement.value = token.id; // ex.: tok_1Px...
+            // OK: token gerado (ex.: "tok_1Px...")
+            const token = response.id;
+            document.getElementById('MPHiddenInputToken').value = token;
 
-        // Avança seu fluxo normal
-        if (token.id) {
-            dadosCartao(); // mesma função que você já chama
-        } else {
-            alert("Forma de pagamento indisponível no momento. Tente novamente.");
-        }
+            // segue seu fluxo existente
+            if (token) {
+                dadosCartao();
+            }
+            });
         }
 
         //}
