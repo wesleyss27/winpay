@@ -110,28 +110,29 @@ class Stripe
     public function compraCartao($data)
     {
         $url = $this->endpoint . "payment_intents";
-    
-        // normaliza valor
+
+        // --- normaliza valor (centavos)
         $valor = $data['preco'] ?? 0;
         if (!is_int($valor)) {
             $valor = str_replace(['.', ','], ['', '.'], (string)$valor);
             $valor = (int) round(((float)$valor) * 100);
         }
-    
-        $token = $data['MPHiddenInputToken'] 
-              ?? $data['stripe-token'] 
-              ?? $data['stripeToken'] 
-              ?? null;
-    
-            if (!$token) {
+
+        // --- token do cartão vindo do front (tok_...)
+        $token = $data['MPHiddenInputToken']
+            ?? $data['stripe-token']
+            ?? $data['stripeToken']
+            ?? null;
+
+        if (!$token) {
             return (object)[
                 'error' => (object)[
                     'message' => 'MPHiddenInputToken ausente'
                 ]
             ];
         }
-            
-    
+
+        // --- corpo do PaymentIntent
         $body = [
             'amount'                         => $valor,
             'currency'                       => 'brl',
@@ -142,25 +143,34 @@ class Stripe
             'payment_method_data[card][token]' => $token,
             // 'metadata[order_id]' => $data['order_id'] ?? '',
         ];
-    
-        // parcelas (se usar)
+
+        // --- parcelas (se usar)
         if (!empty($data['parcela']) && (int)$data['parcela'] > 1) {
             $qtd = (int)$data['parcela'];
-            $body['payment_method_options[card][installments][enabled]']     = 'true';
-            $body['payment_method_options[card][installments][plan][type]']  = 'fixed_count';
-            $body['payment_method_options[card][installments][plan][count]'] = (string)$qtd;
+
+            $body['payment_method_options[card][installments][enabled]']                 = 'true';
+            $body['payment_method_options[card][installments][plan][type]']              = 'fixed_count';
+            $body['payment_method_options[card][installments][plan][count]']             = (string)$qtd;
+            $body['payment_method_options[card][installments][plan][interval]']          = 'month'; // <-- obrigatório
+
+            // opcional: travar rede se necessário (ex.: 'mastercard' ou 'visa')
+            if (!empty($data['network'])) {
+                $body['payment_method_options[card][installments][network]']             = $data['network'];
+            }
         }
-    
-        // Connect (opcional)
+
+        // --- Stripe Connect (opcional)
         if (!empty($data['destination'])) {
             $body['transfer_data[destination]'] = $data['destination']; // acct_xxx
         }
         if (isset($data['application_fee_amount'])) {
             $body['application_fee_amount'] = (int)$data['application_fee_amount'];
         }
-    
-        return $this->executa($url, "POST", http_build_query($body));
-    }
+
+        // Envia como application/x-www-form-urlencoded
+    return $this->executa($url, "POST", http_build_query($body));
+}
+
     
 
     public function estornoCartao($data)
