@@ -172,7 +172,7 @@ class BsPay
         $cpf = $onlyDigits($data["cpf"] ?? "");
 
         // Webhook de notificação (pode sobrescrever via $data["postbackUrl"])
-        $postbackUrl = (string)($data["postbackUrl"] ?? "https://webhook.site/cf63ac07-d03b-4c6f-9937-762776906f43");
+        $postbackUrl = (string)($data["postbackUrl"] ?? "https://app.winpay.digital/webhook/bspay");
 
         // Monta payload conforme Cobrança PIX (QR Code)
         $payload = [

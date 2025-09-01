@@ -397,7 +397,10 @@ class AppWebHook
                 $venda->data_finalizada = $finalizada;
                 $venda->data_ultimo_evento = $ultimo_evento;
 
+                error_log("Chegou aqui");
+
                 if ($venda->save()) {
+                    error_log("Foi salvo");
                     $msg = "Salvo";
                 } else {
                     $msg = "{$venda->fail()->getMessage()}";
@@ -435,7 +438,7 @@ class AppWebHook
                 }
 
                 (new AppProcessos())->processos($dados);
-
+                error_log("Andou aqui");
                 // Registro de log
                 $arquivo = fopen('webhook-bspay.txt', 'a+');
                 $texto = date("d/m/Y H:i:s") . "\n";
