@@ -29,7 +29,7 @@ class BsPay
         if (@$adquirente) {
             $this->endpoint = "https://api.bspay.co/v2/pix/qrcode";
             $this->auth_url = "https://api.bspay.co/v2/oauth/token";
-            $this->client_id     = "z4igor_0289095619925806";
+            $this->client_id     = "z4igor_2142362738688273";
             $this->client_secret = $adquirente->token_producao;
             //$this->public_key = $adquirente->chave;
             $this->public_key = $adquirente->chave_producao;
