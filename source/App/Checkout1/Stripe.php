@@ -13,7 +13,7 @@ class Stripe
 
     public function __construct()
     {
-        $configuracaoCheckout = (new ConfiguracaoCheckout())->findById(8);
+        $configuracaoCheckout = (new ConfiguracaoCheckout())->findById(9);
         $configuracao = (new ConfiguracaoCheckout())->findById(1);
         if ($configuracao->sandbox == 1) {
             $this->endpoint = "https://api.stripe.com/v1/";
