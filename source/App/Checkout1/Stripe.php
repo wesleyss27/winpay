@@ -107,6 +107,49 @@ class Stripe
         }
     }
 
+    private function executaComHeaders($url, $metodo, $postFields = null, array $headers = [])
+{
+    $curl = curl_init();
+
+    $defaultHeaders = [
+        "Authorization: Bearer {$this->token}",
+        'Content-Type: application/x-www-form-urlencoded',
+    ];
+    $headers = array_values(array_unique(array_merge($defaultHeaders, $headers)));
+
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => $metodo,
+        CURLOPT_POSTFIELDS => $postFields,
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_TIMEOUT => 60,
+    ]);
+
+    $response = curl_exec($curl);
+    $http = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    $err  = curl_error($curl);
+    curl_close($curl);
+
+    // Log separado para Stripe
+    $logFile = DIRETORIO . "logs/stripe.txt";
+    if ($f = @fopen($logFile, 'a+')) {
+        fwrite($f, "=== " . date("d/m/Y H:i:s") . " ===\n");
+        fwrite($f, "URL: {$url}\nMETHOD: {$metodo}\nHTTP: {$http}\n");
+        if ($postFields) fwrite($f, "BODY: {$postFields}\n");
+        fwrite($f, "RESP: {$response}\n");
+        if ($err) fwrite($f, "CURL_ERR: {$err}\n");
+        fwrite($f, "-------------------------------\n");
+        fclose($f);
+    }
+
+    $obj = json_decode($response);
+    if (!is_object($obj)) $obj = (object)['raw' => $response];
+    $obj->_http = $http;
+    return $obj;
+}
+
+
     public function compraCartao($data)
     {
         $url = $this->endpoint . "payment_intents";
@@ -134,24 +177,22 @@ class Stripe
 
         // --- corpo do PaymentIntent
         $body = [
-            'amount'                         => $valor,
-            'currency'                       => 'brl',
-            'confirmation_method'            => 'automatic',
-            'confirm'                        => 'true',
-            // monta o payment_method a partir do token do cartão
-            'payment_method_data[type]'      => 'card',
+            'amount'                       => $valor,
+            'currency'                     => 'brl',
+            'confirmation_method'          => 'automatic',
+            'confirm'                      => 'true',
+            'payment_method_types[]'       => 'card',
+            'payment_method_data[type]'    => 'card',
             'payment_method_data[card][token]' => $token,
-            // 'metadata[order_id]' => $data['order_id'] ?? '',
         ];
 
         // --- parcelas (se usar)
         if (!empty($data['parcela']) && (int)$data['parcela'] > 1) {
             $qtd = (int)$data['parcela'];
-
-            $body['payment_method_options[card][installments][enabled]']                 = 'true';
-            $body['payment_method_options[card][installments][plan][type]']              = 'fixed_count';
-            $body['payment_method_options[card][installments][plan][count]']             = (string)$qtd;
-            $body['payment_method_options[card][installments][plan][interval]']          = 'month'; // <-- obrigatório
+            $body['payment_method_options[card][installments][enabled]'] = 'true';
+            $body['payment_method_options[card][installments][plan][type]'] = 'fixed_count';
+            $body['payment_method_options[card][installments][plan][count]'] = (string)$qtd;
+            $body['payment_method_options[card][installments][plan][interval]'] = 'month';
 
             // opcional: travar rede se necessário (ex.: 'mastercard' ou 'visa')
             if (!empty($data['network'])) {
@@ -167,8 +208,13 @@ class Stripe
             $body['application_fee_amount'] = (int)$data['application_fee_amount'];
         }
 
-        // Envia como application/x-www-form-urlencoded
-    return $this->executa($url, "POST", http_build_query($body));
+        $idempotencyKey = bin2hex(random_bytes(16));
+    return $this->executaComHeaders(
+        $url,
+        "POST",
+        http_build_query($body),
+        ["Idempotency-Key: {$idempotencyKey}"]
+    );
 }
 
     
