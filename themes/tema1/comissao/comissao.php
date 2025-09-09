@@ -339,7 +339,7 @@ if ($_SESSION["tipo"] == 6) {
                 <div class="card card-body" style="font-size: 13px">
 
                   <?php
-                    $avaliable_amount = sprintf( '%0.2f', @$saldoPagarme->balance / 100 );
+                    $avaliable_amount = $saldoPagarme->balance ? $saldoPagarme->balance / 100 : 0;
                     $withdraw_value =  $avaliable_amount > $taxas->taxa_saque_pagarme ? $avaliable_amount - $taxas->taxa_saque_pagarme : '0';
                   ?>
 
