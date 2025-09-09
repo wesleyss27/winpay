@@ -160,7 +160,7 @@ class AppComissao
         $available_amount = $saldoPagarme->balance - 367;
 
         if ( $withdraw_value > $available_amount ) {
-            echo "É necessário informar um valor inferior a " . number_format($withdraw_value, 2, ',', '.');
+            echo "É necessário informar um valor inferior a " . number_format($available_amount, 2, ',', '.');
             return;
         }
 
