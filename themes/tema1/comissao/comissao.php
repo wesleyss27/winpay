@@ -339,7 +339,7 @@ if ($_SESSION["tipo"] == 6) {
                 <div class="card card-body" style="font-size: 13px">
 
                   <?php
-                    $avaliable_amount = $saldoPagarme->balance ? $saldoPagarme->balance / 100 : 0;
+                    $avaliable_amount = $saldoPagarme->balance ? $saldoPagarme->balance : 0;
                     $withdraw_value =  $avaliable_amount > $taxas->taxa_saque_pagarme ? $avaliable_amount - $taxas->taxa_saque_pagarme : '0';
                   ?>
 
@@ -350,7 +350,7 @@ if ($_SESSION["tipo"] == 6) {
 
                   <p><b>Saque minimo:</b> <?php echo $taxas->vlr_min_saque ?></p>
                   <p><b>Taxa por saque:</b> <?php echo $taxas->taxa_saque_pagarme ?> a cada saque realizado.</p>
-                  <p><b>Saque máximo:</b> <?php echo  number_format(  $withdraw_value, 2, ",", ".") ?></p>
+                  <p><b>Saque máximo:</b> R$ <?= number_format($withdraw_value, 2, ',', '.') ?></p>
                 </div>
 
                 <div class="card card-body">
