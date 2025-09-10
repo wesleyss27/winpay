@@ -315,7 +315,7 @@ if ($_SESSION["tipo"] == 6) {
       <!-- end cadastrar -->
 
       <!-- pagarme -->
-      <div class="modal fade" id="modal-pagarme">
+      <div class="modal fade" id="modal-lg">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
 
