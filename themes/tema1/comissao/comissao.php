@@ -144,7 +144,7 @@ if ($_SESSION["tipo"] == 6) {
 
         <div class="card-header">
           <?php if (isset($saldoPagarme)) : ?>
-            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-pagarme">
+            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-lg">
               Solicitar saque
             </button> &nbsp;
           <?php endif ?>
@@ -315,7 +315,7 @@ if ($_SESSION["tipo"] == 6) {
       <!-- end cadastrar -->
 
       <!-- pagarme -->
-      <div class="modal fade" id="modal-lg">
+      <div class="modal fade" id="modal-pagarme">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
 
