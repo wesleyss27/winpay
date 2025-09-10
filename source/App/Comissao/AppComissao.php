@@ -919,25 +919,38 @@ class AppComissao
 
     public function verificarSaldo($data)
     {
-        $comissoes = (new Comissao())->find("tempo_saque <= '" . date("Y-m-d") . "' AND disponivel = 0")->fetch(true);
+        // Busca: se não houver registros, $comissoes vira []
+        $comissoes = (new Comissao())
+            ->find("tempo_saque <= :hoje AND disponivel = 0", "hoje=" . date("Y-m-d"))
+            ->fetch(true) ?? [];
+
+        if (empty($comissoes)) {
+            // opcional: alguma saída/log
+            // echo "Nenhuma comissão elegível.\n";
+            return;
+        }
 
         foreach ($comissoes as $comissao) {
-            $total = number_format($comissao->valor - $comissao->antecipado, 2, ".", "");
+            // Calcule em número (float), formate só na saída
+            $valor      = (float)$comissao->valor;
+            $antecipado = (float)$comissao->antecipado;
+            $total      = round($valor - $antecipado, 2);
 
             echo "***************************************************<br>";
             echo "USUÁRIO: " . $comissao->dataUsuario()->nome . " - " . $comissao->dataUsuario()->taxa_saque . "<br>";
-            echo "VALOR: " . $comissao->valor . "<br>";
-            echo "TOTAL: " . number_format($total, 2, ".", ",") . "<br><br>";
+            echo "VALOR: " . number_format($valor, 2, ",", ".") . "<br>";
+            echo "TOTAL: " . number_format($total, 2, ",", ".") . "<br><br>";
 
             $comm = (new Comissao())->findById($comissao->id);
             $comm->disponivel = 2;
             $comm->save();
 
             $dados["usuario"] = $comissao->usuario;
-            $dados["valor"] = $total;
+            $dados["valor"]   = $total; // mantenha numérico para gravar
             $this->cadastroSaldo($dados);
         }
     }
+
 
     public function cadastroSaldo($data)
     {
