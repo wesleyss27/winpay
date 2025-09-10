@@ -918,26 +918,54 @@ class AppComissao
     }
 
     public function verificarSaldo($data)
-    {
-        $comissoes = (new Comissao())->find("tempo_saque <= '" . date("Y-m-d") . "' AND disponivel = 0")->fetch(true);
+{
+    // Busca com filtro até amanhã (cobre o dia todo de hoje)
+    $q = (new Comissao())->find(
+        "tempo_saque < :amanha AND disponivel = :disp",
+        "amanha=" . date("Y-m-d", strtotime("+1 day")) . "&disp=0"
+    );
 
-        foreach ($comissoes as $comissao) {
-            $total = number_format($comissao->valor - $comissao->antecipado, 2, ".", "");
+    // Debug inicial
+    echo "<pre>";
+    echo "SQL gerado: " . $q->query() . "\n"; // se o seu ORM permitir
+    echo "COUNT: " . ($q->count() ?? 0) . "\n";
 
-            echo "***************************************************<br>";
-            echo "USUÁRIO: " . $comissao->dataUsuario()->nome . " - " . $comissao->dataUsuario()->taxa_saque . "<br>";
-            echo "VALOR: " . $comissao->valor . "<br>";
-            echo "TOTAL: " . number_format($total, 2, ".", ",") . "<br><br>";
-
-            $comm = (new Comissao())->findById($comissao->id);
-            $comm->disponivel = 2;
-            $comm->save();
-
-            $dados["usuario"] = $comissao->usuario;
-            $dados["valor"] = $total;
-            $this->cadastroSaldo($dados);
-        }
+    if ($q->fail()) {
+        echo "ERRO: ";
+        var_dump($q->fail());
     }
+
+    $comissoes = $q->fetch(true) ?? [];
+    echo "RESULTADO: ";
+    var_dump($comissoes);
+    echo "</pre>";
+
+    // Se não houver registros, encerra
+    if (empty($comissoes)) {
+        echo "Nenhuma comissão encontrada para liberar.\n";
+        return;
+    }
+
+    foreach ($comissoes as $comissao) {
+        $valor      = (float)$comissao->valor;
+        $antecipado = (float)$comissao->antecipado;
+        $total      = round($valor - $antecipado, 2);
+
+        echo "***************************************************<br>";
+        echo "USUÁRIO: " . $comissao->dataUsuario()->nome . " - " . $comissao->dataUsuario()->taxa_saque . "<br>";
+        echo "VALOR: " . number_format($valor, 2, ",", ".") . "<br>";
+        echo "TOTAL: " . number_format($total, 2, ",", ".") . "<br><br>";
+
+        $comm = (new Comissao())->findById($comissao->id);
+        $comm->disponivel = 2;
+        $comm->save();
+
+        $dados["usuario"] = $comissao->usuario;
+        $dados["valor"]   = $total;
+        $this->cadastroSaldo($dados);
+    }
+}
+
 
     public function cadastroSaldo($data)
     {
