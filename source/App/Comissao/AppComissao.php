@@ -918,79 +918,73 @@ class AppComissao
     }
 
     public function verificarSaldo($data)
-    {
-        // 1) Monta filtro principal: até amanhã (cobre o dia inteiro de hoje) e disponivel = 0
-        $terms  = "tempo_saque < :amanha AND disponivel = :disp";
-        $params = "amanha=" . date("Y-m-d", strtotime("+1 day")) . "&disp=0";
-    
-        $q = (new Comissao())->find($terms, $params);
-    
-        // DEBUG: mostra o que foi usado na busca e o resultado agregado
-        echo "<pre>";
-        echo "DEBUG -> TERMS: {$terms}\n";
-        echo "DEBUG -> PARAMS: {$params}\n";
-        echo "DEBUG -> COUNT: " . ($q->count() ?? 0) . "\n";
-        if ($q->fail()) {
-            echo "DEBUG -> FAIL:\n";
-            var_dump($q->fail());
-        }
-        echo "</pre>";
-    
-        // 2) Busca registros
-        $comissoes = $q->fetch(true) ?? [];
-    
-        // 3) Se não veio nada, rodamos checks auxiliares para entender o que está filtrando:
-        if (empty($comissoes)) {
-            echo "<pre>";
-            echo "DEBUG -> Nenhuma comissão no filtro principal.\n";
-    
-            // 3a) Verifica apenas disponivel = 0 (sem filtro de data)
-            $qDisp = (new Comissao())->find("disponivel = :disp", "disp=0");
-            echo "DEBUG -> Somente disponivel = 0 -> COUNT: " . ($qDisp->count() ?? 0) . "\n";
-    
-            // 3b) Se existir algo com disponivel=0, mostramos até 5 registros (id, tempo_saque) para inspeção
-            $sample = $qDisp->fetch(true) ?? [];
-            if (!empty($sample)) {
-                echo "DEBUG -> Amostra (até 5) com disponivel=0:\n";
-                $i = 0;
-                foreach ($sample as $c) {
-                    echo "  id={$c->id} | tempo_saque={$c->tempo_saque}\n";
-                    if (++$i >= 5) break;
-                }
-            }
-    
-            // 3c) Verifica somente a data (qualquer disponivel)
-            $qData = (new Comissao())->find("tempo_saque < :amanha", "amanha=" . date("Y-m-d", strtotime("+1 day")));
-            echo "DEBUG -> Apenas filtro de data (qualquer disponivel) -> COUNT: " . ($qData->count() ?? 0) . "\n";
-            echo "</pre>";
-    
-            // Se ainda vazio, encerra
-            return;
-        }
-    
-        // 4) Processa normalmente quando há comissoes
-        foreach ($comissoes as $comissao) {
-            // Calcule como número (float), formate só ao exibir
-            $valor      = (float)$comissao->valor;
-            $antecipado = (float)$comissao->antecipado;
-            $total      = round($valor - $antecipado, 2);
-    
-            echo "***************************************************<br>";
-            echo "USUÁRIO: " . $comissao->dataUsuario()->nome . " - " . $comissao->dataUsuario()->taxa_saque . "<br>";
-            echo "VALOR: " . number_format($valor, 2, ",", ".") . "<br>";
-            echo "TOTAL: " . number_format($total, 2, ",", ".") . "<br><br>";
-    
-            // Atualiza status
-            $comm = (new Comissao())->findById($comissao->id);
-            $comm->disponivel = 2;
-            $comm->save();
-    
-            // Registra no saldo
-            $dados["usuario"] = $comissao->usuario;
-            $dados["valor"]   = $total; // mantenha numérico
-            $this->cadastroSaldo($dados);
-        }
+{
+    $amanha = date("Y-m-d", strtotime("+1 day"));
+
+    // A) Seu filtro original (interseção)
+    $qElig = (new Comissao())->find("tempo_saque < :amanha AND disponivel = :disp", "amanha={$amanha}&disp=0");
+
+    // B) Só disponivel=0 (pendentes, qualquer data)
+    $qPend = (new Comissao())->find("disponivel = :disp", "disp=0");
+
+    // C) Só data (passados), qualquer disponivel
+    $qPass = (new Comissao())->find("tempo_saque < :amanha", "amanha={$amanha}");
+
+    // D) Pendurados no futuro: disponivel=0 E tempo_saque >= amanhã
+    $qFutu = (new Comissao())->find("tempo_saque >= :amanha AND disponivel = :disp", "amanha={$amanha}&disp=0");
+
+    // E) Já liberados/alterados: tempo_saque < amanhã E disponivel != 0
+    $qJaLib = (new Comissao())->find("tempo_saque < :amanha AND disponivel != :disp", "amanha={$amanha}&disp=0");
+
+    echo "<pre>";
+    echo "Elegíveis (disp=0 & data<amanha): " . ($qElig->count() ?? 0) . "\n";
+    echo "Pendentes (disp=0):              " . ($qPend->count() ?? 0) . "\n";
+    echo "Passados (data<amanha):           " . ($qPass->count() ?? 0) . "\n";
+    echo "Futuros pendentes (disp=0 & data>=amanha): " . ($qFutu->count() ?? 0) . "\n";
+    echo "Passados já tratados (data<amanha & disp!=0): " . ($qJaLib->count() ?? 0) . "\n";
+
+    // Amostras para entender:
+    $sampleFutu = $qFutu->fetch(true) ?? [];
+    if (!empty($sampleFutu)) {
+        echo "Amostra FUTUROS PENDENTES (até 5):\n";
+        $i=0; foreach ($sampleFutu as $c) { echo "  id={$c->id} | tempo_saque={$c->tempo_saque} | disp={$c->disponivel}\n"; if(++$i>=5) break; }
     }
+
+    $samplePass = $qPass->fetch(true) ?? [];
+    if (!empty($samplePass)) {
+        echo "Amostra PASSADOS (até 5):\n";
+        $i=0; foreach ($samplePass as $c) { echo "  id={$c->id} | tempo_saque={$c->tempo_saque} | disp={$c->disponivel}\n"; if(++$i>=5) break; }
+    }
+    echo "</pre>";
+
+    // Se não há elegíveis, encerra (evita warning no foreach)
+    $comissoes = $qElig->fetch(true) ?? [];
+    if (empty($comissoes)) {
+        echo "Nenhuma comissão elegível hoje.\n";
+        return;
+    }
+
+    // --- processamento normal abaixo ---
+    foreach ($comissoes as $comissao) {
+        $valor      = (float)$comissao->valor;
+        $antecipado = (float)$comissao->antecipado;
+        $total      = round($valor - $antecipado, 2);
+
+        echo "***************************************************<br>";
+        echo "USUÁRIO: " . $comissao->dataUsuario()->nome . " - " . $comissao->dataUsuario()->taxa_saque . "<br>";
+        echo "VALOR: " . number_format($valor, 2, ",", ".") . "<br>";
+        echo "TOTAL: " . number_format($total, 2, ",", ".") . "<br><br>";
+
+        $comm = (new Comissao())->findById($comissao->id);
+        $comm->disponivel = 2;
+        $comm->save();
+
+        $dados["usuario"] = $comissao->usuario;
+        $dados["valor"]   = $total;
+        $this->cadastroSaldo($dados);
+    }
+}
+
     
 
 
