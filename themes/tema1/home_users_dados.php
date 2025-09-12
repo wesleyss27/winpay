@@ -45,7 +45,7 @@
       </div>
       <h5 class="mb-1">Disponível para saque</h5>
       <h3 id="disponivelValue" class="hidden-value">
-        R$ <?= number_format($saldoPagarme->balance, 2, ',', '.') ?>
+        R$ <?= number_format($saldo->valor, 2, ',', '.') ?>
       </h3>
       <small class="d-block">Valor disponível para saque</small>
     </div>
