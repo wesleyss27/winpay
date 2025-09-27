@@ -75,6 +75,20 @@ if ($checkout->vencimento_boletos)
     $data_vencimento = date("Y-m-d", strtotime("+$checkout->vencimento_boletos days"));
 // FIM DEFINIÇÃO DE VARIÁVEIS
 
+// Marca from_whatsapp via servidor (vale para este request também)
+if (empty($_COOKIE['from_whatsapp'])) {
+    $ref = $_SERVER['HTTP_REFERER'] ?? '';
+    $ua  = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    if (preg_match('/whatsapp|wa\.me/i', $ref.' '.$ua)) {
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        // HttpOnly = false pois você já seta via JS também; SameSite=Lax ok pra checkout
+        setcookie('from_whatsapp', '1', time() + 60*60*24*30, '/', '', $secure, false);
+        $_COOKIE['from_whatsapp'] = '1';
+    }
+}
+$fromWA = !empty($_COOKIE['from_whatsapp']);
+
+
 // COOKIES BANCO DE DADOS
 if (@$cookies) {
 
@@ -199,6 +213,20 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <link rel="stylesheet" href="<?= url("pagamentos/css/style.css?" . time()); ?>">
     <link rel="stylesheet" href="<?= url("themes/tema1/plugins/fontawesome-free/css/all.min.css") ?>">
 
+    <script>
+        (function () {
+        try {
+            var hit = /whatsapp|wa\.me/i.test((document.referrer||"") + " " + (navigator.userAgent||""));
+            if (hit) {
+            var isHttps = location.protocol === 'https:';
+            document.cookie = "from_whatsapp=1; Max-Age=2592000; Path=/; SameSite=Lax" + (isHttps?"; Secure":"");
+            }
+        } catch(e) {}
+        })();
+    </script>
+
+
+
     <?php if (@$sandbox == 0) : ?>
         <!-- ANALYTICS REDROCKET -->
         <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -303,6 +331,10 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
         $pixels = explode(",", $checkout->dataPixelFacebook()->id_pixel);
         $valor = @$checkout->dataPixelFacebook()->valor ? $checkout->dataPixelFacebook()->valor : $venda->valor_liquido;
+        echo "
+        <!-- PIXEL FACEBOOK CHECKOUT -->
+        <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&fbq_event=InitiateCheckout") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+        ";
 
         foreach ($pixels as $pixel2) :
             // echo "$forma_pagamento " . $checkout->dataPixelFacebook()->boleto;
@@ -317,10 +349,14 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
 
+                if (strpos($_SERVER['HTTP_COOKIE'] ?? '', 'from_whatsapp=1') !== false) {
+                    $dados['custom_data']['channel'] = 'whatsapp'; // opcional
+                    $dados['from_whatsapp'] = 1; // para seus logs internos
+                }
                 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&fbq_event=InitiateCheckout") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&fbq_event=InitiateCheckout$wa") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
                 ";
 
                 $fb = (new AppFacebook())->pixel($dados);

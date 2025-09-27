@@ -25,6 +25,8 @@ $pixel = explode(",", @$arr["id_pixel"]);
 $analytics = explode(",", @$arr["analytics"]);
 $forma_pagamento = $venda->forma_pagamento;
 $up = @$upsell ? true : false;
+$waCookie = (strpos($_SERVER['HTTP_COOKIE'] ?? '', 'from_whatsapp=1') !== false);
+$waQS = $waCookie ? '&wa=1' : '';
 
 if (@$cookies) {
     // var_dump($cookies);
@@ -86,8 +88,28 @@ $taxa_adq = array();
 
 
 $v->start("facebook");
-?>
 
+?>
+<script>
+(function () {
+  try {
+    var isHttps = location.protocol === 'https:';
+    var hit = /whatsapp|wa\.me/i.test((document.referrer||"") + " " + (navigator.userAgent||""));
+    if (hit) {
+      document.cookie = "from_whatsapp=1; Max-Age=2592000; Path=/; SameSite=Lax" + (isHttps?"; Secure":"");
+    }
+    // Fallback: se já houver o cookie, acrescenta wa=1 nos iframes renderizados pelo PHP
+    var hasWA = document.cookie.indexOf("from_whatsapp=1") !== -1;
+    if (hasWA) {
+      document.querySelectorAll('iframe[src*="pagamentos/pixel-"]').forEach(function(el){
+        if (el.src.indexOf('wa=1') === -1) {
+          el.src += (el.src.indexOf('?')>-1 ? '&' : '?') + 'wa=1';
+        }
+      });
+    }
+  } catch(e) {}
+})();
+</script>
 
 <!-- < ?php -->
 <!-- // TAXAS CASO TRANSAÇÕES SEJAM FEITAS POR OUTRAS ADQUIRENTES (MP, PAGARME, PAGSEGURO, PAGSEGURO ETC..) -->
@@ -288,7 +310,8 @@ if (@$facebook) {
 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel&valor=$valor&fbq_event=Purchase") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel&valor=$valor&fbq_event=Purchase") . "$waQS'
+          frameborder='0' height='0' width='0' style='top:-20px; position:absolute'></iframe>
                 ";
 
                 $fb = (new AppFacebook())->pixel($dados);
@@ -299,7 +322,8 @@ if (@$facebook) {
             else :
                 echo "
                     <!-- PIXEL FACEBOOK CAMPANHA -->
-                    <iframe src='" . url("pagamentos/pixel-purchase.php?pixel=$pixel&valor=$valor") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel-purchase.php?pixel=$pixel&valor=$valor") . "$waQS'
+          frameborder='0' height='0' width='0' style='top:-20px; position:absolute'></iframe>
                 ";
             endif;
         endif;
@@ -331,7 +355,8 @@ if (@$facebook) {
 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&valor=$valor&fbq_event=Purchase") . "$waQS'
+          frameborder='0' height='0' width='0' style='top:-20px; position:absolute'></iframe>
                 ";
 
                 $fb = (new AppFacebook())->pixel($dados);
@@ -343,7 +368,8 @@ if (@$facebook) {
             }else {
                 echo "
                     <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-purchase.php?pixel=$pixel2&valor=$valor") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel-purchase.php?pixel=$pixel2&valor=$valor") . "$waQS'
+          frameborder='0' height='0' width='0' style='top:-20px; position:absolute'></iframe>
                 ";
             }
         }
