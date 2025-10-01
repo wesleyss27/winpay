@@ -15,6 +15,166 @@ if ($_SESSION["tipo"] == 6) {
 }
 ?>
 
+<style>
+/* ===== Tema dark WinPay só para #modal-lg e #modal-pagarme (CSS puro, sem nesting) ===== */
+
+/* Dialog + animação */
+#modal-lg .modal-dialog,
+#modal-pagarme .modal-dialog{
+  width:100% !important;
+  max-width:900px !important;
+  margin:20px !important;
+  animation: slideUp .3s ease-out !important;
+}
+
+/* Content + bordas/shine */
+#modal-lg .modal-content,
+#modal-pagarme .modal-content{
+  background: linear-gradient(145deg,#1a1a1a,#111111) !important;
+  border:1px solid rgba(255,221,0,.3) !important;
+  border-radius:20px !important;
+  box-shadow:
+    0 25px 50px rgba(0,0,0,.9),
+    0 0 0 1px rgba(255,221,0,.1),
+    inset 0 1px 0 rgba(255,255,255,.1) !important;
+  overflow:hidden !important;
+  position:relative !important;
+}
+#modal-lg .modal-content::before,
+#modal-pagarme .modal-content::before{
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,#FFDD00,transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Header (serve para .card-header e .modal-header dentro dos modais) */
+#modal-lg .card-header, #modal-lg .modal-header,
+#modal-pagarme .card-header, #modal-pagarme .modal-header{
+  background: linear-gradient(135deg,#2a2a2a,#1a1a1a) !important;
+  padding:24px 32px !important;
+  border-bottom:1px solid rgba(255,221,0,.2) !important;
+  display:flex; align-items:center; gap:10px;
+}
+#modal-lg .card-header h3, #modal-lg .modal-header h3,
+#modal-lg .card-header h4, #modal-lg .modal-header h4,
+#modal-pagarme .card-header h3, #modal-pagarme .modal-header h3,
+#modal-pagarme .card-header h4, #modal-pagarme .modal-header h4{
+  color:#FFDD00 !important; font-size:20px !important; font-weight:600 !important; margin:0 !important;
+  font-family:'Inter','Montserrat',sans-serif !important;
+}
+#modal-lg .card-header .close, #modal-lg .modal-header .close,
+#modal-pagarme .card-header .close, #modal-pagarme .modal-header .close{
+  background:none !important; border:none !important; color:#FFDD00 !important; font-size:24px !important;
+  cursor:pointer !important; margin-left:auto; width:36px !important; height:36px !important;
+  display:flex !important; align-items:center !important; justify-content:center !important; border-radius:50% !important;
+  transition:all .3s ease !important;
+}
+#modal-lg .card-header .close:hover, #modal-lg .modal-header .close:hover,
+#modal-pagarme .card-header .close:hover, #modal-pagarme .modal-header .close:hover{
+  background:rgba(255,221,0,.1) !important; transform:scale(1.1);
+}
+
+/* Body (vence o inline antigo) */
+#modal-lg .modal-body,
+#modal-pagarme .modal-body{
+  background:#111111 !important; color:#f1f1f1 !important;
+  padding:32px !important; max-height:70vh !important; overflow-y:auto !important;
+  font-family:'Inter','Montserrat',sans-serif;
+}
+#modal-lg .modal-body::-webkit-scrollbar,
+#modal-pagarme .modal-body::-webkit-scrollbar{ width:8px; }
+#modal-lg .modal-body::-webkit-scrollbar-track,
+#modal-pagarme .modal-body::-webkit-scrollbar-track{ background:#1a1a1a; border-radius:4px; }
+#modal-lg .modal-body::-webkit-scrollbar-thumb,
+#modal-pagarme .modal-body::-webkit-scrollbar-thumb{ background:linear-gradient(135deg,#FFDD00,#D4B800); border-radius:4px; }
+#modal-lg .modal-body::-webkit-scrollbar-thumb:hover,
+#modal-pagarme .modal-body::-webkit-scrollbar-thumb:hover{ background:linear-gradient(135deg,#FFE83D,#FFDD00); }
+
+/* Footer */
+#modal-lg .modal-footer,
+#modal-pagarme .modal-footer{
+  background:linear-gradient(135deg,#2a2a2a,#1a1a1a) !important;
+  padding:20px 32px !important; border-top:1px solid rgba(255,221,0,.2) !important;
+  display:flex !important; justify-content:space-between !important; gap:12px !important;
+}
+
+/* Cards internos */
+#modal-lg .card.card-body,
+#modal-pagarme .card.card-body{
+  background:linear-gradient(145deg,#2a2a2a,#1a1a1a) !important; color:#f1f1f1 !important;
+  border:1px solid rgba(255,221,0,.1) !important; border-radius:15px !important;
+  padding:24px !important; margin-bottom:20px !important;
+  box-shadow:0 8px 32px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.05) !important;
+  position:relative !important; overflow:hidden !important;
+}
+#modal-lg .card.card-body::before,
+#modal-pagarme .card.card-body::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,221,0,.3),transparent);
+}
+#modal-lg .titulo, #modal-pagarme .titulo{
+  color:#FFDD00 !important; font-size:18px !important; font-weight:600 !important; margin-bottom:20px !important;
+  border-bottom:2px solid rgba(255,221,0,.2) !important; padding-bottom:8px !important;
+}
+#modal-lg .row.borda1, #modal-pagarme .row.borda1{
+  padding:12px 0 !important; border-bottom:1px solid rgba(255,221,0,.1) !important; transition:background .3s ease !important;
+}
+#modal-lg .row.borda1:hover, #modal-pagarme .row.borda1:hover{
+  background:rgba(255,221,0,.05) !important; border-radius:8px !important; margin:0 -12px !important; padding:12px !important;
+}
+#modal-lg .row.borda1:last-child, #modal-pagarme .row.borda1:last-child{ border-bottom:none !important; }
+
+/* Tabelas (se usar dentro do modal) */
+#modal-lg table, #modal-pagarme table{
+  width:100%; border-collapse:separate; border-spacing:0; background:#1a1a1a; color:#f1f1f1;
+  border:1px solid rgba(255,221,0,.1); border-radius:10px; overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+#modal-lg thead, #modal-pagarme thead{ background:linear-gradient(135deg,#2a2a2a,#1a1a1a); }
+#modal-lg thead th, #modal-pagarme thead th{
+  padding:14px 16px; text-align:left; color:#FFDD00; font-weight:600; border-bottom:1px solid rgba(255,221,0,.1); font-size:14px;
+}
+#modal-lg tbody td, #modal-pagarme tbody td{
+  padding:12px 16px; border-bottom:1px solid rgba(255,221,0,.05); font-size:13px;
+}
+#modal-lg tbody tr:hover, #modal-pagarme tbody tr:hover{ background:rgba(255,221,0,.05); }
+
+/* Responsivo */
+@media (max-width:768px){
+  #modal-lg .modal-dialog, #modal-pagarme .modal-dialog{
+    margin:10px !important; max-width:calc(100vw - 20px) !important;
+  }
+  #modal-lg .modal-body, #modal-pagarme .modal-body{
+    padding:20px !important; max-height:60vh !important;
+  }
+  #modal-lg .card-header, #modal-lg .modal-header,
+  #modal-lg .modal-footer,
+  #modal-pagarme .card-header, #modal-pagarme .modal-header,
+  #modal-pagarme .modal-footer{
+    padding:16px 20px !important;
+  }
+}
+
+/* animações */
+@keyframes slideUp{ from{opacity:0; transform:translateY(30px) scale(.95);} to{opacity:1; transform:translateY(0) scale(1);} }
+@keyframes shimmer{ 0%{transform:translateX(-100%);} 100%{transform:translateX(100%);} }
+/* Centralização robusta para #modal-lg e #modal-pagarme */
+#modal-lg .modal-dialog,
+#modal-pagarme .modal-dialog{
+  margin: 0 auto !important;            /* centraliza na horizontal */
+  min-height: calc(100vh - 1rem) !important;
+  display: flex !important;              /* ativa alinhamento vertical */
+  align-items: center !important;        /* centraliza na vertical */
+}
+
+#modal-lg .modal-content,
+#modal-pagarme .modal-content{
+  width: 100%;
+}
+
+</style>
+
 <div class="content-wrapper">
   <br />
 
