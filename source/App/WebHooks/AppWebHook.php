@@ -383,7 +383,15 @@ class AppWebHook
             $venda = (new Venda())->find("transacao = '$payID'")->fetch();
 
             if ($venda) {
+                $status_atual = (int)$venda->status_transacao;
+
                 $status = $status_transacao[$response->requestBody->status] ?? null;
+
+                if ($status === $status_atual) {
+                    error_log("Bspay duplicado ignorado: venda {$venda->id}, status={$status}");
+                    echo "Evento duplicado (status igual).<br>";
+                    return;
+                }
 
                 if ($status == 4) {
                     $finalizada = date("Y-m-d H:i:s");
