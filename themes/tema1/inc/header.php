@@ -33,6 +33,7 @@
 
   <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/geral.css?" . time()) ?>">
   <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/cores.css?" . time()) ?>">
+  <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/modal-global.css?" . time()) ?>">
   <?= $v->section("links") ?>
 
   <?php if (AMBIENTE == "produção") : ?>
