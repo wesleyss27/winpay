@@ -50,6 +50,171 @@ if ($_SESSION["tipo"] == 6) {
     </div><!-- /.container-fluid -->
   </section>
 
+  <style>
+    /* Modernização local - mantém a paleta WinPay (amarelo #FFDD00) */
+    :root {
+      --winpay-primary: #FFDD00;
+      --winpay-primary-700: #D4B800;
+      --winpay-bg-elevated: #0b0b0b;
+      --winpay-bg-surface: #101010;
+      --winpay-border: rgba(255, 255, 255, 0.08);
+      --winpay-text: #f2f2f2;
+      --winpay-text-dim: #bdbdbd;
+      --winpay-focus: rgba(255, 221, 0, 0.35);
+      --winpay-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    /* Breadcrumb (existente) deixa mais elegante sem mudar markup */
+    .breadcrumb {
+      background: transparent;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cards */
+    .card {
+      background: linear-gradient(135deg, var(--winpay-bg-surface) 0%, #060606 100%);
+      border: 1px solid var(--winpay-border);
+      border-radius: 14px;
+      box-shadow: var(--winpay-shadow);
+      overflow: hidden;
+    }
+    .card > .card-body { padding: 18px; }
+
+    /* Inputs */
+    .form-control {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--winpay-text);
+      border-radius: 10px;
+      height: 43px;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .form-control::placeholder { color: #8c8c8c; }
+    .form-control:focus {
+      background: #141414;
+      color: #fff;
+      border-color: rgba(255, 221, 0, 0.45);
+      box-shadow: 0 0 0 3px var(--winpay-focus);
+    }
+
+    label { color: var(--winpay-text); font-weight: 500; }
+    small { color: var(--winpay-text-dim); }
+
+    /* Callouts */
+    .callout.callout-primary {
+      background: linear-gradient(145deg, rgba(255, 221, 0, 0.08), rgba(255, 221, 0, 0.02));
+      border-left: 4px solid var(--winpay-primary);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 221, 0, 0.2);
+      color: var(--winpay-text);
+    }
+
+    /* Botões */
+    .btn.btn-primary {
+      background: linear-gradient(135deg, var(--winpay-primary) 0%, #ffe866 100%);
+      color: #1a1a1a;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-weight: 600;
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn.btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(255, 221, 0, 0.25);
+      filter: brightness(1.02);
+    }
+    .btn.btn-outline-primary {
+      border: 1px solid var(--winpay-primary);
+      color: var(--winpay-primary);
+      border-radius: 10px;
+      background: transparent;
+    }
+    .btn.btn-outline-primary:hover {
+      background: rgba(255, 221, 0, 0.1);
+      color: var(--winpay-primary);
+      box-shadow: 0 6px 18px rgba(255,221,0,0.18);
+    }
+
+    /* Progressbar existente (#progressbar) */
+    #progressbar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      counter-reset: step;
+      padding: 0;
+      margin: 10px 0 0;
+      list-style: none;
+    }
+    #progressbar li {
+      position: relative;
+      text-align: center;
+      color: var(--winpay-text-dim);
+      font-weight: 600;
+      background: linear-gradient(145deg, #0f0f0f, #0a0a0a);
+      border: 1px solid var(--winpay-border);
+      padding: 12px 8px;
+      border-radius: 12px;
+      transition: all .25s ease;
+    }
+    #progressbar li::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: rgba(255, 221, 0, 0.15);
+      color: var(--winpay-primary-700);
+      border: 1px solid rgba(255,221,0,0.25);
+      box-shadow: inset 0 0 10px rgba(255,221,0,0.08);
+    }
+    #progressbar li.active {
+      color: var(--winpay-primary);
+      border-color: rgba(255,221,0,0.35);
+      box-shadow: 0 8px 26px rgba(255,221,0,0.12);
+    }
+    #progressbar li.active::before {
+      background: var(--winpay-primary);
+      color: #1a1a1a;
+      border-color: var(--winpay-primary);
+    }
+
+    /* Checkbox rascunho */
+    .rascunho.alert {
+      background: linear-gradient(145deg, rgba(255, 193, 7, 0.15), rgba(255, 193, 7, 0.05));
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 12px;
+      color: var(--winpay-text);
+    }
+
+    /* Seções de upload */
+    input[type="file"].form-control { background: #111; }
+
+    /* Ajuda (botão flutuante) */
+    .btn-ajuda {
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--winpay-primary) 0%, #ffe866 100%);
+      color: #151515;
+      border: none;
+      box-shadow: 0 10px 24px rgba(255,221,0,0.28);
+      font-weight: 700;
+    }
+    .ajuda {
+      background: linear-gradient(135deg, #0f0f0f, #0a0a0a);
+      border: 1px solid var(--winpay-border);
+      border-radius: 14px;
+      color: var(--winpay-text);
+      box-shadow: var(--winpay-shadow);
+    }
+    .ajuda-titulo { color: var(--winpay-primary); }
+    .mensagens a { color: var(--winpay-primary); }
+  </style>
+
   <!-- Main content -->
   <section class="content">
     <?= $v->insert("fragmentos/msg-cadastrar-editar", []); ?>
