@@ -8,624 +8,466 @@ use Source\Models\Afiliados\Afiliacao;
 <?= $v->start("links"); ?>
 <link rel="stylesheet" href="<?= url("themes/tema1/dist/css/modal.css") ?>">
 <style>
-
-.modern-stats-container {
-      margin: 1.5rem 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .stat-card {
-      background: linear-gradient(135deg, rgb(5, 5, 5) 0%, rgb(0, 0, 0) 100%);
-      border-radius: 12px;
-      padding: 1.5rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      min-height: 120px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #f4d03f 0%, #f4d03f 100%);
-      border-radius: 12px 12px 0 0;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 5px 9px rgba(238, 255, 0, 0.2);
-      border-color: #f4d03f;
-    }
-
-    .stat-header {
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-      color: #888;
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-value h2 {
-      color: #fff;
-      font-size: 2rem;
-      font-weight: 700;
-      margin: 0;
-      line-height: 1.2;
-      word-break: break-word;
-    }
-
-    .category-text {
-      color: #00ff88 !important;
-      font-size: 1.5rem !important;
-    }
-
-    /* Payment cards styling */
-    .payment-card {
-      min-height: 100px;
-    }
-
-    .payment-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      height: 100%;
-    }
-
-    .payment-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .payment-icon.credit-card {
-      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
-    }
-
-    .payment-icon.barcode {
-      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
-    }
-
-    .payment-icon.pix {
-      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
-    }
-
-    .payment-icon i {
-      color: #000;
-      font-size: 24px;
-    }
-
-    .pix-icon {
-      width: 24px;
-      height: 24px;
-      filter: brightness(0);
-    }
-
-    .payment-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .payment-percentage {
-      background: linear-gradient(135deg, rgb(217, 192, 0) 0%, #f4d03f 100%);
-      color: #000;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: inline-block;
-      margin-bottom: 0.5rem;
-      white-space: nowrap;
-    }
-
-    .payment-count {
-      color: #fff;
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 0;
-      word-break: break-word;
-    }
-
-    /* Financial cards styling */
-    .financial-card .stat-value h2 {
-      color: #f4d03f;
-    }
-
-    .financial-value {
-      font-size: 1.5rem !important;
-      word-break: break-word;
-    }
-
-    /* Responsive design */
-    @media (max-width: 1024px) {
-      .stats-row {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-    }
-
-    @media (max-width: 768px) {
-      .modern-stats-container {
-        margin: 1rem 0;
-      }
-      
-      .stats-row {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 0.75rem;
-      }
-      
-      .stat-card {
-        padding: 1.25rem;
-        min-height: 110px;
-        text-align: center;
-      }
-      
-      /* Remove top stripe on mobile */
-      .stat-card::before {
-        display: none;
-      }
-      
-      .stat-header {
-        text-align: left;
-      }
-      
-      .stat-value h2 {
-        font-size: 1.75rem;
-        text-align: center;
-      }
-      
-      .payment-count {
-        font-size: 1.5rem;
-        text-align: center;
-      }
-      
-      .payment-percentage {
-        text-align: center;
-        display: block;
-        margin: 0 auto 0.5rem auto;
-        width: fit-content;
-      }
-      
-      .payment-icon {
-        width: 45px;
-        height: 45px;
-      }
-      
-      .payment-icon i {
-        font-size: 22px;
-      }
-      
-      .pix-icon {
-        width: 22px;
-        height: 22px;
-      }
-
-      .payment-header {
-        gap: 0.75rem;
-        flex-direction: column;
-      }
-
-      .payment-info {
-        text-align: center;
-      }
-
-      .financial-value {
-        font-size: 1.4rem !important;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .stats-row {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-      }
-      
-      .stat-card {
-        padding: 1rem;
-        min-height: 100px;
-      }
-      
-      .stat-value h2 {
-        font-size: 1.5rem;
-      }
-      
-      .payment-header {
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: center;
-      }
-      
-      .payment-icon {
-        width: 40px;
-        height: 40px;
-      }
-      
-      .payment-icon i {
-        font-size: 18px;
-      }
-      
-      .pix-icon {
-        width: 18px;
-        height: 18px;
-      }
-      
-      .payment-count {
-        font-size: 1.25rem;
-      }
-      
-      .financial-value {
-        font-size: 1.25rem !important;
-      }
-
-      .stat-label {
-        font-size: 0.8rem;
-      }
-
-      .payment-percentage {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.6rem;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .stat-card {
-        padding: 0.75rem;
-      }
-      
-      .stat-value h2 {
-        font-size: 1.25rem;
-      }
-      
-      .payment-count {
-        font-size: 1.1rem;
-      }
-      
-      .financial-value {
-        font-size: 1.1rem !important;
-      }
-    }
-
-
-
-
-
-
-    
- /* Container da Tabela */
-.modern-table-container {
-  background: #1e1e1e;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
-  border: 1px solid #2c2c2c;
-}
-
-/* Tabela */
-.modern-table {
-  margin: 0;
-  font-size: 14px;
-  width: 100%;
-  border-collapse: collapse;
-  color: #e5e7eb;
-}
-
-.modern-table thead {
-  background: linear-gradient(135deg,rgb(0, 0, 0),rgb(41, 42, 43));
-  color: #f9fafb;
-}
-
-.modern-table thead th {
-  padding: 16px;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  border: none;
-  text-align: left;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Corpo da Tabela */
-.modern-table tbody tr {
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  border-bottom: 1px solid #2c2c2c;
-}
-
-.modern-table tbody tr:hover {
-  background-color: #272727;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-}
-
-.modern-table tbody td {
-  padding: 14px 16px;
-  vertical-align: middle;
-  border: none;
-  font-family: 'Inter', sans-serif;
-  color: #d1d5db;
-}
-
-.modern-table tbody tr:last-child {
-  border-bottom: none;
-}
-
-/* Scroll responsivo */
-.table-responsive-modern {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.table-responsive-modern::-webkit-scrollbar {
-  height: 8px;
-}
-
-.table-responsive-modern::-webkit-scrollbar-track {
-  background: #111827;
-  border-radius: 4px;
-}
-
-.table-responsive-modern::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 4px;
-}
-
-.table-responsive-modern::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
-}
-
-/* Badge (status, tags, etc.) */
-.badge-modern {
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 600;
-  background-color: #374151;
-  color: #f9fafb;
-  display: inline-block;
-  line-height: 1;
-}
-
-/* Botão de detalhes */
-.btn-details-modern {
-  background: linear-gradient(135deg, rgb(217, 192, 0), rgb(217, 192, 0));
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
-  cursor: pointer;
-}
-
-.btn-details-modern:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
-}
-
-/* Ícones */
-.status-icon {
-  font-size: 20px;
-  margin: 0;
-  opacity: 0.85;
-  color: #facc15;
-}
-
-/* Links */
-.whatsapp-link {
-  color: #25d366;
-  transition: all 0.2s ease;
-}
-
-.whatsapp-link:hover {
-  color: #128c7e;
-  transform: scale(1.1);
-}
-
-.product-link {
-  color: #60a5fa;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.product-link:hover {
-  color: #3b82f6;
-  text-decoration: underline;
-}
-
-.sale-id-link {
-  color: #9ca3af;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.sale-id-link:hover {
-  color: #e5e7eb;
-  text-decoration: underline;
-}
-
-modern-info-alert {
-  background: rgb(0, 0, 0);
-  border: none;
-  border-radius: 12px;
-  padding: 0;
-  margin: 1.5rem 0;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.modern-info-alert:hover {
-  transform: translateY(-2px);
-
-}
-
-.alert-content {
-  display: flex;
-  align-items: flex-start;
-  padding: 1.25rem;
-  gap: 1rem;
-}
-
-.alert-icon {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  background: rgba(33, 150, 243, 0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-}
-
-.alert-icon i {
-  color: rgb(217, 192, 0);
-  font-size: 18px;
-}
-
-.alert-text {
-  flex: 1;
-  color: rgb(217, 192, 0);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.alert-text strong {
-  color: rgb(217, 192, 0)
-  font-weight: 600;
-}
-
-
-
-/* Responsive */
-@media (max-width: 768px) {
-  .modern-info-alert {
-    margin: 1rem 0;
+  .sales-page {
+    background: #000;
+    color: #f5f5f5;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 4rem;
   }
-  
-  .alert-content {
-    padding: 1rem;
+
+  .sales-header {
+    border: none;
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .sales-header-intro {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .sales-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .sales-subtitle {
+    margin: 0.35rem 0 0;
+    color: rgba(255, 255, 255, 0.68);
+    max-width: 620px;
+    line-height: 1.5;
+  }
+
+  .sales-filters {
+    margin-top: 2rem;
+    background: rgba(17, 17, 20, 0.78);
+    border: 1px solid rgba(217, 192, 0, 0.18);
+    border-radius: 18px;
+    padding: 1.75rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .sales-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .filter-field label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 0.4rem;
+  }
+
+  .filter-field input,
+  .filter-field select {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f5f5f5;
+    border-radius: 12px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  .filter-field input::placeholder {
+    color: rgba(255, 255, 255, 0.42);
+  }
+
+  .filter-field select {
+    padding-right: 2.1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23d9c000' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 12px 8px;
+    color: #f5f5f5;
+  }
+
+  .filter-field select option {
+    background: #0f0f12;
+    color: #f5f5f5;
+  }
+
+  .filter-actions {
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
+    align-items: center;
   }
-  
-  .alert-icon {
-    width: 36px;
-    height: 36px;
+
+  .filter-button {
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.4rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08rem;
+    background: linear-gradient(135deg, #d9c000, #f4d03f);
+    color: #111;
+    cursor: pointer;
+    transition: filter 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-  
-  .alert-icon i {
-    font-size: 16px;
+
+  .filter-button:hover {
+    filter: brightness(1.08);
   }
-  
-  .alert-text {
-    font-size: 13px;
+
+  .filter-advanced-toggle {
+    background: transparent;
+    border: 1px solid rgba(217, 192, 0, 0.38);
+    color: #f5f5f5;
   }
-}
 
-/* Dark theme support */
-@media (prefers-color-scheme: dark) {
-  .modern-info-alert {
-    background: rgb(0, 0, 0);;
+  .filter-advanced-toggle:hover {
+    background: rgba(217, 192, 0, 0.14);
   }
-  
-  .alert-icon {
-    background: rgba(59, 130, 246, 0.2);
+
+  .sales-advanced {
+    display: none;
+    margin-top: 1.25rem;
+    background: rgba(10, 10, 12, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 1.5rem;
   }
-  
-  .alert-icon i {
-    color: rgb(217, 192, 0);
+
+  .sales-advanced h5 {
+    margin: 0 0 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    font-size: 0.85rem;
   }
-  
-  .alert-text {
-    color: #dbeafe;
+
+  .sales-stats {
+    margin: 2.5rem 0 1.75rem;
+    display: grid;
+    gap: 1.5rem;
   }
-  
-  .alert-text strong {
-    color: rgb(217, 192, 0);
+
+  .sales-stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
   }
-}
 
-/* Estilo unificado para inputs, selects e filtros do formulário de busca avançada */
+  .sales-stat-card {
+    background: linear-gradient(135deg, rgba(17, 17, 20, 0.95), rgba(6, 6, 8, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
 
-form input[type="text"],
-form input[type="number"],
-form input[type="date"],
-form select {
-  background: #2a2a2a !important;
-  border: 2px solid #444 !important;
-  border-radius: 8px !important;
-  padding: 12px 16px !important;
-  color: #ffffff !important;
-  font-size: 14px !important;
-  font-family: 'Inter', sans-serif !important;
-  width: 100% !important;
-  height: auto !important;
-  min-height: 45px !important;
-  box-sizing: border-box !important;
-  transition: all 0.3s ease !important;
-}
+  .sales-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
+  }
 
-form input[type="text"]:focus,
-form input[type="number"]:focus,
-form input[type="date"]:focus,
-form select:focus {
-  background: #333333 !important;
-  border-color: #FFDD00 !important;
-  box-shadow: 0 0 0 3px rgba(255, 221, 0, 0.2) !important;
-  outline: none !important;
-  color: #ffffff !important;
-}
+  .sales-stat-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    color: rgba(255, 255, 255, 0.55);
+  }
 
-form select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FFDD00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
-  background-position: right 12px center !important;
-  background-repeat: no-repeat !important;
-  background-size: 16px 12px !important;
-  padding-right: 40px !important;
-  cursor: pointer !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-}
+  .sales-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fdfdfd;
+  }
 
-form select option {
-  background: #2a2a2a !important;
-  color: #ffffff !important;
-}
+  .sales-stat-value.highlight {
+    color: #d9c000;
+  }
 
-form h6 {
-  color: #FFDD00 !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  font-family: 'Inter', sans-serif !important;
-  margin-bottom: 8px !important;
-}
+  .sales-payment-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
 
+  .sales-payment-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #d9c000, #f4d03f);
+    color: #111;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+  }
 
+  .sales-payment-info {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .sales-payment-percentage {
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(217, 192, 0, 0.18);
+    color: #f4d03f;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+  }
+
+  .sales-payment-count {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  .sales-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(17, 17, 20, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .sales-legend-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .sales-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .sales-legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .sales-export a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(217, 192, 0, 0.18);
+    color: #f4d03f;
+    padding: 0.45rem 0.85rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06rem;
+    text-decoration: none;
+  }
+
+  .sales-info-alert {
+    margin-bottom: 1.5rem;
+    padding: 1.1rem 1.35rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(217, 192, 0, 0.15);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sales-info-icon {
+    color: #f4d03f;
+    font-size: 1.2rem;
+    margin-top: 0.15rem;
+  }
+
+  .sales-info-text {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .sales-table-card {
+    background: rgba(12, 12, 15, 0.92);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+
+  .sales-table-scroll {
+    overflow-x: auto;
+  }
+
+  .sales-table-scroll::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .sales-table-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+  }
+
+  .sales-table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    color: #e5e7eb;
+  }
+
+  .sales-table-card thead {
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  .sales-table-card th {
+    padding: 0.9rem 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08rem;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+    text-align: left;
+  }
+
+  .sales-table-card tbody tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.25s ease;
+  }
+
+  .sales-table-card tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .sales-table-card td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .badge-modern {
+    background: rgba(217, 192, 0, 0.2);
+    color: #f4d03f;
+    border: 1px solid rgba(217, 192, 0, 0.4);
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    text-transform: uppercase;
+  }
+
+  .sale-id-link {
+    color: #f4d03f;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .sale-id-link:hover {
+    text-decoration: underline;
+  }
+
+  .sales-table-card .whatsapp-link {
+    color: #25d366;
+  }
+
+  .btn-details-modern {
+    background: linear-gradient(135deg, #d9c000, #f4d03f);
+    color: #111;
+    border: none;
+    padding: 0.55rem 1rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  .btn-details-modern:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+  }
+
+  .status-icon {
+    font-size: 1rem;
+    margin-right: 0.3rem;
+    opacity: 0.85;
+  }
+
+  .sales-table-card .product-link {
+    color: #60a5fa;
+  }
+
+  @media (max-width: 1024px) {
+    .sales-header {
+      padding: 2rem 1.25rem 1.25rem;
+    }
+
+    .sales-stat-row {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sales-header-intro {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .sales-title {
+      font-size: 1.9rem;
+    }
+
+    .sales-filters {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .sales-filters-grid {
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    }
+
+    .filter-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .filter-button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .sales-legend {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 </style>
 <?= $v->end(); ?>
 
@@ -736,123 +578,104 @@ function dadosEndereco($venda)
 </div>
 
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-  <!-- FORMULARIO -->
-  <section class="content-header">
+<div class="content-wrapper sales-page">
+  <section class="content-header sales-header">
 
     <?= $section->getTipoSecaoLayout() ?>
 
-    <div class="col-sm-6">
-      <h4 style="font-family:inter; color: white"><?= $title ?></h4>
+    <div class="sales-header-intro">
+      <div>
+        <h1 class="sales-title"><?= $title ?></h1>
+        <p class="sales-subtitle">Acompanhe suas vendas com filtros rapidos, metricas objetivas e uma leitura mais limpa do desempenho da sua operacao.</p>
+      </div>
     </div>
 
-    <form action="#" style="font-family:inter; font-size:10px">
-      <div class="callout callout-primary">
-        <div class="row">
-          <div class="col-12 col-md-2">
-            <h6 style="font-family:inter">Data da venda:</h6>
-            <input type="date" name="inicio" id="inicio" class="form-control" style="cursor:pointer;" value="<?= @$_GET["inicio"]; ?>">
-          </div>
+    <form action="#" class="sales-filters">
+      <div class="sales-filters-grid">
+        <div class="filter-field">
+          <label for="inicio">Data da venda (inicio)</label>
+          <input type="date" name="inicio" id="inicio" value="<?= @$_GET["inicio"]; ?>">
+        </div>
 
-          <div class="col-12 col-md-2">
-            <h6 style="font-family:inter; color:#fff">|</h6>
-            <input type="date" name="fim" id="fim" class="form-control" style="cursor:pointer;" value="<?= @$_GET["fim"]; ?>">
-          </div>
+        <div class="filter-field">
+          <label for="fim">Data da venda (fim)</label>
+          <input type="date" name="fim" id="fim" value="<?= @$_GET["fim"]; ?>">
+        </div>
 
-          <div class="col-12 col-md-2">
-            <h6 style="font-family:inter">Data finalizada:</h6>
-            <input type="date" name="inicio_finalizada" id="inicio_finalizada" class="form-control" style="cursor:pointer;" value="<?= @$_GET["inicio_finalizada"]; ?>">
-          </div>
+        <div class="filter-field">
+          <label for="inicio_finalizada">Data finalizada (inicio)</label>
+          <input type="date" name="inicio_finalizada" id="inicio_finalizada" value="<?= @$_GET["inicio_finalizada"]; ?>">
+        </div>
 
-          <div class="col-12 col-md-2">
-            <h6 style="font-family:inter; color:#fff">|</h6>
-            <input type="date" name="fim_finalizada" id="fim_finalizada" class="form-control" style="cursor:pointer;" value="<?= @$_GET["fim_finalizada"]; ?>">
-          </div>
+        <div class="filter-field">
+          <label for="fim_finalizada">Data finalizada (fim)</label>
+          <input type="date" name="fim_finalizada" id="fim_finalizada" value="<?= @$_GET["fim_finalizada"]; ?>">
+        </div>
 
-          <div class="col-12 col-md-4">
-            <h6 style="font-family:inter">Forma de Pagamento:</h6>
+        <div class="filter-field">
+          <label for="pagamento">Forma de pagamento</label>
+          <select name="pagamento" id="pagamento">
+            <option value="">Pagamento...</option>
+            <option value="1" <?php if (@$_GET["pagamento"] == 1) echo "selected"; ?>>Cartao de credito</option>
+            <option value="2" <?php if (@$_GET["pagamento"] == 2) echo "selected"; ?>>Boleto</option>
+            <option value="3" <?php if (@$_GET["pagamento"] == 3) echo "selected"; ?>>PIX</option>
+          </select>
+        </div>
 
-            <select name="pagamento" id="pagamento" class="form-control">
-              <option value="">Pagamento...</option>
-              <option value="1" <?php if (@$_GET["pagamento"] == 1) echo "selected";
-                                echo "" ?>>Cartão de crédito</option>
-              <option value="2" <?php if (@$_GET["pagamento"] == 2) echo "selected";
-                                echo "" ?>>Boleto</option>
-              <option value="3" <?php if (@$_GET["pagamento"] == 3) echo "selected";
-                                echo "" ?>>PIX</option>
+        <div class="filter-field">
+          <label for="venda">Codigo da venda ou pedido</label>
+          <input type="text" name="venda" id="venda" placeholder="ex.: PAY-078VRHCE52BI ou 239" value="<?= @$_GET["venda"]; ?>">
+        </div>
+
+        <div class="filter-field">
+          <label for="status">Status da transacao</label>
+          <select name="status" id="status">
+            <option value="">Status...</option>
+            <?php foreach ($status_transacao as $cod => $status) : ?>
+              <option value="<?= $cod ?>" <?php if (@$_GET["status"] == $cod) echo "selected"; ?>><?= $status ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+
+        <?php if ($section->getTipo() != 6) : ?>
+          <div class="filter-field">
+            <label for="produto">Produto</label>
+            <select name="produto" id="produto">
+              <option value="">Produto...</option>
+              <?php foreach ($produto as $produto) : ?>
+                <option value="<?= $produto->id ?>" <?= (@$_GET["produto"] == $produto->id) ? "selected" : "" ?>><?= $produto->nome ?></option>
+              <?php endforeach; ?>
+              <?php if (@$produtor) : foreach ($produtor as $produtor) : ?>
+                  <option value="<?= $produtor->dataProduto()->id ?>" <?= (@$_GET["produto"] == $produtor->dataProduto()->id) ? "selected" : "" ?>><?= $produtor->dataProduto()->nome ?></option>
+              <?php endforeach; endif; ?>
             </select>
           </div>
-        </div>
+
+          <div class="filter-field">
+            <label for="comprador">Comprador</label>
+            <input type="text" name="comprador" id="comprador" placeholder="Nome, CPF/CNPJ ou e-mail" value="<?= @$_GET["comprador"]; ?>">
+          </div>
+        <?php endif; ?>
       </div>
 
-      <div class="callout callout-primary">
-        <div class="row">
-          <div class="col-12 col-md-3">
-            <h6 style="font-family:inter">Código da venda ou pedido:</h6>
-            <input type="text" name="venda" class="form-control" placeholder="ex.: PAY-078VRHCE52BI ou 239" value="<?= @$_GET["venda"]; ?>">
-          </div>
-
-          <div class="col-12 col-md-2">
-            <h6 style="font-family:inter">Status da transação:</h6>
-            <select name="status" id="status" class="form-control">
-              <option value="">Status...</option>
-              <?php foreach ($status_transacao as $cod => $status) : ?>
-                <option value="<?= $cod ?>" <?php if (@$_GET["status"] == $cod) echo "selected";
-                                            echo "" ?>><?= $status ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <?php if ($section->getTipo() != 6) : ?>
-            <div class="col-12 col-md-2">
-              <h6 style="font-family:inter">Produto:</h6>
-
-              <select name="produto" id="produto" class="form-control">
-                <option value="">Produto...</option>
-                <?php foreach ($produto as $produto) : ?>
-                  <option value="<?= $produto->id ?>" <?= (@$_GET["produto"] == $produto->id) ? "selected" : "" ?>><?= $produto->nome ?></option>
-                <?php endforeach; ?>
-                <?php if (@$produtor) : foreach ($produtor as $produtor) : ?>
-                    <option value="<?= $produtor->dataProduto()->id ?>" <?= (@$_GET["produto"] == $produtor->dataProduto()->id) ? "selected" : "" ?>><?= $produtor->dataProduto()->nome ?></option>
-                <?php endforeach;
-                endif; ?>
-              </select>
-            </div>
-
-
-            <div class="col-12 col-md-3">
-              <h6 style="font-family:inter">Comprador:</h6>
-              <input type="text" name="comprador" id="cpf" class="form-control" placeholder="(nome ou CPF/CNPJ ou email)" value="<?= @$_GET["comprador"]; ?>">
-            </div>
-          <?php endif; ?>
-
-
-          <div class="col-12 col-md-2">
-            <h6 style="font-family:inter; color:#fff">|</h6>
-            <button type="submit" name="" class="form-control form-control btn-primary"> <i class="fa fa-check"></i> Filtrar</button>
-          </div>
-        </div>
+      <div class="filter-actions">
+        <button type="submit" class="filter-button"><i class="fas fa-search"></i> Filtrar</button>
+        <?php if ($section->getTipo() != 6) : ?>
+          <button type="button" class="filter-button filter-advanced-toggle" id="btn-filtro"><i class="fas fa-sliders-h"></i> Mais filtros</button>
+        <?php endif; ?>
       </div>
 
       <?php if ($section->getTipo() != 6) : ?>
-        <button type="button" class="btn btn-outline-primary btn-sm" id="btn-filtro">Mais Filtros</button>
-      <?php endif ?>
-
-      <div id="busca-avancada">
-        <br>
-        <h5>Busca Avançada</h5>
-
-        <div class="callout callout-primary">
-          <div class="row">
-
-            <div class="col-md-3">
-              <h6>Data vencimento boleto:</h6>
-              <input type="date" name="vencimento_boleto" id="vencimento_boleto" class="form-control">
+        <div id="busca-avancada" class="sales-advanced">
+          <h5>Busca avancada</h5>
+          <div class="sales-filters-grid">
+            <div class="filter-field">
+              <label for="vencimento_boleto">Data vencimento boleto</label>
+              <input type="date" name="vencimento_boleto" id="vencimento_boleto">
             </div>
-
-            <div class="col-md-3">
-              <h6>Planos:</h6>
-              <select name="planos" id="planos" class="form-control">
+            <div class="filter-field">
+              <label for="planos">Planos</label>
+              <select name="planos" id="planos">
                 <option value="">Selecionar...</option>
                 <?php if ($planos) : ?>
                   <?php foreach ($planos as $plano_produto) : ?>
@@ -863,10 +686,9 @@ function dadosEndereco($venda)
                 <?php endif ?>
               </select>
             </div>
-
-            <div class="col-md-3">
-              <h6>Campanha:</h6>
-              <select name="campanha" id="campanha" class="form-control">
+            <div class="filter-field">
+              <label for="campanha">Campanha</label>
+              <select name="campanha" id="campanha">
                 <option value="">Selecionar...</option>
                 <?php if ($campanhas) : ?>
                   <?php foreach ($campanhas as $campanha_produto) : ?>
@@ -877,10 +699,9 @@ function dadosEndereco($venda)
                 <?php endif ?>
               </select>
             </div>
-
-            <div class="col-md-3">
-              <h6>Afiliado:</h6>
-              <select name="afiliado" id="afiliado" class="form-control">
+            <div class="filter-field">
+              <label for="afiliado">Afiliado</label>
+              <select name="afiliado" id="afiliado">
                 <option value="">Selecionar...</option>
                 <?php if ($afiliados) : ?>
                   <?php foreach ($afiliados as $afiliado_produto) : ?>
@@ -889,261 +710,161 @@ function dadosEndereco($venda)
                 <?php endif ?>
               </select>
             </div>
-
           </div>
-        </div>
 
-        <div class="callout callout-primary">
-          <div class="row">
-
-            <div class="col-md-3">
-              <h6>Upsell:</h6>
-              <select name="upsell" id="upsell" class="form-control">
+          <div class="sales-filters-grid">
+            <div class="filter-field">
+              <label for="upsell">Upsell</label>
+              <select name="upsell" id="upsell">
                 <option value="">Selecionar...</option>
                 <option value="IS NOT NULL">Sim</option>
-                <option value="IS NULL">Não</option>
+                <option value="IS NULL">Nao</option>
               </select>
             </div>
-
-            <div class="col-md-3">
-              <h6>Order bump:</h6>
-              <select name="order_bump" id="order_bump" class="form-control">
+            <div class="filter-field">
+              <label for="order_bump">Order bump</label>
+              <select name="order_bump" id="order_bump">
                 <option value="">Selecionar...</option>
                 <option value="IS NOT NULL">Sim</option>
-                <option value="IS NULL">Não</option>
+                <option value="IS NULL">Nao</option>
               </select>
             </div>
-
-            <div class="col-md-3">
-              <h6>Cupom de desconto:</h6>
-              <input type="text" name="cupom" id="cupom" class="form-control">
+            <div class="filter-field">
+              <label for="cupom">Cupom de desconto</label>
+              <input type="text" name="cupom" id="cupom">
             </div>
-
-            <div class="col-md-3">
-              <h6>Tipo de frete:</h6>
-              <select name="frete" id="frete" class="form-control">
+            <div class="filter-field">
+              <label for="frete">Tipo de frete</label>
+              <select name="frete" id="frete">
                 <option value="">Selecionar...</option>
-                <option value="fixo">Frete Fixo</option>
-                <option value="gratis">Frete Grátis</option>
+                <option value="fixo">Frete fixo</option>
+                <option value="gratis">Frete gratis</option>
                 <option value="sedex">Correios - Sedex</option>
                 <option value="pac">Correios - Pac</option>
                 <option value="jadlog">Frete Jadlog</option>
-                <option value="regiao">Frete Por Região</option>
+                <option value="regiao">Frete por regiao</option>
               </select>
             </div>
-
           </div>
-        </div>
 
-        <div class="callout callout-primary">
-          <div class="row">
-
-            <div class="col-md-3">
-              <h6>Assumir juros:</h6>
-              <select name="assumir_juros" id="assumir_juros" class="form-control">
+          <div class="sales-filters-grid">
+            <div class="filter-field">
+              <label for="assumir_juros">Assumir juros</label>
+              <select name="assumir_juros" id="assumir_juros">
                 <option value="">Selecionar...</option>
                 <option value="IS NOT NULL">Sim</option>
-                <option value="IS NULL">Não</option>
+                <option value="IS NULL">Nao</option>
               </select>
             </div>
-
-            <div class="col-md-3">
-              <h6>Parcelas do cartão:</h6>
-              <input type="number" name="parcelas" id="parcelas" class="form-control">
+            <div class="filter-field">
+              <label for="parcelas">Parcelas do cartao</label>
+              <input type="number" name="parcelas" id="parcelas">
             </div>
-
-            <div class="col-md-3">
-              <h6>SRC, UTMs...:</h6>
-              <input type="text" name="src" id="src" class="form-control">
+            <div class="filter-field">
+              <label for="src">SRC, UTMs...</label>
+              <input type="text" name="src" id="src">
             </div>
-
-            <!-- <div class="col-md-3">
-              <h6>Televendas:</h6>
-              <select name="televendas" id="televendas" class="form-control">
-                <option value="">Televendas...</option>
-                <option value="IS NOT NULL">Sim</option>
-                <option value="IS NULL">Não</option>
-              </select>
-            </div> -->
-
           </div>
         </div>
-
-      </div>
+      <?php endif; ?>
     </form>
   </section>
-  <!-- FIM FORMULARIO -->
 
-  <!-- Main content -->
   <section class="content">
 
     <!-- Default box -->
     <?php if ($vendas) : ?>
       <?php if ($section->getTipo() != 6) : ?>
-        <div class="modern-stats-container">
-          <!-- Primera fila de cards -->
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-header">
-                <span class="stat-label">Total de vendas:</span>
-              </div>
-              <div class="stat-value">
-                <h2><?= $count; ?></h2>
+        <div class="sales-stats">
+          <div class="sales-stat-row">
+            <div class="sales-stat-card">
+              <span class="sales-stat-label">Total de vendas</span>
+              <span class="sales-stat-value"><?= $count; ?></span>
+            </div>
+
+            <div class="sales-stat-card">
+              <span class="sales-stat-label">Sua categoria</span>
+              <span class="sales-stat-value highlight"><?php echo $nivel[@$nivelUsuario]; ?></span>
+            </div>
+
+            <div class="sales-stat-card sales-payment-card">
+              <div class="sales-payment-icon"><i class="fas fa-credit-card"></i></div>
+              <div class="sales-payment-info">
+                <span class="sales-payment-percentage"><?= number_format($vendasCartao / $count * 100, 2, ",", "."); ?>%</span>
+                <span class="sales-payment-count"><?= $vendasCartao ?></span>
               </div>
             </div>
 
-            <div class="stat-card">
-              <div class="stat-header">
-                <span class="stat-label">Sua categoria:</span>
-              </div>
-              <div class="stat-value">
-                <h2 class="category-text"><?php echo $nivel[@$nivelUsuario]; ?></h2>
-              </div>
-            </div>
-
-            <div class="stat-card payment-card">
-              <div class="payment-header">
-                <div class="payment-icon credit-card">
-                  <i class="fas fa-credit-card"></i>
-                </div>
-                <div class="payment-info">
-                  <span class="payment-percentage"><?= number_format($vendasCartao / $count * 100, 2, ",", "."); ?>%</span>
-                  <h3 class="payment-count"><?= $vendasCartao ?></h3>
-                </div>
+            <div class="sales-stat-card sales-payment-card">
+              <div class="sales-payment-icon"><i class="fas fa-barcode"></i></div>
+              <div class="sales-payment-info">
+                <span class="sales-payment-percentage"><?= number_format($vendasBoleto / $count * 100, 2, ",", "."); ?>%</span>
+                <span class="sales-payment-count"><?= $vendasBoleto ?></span>
               </div>
             </div>
 
-            <div class="stat-card payment-card">
-              <div class="payment-header">
-                <div class="payment-icon barcode">
-                  <i class="fas fa-barcode"></i>
-                </div>
-                <div class="payment-info">
-                  <span class="payment-percentage"><?= number_format($vendasBoleto / $count * 100, 2, ",", "."); ?>%</span>
-                  <h3 class="payment-count"><?= $vendasBoleto ?></h3>
-                </div>
-              </div>
-            </div>
-
-            <div class="stat-card payment-card">
-              <div class="payment-header">
-                <div class="payment-icon pix">
-                  <img src="<?= url("themes/tema1/images/pix-text-success.png") ?>" alt="PIX" class="pix-icon">
-                </div>
-                <div class="payment-info">
-                  <span class="payment-percentage"><?= number_format($vendasPix / $count * 100, 2, ",", "."); ?>%</span>
-                  <h3 class="payment-count"><?= $vendasPix ?></h3>
-                </div>
+            <div class="sales-stat-card sales-payment-card">
+              <div class="sales-payment-icon"><i class="fas fa-qrcode"></i></div>
+              <div class="sales-payment-info">
+                <span class="sales-payment-percentage"><?= number_format($vendasPix / $count * 100, 2, ",", "."); ?>%</span>
+                <span class="sales-payment-count"><?= $vendasPix ?></span>
               </div>
             </div>
           </div>
 
-          <!-- Segunda fila de cards -->
-          <div class="stats-row">
-            <div class="stat-card financial-card">
-              <div class="stat-header">
-                <span class="stat-label">Valor Vendas:</span>
-              </div>
-              <div class="stat-value">
-                <h2 class="financial-value"><?= @$somaVendas ?></h2>
-              </div>
+          <div class="sales-stat-row">
+            <div class="sales-stat-card">
+              <span class="sales-stat-label">Valor vendas</span>
+              <span class="sales-stat-value highlight"><?= @$somaVendas ?></span>
             </div>
 
-            <div class="stat-card financial-card">
-              <div class="stat-header">
-                <span class="stat-label">Tiket Médio:</span>
-              </div>
-              <div class="stat-value">
-                <h2 class="financial-value"><?= @$somaVendas ? "R$ " . number_format($somaVendas / $count, 2, ",", ".") : "-"; ?></h2>
-              </div>
+            <div class="sales-stat-card">
+              <span class="sales-stat-label">Ticket medio</span>
+              <span class="sales-stat-value highlight"><?= @$somaVendas ? "R$ " . number_format($somaVendas / $count, 2, ",", ".") : "-"; ?></span>
             </div>
 
-            <div class="stat-card financial-card">
-              <div class="stat-header">
-                <span class="stat-label">Valor Comissão:</span>
-              </div>
-              <div class="stat-value">
-                <h2 class="financial-value">R$ <?= @number_format(@$somaProdutor->soma_produtor, 2, ",", ".") ?></h2>
-              </div>
+            <div class="sales-stat-card">
+              <span class="sales-stat-label">Valor comissao</span>
+              <span class="sales-stat-value highlight">R$ <?= @number_format(@$somaProdutor->soma_produtor, 2, ",", ".") ?></span>
             </div>
 
-            <div class="stat-card financial-card">
-              <div class="stat-header">
-                <span class="stat-label">Tiket Médio Comissão:</span>
-              </div>
-              <div class="stat-value">
-                <h2 class="financial-value"><?= @$somaProdutor->soma_produtor ? "R$ " . number_format($somaProdutor->soma_produtor / $count, 2, ",", ".") : "-"; ?></h2>
-              </div>
+            <div class="sales-stat-card">
+              <span class="sales-stat-label">Ticket medio comissao</span>
+              <span class="sales-stat-value highlight"><?= @$somaProdutor->soma_produtor ? "R$ " . number_format($somaProdutor->soma_produtor / $count, 2, ",", ".") : "-"; ?></span>
             </div>
           </div>
         </div>
       <?php endif; ?>
 
-      <style>
-        .legenda {
-          width: 25px;
-          height: 25px;
-          margin: 0 10px;
-          border-radius: 50%;
-          display: inline-block;
-        }
-      </style>
-      <div class="card card-body callout">
-        <div class="row">
-
-          <div class="col-12 d-flex">
-            <div class="d-flex align-items-center">
-              <div class="d-flex align-items-center">
-                <span class="legenda bg-warning"></span> <small>AGUARDANDO PAGAMENTO </small>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="legenda bg-info"></span> <small>EM ANÁLISE </small>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="legenda bg-success"></span> <small>PAGA / COMPLETA </small>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="legenda bg-danger"></span> <small>CANCELADA / DEVOLVIDA / ESTORNADA </small>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="legenda bg-block"></span> <small>BLOQUEADA </small>
-              </div>
-            </div>
-
-            <div class="exportar">
-              Exportar:
-              <a href="<?= url("vendas/exportar") ?>" class="badge badge-success text-white" target="_blank">xls</a>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <a href="?update-status=true" class="btn btn-success float-right" role="button" style="text-decoration: none; color: white; display: none">Atualizar o status da listagem</a>
-          </div>
-
+      <div class="sales-legend">
+        <div class="sales-legend-list">
+          <span class="sales-legend-item"><span class="sales-legend-dot" style="background:#facc15;"></span>Aguardando pagamento</span>
+          <span class="sales-legend-item"><span class="sales-legend-dot" style="background:#38bdf8;"></span>Em analise</span>
+          <span class="sales-legend-item"><span class="sales-legend-dot" style="background:#4ade80;"></span>Paga / completa</span>
+          <span class="sales-legend-item"><span class="sales-legend-dot" style="background:#f87171;"></span>Cancelada / devolvida / estornada</span>
+          <span class="sales-legend-item"><span class="sales-legend-dot" style="background:#6b7280;"></span>Bloqueada</span>
         </div>
-
-      </div>
-
-      <div class="modern-info-alert">
-        <div class="alert-content">
-          <div class="alert-icon">
-            <i class="fas fa-info-circle"></i>
-          </div>
-          <div class="alert-text">
-            <?php if (!$pag_coprodutor) : ?>
-              <strong>Atenção:</strong> Novas vendas levam alguns minutos para aparecerem nesse relatório, após serem realizadas no checkout.<br>
-              Vendas do PIX levam alguns minutos para aparecerem a aprovação.
-            <?php else : ?>
-              <strong>Valores atualizados a cada hora</strong>
-            <?php endif; ?>
-          </div>
+        <div class="sales-export">
+          <span>Exportar</span>
+          <a href="<?= url("vendas/exportar") ?>" target="_blank"><i class="fas fa-file-export"></i> XLS</a>
         </div>
       </div>
 
-      <div class="modern-table-container">
+      <div class="sales-info-alert">
+        <span class="sales-info-icon"><i class="fas fa-info-circle"></i></span>
+        <div class="sales-info-text">
+          <?php if (!$pag_coprodutor) : ?>
+            <strong>Atencao:</strong> novas vendas levam alguns minutos para aparecerem neste relatorio apos serem realizadas no checkout. Vendas via PIX podem demorar alguns minutos para aprovacao.
+          <?php else : ?>
+            <strong>Valores atualizados a cada hora.</strong>
+          <?php endif; ?>
+        </div>
+      </div>
 
-      <div class="table-responsive-modern">
-        <table class="modern-table">
+      <div class="sales-table-card">
+        <div class="sales-table-scroll">
+
+        <table class="sales-table">
             <thead>
               <tr>
                 <th scope="col">Venda</th>
@@ -1511,12 +1232,6 @@ function dadosEndereco($venda)
   </section>
 </div>
 
-<style>
-  #busca-avancada {
-    display: none;
-  }
-</style>
-
 <?= $v->start("scripts"); ?>
 <script src="<?= url("themes/tema1/dist/js/modal.js") ?>"></script>
 <script>
@@ -1529,10 +1244,10 @@ function dadosEndereco($venda)
       $("#busca-avancada").toggle();
 
       if (cont == 0) {
-        $("#btn-filtro").html("Menos Filtros");
+        $("#btn-filtro").html("Menos filtros");
         cont = 1;
       } else {
-        $("#btn-filtro").html("Mais Filtros");
+        $("#btn-filtro").html("Mais filtros");
         cont = 0;
       }
     });
