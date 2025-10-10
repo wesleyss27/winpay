@@ -2,9 +2,9 @@
 <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-image: linear-gradient(to bottom, #0b0024, #b73234, #b73234)"> -->
 
 <style>
-//* Importação das fontes */
+/* Importação das fontes */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0');
 
 /* -------- Animação Glow -------- */
 @keyframes glow {
@@ -87,22 +87,36 @@
 }
 
 /* -------- Ícones -------- */
-.nav-sidebar .nav-link .material-icons-outlined,
-.nav-sidebar .nav-link i {
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.nav-sidebar .nav-link .material-symbols-rounded {
   font-size: 20px;
   margin-right: 12px;
   color: rgb(217, 192, 0);
   transition: all 0.3s ease;
 }
 
-.nav-sidebar .nav-link:hover .material-icons-outlined,
-.nav-sidebar .nav-link:hover i {
+.nav-sidebar .nav-link:hover .material-symbols-rounded {
   color: #f4d03f;
   transform: scale(1.1);
 }
 
-.nav-sidebar .nav-link.active .material-icons-outlined,
-.nav-sidebar .nav-link.active i {
+.nav-sidebar .nav-link.active .material-symbols-rounded {
   color: #111;
 }
 
@@ -146,8 +160,7 @@
   padding: 10px 0 !important;
 }
 
-.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link .material-icons-outlined,
-.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link i {
+.sidebar-mini.sidebar-collapse .nav-sidebar .nav-link .material-symbols-rounded {
   margin-right: 0 !important;
   font-size: 24px !important;
 }
@@ -165,8 +178,7 @@
   padding: 10px !important;
 }
 
-.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link .material-icons-outlined,
-.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link i {
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link .material-symbols-rounded {
   margin-right: 10px !important;
 }
 
@@ -204,7 +216,7 @@
 
 
 
-<link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="position: fixed; background-color: rgb(0, 0, 0);">
   <?php
@@ -233,7 +245,7 @@
             <li class="nav-item">
               <a href="<?= url() ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
                 <!-- <a href="<?= url() ?>" class="nav-link txt-azul-dark" style="color:#fff"> -->
-                <span class="material-icons-outlined">home</span>
+                <span class="material-symbols-rounded">home</span>
                 <p>Início </p>
               </a>
             </li>
@@ -242,7 +254,7 @@
           <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("marketplace")) : ?>
             <li class="nav-item" title="Veja produtos para poder se afiliar a eles">
               <a href="<?= url('marketplace') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                <span class="material-icons-outlined">storefront</span>
+                <span class="material-symbols-rounded">storefront</span>
                 <p>Marketplace</p>
               </a>
             </li>
@@ -252,14 +264,14 @@
         <?php if ($section->getTipo() == 6) : ?>
           <li class="nav-item" title="Veja suas compras">
             <a href="<?= url('vendas') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-              <i class="nav-icon fas fa-check"></i>
+              <span class="material-symbols-rounded nav-icon">check_circle</span>
               <p> Minhas Compras </p>
             </a>
           </li>
 
           <li class="nav-item" title="Veja e edite seus dados pessoais">
             <a href="<?= url('usuarios/perfil/' . $_SESSION["id"]) ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-              <i class="nav-icon fas fa-user"></i>
+              <span class="material-symbols-rounded nav-icon">person</span>
               <p> Meus dados </p>
             </a>
           </li>
@@ -288,10 +300,10 @@
                 <a href='#' class='nav-link'>
                 <?php endif; ?>
 
-                <span class="material-icons-outlined">shopping_cart</span>
+                <span class="material-symbols-rounded">shopping_bag</span>
                 <p class="txt-branco-octa" style="text-shadow:#343a40">
                   Vendas
-                  <i class="right fas fa-caret-left"></i>
+                  <span class="material-symbols-rounded right">chevron_left</span>
                 </p>
                 </a>
 
@@ -299,7 +311,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas")) : ?>
                     <li class="nav-item sub-item" title="Veja suas vendas">
                       <a href="<?= url('vendas') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                        <i class="fas fa-check nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">check_circle</span>
                         <p>Todas As Transações</p>
                       </a>
                     </li>
@@ -308,7 +320,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas")) : ?>
                     <li class="nav-item sub-item" title="Veja suas vendas">
                       <a href="<?= url('vendas?status=4&order=data_finalizada') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                        <i class="fas fa-check nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">check_circle</span>
                         <p>Vendas Realizadas</p>
                       </a>
                     </li>
@@ -317,7 +329,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas")) : ?>
                     <li class="nav-item sub-item" title="Veja suas vendas">
                       <a href="<?= url('vendas?pagamento=2&status=1') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                        <i class="fas fa-check nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">check_circle</span>
                         <p>Boletos Gerados</p>
                       </a>
                     </li>
@@ -325,7 +337,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas")) : ?>
                     <li class="nav-item sub-item" title="Veja suas vendas">
                       <a href="<?= url('vendas?pagamento=2&status=5') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                        <i class="fas fa-check nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">check_circle</span>
                         <p>Boletos Cancelados</p>
                       </a>
                     </li>
@@ -334,7 +346,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas_coprodutor")) : ?>
                     <li class="nav-item sub-item" title="Veja suas vendas">
                       <a href="<?= url('vendas/coprodutor') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                        <i class="far fa-check-circle nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">verified</span>
                         <p>Vendas Coprodutor</p>
                       </a>
                     </li>
@@ -343,7 +355,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("abandono_checkout")) : ?>
                     <li class="nav-item sub-item" title="Veja tentativas de compras do seu produto" style="text-shadow:#343a40">
                       <a href="<?= url('abandono') ?>" class="nav-link txt-branco-octa">
-                        <i class="fas fa-shopping-cart nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">shopping_cart_checkout</span>
                         <p>Abandono de checkout</p>
                       </a>
                     </li>
@@ -352,7 +364,7 @@
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("minhas_compras")) : ?>
                     <li class="nav-item sub-item" title="Veja suas compras">
                       <a href="<?= url('vendas?minhas=true') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                        <i class="fas fa-cart-plus nav-icon"></i>
+                        <span class="material-symbols-rounded nav-icon">add_shopping_cart</span>
                         <p>Minhas Compras</p>
                       </a>
                     </li>
@@ -378,17 +390,17 @@
               }
               ?>
 
-              <span class="material-icons-outlined">inventory</span>
+              <span class="material-symbols-rounded">inventory_2</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Produtos
-                <i class="right fas fa-caret-left"></i>
+                <span class="material-symbols-rounded right">chevron_left</span>
               </p>
               </a>
               <ul class="nav nav-treeview">
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("novo_produto")) : ?>
                   <li class="nav-item sub-item" title="Cadastre um novo produto">
                     <a href="<?= url('produtos/novo') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-book-medical nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">library_add</span>
                       <p>Novo produto</p>
                     </a>
                   </li>
@@ -397,7 +409,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("meus_produtos")) : ?>
                   <li class="nav-item sub-item" title="Veja os produtos cadastrados por você">
                     <a href="<?= url('produtos') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-list-alt nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">view_list</span>
                       <p>Meus Produtos</p>
                     </a>
                   </li>
@@ -406,7 +418,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("produtos_promovidos")) : ?>
                   <li class="nav-item sub-item" title="Veja os produtos que você promove">
                     <a href="<?= url('produtos/promovidos') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-hand-holding-usd nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">savings</span>
                       <p>Promovidos</p>
                     </a>
                   </li>
@@ -415,7 +427,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("minhas_coproducoes")) : ?>
                   <li class="nav-item sub-item" title="Veja os produtos que você promove">
                     <a href="<?= url('produtos/coproducoes') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="far fa-handshake nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">handshake</span>
                       <p>Minhas Coproduções</p>
                     </a>
                   </li>
@@ -427,7 +439,7 @@
             <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("assinaturas")) : ?>
               <li class="nav-item">
                 <a href="<?= url("assinaturas") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                  <span class="material-icons-outlined">autorenew</span>
+                  <span class="material-symbols-rounded">subscriptions</span>
                   <p> Assinaturas</p>
                 </a>
               </li>
@@ -449,17 +461,17 @@
                 echo "<a href='#' class='nav-link'>";
               }
               ?>
-              <span class="material-icons-outlined">attach_money</span>
+              <span class="material-symbols-rounded">payments</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Comissões e Saques
-                <i class="right fas fa-caret-left"></i>
+                <span class="material-symbols-rounded right">chevron_left</span>
               </p>
               </a>
               <ul class="nav nav-treeview">
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("saques_extratos")) : ?>
                   <li class="nav-item sub-item" title="Veja suas comissões e solicite saques">
                     <a href="<?= url('comissao') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="far fa-chart-bar nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">insights</span>
                       <p>Saque e Extratos</p>
                     </a>
                   </li>
@@ -467,7 +479,7 @@
                 <?php if ($_SESSION["tipo"] == 1 || $_SESSION["tipo"] == 2) : ?>
                   <li class="nav-item sub-item" title="Comissões da REDROCKET">
                     <a href="<?= url('comissao/redrocket') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="far fa-chart-bar nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">workspace_premium</span>
                       <p>Comissão WINPAY</p>
                     </a>
                   </li>
@@ -476,7 +488,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("conta_bancaria")) : ?>
                   <li class="nav-item sub-item" title="Cadastre contas bancárias">
                     <a href="<?= url('banco') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-piggy-bank nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">savings</span>
                       <p>Contas Bancárias</p>
                     </a>
                   </li>
@@ -485,7 +497,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("saques_solicitados")) : ?>
                   <li class="nav-item sub-item" title="Histórico de saques e a situação dos mesmos">
                     <a href="<?= url('saques') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="far fa-money-bill-alt nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">request_quote</span>
                       <p>Saques Solicitados</p>
                     </a>
                   </li>
@@ -494,7 +506,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("antecipacao")) : ?>
                   <li class="nav-item sub-item" title="Veja se possiu valor liberado para antecipar">
                     <a href="<?= url('antecipacao') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-wallet nav-icon"></i>
+                      <span class="material-symbols-rounded nav-icon">account_balance_wallet</span>
                       <p>Antecipação</p>
                     </a>
                   </li>
@@ -519,37 +531,37 @@
               }
               ?>
 
-              <span class="material-icons-outlined">settings</span>
+              <span class="material-symbols-rounded">settings</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Configurações
-                <i class="right fas fa-caret-left"></i>
+                <span class="material-symbols-rounded right">chevron_left</span>
               </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item sub-item" title="Cadastro e configuração de funcionários">
                   <a href="<?= url("funcionarios") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                    <i class="far fa-user nav-icon"></i>
+                    <span class="material-symbols-rounded nav-icon">badge</span>
                     <p>Funcionários</p>
                   </a>
                 </li>
 
                 <li class="nav-item sub-item" title="Configurações de produtores">
                   <a href="<?= url("usuarios?tipo=4") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                    <i class="far fa-user-circle nav-icon"></i>
+                    <span class="material-symbols-rounded nav-icon">groups</span>
                     <p>Produtores</p>
                   </a>
                 </li>
 
                 <li class="nav-item sub-item" title="Configurações de afiliados">
                   <a href="<?= url("usuarios?tipo=5") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                    <i class="far fa-address-book nav-icon"></i>
+                    <span class="material-symbols-rounded nav-icon">contact_page</span>
                     <p>Afiliados</p>
                   </a>
                 </li>
 
                 <li class="nav-item sub-item" title="Configurações das taxas da plataforma">
                   <a href="<?= url("taxas") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                    <i class="fas fa-cogs nav-icon"></i>
+                    <span class="material-symbols-rounded nav-icon">settings_suggest</span>
                     <p>Taxas</p>
                   </a>
                 </li>
@@ -580,17 +592,17 @@
               }
               ?>
 
-              <span class="material-icons-outlined">build</span>
+              <span class="material-symbols-rounded">handyman</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Ferramentas
-                <i class="right fas fa-caret-left"></i>
+                <span class="material-symbols-rounded right">chevron_left</span>
               </p>
               </a>
 
               <ul class="nav nav-treeview">
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("integracoes")) : ?>
                   <li class="nav-item sub-item">
-                    <a href="<?= url("integracoes") ?>" class="nav-link txt-branco-octa"><i class="nav-icon fas fa-marker"></i>
+                    <a href="<?= url("integracoes") ?>" class="nav-link txt-branco-octa"><span class="material-symbols-rounded nav-icon">hub</span>
                       <p>Integrações</p>
                     </a>
                   </li>
@@ -598,7 +610,7 @@
 
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("postback")) : ?>
                   <li class="nav-item sub-item" title="Gerenciar Postbacks">
-                    <a href="<?= url("postbacks") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-align-left"></i>
+                    <a href="<?= url("postbacks") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">sync_alt</span>
                       <p>Postback</p>
                     </a>
                   </li>
@@ -606,7 +618,7 @@
 
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("pixel")) : ?>
                   <li class="nav-item sub-item" title="Cadastro de pixel">
-                    <a href="<?= url("pixel") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-align-left"></i>
+                    <a href="<?= url("pixel") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">blur_on</span>
                       <p>Pixel</p>
                     </a>
                   </li>
@@ -614,7 +626,7 @@
 
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("api")) : ?>
                   <li class="nav-item sub-item" title="Gerar API">
-                    <a href="<?= url("api") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-align-left"></i>
+                    <a href="<?= url("api") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">api</span>
                       <p>Api</p>
                     </a>
                   </li>
@@ -622,7 +634,7 @@
 
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("notas_fiscais")) : ?>
                   <li class="nav-item sub-item" title="Ver notas fiscais">
-                    <a href="<?= url("notas") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-align-left"></i>
+                    <a href="<?= url("notas") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">description</span>
                       <p>Notas Fiscais</p>
                     </a>
                   </li>
@@ -630,19 +642,19 @@
 
                 <?php if ($_SESSION["tipo"] == 1) : ?>
                   <li class="nav-item sub-item" title="Links para verificação de processos internos">
-                    <a href="<?= url("links-uteis") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-link"></i>
+                    <a href="<?= url("links-uteis") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">link</span>
                       <p>Links úteis</p>
                     </a>
                   </li>
 
                   <li class="nav-item sub-item" title="">
-                    <a href="<?= url("emails") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-link"></i>
+                    <a href="<?= url("emails") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">mail</span>
                       <p>Ferramenta de Emails</p>
                     </a>
                   </li>
 
                   <li class="nav-item sub-item" title="">
-                    <a href="<?= url("login-master") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><i class="nav-icon fas fa-link"></i>
+                    <a href="<?= url("login-master") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">admin_panel_settings</span>
                       <p>Login Master</p>
                     </a>
                   </li>
@@ -667,10 +679,10 @@
               }
               ?>
 
-              <span class="material-icons-outlined">bar_chart</span>
+              <span class="material-symbols-rounded">query_stats</span>
               <p class="txt-branco-octa" style="text-shadow:#343a40">
                 Relatórios
-                <i class="right fas fa-caret-left"></i>
+                <span class="material-symbols-rounded right">chevron_left</span>
               </p>
               </a>
 
@@ -678,7 +690,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("analitico_vendas")) : ?>
                   <li class="nav-item sub-item">
                     <a href="<?= url("relatorios") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="nav-icon fas fa-chart-line"></i>
+                      <span class="material-symbols-rounded nav-icon">query_stats</span>
                       <p>Analíticos de Vendas</p>
                     </a>
                   </li>
@@ -687,7 +699,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas_afiliados")) : ?>
                   <li class="nav-item sub-item" title="Performance Afiliados">
                     <a href="<?= url("relatorios/afiliados") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-funnel-dollar"></i>
+                      <span class="material-symbols-rounded nav-icon">paid</span>
                       <p>Vendas Afiliados</p>
                     </a>
                   </li>
@@ -696,7 +708,7 @@
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("performance_afiliados")) : ?>
                   <li class="nav-item sub-item" title="Performance Afiliados">
                     <a href="<?= url("relatorios/performance-afiliados") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                      <i class="fas fa-users"></i>
+                      <span class="material-symbols-rounded nav-icon">diversity_3</span>
                       <p>Performance Afiliados</p>
                     </a>
                   </li>
@@ -720,31 +732,31 @@
             }
             ?>
 
-            <span class="material-icons-outlined">pie_chart</span>
+            <span class="material-symbols-rounded">space_dashboard</span>
             <p class="txt-branco-octa" style="text-shadow:#343a40">
               Painel WINPAY
-              <i class="right fas fa-caret-left"></i>
+              <span class="material-symbols-rounded right">chevron_left</span>
             </p>
             </a>
 
             <ul class="nav nav-treeview">
               <li class="nav-item sub-item">
                 <a href="<?= url("relatorios/painel") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                  <i class="nav-icon fas fa-chart-line"></i>
+                  <span class="material-symbols-rounded nav-icon">query_stats</span>
                   <p>Relatórios REDROCKET</p>
                 </a>
               </li>
 
               <li class="nav-item sub-item" title="Painel Clientes">
                 <a href="<?= url("relatorios/painel_clientes") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                  <i class=" nav-icon fas fa-tachometer-alt"></i>
+                  <span class="material-symbols-rounded nav-icon">dashboard</span>
                   <p>Relatórios Clientes</p>
                 </a>
               </li>
 
               <li class="nav-item sub-item" title="Painel REDROCKET NF">
                 <a href="<?= url("relatorios/painel-nf") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
-                  <i class="nav-icon fas fa-file-invoice"></i>
+                  <span class="material-symbols-rounded nav-icon">receipt_long</span>
                   <p>Painel REDROCKET NF</p>
                 </a>
               </li>
