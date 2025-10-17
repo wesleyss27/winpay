@@ -276,7 +276,6 @@ if ($_SESSION["tipo"] == 6) {
                                     ativo: "<?= $plano->ativo ?>",
                                     habilitar_ecommerce: "<?= $plano->habilitar_ecommerce ?>",
                                     televendas: "<?= $plano->televendas ?>",
-                                    status: "<?= $plano->status ?>",
                                     pagina: "<?= $pagina ?>",
                                 }
                             </script>
@@ -595,8 +594,8 @@ if ($_SESSION["tipo"] == 6) {
 
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelar">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="salvar">Salvar</button>
-                    <button type="button" class="btn btn-warning" id="editar">Editar</button>
+                    <button class="btn btn-primary" id="salvar">Salvar</button>
+                    <button class="btn btn-warning" id="editar">Editar</button>
                 </div>
 
             </form>
@@ -733,11 +732,11 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         var valor = $("#parcelas").val();
 
         if (valor > 12) {
-            $("#parcelas").val(12);
+            $("#parcelas").prop("value", 12);
         }
 
         if (valor < 1) {
-            $("#parcelas").val(1);
+            $("#parcelas").prop("value", 1);
         }
 
         var val = $("#preco").val();
@@ -760,8 +759,12 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#cancelar").css("display", "inline");
         $("#editar").css("display", "none");
         $(".mostrar_comissao").css("display", "none");
-        $("#habilitar_comissao").val(0);
-        $("#habilitar_comissao_coprodutores").val(0);
+        $("#habilitar_comissao option[value=" + 0 + "]").prop({
+            "selected": true
+        });
+        $("#habilitar_comissao_coprodutores[value= " + 0 + "]").prop({
+            "selected": true
+        });
         // console.log()
         $("#comissao1").val(0.00);
         cancelar();
@@ -769,12 +772,12 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
 
     });
 
-    $("#salvar").off("click").on("click", function(e) {
+    $("#salvar1").click(function(e) {
         e.preventDefault();
         salvarEditar(1);
     });
 
-    $("#editar").off("click").on("click", function(e) {
+    $("#editar1").click(function(e) {
         e.preventDefault();
         salvarEditar(0);
     });
@@ -797,7 +800,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
             preco = $("#preco").val(),
             quantidade = $("#quantidade").val();
 
-        var form = $("form[name='plano']");
+        var form = $("form");
 
         if (nome == "" || preco == "" || quantidade == "") {
 
@@ -819,11 +822,8 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
                 },
                 success: function(callback) {
                     console.log("callback ", callback);
-                    alert(callback);
-                    if (typeof callback === "string" && callback.toLowerCase().includes("sucesso")) {
-                        $("#modal-lg").modal("hide");
-                        cancelar();
-                    }
+                    // alert(callback);
+                    // location.reload();
                 }
 
             });
@@ -907,7 +907,6 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         var ativo = dados[i]["ativo"];
         var habilitar_ecommerce = dados[i]["habilitar_ecommerce"];
         var televendas = dados[i]["televendas"];
-        var statusPlano = dados[i]["status"];
 
         console.log(id, preco, nome, quantidade, foto, privado, ativo, comissao_coprodutores);
 
@@ -915,20 +914,17 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#salvar").css("display", "none");
         $("#editar").css("display", "inline");
         $("#cancelar").css("display", "inline");
-        $("#id").val(id);
-        $("#nome").val(nome);
-        $("#preco").val(preco);
-        $("#descricao").val(descricao);
-        $("#assumir_juros").val(assumir_juros);
-        if (statusPlano !== undefined && statusPlano !== null) {
-            $("input[name='status']").val(statusPlano);
-        }
+        $("#id").attr("value", id);
+        $("nome").attr("value", nome);
+        $("#preco").attr("value", preco);
+        $("#descricao").attr("value", descricao);
+        $("#assumir_juros option[value=" + assumir_juros + "]").prop("selected", true);
 
         if ($("#assumir_juros").val() == 1)
             juros();
 
-        if (tipo_comissao_afiliado !== undefined && tipo_comissao_afiliado !== null) {
-            $("#tipo_comissao1").val(tipo_comissao_afiliado);
+        if (tipo_comissao_afiliado) {
+            $("#tipo_comissao1 option[value=" + tipo_comissao_afiliado + "]").prop("selected", true);
         }
         // SESSÃO COMISSAO AFILIADO
         if (habilitar_comissao_afiliado == 0) {
@@ -937,8 +933,8 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
             $(".mostrar_comissao").css("display", "inline");
         }
 
-        if (habilitar_comissao_afiliado !== undefined && habilitar_comissao_afiliado !== null) {
-            $("#habilitar_comissao").val(habilitar_comissao_afiliado);
+        if (habilitar_comissao_afiliado) {
+            $("#habilitar_comissao option[value=" + habilitar_comissao_afiliado + "]").prop("selected", true);
         }
         //  FIM SESSAO COMISSAO AFILIADO
 
@@ -950,31 +946,31 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         }
 
         if (habilitar_comissao_coprodutores) {
-            $("#habilitar_comissao_coprodutores").val(habilitar_comissao_coprodutores);
+            $("#habilitar_comissao_coprodutores option[value=" + habilitar_comissao_coprodutores + "]").prop("selected", true);
 
             var com = comissao_coprodutores.split(",");
             console.log(com, com.length);
             for (var i = 0; i < com.length; i++) {
                 var coprodutor = com[i].split("|");
 
-                $("#coprodutores" + coprodutor[0]).val(coprodutor[0]);
-                $("#tipo_comissao_coprodutor" + coprodutor[0]).val(coprodutor[1]);
-                $("#comissao_coprodutor" + coprodutor[0]).val(coprodutor[2]);
+                $("#coprodutores" + coprodutor[0]).attr("value", coprodutor[0]);
+                $("#tipo_comissao_coprodutor" + coprodutor[0] + " option[value=" + coprodutor[1] + "]").prop("selected", true);
+                $("#comissao_coprodutor" + coprodutor[0]).attr("value", coprodutor[2]);
             }
         }
         // FIM COMISSÃO COPRODUTORES
 
-        $("#comissao1").val(comissao_afiliado);
+        $("#comissao1").prop("value", comissao_afiliado);
 
-        $("#parcelas").val(parcelas);
+        $("#parcelas").prop("value", parcelas);
 
         if (periodo) {
-            $("#periodo").val(periodo);
-            $("#maximo_recorrencia").val(maximo_recorrencia);
-            $("#primeira_parcela").val(primeira_parcela);
-            $("#preco_parcela").val(preco_parcela);
-            $("#carencia").val(carencia);
-            $("#comissao_afiliado_assinatura").val(comissao_afiliado_assinatura);
+            $("#periodo option[value=" + periodo + "]").prop("selected", true);
+            $("#maximo_recorrencia").attr("value", maximo_recorrencia);
+            $("#primeira_parcela option[value=" + primeira_parcela + "]").prop("selected", true);
+            $("#preco_parcela").prop("value", preco_parcela);
+            $("#carencia").prop("value", carencia);
+            $("#comissao_afiliado_assinatura").prop("value", comissao_afiliado_assinatura);
         }
 
         if (primeira_parcela == "preco") {
@@ -989,18 +985,18 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         }
         console.log(nome);
 
-        $("#nome").val(nome);
-        $("#quantidade").val(quantidade);
+        $("#nome").attr("value", nome);
+        $("#quantidade").attr("value", quantidade);
 
-        $("#descricao").val(descricao);
-        $("#privado").val(privado);
-        $("#ativo").val(ativo);
-        $("#habilitar_ecommerce").val(habilitar_ecommerce);
+        $("#descricao").prop("value", descricao);
+        $("#privado option[value=" + privado + "]").prop("selected", true);
+        $("#ativo option[value=" + ativo + "]").prop("selected", true);
+        $("#habilitar_ecommerce option[value=" + habilitar_ecommerce + "]").prop("selected", true);
         // $("#televendas option[value=" + televendas + "]").prop("selected", true);
 
         if (foto) {
             $("#excluir-foto").show();
-            $("#foto_atual, #ft_atual").val(foto);
+            $("#foto_atual, #ft_atual").attr("value", foto);
 
             $("#imagem_foto_atual").prop({
                 "src": "<?= url("uploads/produtos/") ?>" + foto,
@@ -1012,7 +1008,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
 
     $("#excluir-foto").click((e) => {
         e.preventDefault();
-        $("#foto_atual").val("");
+        $("#foto_atual").attr("value", "");
         $("#imagem_foto_atual").hide("slow");
         $("#excluir-foto").hide("slow");
     });
@@ -1022,40 +1018,39 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#salvar").css("display", "inline");
         $("#editar").css("display", "none");
         $("#cancelar").css("display", "inline");
-        $("#id").val("");
-        $("#preco").val("");
-        $("#descricao").val("");
-        $("#assumir_juros").val("0");
-        $("#nome").val("");
-        $("#quantidade").val("");
-        $("#parcelas").val("");
+        $("#id").attr("value", "");
+        $("#preco").attr("value", "");
+        $("#descricao").attr("value", "");
+        $("#assumir_juros").prop("selected", false);
+        $("#nome").attr("value", "");
+        $("#quantidade").attr("value", "");
+        $("#parcelas").prop("value", "");
 
-        $("#periodo").prop("selectedIndex", 0);
-        $("#maximo_recorrencia").val("");
-        $("#primeira_parcela").prop("selectedIndex", 0);
-        $("#preco_parcela").val("");
-        $("#carencia").val("");
+        $("#periodo option").prop("selected", false);
+        $("#maximo_recorrencia").attr("value", "");
+        $("#primeira_parcela option").prop("selected", false);
+        $("#preco_parcela").prop("value", "");
+        $("#carencia").prop("value", "");
 
-        $("#descricao").val("");
-        $("#privado").val(0);
-        $("#ativo").val(1);
-        $("#habilitar_ecommerce").val(0);
+        $("#descricao").prop("value", "");
+        $("#privado option").prop("selected", false);
+        $("#ativo option").prop("selected", false);
+        $("#habilitar_ecommerce option").prop("selected", false);
 
-        $("#foto_atual, #ft_atual").val("");
+        $("#foto_atual, #ft_atual").attr("value", "");
 
         $("#imagem_foto_atual").prop("src", "");
 
-        $("#habilitar_comissao").val(0);
+        $("#habilitar_comissao_afiliados option").prop("selected", false);
 
-        $("#habilitar_comissao_coprodutores").val(0);
-        $("input[name='status']").val("<?= $produto->status ?>");
+        $("#habilitar_comissao_coprodutores option").prop("selected", false);
         <?php if ($coproducao) : ?>
             <?php foreach ($coproducao as $coprodutor) : ?>
                 var tipo_comissao = "<?= $coprodutor->tipo_comissao ?>";
-                $("#coprodutores" + <?= $coprodutor->co_produtor ?>).val("<?= $coprodutor->co_produtor ?>");
-                $("#coprodutor" + <?= $coprodutor->co_produtor ?>).val("<?= $coprodutor->dataCoprodutor()->nome ?>");
-                $("#tipo_comissao_coprodutor" + <?= $coprodutor->co_produtor ?>).val(tipo_comissao);
-                $("#comissao_coprodutor" + <?= $coprodutor->co_produtor ?>).val("<?= $coprodutor->comissao ?>");
+                $("#coprodutores" + <?= $coprodutor->co_produtor ?>).attr("value", "<?= $coprodutor->co_produtor ?>");
+                $("#coprodutor" + <?= $coprodutor->co_produtor ?>).attr("value", "<?= $coprodutor->dataCoprodutor()->nome ?>");
+                $("#tipo_comissao_coprodutor" + <?= $coprodutor->co_produtor ?> + " option[value=" + tipo_comissao + "]").prop("selected", true);
+                $("#comissao_coprodutor" + <?= $coprodutor->co_produtor ?>).attr("value", "<?= $coprodutor->comissao ?>");
             <?php endforeach; ?>
         <?php endif; ?>
     }

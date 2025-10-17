@@ -257,7 +257,6 @@ $router->get("/exportar", "AppAssinaturas:exportar", "vendas.exportar");
 $router->get("/exportar-vendas", "AppAssinaturas:exportarVendas", "vendas.exportarVendas");
 $router->get("/verificar-assinaturas", "AppAssinaturas:verificarAssinaturas", "assinaturas.verificar");
 $router->get("/input-venda", "AppAssinaturas:renderInputVenda", "assinaturas.inputVenda");
-$router->post("/venda-manual", "AppAssinaturas:criarVendaManual", "assinaturas.vendaManual");
 
 
 /*

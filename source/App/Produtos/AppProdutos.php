@@ -1343,10 +1343,10 @@ class AppProdutos
     ? $data['comissao_afiliado_assinatura']
     : null;
         $plano->descricao = @$data["descricao"];
-        $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
-        $plano->status = isset($data["status"]) ? (int)$data["status"] : null;
-        $plano->ativo = isset($data["ativo"]) ? (int)$data["ativo"] : 0;
-        $plano->habilitar_ecommerce = isset($data["habilitar_ecommerce"]) ? (int)$data["habilitar_ecommerce"] : 0;
+        $plano->privado = @$data["privado"];
+        $plano->status = @$data["status"];
+        $plano->ativo = @$data["ativo"];
+        $plano->habilitar_ecommerce = @$data["habilitar_ecommerce"];
 
         // COMISSAO AFILIADO
 
@@ -1461,10 +1461,10 @@ class AppProdutos
     ? $data['comissao_afiliado_assinatura']
     : null;
         $plano->descricao = @$data["descricao"];
-        $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
-        $plano->status = isset($data["status"]) ? (int)$data["status"] : null;
-        $plano->ativo = isset($data["ativo"]) ? (int)$data["ativo"] : 0;
-        $plano->habilitar_ecommerce = isset($data["habilitar_ecommerce"]) ? (int)$data["habilitar_ecommerce"] : 0;
+        $plano->privado = @$data["privado"];
+        $plano->status = @$data["status"];
+        $plano->ativo = @$data["ativo"];
+        $plano->habilitar_ecommerce = @$data["habilitar_ecommerce"];
 
         // COMISSAO AFILIADO
 
@@ -1558,10 +1558,10 @@ class AppProdutos
     ? $data['comissao_afiliado_assinatura']
     : null;
         $plano->descricao = @$data["descricao"];
-        $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
-        $plano->status = isset($data["status"]) ? (int)$data["status"] : null;
-        $plano->ativo = isset($data["ativo"]) ? (int)$data["ativo"] : 0;
-        $plano->habilitar_ecommerce = isset($data["habilitar_ecommerce"]) ? (int)$data["habilitar_ecommerce"] : 0;
+        $plano->privado = @$data["privado"];
+        $plano->status = $data["status"];
+        $plano->ativo = @$data["ativo"];
+        $plano->habilitar_ecommerce = @$data["habilitar_ecommerce"];
         // $plano->televendas = @$data["televendas"];
         $files = new File();
 
@@ -1594,16 +1594,17 @@ class AppProdutos
 
             $comissao_coprodutores = "";
             $i = 0;
-            if (!empty($data["coprodutores"])) {
-                foreach ($data["coprodutores"] as $coprodutores) {
-                    $data["comissao_coprodutor"][$i] = str_replace(",", ".", $data["comissao_coprodutor"][$i]);
-                    if (count($data["coprodutores"]) - 1 == $i) {
-                        $comissao_coprodutores .= "$coprodutores|{$data["tipo_comissao_coprodutor"][$i]}|" . number_format($data["comissao_coprodutor"][$i], 2, ".", "");
-                    } else {
-                        $comissao_coprodutores .= "$coprodutores|{$data["tipo_comissao_coprodutor"][$i]}|" . number_format($data["comissao_coprodutor"][$i], 2, ".", "") . ",";
-                    }
-                    $i++;
+            if (@$data["coprodutores"] != "")
+                echo "gsg " . count(@$data["coprodutores"]);
+            foreach ($data["coprodutores"] as $coprodutores) {
+                $data["comissao_coprodutor"][$i] = str_replace(",", ".", $data["comissao_coprodutor"][$i]);
+                if (count($data["coprodutores"]) - 1 == $i) {
+                    $comissao_coprodutores .= "$coprodutores|{$data["tipo_comissao_coprodutor"][$i]}|" . number_format($data["comissao_coprodutor"][$i], 2, ".", "");
+                } else {
+                    $comissao_coprodutores .= "$coprodutores|{$data["tipo_comissao_coprodutor"][$i]}|" . number_format($data["comissao_coprodutor"][$i], 2, ".", "") . ",";
                 }
+                echo $i;
+                $i++;
             }
             $plano->comissao_coprodutores = @$comissao_coprodutores;
         } else {
@@ -1620,13 +1621,6 @@ class AppProdutos
         } else {
             $msg = $plano->fail()->getMessage();
             $classCss = "bg-warning";
-        }
-
-        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-
-        if ($isAjax) {
-            echo $msg;
-            return;
         }
 
         $pagina_atual = $data["pagina"];

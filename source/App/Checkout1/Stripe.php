@@ -167,6 +167,14 @@ class Stripe
             ?? $data['stripeToken']
             ?? null;
 
+        if (!$token) {
+            return (object)[
+                'error' => (object)[
+                    'message' => 'MPHiddenInputToken ausente'
+                ]
+            ];
+        }
+
         // --- corpo do PaymentIntent
         $body = [
             'amount'                       => $valor,
@@ -175,29 +183,8 @@ class Stripe
             'confirm'                      => 'true',
             'payment_method_types[]'       => 'card',
             'payment_method_data[type]'    => 'card',
+            'payment_method_data[card][token]' => $token,
         ];
-
-        if ($token) {
-            $body['payment_method_data[card][token]'] = $token;
-        } elseif (!empty($data['numcart']) && !empty($data['mes_val']) && !empty($data['ano_val']) && !empty($data['cvv'])) {
-            $numero = preg_replace('/\D+/', '', $data['numcart']);
-            $mes = str_pad(preg_replace('/\D+/', '', $data['mes_val']), 2, '0', STR_PAD_LEFT);
-            $ano = preg_replace('/\D+/', '', $data['ano_val']);
-            if (strlen($ano) === 2) {
-                $ano = '20' . $ano;
-            }
-
-            $body['payment_method_data[card][number]'] = $numero;
-            $body['payment_method_data[card][exp_month]'] = $mes;
-            $body['payment_method_data[card][exp_year]'] = $ano;
-            $body['payment_method_data[card][cvc]'] = preg_replace('/\D+/', '', $data['cvv']);
-        } else {
-            return (object)[
-                'error' => (object)[
-                    'message' => 'Dados do cartão ausentes'
-                ]
-            ];
-        }
 
         // --- parcelas (se usar)
         if (!empty($data['parcela']) && (int)$data['parcela'] > 1) {
