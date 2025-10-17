@@ -127,7 +127,6 @@ class BsPay
         error_log("[BSPay] HTTP Code: {$http}");
         if ($errNo) error_log("[BSPay] cURL #{$errNo}: {$err}");
 
-        echo $resp;
         return json_decode($resp);
     }
 
