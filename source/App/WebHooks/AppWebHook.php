@@ -20,6 +20,9 @@ use Source\Models\Assinaturas\AssinaturaCadastro;
 use Source\Models\Produtos\Produto;
 use Source\Models\Produtos\Plano;
 use Source\App\Assinaturas\AppAssinaturas;
+use Source\Models\Vendas\ManualSale;
+use Source\Models\Vendas\ManualSaleItem;
+use Source\Models\Assinaturas\Assinatura;
 
 class AppWebHook
 {
@@ -378,42 +381,33 @@ class AppWebHook
             "CHARGEBACK" => 7
         );
 
+        $motivo = null;
+        $finalizada = null;
+
         if (isset($response->requestBody->transactionId)) {
             $payID = $response->requestBody->transactionId;
-            $venda = (new Venda())->find("transacao = '$payID'")->fetch();
+            $status = $status_transacao[$response->requestBody->status] ?? null;
+            if ($status === null) {
+                echo "Status desconhecido recebido do BSPay.<br>";
+                return;
+            }
 
-            if ($venda) {
-                $status_atual = (int)$venda->status_transacao;
+            if ($status === 4) {
+                $finalizada = date("Y-m-d H:i:s");
+                $motivo = null;
+            } elseif (in_array($status, [5, 6, 7])) {
+                $motivo = $response->requestBody->message ?? "Pagamento não concluído";
+            }
 
-                $status = $status_transacao[$response->requestBody->status] ?? null;
+            $vendas = $this->atualizarVendasManualPorTransacao($payID, $status, $motivo, $finalizada);
 
-                if ($status === $status_atual) {
-                    error_log("Bspay duplicado ignorado: venda {$venda->id}, status={$status}");
-                    echo "Evento duplicado (status igual).<br>";
-                    return;
-                }
+            if (!$vendas) {
+                echo "Não tem venda para a transação {$payID}.<br>";
+                return;
+            }
 
-                if ($status == 4) {
-                    $finalizada = date("Y-m-d H:i:s");
-                    $ultimo_evento = $finalizada;
-                } else {
-                    $finalizada = null;
-                    $ultimo_evento = date("Y-m-d H:i:s");
-                }
-
-                $venda->status_transacao = $status;
-                $venda->data_finalizada = $finalizada;
-                $venda->data_ultimo_evento = $ultimo_evento;
-
-                error_log("Chegou aqui");
-
-                if ($venda->save()) {
-                    error_log("Foi salvo");
-                    $msg = "Salvo";
-                } else {
-                    $msg = "{$venda->fail()->getMessage()}";
-                }
-
+            foreach ($vendas as $venda) {
+                $dados = [];
                 if (@$venda->endereco) {
                     $dados["nome"] = $venda->dataEndereco()->nome;
                     $dados["email"] = $venda->dataEndereco()->email;
@@ -425,7 +419,7 @@ class AppWebHook
                 }
 
                 $dados["venda"] = $venda->id;
-                $dados["status_transacao"] = $status;
+                $dados["status_transacao"] = $venda->status_transacao;
                 $dados["transacao"] = $payID;
                 $dados["produtor"] = $venda->produtor;
 
@@ -439,15 +433,13 @@ class AppWebHook
                 if (@$venda->plano) {
                     $dados["nomekit"] = $venda->dataPlano()->nome;
                     $dados["produto"] = $venda->dataPlano()->codigo;
-                    $dados["plano"] = @$venda->dataplano()->codigo;
                 } else {
                     $dados["nomekit"] = $venda->dataProduto()->nome;
                     $dados["produto"] = $venda->dataProduto()->nome;
                 }
 
                 (new AppProcessos())->processos($dados);
-                error_log("Andou aqui");
-                // Registro de log
+
                 $arquivo = fopen('webhook-bspay.txt', 'a+');
                 $texto = date("d/m/Y H:i:s") . "\n";
                 $texto .= json_encode($response, JSON_PRETTY_PRINT) . "\n";
@@ -457,9 +449,7 @@ class AppWebHook
                 $bling = (new AppBling(null))->criarPedido(["venda" => $venda->id, "usuario" => $venda->produtor, "produto" => $venda->produto]);
                 $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
 
-                echo "Venda {$venda->id}, status atualizado para {$status}.<br>";
-            } else {
-                echo "Não tem venda para a transação {$payID}.<br>";
+                echo "Venda {$venda->id}, status atualizado para {$venda->status_transacao}.<br>";
             }
         } else {
             echo "Dados inválidos recebidos no webhook.<br>";
@@ -548,79 +538,64 @@ class AppWebHook
 
         // 4) Localiza a venda
         //    Recomendação: salve SEMPRE payment_intent.id em venda->transacao ao criar o pagamento.
-        $venda = null;
+        $vendas = [];
         if (!empty($paymentIntentId)) {
-            $venda = (new \Source\Models\Vendas\Venda())->find("transacao = '{$paymentIntentId}'")->fetch();
+            $vendas = $this->atualizarVendasManualPorTransacao($paymentIntentId, $status, $motivo, $finalizada);
         }
-        if (!$venda && !empty($chargeId)) {
-            $venda = (new \Source\Models\Vendas\Venda())->find("transacao = '{$chargeId}'")->fetch();
+        if (!$vendas && !empty($chargeId)) {
+            $vendas = $this->atualizarVendasManualPorTransacao($chargeId, $status, $motivo, $finalizada);
         }
 
-        if ($venda) {
-            // 5) Atualiza venda
-            $venda->status_transacao  = $status;
-            $venda->data_finalizada   = $finalizada;
-            $venda->data_ultimo_evento = $ultimo_evento;
-            if (!empty($motivo)) {
-                $venda->motivo = $motivo;
+        if ($vendas) {
+            foreach ($vendas as $venda) {
+                $dados = [];
+                if (@$venda->endereco) {
+                    $dados["nome"]     = $venda->dataEndereco()->nome;
+                    $dados["email"]    = $venda->dataEndereco()->email;
+                    $dados["telefone"] = $venda->dataEndereco()->telefone;
+                } else {
+                    $dados["nome"]     = $venda->dataComprador()->nome;
+                    $dados["email"]    = $venda->dataComprador()->email;
+                    $dados["telefone"] = $venda->dataComprador()->telefone;
+                }
+
+                $dados["venda"]            = $venda->id;
+                $dados["status_transacao"] = $venda->status_transacao;
+                $dados["transacao"]        = $payID ?? $paymentIntentId ?? $chargeId;
+                $dados["produtor"]         = $venda->produtor;
+
+                if (@$venda->afiliado) { $dados["afiliado"] = $venda->afiliado; }
+
+                $dados["valor_bruto"]    = $venda->valor_bruto;
+                $dados["valor_produto"]  = $venda->valor_produto;
+                $dados["valor_desconto"] = $venda->valor_desconto;
+
+                if (@$venda->plano) {
+                    $dados["nomekit"] = $venda->dataPlano()->nome;
+                    $dados["produto"] = $venda->dataPlano()->nome;
+                } else {
+                    $dados["nomekit"] = $venda->dataProduto()->nome;
+                    $dados["produto"] = $venda->dataProduto()->nome;
+                }
+
+                (new \Source\App\Processos\AppProcessos())->processos($dados);
+
+                $arq = fopen('webhook-stripe.txt', 'a+');
+                $txt  = date("d/m/Y H:i:s") . "\n";
+                $txt .= "event: {$type}\n";
+                $txt .= "status: {$venda->status_transacao}\n";
+                $txt .= "venda: {$venda->id}\n";
+                $txt .= "payID: " . ($payID ?? $paymentIntentId ?? $chargeId ?? '') . "\n";
+                $txt .= "-------------------------------------------\n";
+                fwrite($arq, $txt);
+                fclose($arq);
             }
-
-            if ($venda->save()) {
-                $msg = "Salvo";
-            } else {
-                $msg = "{$venda->fail()->getMessage()}";
-            }
-
-            // 6) Monta dados e dispara processos (segue seu padrão)
-            if (@$venda->endereco) {
-                $dados["nome"]     = $venda->dataEndereco()->nome;
-                $dados["email"]    = $venda->dataEndereco()->email;
-                $dados["telefone"] = $venda->dataEndereco()->telefone;
-            } else {
-                $dados["nome"]     = $venda->dataComprador()->nome;
-                $dados["email"]    = $venda->dataComprador()->email;
-                $dados["telefone"] = $venda->dataComprador()->telefone;
-            }
-
-            $dados["venda"]            = $venda->id;
-            $dados["status_transacao"] = $status;
-            $dados["transacao"]        = $payID ?? $paymentIntentId ?? $chargeId;
-            $dados["produtor"]         = $venda->produtor;
-
-            if (@$venda->afiliado) { $dados["afiliado"] = $venda->afiliado; }
-
-            $dados["valor_bruto"]    = $venda->valor_bruto;
-            $dados["valor_produto"]  = $venda->valor_produto;
-            $dados["valor_desconto"] = $venda->valor_desconto;
-
-            if (@$venda->plano) {
-                $dados["nomekit"] = $venda->dataPlano()->nome;
-                $dados["produto"] = $venda->dataPlano()->nome;
-            } else {
-                $dados["nomekit"] = $venda->dataProduto()->nome;
-                $dados["produto"] = $venda->dataProduto()->nome;
-            }
-
-            (new \Source\App\Processos\AppProcessos())->processos($dados);
-
-            // 7) Logs simples
-            $arq = fopen('webhook-stripe.txt', 'a+');
-            $txt  = date("d/m/Y H:i:s") . "\n";
-            $txt .= "event: {$type}\n";
-            $txt .= "status: {$status}\n";
-            $txt .= "venda: {$venda->id}\n";
-            $txt .= "payID: " . ($payID ?? '') . "\n";
-            $txt .= "msg: {$msg}\n";
-            $txt .= "-------------------------------------------\n";
-            fwrite($arq, $txt);
-            fclose($arq);
 
             http_response_code(200);
             echo json_encode(['ok' => true]);
             return;
         }
 
-        // 8) Não achou a venda
         $arq = fopen('webhook-stripe-notfound.txt', 'a+');
         $txt = date("d/m/Y H:i:s") . " - venda não encontrada. event={$type} payment_intent={$paymentIntentId} charge={$chargeId}\n";
         fwrite($arq, $txt);
@@ -1014,5 +989,74 @@ class AppWebHook
         } else {
             echo "Não tem venda";
         }
+    }
+
+    private function atualizarVendasManualPorTransacao(string $transacao, int $status, ?string $motivo, ?string $dataFinalizada): array
+    {
+        $vendas = (new Venda())->find("transacao = :tx", "tx={$transacao}")->fetch(true);
+        if (!$vendas) {
+            return [];
+        }
+
+        $manualSaleIds = [];
+        $manualItemIds = [];
+        $ultimoEvento = date("Y-m-d H:i:s");
+
+        foreach ($vendas as $venda) {
+            $statusAtual = (int)$venda->status_transacao;
+            if ($statusAtual !== $status || $venda->data_finalizada !== $dataFinalizada) {
+                $venda->status_transacao = $status;
+                $venda->data_finalizada = $dataFinalizada;
+                $venda->data_ultimo_evento = $ultimoEvento;
+                if ($motivo) {
+                    $venda->motivo = $motivo;
+                } elseif ($status === 4) {
+                    $venda->motivo = null;
+                }
+                $venda->save();
+            }
+
+            if ($venda->manual_sale_item_id) {
+                $manualItemIds[] = (int)$venda->manual_sale_item_id;
+                $manualItem = (new ManualSaleItem())->findById($venda->manual_sale_item_id);
+                if ($manualItem) {
+                    $manualSaleIds[] = (int)$manualItem->manual_sale_id;
+                }
+            }
+        }
+
+        $manualSaleIds = array_values(array_unique($manualSaleIds));
+        if ($manualSaleIds) {
+            $manualSaleModel = new ManualSale();
+            foreach ($manualSaleIds as $manualSaleId) {
+                $manualSale = $manualSaleModel->findById($manualSaleId);
+                if ($manualSale) {
+                    $manualSale->status = $status;
+                    $manualSale->save();
+                }
+            }
+        }
+
+        $manualItemIds = array_values(array_unique($manualItemIds));
+        if ($manualItemIds) {
+            $ids = implode(',', $manualItemIds);
+            $assinaturas = (new Assinatura())->find("manual_sale_item_id IN ({$ids})")->fetch(true);
+            if ($assinaturas) {
+                foreach ($assinaturas as $assinatura) {
+                    if ($status === 4) {
+                        $assinatura->status = 1;
+                        $assinatura->tentativas = 0;
+                    } elseif (in_array($status, [5, 6, 7])) {
+                        $assinatura->status = 3;
+                    } else {
+                        $assinatura->status = $status;
+                    }
+                    $assinatura->data_ultimo_evento = $ultimoEvento;
+                    $assinatura->save();
+                }
+            }
+        }
+
+        return $vendas;
     }
 }
