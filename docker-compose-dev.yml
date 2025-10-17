@@ -1,0 +1,24 @@
+version: "3"
+services:
+  php-apache:
+    image: wesleyss30/php-apache:1.0
+    container_name: php-apache-dev
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/vendor
+      - ./php:/usr/local/etc/php
+      - ./.htpasswd:/etc/apache2/.htpasswd
+      - ./000-default-dev.conf:/etc/apache2/sites-available/000-default-dev.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dev.rule=Host(`dev.winpay.digital`)"
+      - "traefik.http.services.php-apache.loadbalancer.server.port=80"
+      - "traefik.http.routers.dev.tls.certresolver=myresolver"
+
+networks:
+  mynetwork:
+    driver: bridge
