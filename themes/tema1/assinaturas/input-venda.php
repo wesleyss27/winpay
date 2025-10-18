@@ -663,3 +663,4 @@ if ($_SESSION["tipo"] == 6) {
     .btn-primary:hover { background-color: #e6c200; }
     .input-error { border: 2px solid red; }
 </style>
+
