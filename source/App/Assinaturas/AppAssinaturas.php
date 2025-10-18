@@ -475,6 +475,7 @@ class AppAssinaturas
 
     $usuarioId = $_SESSION["id"];
     $produtos = (new Produto())->find("usuario = :uid", "uid={$usuarioId}")->order("nome ASC")->fetch(true);
+    $produtos = $produtos ?: [];
 
     $planosPorProduto = [];
     $checkoutPorProduto = [];
