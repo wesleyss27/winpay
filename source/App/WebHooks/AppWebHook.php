@@ -367,7 +367,7 @@ class AppWebHook
         date_default_timezone_set("America/Recife");
 
         header('Content-Type: application/json');
-        // Pega o RAW data da requisição
+        // Pega o RAW data da requisiçãoo
         $json = file_get_contents('php://input');
         // Converte os dados recebidos
         $response = json_decode($json);
