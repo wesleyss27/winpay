@@ -15,6 +15,10 @@ if ($_SESSION["tipo"] == 6) {
         padding: 0.5rem clamp(1rem, 2vw + 0.5rem, 2.75rem) 3rem;
     }
 
+    .manual-sale-page::before {
+        background: #050505 !important;
+    }
+
     .manual-sale-page .content-header {
         padding: 0;
         margin-bottom: 2rem;
