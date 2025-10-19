@@ -408,15 +408,10 @@ class AppWebHook
 
             foreach ($vendas as $venda) {
                 $dados = [];
-                if (@$venda->endereco) {
-                    $dados["nome"] = $venda->dataEndereco()->nome;
-                    $dados["email"] = $venda->dataEndereco()->email;
-                    $dados["telefone"] = $venda->dataEndereco()->telefone;
-                } else {
-                    $dados["nome"] = $venda->dataComprador()->nome;
-                    $dados["email"] = $venda->dataComprador()->email;
-                    $dados["telefone"] = $venda->dataComprador()->telefone;
-                }
+                $contato = $venda->dataEndereco() ?: $venda->dataComprador();
+                $dados["nome"] = $contato ? ($contato->nome ?? null) : null;
+                $dados["email"] = $contato ? ($contato->email ?? null) : null;
+                $dados["telefone"] = $contato ? ($contato->telefone ?? null) : null;
 
                 $dados["venda"] = $venda->id;
                 $dados["status_transacao"] = $venda->status_transacao;
