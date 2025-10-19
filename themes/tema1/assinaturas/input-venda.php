@@ -517,7 +517,18 @@ if ($_SESSION["tipo"] == 6) {
             method: "POST",
             body: formData
         })
-        .then(response => response.json())
+        .then(async response => {
+            const text = await response.text();
+            try {
+                const pos = text.lastIndexOf('}{');
+                const jsonSegment = pos >= 0 ? text.slice(pos + 1) : text;
+                return JSON.parse(jsonSegment);
+            } catch (err) {
+                exibirMensagem("Erro ao interpretar a resposta do servidor.", "danger");
+                console.error("Resposta bruta:", text);
+                throw err;
+            }
+        })
         .then(data => {
             if (data.success) {
                 const resumo = data.manual_sale_id
