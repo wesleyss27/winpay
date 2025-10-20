@@ -1179,62 +1179,133 @@ $(function () {
   const myChart = echarts.init(chartDom);
 
   const option = {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: 'transparent',
+    color: ['#F4D03F', '#7B8CFF'],
+    textStyle: {
+      fontFamily: 'Inter',
+      color: '#F3F4F6'
+    },
     tooltip: {
       trigger: 'axis',
-      backgroundColor: '#2c2c2c',
-      borderColor: '#FFD700',
-      textStyle: { color: '#fff', fontFamily: 'Inter' },
+      backgroundColor: 'rgba(7, 7, 8, 0.92)',
+      borderColor: 'rgba(244, 208, 63, 0.3)',
+      borderWidth: 1,
+      padding: 12,
+      textStyle: {
+        color: '#F9FAFB',
+        fontFamily: 'Inter',
+        fontWeight: 500
+      },
       axisPointer: {
-        type: 'shadow'
+        type: 'line',
+        lineStyle: {
+          color: 'rgba(244, 208, 63, 0.45)',
+          width: 1.2
+        }
       }
     },
     legend: {
       data: ['Mês Atual', 'Mês Anterior'],
-      top: 'top',
+      top: 0,
+      itemWidth: 12,
+      itemHeight: 8,
+      icon: 'roundRect',
       textStyle: {
-        color: '#FFD700',
+        color: '#E5E7EB',
         fontFamily: 'Inter',
-        fontWeight: 500
+        fontWeight: 500,
+        fontSize: 13
       }
     },
     grid: {
-      left: '5%',
-      right: '5%',
-      top: '20%',
-      bottom: '15%',
+      left: '3%',
+      right: '3%',
+      top: '18%',
+      bottom: '10%',
       containLabel: true
     },
     xAxis: {
       type: 'category',
       data: <?= json_encode(range(1, 31)) ?>,
-      axisLine: { lineStyle: { color: '#444' } },
-      axisLabel: { color: '#ccc', fontFamily: 'Inter' }
+      boundaryGap: false,
+      axisLine: {
+        lineStyle: { color: '#1F2937' }
+      },
+      axisTick: { show: false },
+      axisLabel: {
+        color: '#9CA3AF',
+        fontFamily: 'Inter',
+        fontSize: 12
+      },
+      splitLine: {
+        show: false
+      }
     },
     yAxis: {
       type: 'value',
-      axisLine: { lineStyle: { color: '#444' } },
-      axisLabel: { color: '#ccc', fontFamily: 'Inter' },
-      splitLine: { lineStyle: { color: '#333' } }
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        color: '#9CA3AF',
+        fontFamily: 'Inter',
+        fontSize: 12
+      },
+      splitLine: {
+        lineStyle: {
+          color: 'rgba(148, 163, 184, 0.08)'
+        }
+      }
     },
     series: [
       {
         name: 'Mês Atual',
-        type: 'bar',
-        barWidth: '40%',
-        itemStyle: { color: '#FFD700' },
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: {
+          color: '#F4D03F',
+          width: 3,
+          shadowColor: 'rgba(244, 208, 63, 0.25)',
+          shadowBlur: 12
+        },
+        areaStyle: {
+          opacity: 1,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(244, 208, 63, 0.35)' },
+            { offset: 1, color: 'rgba(244, 208, 63, 0.02)' }
+          ])
+        },
         emphasis: {
-          itemStyle: { color: '#FFE066' }
+          focus: 'series',
+          scale: true
         },
         data: <?= json_encode(array_values($vendasAtual)) ?>
       },
       {
         name: 'Mês Anterior',
-        type: 'bar',
-        barWidth: '40%',
-        itemStyle: { color: '#5DADE2' },
+        type: 'line',
+        smooth: true,
+        showSymbol: false,
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: {
+          color: '#7B8CFF',
+          width: 3,
+          shadowColor: 'rgba(123, 140, 255, 0.25)',
+          shadowBlur: 12
+        },
+        areaStyle: {
+          opacity: 1,
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(123, 140, 255, 0.28)' },
+            { offset: 1, color: 'rgba(123, 140, 255, 0.02)' }
+          ])
+        },
         emphasis: {
-          itemStyle: { color: '#85C1E9' }
+          focus: 'series',
+          scale: true
         },
         data: <?= json_encode(array_values($vendasAnterior)) ?>
       }

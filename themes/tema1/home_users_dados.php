@@ -10,7 +10,7 @@
     <div class="">
       <a href="<?= url("comissao") ?>" class="text-dark">
         <span>Disponível para saque</span>
-        <h5 class="text-info">R$ <?= formataNumero( ! empty( $saldoPagarme->available_amount ) ? $saldoPagarme->available_amount / 100 : 0 ) ?></h5>
+        <h5 class="text-info">R$ <?= formataNumero(!empty($saldoPagarme->available_amount) ? $saldoPagarme->available_amount / 100 : 0) ?></h5>
       </a>
     </div>
   </div>
@@ -18,596 +18,550 @@
 <hr>
 -->
 
-<div class="row">
-  <!-- Card Total em conta -->
-  <div class="col-md-6 mb-5">
-    <div class="winpay-card p-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <i class="fas fa-piggy-bank card-icon"></i> 
-        <button class="toggle-visibility btn btn-sm" data-target="#totalValue">
-          <i class="fas fa-eye-slash"></i>
-        </button>
-      </div>
-      <h5 class="mb-1">Total em conta</h5>
-      <h3 id="totalValue" class="hidden-value">R$ <?= formataNumero($valorPago) ?></h3>
-      <small class="d-block">Soma do valor disponível + recebimentos</small>
-    </div>
-  </div>
+<?php
+  $totalVendas = (float) ($dados["totalVendas"] ?? 0);
 
-  <!-- Card Disponível para saque -->
-  <div class="col-md-6 mb-5">
-    <div class="winpay-card p-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <i class="fas fa-coins card-icon"></i> 
-        <button class="toggle-visibility btn btn-sm" data-target="#disponivelValue">
-          <i class="fas fa-eye-slash"></i>
-        </button>
-      </div>
-      <h5 class="mb-1">Disponível para saque</h5>
-      <h3 id="disponivelValue" class="hidden-value">
-        R$ <?= number_format($saldo->valor, 2, ',', '.') ?>
-      </h3>
-      <small class="d-block">Valor disponível para saque</small>
-    </div>
-  </div>
+  $cartoesTotal = (float) ($dados["cartoes"] ?? 0);
+  $cartoesPagos = (float) ($dados["cartoesPagos"] ?? 0);
+  $cartoesCancelados = (float) ($dados["cartoesCancelados"] ?? 0);
 
-  <!-- Card Total cancelados 
-  <div class="col-md-4 mb-4"> 
-    <div class="winpay-card p-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <i class="fas fa-file-invoice-dollar card-icon"></i> 
-        <button class="toggle-visibility btn btn-sm" data-target="#canceladoValue">
-          <i class="fas fa-eye-slash"></i>
-        </button>
-      </div>
-      <h5 class="mb-1">Total cancelados</h5>
-      <h3 id="canceladoValue" class="hidden-value">R$ <?= formataNumero($valorCancelado) ?></h3>
-      <small class="d-block">Valor total cancelado</small>
-    </div>
-  </div>
-  -->
-</div>
+  $boletosTotal = (float) ($dados["boletos"] ?? 0);
+  $boletosPagos = (float) ($dados["boletosPagos"] ?? 0);
+  $boletosVencidos = (float) ($dados["boletosCancelados"] ?? 0);
 
+  $pixTotal = (float) ($dados["pix"] ?? 0);
+  $pixPagos = (float) ($dados["pixPagos"] ?? 0);
+  $pixCancelados = (float) ($dados["pixCancelados"] ?? 0);
 
+  $percent = static function (float $part, float $whole): float {
+    return $whole > 0 ? ($part / $whole) * 100 : 0.0;
+  };
 
-<!-- Estilos personalizados -->
+  $shareCartao = $percent($cartoesTotal, $totalVendas);
+  $shareBoleto = $percent($boletosTotal, $totalVendas);
+  $sharePix = $percent($pixTotal, $totalVendas);
+
+  $cartaoAprovadoPct = $percent($cartoesPagos, $cartoesTotal);
+  $cartaoCanceladoPct = $percent($cartoesCancelados, $cartoesTotal);
+
+  $boletoAprovadoPct = $percent($boletosPagos, $boletosTotal);
+  $boletoVencidoPct = $percent($boletosVencidos, $boletosTotal);
+
+  $pixAprovadoPct = $percent($pixPagos, $pixTotal);
+  $pixCanceladoPct = $percent($pixCancelados, $pixTotal);
+?>
+
 <style>
-  
-/* Modern WinPay Cards Styles */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-/* Estilização dos cards no estilo WinPay modernizado */
-.winpay-card {
-  background: linear-gradient(135deg, rgb(5, 5, 5) 0%, rgb(0, 0, 0) 100%);
-  border-radius: 16px;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-
-
-.winpay-card:hover {
-  border-color: rgba(217, 192, 0, 0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(217, 192, 0, 0.15);
-  background: linear-gradient(135deg, rgb(8, 8, 8) 0%, rgb(3, 3, 3) 100%);
-}
-
-/* Container superior com ícone e botão */
-.winpay-card .d-flex.justify-content-between.align-items-center {
-  margin-bottom: 1rem;
-}
-
-/* Ícones pequenos no canto superior esquerdo */
-.card-icon {
-  font-size: 1.5rem;
-  color: rgb(217, 192, 0);
-  background: rgba(217, 192, 0, 0.1);
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.winpay-card:hover .card-icon {
-  background: rgba(217, 192, 0, 0.15);
-  transform: scale(1.05);
-  color: #f4d03f;
-}
-
-/* Títulos dos cards */
-.winpay-card h5 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #9CA3AF;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-}
-
-/* Valor do card */
-.winpay-card h3 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: #ffffff;
-  line-height: 1.1;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Pequena legenda abaixo */
-.winpay-card small,
-.winpay-card .text-muted {
-  color: #6B7280 !important;
-  font-size: 0.8rem;
-  font-weight: 500;
-  line-height: 1.3;
-  opacity: 0.9;
-}
-
-/* Ocultação dos valores com efeito moderno */
-.hidden-value {
-  filter: blur(6px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.hidden-value::after {
-  content: '●●●●●●●●';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: rgba(217, 192, 0, 0.6);
-  font-size: 1.2rem;
-  letter-spacing: 4px;
-  filter: none;
-}
-
-/* Estilização do botão de visibilidade modernizado */
-.toggle-visibility {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #9CA3AF;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border-radius: 8px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.toggle-visibility:hover {
-  background: rgba(217, 192, 0, 0.1);
-  border-color: rgba(217, 192, 0, 0.3);
-  color: rgb(217, 192, 0);
-  transform: scale(1.05);
-}
-
-.toggle-visibility:active {
-  transform: scale(0.95);
-}
-
-/* Animação suave para mostrar/ocultar valores */
-.winpay-card h3:not(.hidden-value) {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
+  .winpay-dashboard .winpay-dashboard-row {
+    margin-bottom: 2.5rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-/* Responsividade aprimorada */
-@media (max-width: 768px) {
-  .winpay-card {
-    border-radius: 12px;
-    margin-bottom: 1rem;
+  .winpay-dashboard .winpay-card {
+    position: relative;
+    background: #070708;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 1.6rem;
+    color: #ffffff;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 20px 34px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    min-height: 100%;
   }
-  
-  .winpay-card h3 {
-    font-size: 1.75rem;
+
+  .winpay-dashboard .winpay-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at top right, rgba(217, 192, 0, 0.08), transparent 55%);
+    opacity: 0.6;
+    pointer-events: none;
   }
-  
-  .card-icon {
+
+  .winpay-dashboard .winpay-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(217, 192, 0, 0.28);
+    box-shadow: 0 26px 42px rgba(0, 0, 0, 0.52);
+  }
+
+  .winpay-dashboard .winpay-card-header,
+  .winpay-dashboard .winpay-card-content,
+  .winpay-dashboard .winpay-card-footer {
+    position: relative;
+    z-index: 2;
+  }
+
+  .winpay-dashboard .winpay-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .winpay-dashboard .winpay-card .icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: rgba(217, 192, 0, 0.12);
+    color: #f7d158;
+    font-size: 1.4rem;
+    box-shadow: 0 14px 26px rgba(217, 192, 0, 0.2);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .winpay-dashboard .winpay-card:hover .icon-wrapper {
+    transform: scale(1.08);
+    box-shadow: 0 18px 32px rgba(217, 192, 0, 0.28);
+  }
+
+  .winpay-dashboard .toggle-visibility {
     width: 42px;
     height: 42px;
-    font-size: 1.3rem;
-  }
-  
-  .toggle-visibility {
-    width: 32px;
-    height: 32px;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .winpay-card {
-    padding: 1rem !important;
-  }
-  
-  .winpay-card h3 {
-    font-size: 1.5rem;
-  }
-  
-  .winpay-card h5 {
-    font-size: 0.8rem;
-  }
-  
-  .card-icon {
-    width: 38px;
-    height: 38px;
-    font-size: 1.2rem;
-  }
-}
-
-/* Estados de foco para acessibilidade */
-.toggle-visibility:focus {
-  outline: 2px solid rgba(217, 192, 0, 0.5);
-  outline-offset: 2px;
-}
-
-/* Efeito de carregamento opcional */
-.winpay-card.loading {
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-/* Melhorias no gradiente de hover */
-.winpay-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(217, 192, 0, 0.02) 0%, rgba(244, 208, 63, 0.02) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  border-radius: 16px;
-}
-
-.winpay-card:hover::after {
-  opacity: 1;
-}
-
-</style>
-
-<!-- Script para alternar a visibilidade dos valores -->
-<script>
-  document.querySelectorAll('.toggle-visibility').forEach(function(button) {
-    button.addEventListener('click', function() {
-      const targetSelector = this.getAttribute('data-target');
-      const valueElement = document.querySelector(targetSelector);
-      if (valueElement.classList.contains('hidden-value')) {
-        valueElement.classList.remove('hidden-value');
-        this.innerHTML = '<i class="fas fa-eye"></i>';
-      } else {
-        valueElement.classList.add('hidden-value');
-        this.innerHTML = '<i class="fas fa-eye-slash"></i>';
-      }
-    });
-  });
-</script>
-
-<!-- LINHA 2 -->
-<div class="row">
-  <!-- Card Vendas Cartão -->
-  <div class="col-md-4 mb-4">
-    <div class="winpay-card p-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <i class="fas fa-credit-card card-icon"></i>
-      </div>
-      <h5 class="mb-1">Vendas Cartão</h5>
-      <h3 class="modern-value">R$ <?= number_format(@$dados["valorCartaoPago"], 2, ",", ".") ?></h3>
-      <h6 class="modern-percent">
-        <?= number_format(@$p, 2, ",", ".") ?>% - <span class="text-muted">Total Cartão</span>
-      </h6>
-      <hr class="border-secondary my-2">
-      <div class="d-flex justify-content-between text-center">
-        <div class="progress-container">
-          <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
-          <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(217, 192, 0);"></div>
-          </div>
-        </div>
-        <div class="progress-container">
-          <h6 class="modern-label"><span class="text-muted">Cancelados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
-          <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 0);"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card Conversão Boleto -->
-  <div class="col-md-4 mb-4">
-    <div class="winpay-card p-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <i class="fas fa-receipt card-icon"></i>
-      </div>
-      <h5 class="mb-1">Boletos</h5>
-      <h3 class="modern-value">R$ <?= number_format(@$dados["valorBoletoPago"], 2, ",", ".") ?></h3>
-      <h6 class="modern-percent">
-        <?= number_format(@$p, 2, ",", ".") ?>% - <span class="text-muted">Total Boletos</span>
-      </h6>
-      <hr class="border-secondary my-2">
-      <div class="d-flex justify-content-between text-center">
-        <div class="progress-container">
-          <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
-          <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(217, 192, 0);"></div>
-          </div>
-        </div>
-        <div class="progress-container">
-          <h6 class="modern-label"><span class="text-muted">Vencidos:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
-          <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 0);"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card Conversão Pix -->
-  <div class="col-md-4 mb-4">
-    <div class="winpay-card p-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <i class="fas fa-bolt card-icon"></i>
-      </div>
-      <h5 class="mb-1">Pix</h5>
-      <h3 class="modern-value">R$ <?= number_format(@$dados["valorPixPago"], 2, ",", ".") ?></h3>
-      <h6 class="modern-percent">
-        <?= number_format(@$p, 2, ",", ".") ?>% - <span class="text-muted">Total Pix</span>
-      </h6>
-      <hr class="border-secondary my-2">
-      <div class="d-flex justify-content-between text-center">
-        <div class="progress-container">
-          <h6 class="modern-label"><span class="text-muted">Aprovados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
-          <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(217, 192, 0);"></div>
-          </div>
-        </div>
-        <div class="progress-container">
-          <h6 class="modern-label"><span class="text-muted">Cancelados:</span> <?= number_format($p, 2, ",", ".") ?>%</h6>
-          <div class="progress modern-progress">
-            <div class="progress-bar" role="progressbar" style="width:100%; background-color:rgb(155, 135, 0);"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Estilos personalizados -->
-<style>
-  /* Estilização dos cards no estilo WinPay */
-  .winpay-card {
-    background: rgb(30, 36, 51); /* Fundo escuro */
-    border-radius: 10px; /* Cantos levemente arredondados */
-    color: #ffffff; /* Fonte branca */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-    transition: all 0.2s ease-in-out;
-  }
-
-  .winpay-card:hover {
-    border-color: rgb(217, 192, 0);
-    transform: scale(1.02);
-  }
-
-  /* Ícones */
-  .card-icon {
-    font-size: 1.5rem;
-    color: #A0AEC0;
-  }
-
-  /* Títulos */
-  h5 {
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.72);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1rem;
-    font-weight: bold;
-    color: #A0AEC0;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   }
 
-  /* Valor */
-  h3 {
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 5px;
+  .winpay-dashboard .toggle-visibility:hover,
+  .winpay-dashboard .toggle-visibility[aria-pressed="true"] {
+    background: rgba(217, 192, 0, 0.18);
+    color: rgb(217, 192, 0);
+    border-color: rgba(217, 192, 0, 0.4);
   }
 
-  /* Legenda */
-  .text-muted {
-    color: #A0AEC0 !important;
+  .winpay-dashboard .toggle-visibility:focus {
+    outline: 2px solid rgba(217, 192, 0, 0.45);
+    outline-offset: 3px;
+  }
+
+  .winpay-dashboard .winpay-card-title {
+    display: inline-block;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.62);
+    margin-bottom: 0.6rem;
+  }
+
+  .winpay-dashboard .winpay-card-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.85rem;
+    text-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+
+  .winpay-dashboard .winpay-card-helper,
+  .winpay-dashboard .winpay-card-meta {
+    display: block;
     font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
   }
 
-  /* Labels */
-  .modern-label {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #A0AEC0;
+  .winpay-dashboard .winpay-card-meta {
+    margin-bottom: 1.1rem;
   }
 
-  /* Barra de progresso */
-  .modern-progress {
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    width: 100%;
+  .winpay-dashboard .winpay-card-divider {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+    margin: 1.4rem 0;
   }
 
-  /* Ajuste dos contêineres das barras para ficarem lado a lado */
-  .progress-container {
-    width: 48%;
+  .winpay-dashboard .winpay-card-footer {
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
   }
-</style>
 
-<!-- LINHA 3 -->
-<div class="row">
-  <!-- Card: Tentativas de compras 
-  <div class="col-md-4 mb-4">
-    <div class="winpay-card p-3 d-flex flex-column justify-content-between">
-      <div>
-        <div class="d-flex justify-content-between align-items-center">
-          <i class="fas fa-cart-arrow-down card-icon"></i>
-        </div>
-        <h5 class="mb-2">Tentativas de compras</h5>
-        <h3 class="modern-value">R$ <?= formataNumero($valorPendente) ?></h3>
-      </div>
-      <hr class="border-secondary my-2">
-      <div class="row">
-        <div class="col-6">
-          <span class="modern-info">Total: <?= $pendenteVendas ?></span>
-        </div>
-        <div class="col-6 text-right">
-          <span class="modern-info">Ticket: R$ <?= formataNumero($ticketPendente) ?></span>
-        </div>
-      </div>
-    </div>
-  </div>
+  .winpay-dashboard .winpay-metric {
+    position: relative;
+    flex: 1 1 160px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    background: rgba(8, 8, 9, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
 
-  -->
+  .winpay-dashboard .winpay-metric::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle farthest-side at 85% 20%, rgba(217, 192, 0, 0.12), transparent);
+    opacity: 0.6;
+    pointer-events: none;
+  }
 
-  <!-- Card: Estornos e Chargebacks 
-  <div class="col-md-4 mb-4">
-    <div class="winpay-card p-3 d-flex flex-column justify-content-between">
-      <div>
-        <div class="d-flex justify-content-between align-items-center">
-          <i class="fas fa-exchange-alt card-icon"></i>
-        </div>
-        <h5 class="mb-2">Estornos e Chargebacks</h5>
-      </div>
-      <hr class="border-secondary my-2">
-      <div class="row">
-        <div class="col-6">
-          <span class="modern-info">Estornos: <?= $estornoVendas ?></span>
-        </div>
-        <div class="col-6 text-right">
-          <span class="modern-info">R$ <?= formataNumero($valorEstorno) ?></span>
-        </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-6">
-          <span class="modern-info">Chargebacks: <?= $chargebackVendas ?></span>
-        </div>
-        <div class="col-6 text-right">
-          <span class="modern-info">R$ <?= formataNumero($valorChargeback) ?></span>
-        </div>
-      </div>
-    </div>
-  </div>
+  .winpay-dashboard .winpay-metric-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+  }
 
-  -->
-
-  <!-- Card: Abandono de checkout
-  <div class="col-md-4 mb-4">
-    <div class="winpay-card p-3 d-flex flex-column justify-content-between" style="min-height: 150px;">
-      <div>
-        <div class="d-flex justify-content-between align-items-center">
-          <i class="fas fa-user-slash card-icon"></i>
-        </div>
-        <h5 class="mb-2">Abandono de checkout</h5>
-      </div>
-      <hr class="border-secondary my-2">
-      <div class="row">
-        <div class="col-6">
-          <span class="modern-info">Total: <?= $abandonadoVendas ?></span>
-        </div>
-        <div class="col-6 text-right">
-           Espaço reservado para outros dados se necessário 
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
-</div>
-
-
-<!-- Estilos personalizados -->
-<style>
-  .winpay-card {
-    background: rgb(30, 36, 51); /* Fundo escuro */
-    border-radius: 10px; /* Cantos levemente arredondados */
-    color: #ffffff; /* Fonte branca */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-    transition: all 0.2s ease-in-out;
-    min-height: 180px; /* Garante que todos os cards tenham a mesma altura */
+  .winpay-dashboard .winpay-metric-body {
     display: flex;
     flex-direction: column;
+    gap: 0.15rem;
   }
 
-  .winpay-card:hover {
-    border-color: rgb(217, 192, 0);
-    transform: scale(1.02);
+  .winpay-dashboard .winpay-metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.58);
+    font-weight: 600;
   }
 
-  /* Ícones */
-  .card-icon {
-    font-size: 1.3rem;
-    color: #A0AEC0;
+  .winpay-dashboard .winpay-metric-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffe57a;
+    opacity: 0.96;
   }
 
-  /* Títulos */
-  h5 {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #A0AEC0;
+  .winpay-dashboard .winpay-metric[data-tone="calm"] .winpay-metric-value {
+    color: rgba(255, 229, 122, 0.75);
   }
 
-  /* Valor */
-  h3 {
-    font-size: 1.6rem;
-    font-weight: bold;
-    margin-bottom: 5px;
+  .winpay-dashboard .winpay-metric[data-tone="calm"] .winpay-metric-label {
+    color: rgba(255, 255, 255, 0.45);
   }
 
-  /* Legenda */
-  .text-muted {
-    color: #A0AEC0 !important;
-    font-size: 0.85rem;
+  .winpay-dashboard .hidden-value {
+    filter: blur(8px);
+    opacity: 0.25;
   }
 
-  /* Label */
-  .modern-info {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #A0AEC0;
+  .winpay-dashboard .hidden-value::after {
+    content: attr(data-mask);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    color: rgba(217, 192, 0, 0.65);
+    letter-spacing: 0.08em;
+    filter: none;
+    opacity: 1;
+    pointer-events: none;
   }
 
-  /* Garante que os cards fiquem com a mesma altura */
-  .d-flex.flex-column {
-    height: 100%;
+  .winpay-dashboard .hidden-value[data-mask=""]::after {
+    content: "••••••••";
+  }
+
+  .winpay-dashboard .winpay-card .text-muted {
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
+
+  @media (max-width: 991.98px) {
+    .winpay-dashboard .winpay-card {
+      padding: 1.5rem;
+    }
+
+    .winpay-dashboard .winpay-card-value {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .winpay-dashboard .winpay-card {
+      padding: 1.35rem;
+      border-radius: 14px;
+    }
+
+    .winpay-dashboard .winpay-card-header {
+      margin-bottom: 1.25rem;
+    }
+
+    .winpay-dashboard .winpay-card .icon-wrapper {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+    }
+
+    .winpay-dashboard .toggle-visibility {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+    }
+
+    .winpay-dashboard .winpay-card-footer {
+      gap: 0.85rem;
+    }
+
+    .winpay-dashboard .winpay-metric {
+      flex: 1 1 100%;
+      padding: 0.75rem 0.85rem;
+    }
   }
 </style>
 
+<div class="winpay-dashboard">
+<div class="row winpay-dashboard-row">
+  <div class="col-md-6 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-piggy-bank"></i>
+        </span>
+        <button class="toggle-visibility" data-target="#totalValue">
+          <i class="fas fa-eye-slash"></i>
+        </button>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Total em conta</span>
+        <h3 id="totalValue" class="winpay-card-value hidden-value" data-mask="R$ ••••••••">
+          R$ <?= formataNumero($valorPago) ?>
+        </h3>
+        <span class="winpay-card-helper">Soma do valor disponível + recebimentos</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-coins"></i>
+        </span>
+        <button class="toggle-visibility" data-target="#disponivelValue">
+          <i class="fas fa-eye-slash"></i>
+        </button>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Disponível para saque</span>
+        <h3 id="disponivelValue" class="winpay-card-value hidden-value" data-mask="R$ ••••••••">
+          R$ <?= number_format($saldo->valor, 2, ',', '.') ?>
+        </h3>
+        <span class="winpay-card-helper">Valor disponível para saque</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row winpay-dashboard-row">
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-credit-card"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Vendas Cartão</span>
+        <h3 class="winpay-card-value">
+          R$ <?= number_format(@$dados["valorCartaoPago"], 2, ",", ".") ?>
+        </h3>
+        <span class="winpay-card-meta">
+          <?= number_format($shareCartao, 2, ",", ".") ?>% - <span class="text-muted">Total Cartão</span>
+        </span>
+      </div>
+      <hr class="winpay-card-divider">
+      <div class="winpay-card-footer">
+        <div class="winpay-metric" data-tone="bright">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Aprovados</span>
+              <span class="winpay-metric-value"><?= number_format($cartaoAprovadoPct, 2, ",", ".") ?>%</span>
+            </div>
+          </div>
+        </div>
+        <div class="winpay-metric" data-tone="calm">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Cancelados</span>
+              <span class="winpay-metric-value"><?= number_format($cartaoCanceladoPct, 2, ",", ".") ?>%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-receipt"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Boletos</span>
+        <h3 class="winpay-card-value">
+          R$ <?= number_format(@$dados["valorBoletoPago"], 2, ",", ".") ?>
+        </h3>
+        <span class="winpay-card-meta">
+          <?= number_format($shareBoleto, 2, ",", ".") ?>% - <span class="text-muted">Total Boletos</span>
+        </span>
+      </div>
+      <hr class="winpay-card-divider">
+      <div class="winpay-card-footer">
+        <div class="winpay-metric" data-tone="bright">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Aprovados</span>
+              <span class="winpay-metric-value"><?= number_format($boletoAprovadoPct, 2, ",", ".") ?>%</span>
+            </div>
+          </div>
+        </div>
+        <div class="winpay-metric" data-tone="calm">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Vencidos</span>
+              <span class="winpay-metric-value"><?= number_format($boletoVencidoPct, 2, ",", ".") ?>%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-bolt"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Pix</span>
+        <h3 class="winpay-card-value">
+          R$ <?= number_format(@$dados["valorPixPago"], 2, ",", ".") ?>
+        </h3>
+        <span class="winpay-card-meta">
+          <?= number_format($sharePix, 2, ",", ".") ?>% - <span class="text-muted">Total Pix</span>
+        </span>
+      </div>
+      <hr class="winpay-card-divider">
+      <div class="winpay-card-footer">
+        <div class="winpay-metric" data-tone="bright">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Aprovados</span>
+              <span class="winpay-metric-value"><?= number_format($pixAprovadoPct, 2, ",", ".") ?>%</span>
+            </div>
+          </div>
+        </div>
+        <div class="winpay-metric" data-tone="calm">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Cancelados</span>
+              <span class="winpay-metric-value"><?= number_format($pixCanceladoPct, 2, ",", ".") ?>%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINHA 3
+<div class="row winpay-dashboard-row">
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-cart-arrow-down"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Tentativas de compras</span>
+        <h3 class="winpay-card-value">R$ <?= formataNumero($valorPendente) ?></h3>
+        <span class="winpay-card-meta">Total: <?= $pendenteVendas ?> | Ticket: R$ <?= formataNumero($ticketPendente) ?></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-exchange-alt"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Estornos e Chargebacks</span>
+        <span class="winpay-card-meta">Estornos: <?= $estornoVendas ?> | R$ <?= formataNumero($valorEstorno) ?></span>
+        <span class="winpay-card-meta">Chargebacks: <?= $chargebackVendas ?> | R$ <?= formataNumero($valorChargeback) ?></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper">
+          <i class="fas fa-user-slash"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Abandono de checkout</span>
+        <span class="winpay-card-meta">Total: <?= $abandonadoVendas ?></span>
+      </div>
+    </div>
+  </div>
+</div>
+-->
+
+<script>
+  document.querySelectorAll('.winpay-dashboard .toggle-visibility').forEach(function(button) {
+    var targetSelector = button.getAttribute('data-target');
+    var valueElement = document.querySelector(targetSelector);
+
+    if (!valueElement) {
+      return;
+    }
+
+    var hideIcon = '<i class="fas fa-eye-slash"></i>';
+    var showIcon = '<i class="fas fa-eye"></i>';
+
+    var setState = function(hidden) {
+      if (hidden) {
+        valueElement.classList.add('hidden-value');
+        button.innerHTML = hideIcon;
+        button.setAttribute('aria-label', 'Mostrar valor');
+        button.setAttribute('aria-pressed', 'false');
+      } else {
+        valueElement.classList.remove('hidden-value');
+        button.innerHTML = showIcon;
+        button.setAttribute('aria-label', 'Ocultar valor');
+        button.setAttribute('aria-pressed', 'true');
+      }
+    };
+
+    button.addEventListener('click', function() {
+      var isHidden = valueElement.classList.contains('hidden-value');
+      setState(!isHidden);
+    });
+
+    button.setAttribute('type', 'button');
+    if (targetSelector) {
+      var controlId = targetSelector.charAt(0) === '#' ? targetSelector.substring(1) : targetSelector;
+      button.setAttribute('aria-controls', controlId);
+    }
+
+    setState(valueElement.classList.contains('hidden-value'));
+  });
+</script>
+</div>
