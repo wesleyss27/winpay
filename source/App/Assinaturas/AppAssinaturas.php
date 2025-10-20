@@ -18,6 +18,7 @@ use Source\Models\Produtos\Plano;
 use Source\Models\Checkout\Checkout;
 use Source\Models\CoProdutor\CoProdutor;
 use Source\App\Sessao\AppSessao;
+use Source\Models\Afiliados\Afiliacao;
 use Source\App\Assinaturas\AppPagamentoAssinaturas;
 use Source\App\Postback\AppPostback;
 
@@ -474,8 +475,38 @@ class AppAssinaturas
     $this->sessao = (new AppSessao())->verificaSeLogado();
 
     $usuarioId = $_SESSION["id"];
-    $produtos = (new Produto())->find("usuario = :uid", "uid={$usuarioId}")->order("nome ASC")->fetch(true);
-    $produtos = $produtos ?: [];
+
+    $produtosMap = [];
+
+    $produtosProdutor = (new Produto())
+        ->find("usuario = :uid AND tipo_cobranca = 2", "uid={$usuarioId}")
+        ->order("nome ASC")
+        ->fetch(true) ?? [];
+
+    foreach ($produtosProdutor as $produto) {
+        $produtosMap[$produto->id] = $produto;
+    }
+
+    $afiliacoes = (new Afiliacao())
+        ->find("afiliado = :uid AND status = 1 AND ativo = 1", "uid={$usuarioId}")
+        ->fetch(true) ?? [];
+
+    foreach ($afiliacoes as $afiliacao) {
+        $produtoAfiliado = $afiliacao->dataProduto();
+        if (!$produtoAfiliado) {
+            continue;
+        }
+        if ((int)$produtoAfiliado->tipo_cobranca !== 2) {
+            continue;
+        }
+        $produtosMap[$produtoAfiliado->id] = $produtoAfiliado;
+    }
+
+    $produtos = array_values($produtosMap);
+
+    usort($produtos, function ($a, $b) {
+        return strcasecmp($a->nome ?? '', $b->nome ?? '');
+    });
 
     $planosPorProduto = [];
     $checkoutPorProduto = [];

@@ -29,6 +29,7 @@ class AppWebHook
     private $endpoint;
     private $token;
     private $key;
+    private $houveAtualizacaoVendas = false;
 
     public function criarNotificacaoWebhook($data)
     {
@@ -372,6 +373,8 @@ class AppWebHook
         // Converte os dados recebidos
         $response = json_decode($json);
 
+        error_log(json_encode(["message" => "Bspay duplicado ignorado", "venda" => $response]));
+
         $status_transacao = array(
             "PAID" => 4,
             "PENDING" => 1,
@@ -392,17 +395,27 @@ class AppWebHook
                 return;
             }
 
+            $eventoData = $response->requestBody->dateApproval ?? null;
+            $dataEventoFormatada = $eventoData ? date("Y-m-d H:i:s", strtotime($eventoData)) : null;
+
             if ($status === 4) {
-                $finalizada = date("Y-m-d H:i:s");
+                $finalizada = $dataEventoFormatada ?? date("Y-m-d H:i:s");
                 $motivo = null;
             } elseif (in_array($status, [5, 6, 7])) {
                 $motivo = $response->requestBody->message ?? "Pagamento não concluído";
             }
 
-            $vendas = $this->atualizarVendasManualPorTransacao($payID, $status, $motivo, $finalizada);
+            $vendas = $this->atualizarVendasManualPorTransacao($payID, $status, $motivo, $finalizada, $dataEventoFormatada ?? $eventoData);
 
             if (!$vendas) {
                 echo "Não tem venda para a transação {$payID}.<br>";
+                return;
+            }
+
+            if (!$this->houveAtualizacaoVendas()) {
+                $primeiraVenda = $vendas[0];
+                error_log("Bspay duplicado ignorado: venda {$primeiraVenda->id}, status={$status}");
+                echo "Evento duplicado (status igual).<br>";
                 return;
             }
 
@@ -469,6 +482,10 @@ class AppWebHook
         // 2) Extrai tipo e objeto principal
         $type = $event->type ?? '';
         $obj  = $event->data->object ?? null;
+        $eventoStripeData = null;
+        if (isset($event->created)) {
+            $eventoStripeData = date("Y-m-d H:i:s", (int)$event->created);
+        }
 
         if (!$type || !$obj) {
             http_response_code(200);
@@ -482,7 +499,7 @@ class AppWebHook
         $status        = null;
         $payID         = null; // usaremos para localizar a venda
         $finalizada    = null;
-        $ultimo_evento = date("Y-m-d H:i:s");
+        $ultimo_evento = $eventoStripeData ?? date("Y-m-d H:i:s");
         $motivo        = null;
 
         // Tente obter IDs úteis
@@ -535,13 +552,20 @@ class AppWebHook
         //    Recomendação: salve SEMPRE payment_intent.id em venda->transacao ao criar o pagamento.
         $vendas = [];
         if (!empty($paymentIntentId)) {
-            $vendas = $this->atualizarVendasManualPorTransacao($paymentIntentId, $status, $motivo, $finalizada);
+            $vendas = $this->atualizarVendasManualPorTransacao($paymentIntentId, $status, $motivo, $finalizada, $eventoStripeData);
         }
         if (!$vendas && !empty($chargeId)) {
-            $vendas = $this->atualizarVendasManualPorTransacao($chargeId, $status, $motivo, $finalizada);
+            $vendas = $this->atualizarVendasManualPorTransacao($chargeId, $status, $motivo, $finalizada, $eventoStripeData);
         }
 
         if ($vendas) {
+            if (!$this->houveAtualizacaoVendas()) {
+                $primeiraVenda = $vendas[0];
+                error_log("Stripe duplicado ignorado: venda {$primeiraVenda->id}, status={$status}");
+                echo json_encode(['duplicate' => true]);
+                return;
+            }
+
             foreach ($vendas as $venda) {
                 $dados = [];
                 if (@$venda->endereco) {
@@ -986,8 +1010,10 @@ class AppWebHook
         }
     }
 
-    private function atualizarVendasManualPorTransacao(string $transacao, int $status, ?string $motivo, ?string $dataFinalizada): array
+    private function atualizarVendasManualPorTransacao(string $transacao, int $status, ?string $motivo, ?string $dataFinalizada, ?string $dataEvento = null): array
     {
+        $this->houveAtualizacaoVendas = false;
+
         $vendas = (new Venda())->find("transacao = :tx", "tx={$transacao}")->fetch(true);
         if (!$vendas) {
             return [];
@@ -995,11 +1021,22 @@ class AppWebHook
 
         $manualSaleIds = [];
         $manualItemIds = [];
-        $ultimoEvento = date("Y-m-d H:i:s");
+        if ($dataEvento) {
+            $timestampEvento = strtotime($dataEvento);
+            $ultimoEvento = $timestampEvento ? date("Y-m-d H:i:s", $timestampEvento) : $dataEvento;
+        } else {
+            $ultimoEvento = date("Y-m-d H:i:s");
+        }
 
         foreach ($vendas as $venda) {
             $statusAtual = (int)$venda->status_transacao;
-            if ($statusAtual !== $status || $venda->data_finalizada !== $dataFinalizada) {
+            $eventoRegistrado = (
+                $statusAtual === $status &&
+                $venda->data_finalizada === $dataFinalizada &&
+                ($venda->data_ultimo_evento === $ultimoEvento)
+            );
+
+            if (!$eventoRegistrado) {
                 $venda->status_transacao = $status;
                 $venda->data_finalizada = $dataFinalizada;
                 $venda->data_ultimo_evento = $ultimoEvento;
@@ -1009,6 +1046,7 @@ class AppWebHook
                     $venda->motivo = null;
                 }
                 $venda->save();
+                $this->houveAtualizacaoVendas = true;
             }
 
             if ($venda->manual_sale_item_id) {
@@ -1026,8 +1064,12 @@ class AppWebHook
             foreach ($manualSaleIds as $manualSaleId) {
                 $manualSale = $manualSaleModel->findById($manualSaleId);
                 if ($manualSale) {
-                    $manualSale->status = $status;
-                    $manualSale->save();
+                    if ((int)$manualSale->status !== $status) {
+                        $manualSale->status = $status;
+                        if ($manualSale->save()) {
+                            $this->houveAtualizacaoVendas = true;
+                        }
+                    }
                 }
             }
         }
@@ -1038,6 +1080,7 @@ class AppWebHook
             $assinaturas = (new Assinatura())->find("manual_sale_item_id IN ({$ids})")->fetch(true);
             if ($assinaturas) {
                 foreach ($assinaturas as $assinatura) {
+                    $statusAnteriorAss = (int)$assinatura->status;
                     if ($status === 4) {
                         $assinatura->status = 1;
                         $assinatura->tentativas = 0;
@@ -1047,11 +1090,20 @@ class AppWebHook
                         $assinatura->status = $status;
                     }
                     $assinatura->data_ultimo_evento = $ultimoEvento;
-                    $assinatura->save();
+                    if ($assinatura->save()) {
+                        if ($statusAnteriorAss !== (int)$assinatura->status) {
+                            $this->houveAtualizacaoVendas = true;
+                        }
+                    }
                 }
             }
         }
 
         return $vendas;
+    }
+
+    private function houveAtualizacaoVendas(): bool
+    {
+        return (bool)$this->houveAtualizacaoVendas;
     }
 }

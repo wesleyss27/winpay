@@ -396,6 +396,13 @@ class AppProcessos
         $status = @$venda->status_transacao;
         $pagamento = @$venda->forma_pagamento;
 
+        $contatoEndereco = $venda->dataEndereco();
+        $contatoComprador = $venda->dataComprador();
+
+        $nomeContato = $contatoEndereco->nome ?? $contatoComprador->nome ?? "";
+        $emailContato = $contatoEndereco->email ?? $contatoComprador->email ?? null;
+        $telefoneContato = $contatoEndereco->telefone ?? $contatoComprador->telefone ?? null;
+
         if ($venda->plano)
             $nomekit = $venda->dataPlano()->nome;
         else
@@ -404,14 +411,19 @@ class AppProcessos
         $data = array(
             "transacao" => $venda->transacao,
             "pedido" => $venda->id,
-            "nome" => $venda->dataEndereco()->nome,
-            "email" => $venda->dataEndereco()->email,
+            "nome" => $nomeContato,
+            "email" => $emailContato,
             "produto" => $nomekit,
             "valor_bruto" => $venda->valor_produto,
             "motivo" => $venda->motivo,
             "link_boleto" => $venda->link_boleto,
             "email_suporte" => $venda->dataProduto()->email_suporte,
+            "telefone" => $telefoneContato,
         );
+
+        if (empty($emailContato)) {
+            return null;
+        }
 
         $email = new Emails();
         $mensagem = array(
@@ -435,7 +447,7 @@ class AppProcessos
                 1 => $email->pix($data),
                 2 => "",
                 3 => "",
-                4 => $email->pix($data),
+                4 => $email->pixGeradoPago($data),
                 5 => "",
                 6 => ""
             ),
@@ -444,8 +456,6 @@ class AppProcessos
         $msg = @$mensagem[$pagamento][$status];
         if ($msg)
             $envia = $email->enviaSendGrid($msg);
-
-        // $this->logs($data, "processos");
 
         return @$envia;
     }

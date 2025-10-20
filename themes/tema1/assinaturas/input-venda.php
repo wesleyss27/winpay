@@ -520,9 +520,7 @@ if ($_SESSION["tipo"] == 6) {
         .then(async response => {
             const text = await response.text();
             try {
-                const pos = text.lastIndexOf('}{');
-                const jsonSegment = pos >= 0 ? text.slice(pos + 1) : text;
-                return JSON.parse(jsonSegment);
+                return extrairJsonSeguro(text);
             } catch (err) {
                 exibirMensagem("Erro ao interpretar a resposta do servidor.", "danger");
                 console.error("Resposta bruta:", text);
@@ -564,6 +562,35 @@ if ($_SESSION["tipo"] == 6) {
         if (feedbackBox) {
             feedbackBox.classList.add("d-none");
             feedbackBox.innerHTML = "";
+        }
+    }
+
+    function extrairJsonSeguro(texto) {
+        if (!texto) {
+            return {};
+        }
+
+        const semHtml = texto.replace(/<[^>]*>/g, "").trim();
+        if (!semHtml) {
+            return {};
+        }
+
+        for (let i = semHtml.length - 1; i >= 0; i--) {
+            if (semHtml[i] !== "{") {
+                continue;
+            }
+            const candidato = semHtml.slice(i).trim();
+            try {
+                return JSON.parse(candidato);
+            } catch (e) {
+                continue;
+            }
+        }
+
+        try {
+            return JSON.parse(semHtml);
+        } catch (e) {
+            return {};
         }
     }
 
