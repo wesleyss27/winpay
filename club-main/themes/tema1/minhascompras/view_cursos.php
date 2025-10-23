@@ -105,7 +105,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   width: calc(100% + (var(--hero-horizontal-pad) * 2));
   max-width: none;
   padding: 0;
-  height: clamp(140px, 24vh, 260px);
+  height: clamp(160px, 26vh, 300px);
   border-radius: var(--course-radius-lg);
   margin-left: calc(-1 * var(--hero-horizontal-pad));
   margin-right: calc(-1 * var(--hero-horizontal-pad));
@@ -118,10 +118,9 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 .course-view-page .win-hero img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
-  background: radial-gradient(circle at 50% 50%, rgba(15, 19, 32, 0.68), rgba(5, 6, 12, 1));
   transform: scale(1);
   transition: transform 0.6s ease;
 }
@@ -188,7 +187,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 
 .course-view-page .win-hero:hover img,
 .course-view-page .win-hero:focus-within img {
-  transform: scale(1);
+  transform: scale(1.04);
 }
 
 .course-view-page .win-hero:hover .hero-overlay,

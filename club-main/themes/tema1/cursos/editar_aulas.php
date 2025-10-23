@@ -66,6 +66,7 @@ $anexo3 = $aula->arquivo_anexo3 ?? '';
                     <div class="win-form-grid win-form-grid-2">
                         <div class="form-group">
                             <label for="imageInput">Imagem da aula</label>
+                            <small class="win-form-hint" style="display:block;margin-top:0.35rem;color:var(--wh-text-soft);">Recomendado: 720x1080px (proporção 2:3).</small>
                             <div class="attachment">
                                 <label class="filelabel image-filelabel" for="imageInput" data-default="<?= $aula->imagem ?? 'Escolher imagem' ?>">
                                     <i class="fa fa-image"></i>
