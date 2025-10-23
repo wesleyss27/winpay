@@ -105,7 +105,8 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   width: calc(100% + (var(--hero-horizontal-pad) * 2));
   max-width: none;
   padding: 0;
-  height: clamp(220px, 38vh, 340px);
+  aspect-ratio: 21 / 9;
+  min-height: clamp(220px, 36vh, 420px);
   border-radius: var(--course-radius-lg);
   margin-left: calc(-1 * var(--hero-horizontal-pad));
   margin-right: calc(-1 * var(--hero-horizontal-pad));
@@ -276,16 +277,16 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 .lesson-card {
   position: relative;
   display: block;
-  flex: 0 0 clamp(240px, 26vw, 320px);
-  width: clamp(240px, 26vw, 320px);
-  max-width: clamp(240px, 26vw, 320px);
-  aspect-ratio: 6 / 5;
+  flex: 0 0 clamp(190px, 19vw, 240px);
+  width: clamp(190px, 19vw, 240px);
+  max-width: clamp(190px, 19vw, 240px);
+  aspect-ratio: 3 / 4;
   border-radius: 24px;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(8, 9, 20, 0.85), rgba(3, 4, 12, 0.95));
+  background: linear-gradient(135deg, rgba(8, 9, 20, 0.88), rgba(3, 4, 12, 0.97));
   color: inherit;
   text-decoration: none;
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.48);
+  box-shadow: 0 24px 46px rgba(0, 0, 0, 0.52);
   transition: transform 0.32s ease, box-shadow 0.32s ease, filter 0.32s ease;
   transform-origin: center;
 }
@@ -294,7 +295,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.9);
+  filter: brightness(0.94);
   transition: transform 0.45s ease, filter 0.35s ease;
 }
 
@@ -302,7 +303,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 10, 20, 0.12) 0%, rgba(5, 6, 12, 0.42) 55%, rgba(5, 6, 12, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(8, 10, 20, 0.18) 0%, rgba(5, 6, 12, 0.48) 55%, rgba(5, 6, 12, 0.88) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -310,11 +311,11 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 .lesson-card__overlay {
   position: absolute;
   inset: 0;
-  padding: clamp(1.2rem, 2.4vw, 1.6rem);
+  padding: clamp(0.9rem, 2.2vw, 1.4rem);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: linear-gradient(180deg, rgba(5, 6, 12, 0) 10%, rgba(5, 6, 12, 0.68) 100%);
+  background: linear-gradient(180deg, rgba(5, 6, 12, 0) 10%, rgba(5, 6, 12, 0.72) 100%);
   opacity: 0;
   transform: translateY(12%);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -325,11 +326,11 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.7rem 1.6rem;
+  padding: 0.65rem 1.4rem;
   border-radius: 999px;
-  background: rgba(5, 6, 12, 0.82);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.75rem;
+  background: rgba(5, 6, 12, 0.85);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -342,7 +343,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 }
 
 .lesson-card.completed .lesson-card__button {
-  background: rgba(var(--course-accent-rgb), 0.18);
+  background: rgba(var(--course-accent-rgb), 0.2);
   color: var(--course-accent);
 }
 
@@ -392,9 +393,9 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 
 @media (max-width: 575.98px) {
   .lesson-card {
-    flex: 0 0 82vw;
-    width: 82vw;
-    max-width: 82vw;
+    flex: 0 0 68vw;
+    width: 68vw;
+    max-width: 68vw;
   }
 }
 </style>
