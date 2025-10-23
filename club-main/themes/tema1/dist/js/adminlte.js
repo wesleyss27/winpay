@@ -1435,6 +1435,10 @@
         resize = false;
       }
 
+      if ($__default['default']('body').hasClass('sidebar-collapse')) {
+        this.collapse();
+      }
+
       if (!this._options.autoCollapseSize) {
         return;
       }
@@ -1541,7 +1545,11 @@
     PushMenu._jQueryInterface.call($__default['default'](button), 'toggle');
   });
   $__default['default'](window).on('load', function () {
-    PushMenu._jQueryInterface.call($__default['default'](SELECTOR_TOGGLE_BUTTON));
+    if ($__default['default']('body').hasClass('sidebar-collapse')) {
+      PushMenu._jQueryInterface.call($__default['default'](SELECTOR_TOGGLE_BUTTON), 'collapse');
+    } else {
+      PushMenu._jQueryInterface.call($__default['default'](SELECTOR_TOGGLE_BUTTON));
+    }
   });
   /**
    * jQuery API

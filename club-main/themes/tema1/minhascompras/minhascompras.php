@@ -1,128 +1,92 @@
 <?php
 $v->layout("_theme");
+
+$listaCursos = [];
+if ($turmaaluno) {
+    foreach ($turmaaluno as $entrada) {
+        $listaCursos[] = $entrada;
+    }
+}
+$destacado = $listaCursos[0] ?? null;
+
+$imagemCurso = function ($curso) {
+    if (!$curso) {
+        return url("uploads/cursos/default.png");
+    }
+    $cover = $curso->imagem ?? null;
+    return $cover ? url("uploads/cursos/" . $cover) : url("uploads/cursos/default.png");
+};
+
+$descricaoCurso = function ($curso) {
+    if (!$curso || empty($curso->descricao)) {
+        return "Pronto para começar uma nova jornada de aprendizado?";
+    }
+    return mb_strimwidth(strip_tags($curso->descricao), 0, 180, "…");
+};
 ?>
 
-<style>
-body {
-  background-color: #000;
-}
+<div class="content-wrapper win-page">
+  <section class="content">
+    <div class="container-fluid">
 
-.content-wrapper {
-  background-color: #000;
-}
+      <?php if ($destacado) :
+        $cursoHero = $destacado->dataCurso();
+        $imagemHero = $imagemCurso($cursoHero);
+      ?>
+        <section class="win-hero" style="background: linear-gradient(135deg, rgba(11, 15, 28, 0.92), rgba(5, 5, 8, 0.9)), url('<?= $imagemHero; ?>') center/cover no-repeat;">
+          <h2><?= $cursoHero->nome; ?></h2>
+          <p><?= $descricaoCurso($cursoHero); ?></p>
+          <div class="win-page-actions">
+            <a href="<?= url("minhas-compras/viewcursos/" . $cursoHero->id); ?>" class="btn-win">
+              <i class="fas fa-play"></i>
+              Continuar curso
+            </a>
+          </div>
+        </section>
+      <?php endif; ?>
 
-.wrapper {
-  background-color: #000;
-}
+      <section class="win-section">
+        <div class="win-section-header">
+          <h2>Seus cursos</h2>
+          <span class="win-section-subtitle">Acesse rapidamente o conteúdo que você já adquiriu.</span>
+        </div>
 
-ul.miniaturas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        <?php if ($listaCursos) : ?>
+          <div class="win-slider">
+            <?php foreach ($listaCursos as $item) :
+              $curso = $item->dataCurso();
+              $imagem = $imagemCurso($curso);
+              $descricao = $descricaoCurso($curso);
+            ?>
+              <article class="win-slider-card">
+                <figure>
+                  <img src="<?= $imagem; ?>" alt="<?= $curso->nome; ?>">
+                </figure>
+                <figcaption>
+                  <h3><?= mb_strimwidth($curso->nome, 0, 60, "…"); ?></h3>
+                  <p class="win-card-text"><?= $descricao; ?></p>
+                  <a href="<?= url("minhas-compras/viewcursos/" . $curso->id); ?>" class="btn-win">
+                    <i class="fas fa-arrow-right"></i>
+                    Acessar curso
+                  </a>
+                </figcaption>
+              </article>
+            <?php endforeach; ?>
+          </div>
 
-.card-produtos {
-  background-color: #141414;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-produtos:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(217, 192, 0, 0.4);
-}
-
-.card-img-produtos1 {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  background-color: #000;
-}
-
-.card-footer {
-  background-color: #1e1e1e;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-}
-
-.card-title {
-  font-size: 1rem;
-  margin-bottom: 10px;
-  color: rgb(217, 192, 0);
-  font-weight: 600;
-}
-
-.btn {
-  display: inline-block;
-  padding: 8px 12px;
-  background-color: rgb(217, 192, 0);
-  color: black;
-  border: none;
-  border-radius: 5px;
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-}
-
-.btn:hover {
-  background-color: rgba(217, 192, 0, 0.8);
-}
-
-h4 {
-  color: #fff;
-  text-align: center;
-  margin-top: 50px;
-}
-
-</style>
-
-<div class="content-wrapper">
-  <section class="content-header">
-    <section class="wrapper">
-      <ul class="miniaturas">
-
-        <?php if ($turmaaluno) : ?>
-          <?php foreach ($turmaaluno as $cursos) : ?>
-            <li class="card-produtos">
-              
-              <?php if ($cursos->dataCurso()->imagem != "") : ?>
-                <img class="card-img-produtos1" src="<?= url("uploads/cursos/" . $cursos->dataCurso()->imagem); ?>" alt="Imagem do Curso">
-              <?php else : ?>
-                <img src="<?= url("uploads/cursos/default.png"); ?>" alt="Imagem do Curso" class="card-img-produtos1">
-              <?php endif; ?>
-
-              <div class="card-footer">
-                <h2 class="card-title"><?= mb_strimwidth($cursos->dataCurso()->nome, 0, 40, "..."); ?></h2>
-                <a href="<?= url("minhas-compras/viewcursos/" . $cursos->dataCurso()->id) ?>" class="btn">Acessar Curso</a>
-              </div>
-              
-            </li>
-          <?php endforeach; ?>
-
-          <?php
-          $link = URL_BASE . "/produtos/p/";
-          $paginador->paginas($total, $pagina, $link);
-          ?>
-
+          <div class="d-flex justify-content-center mt-4">
+            <?php
+            $link = URL_BASE . "/produtos/p/";
+            $paginador->paginas($total, $pagina, $link);
+            ?>
+          </div>
         <?php else : ?>
-          <h4>Nenhum curso encontrado!</h4>
+          <div class="win-empty-state">
+            Você ainda não possui cursos disponíveis. Explore o catálogo e adquira seu primeiro treinamento!
+          </div>
         <?php endif; ?>
-
-      </ul>
-    </section>
+      </section>
+    </div>
   </section>
 
   <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">

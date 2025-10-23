@@ -1,228 +1,236 @@
 <?php
 $v->layout("_theme");
-$liberacao = array(
+require __DIR__ . "/categorias.php";
+
+$liberacao = [
   1 => "Imediatamente",
   2 => "A cada conclusão de módulo",
   3 => "Segundo módulo depois de 7 dias"
-);
+];
 ?>
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row titulo-pagina">
-        <div class="col-md-12">
-          <h1 style="font-family:inter"><?= $title ?></h1>
-        </div>
-      </div>
-      <hr>
-    </div>
-  </section>
-
-  <!-- Main content -->
+<div class="content-wrapper win-page">
   <section class="content">
     <div class="container-fluid">
+      <header class="win-page-header">
+        <div class="win-page-title">
+          <small>Painel de cursos</small>
+          <h1><?= $title ?></h1>
+        </div>
+        <div class="win-page-actions">
+          <a href="<?= url("cursos/novo") ?>" class="btn-win">
+            <i class="fas fa-plus"></i>
+            Novo curso
+          </a>
+        </div>
+      </header>
 
       <?php if ($cursos) : ?>
-
         <script>
           var dados = [];
         </script>
 
-        <?php $i = 0;
-        foreach ($cursos as $curso) : ?>
-          <div class="card card-body">
-            <div class="row">
-              <div class="col">
-                <?php if ($curso->imagem != "") : ?>
-                  <img src="<?= url("uploads/cursos/" . $curso->imagem); ?>" alt="<?= $curso->nome; ?>" width="60px" height="60px" style="border-radius: 50%;"><br>
-                <?php else : ?>
-                  <img src="<?= url("uploads/cursos/default.png"); ?>" alt="<?= $curso->nome; ?>" width="60px" height="60px" style="border-radius: 50%;"><br>
-                <?php endif; ?>
+        <section class="win-section">
+          <div class="win-grid win-grid-2">
+            <?php $i = 0;
+            foreach ($cursos as $curso) : ?>
+              <?php
+              $alunosCount = $turmaAluno->find("usuario = '$curso->usuario' AND curso = $curso->id")->count();
+              $aulasCount = $aula->find("curso = $curso->id")->count();
+              $cover = $curso->imagem ? url("uploads/cursos/" . $curso->imagem) : url("uploads/cursos/default.png");
+              $categoriaNome = $categorias[$curso->assunto] ?? "Categoria não informada";
+              $produtoNome = $curso->dataProduto()->nome ?? "Produto não informado";
+              $statusLabel = $curso->status == 1 ? "Aprovado" : "Reprovado";
+              $statusClass = $curso->status == 1 ? "win-status win-status-success" : "win-status win-status-danger";
+              ?>
 
-                <b><?= $curso->nome; ?></b>
-              </div>
+              <article class="win-card">
+                <figure>
+                  <img src="<?= $cover; ?>" alt="<?= $curso->nome; ?>">
+                </figure>
 
-              <div class="col">
-                <!-- < ?= @$curso->dataProdutor()->nome; ?><br>
-                < ?= @$curso->dataProdutor()->email; ?> -->
-              </div>
+                <div class="win-card-body">
+                  <div class="win-card-meta">
+                    <span class="win-meta-chip">
+                      <i class="fas fa-box-open"></i>
+                      <?= $produtoNome; ?>
+                    </span>
+                    <span class="win-meta-chip">
+                      <i class="fas fa-tags"></i>
+                      <?= $categoriaNome; ?>
+                    </span>
+                  </div>
 
-              <?php include "categorias.php"; ?>
-              <div class="col">
-                <i class="fas fa-boxes" style="color: #2c7be5;"></i> <?= $curso->dataProduto()->nome; ?><br>
-                <i class="fas fa-tags" style="color: #2c7be5;"></i> <?= $categorias[$curso->assunto]; ?>
-              </div>
+                  <h3><?= mb_strimwidth($curso->nome, 0, 60, "..."); ?></h3>
 
-              <div class="col">
-                <?php $alunosCount = $turmaAluno->find("usuario = '$curso->usuario' AND curso = $curso->id")->count(); ?>
-                <?php $aulasCount = $aula->find("curso = $curso->id")->count(); ?>
-                <i class="fa-regular fa-heart" style="color: #EC0043"></i> <?= $alunosCount ?> alunos <br>
-                <i class="fas fa-video"></i> <?= $aulasCount ?> aulas
-              </div>
+                  <?php if (!empty($curso->descricao)) : ?>
+                    <p><?= mb_strimwidth(strip_tags($curso->descricao), 0, 140, "..."); ?></p>
+                  <?php endif; ?>
 
-              <div class="col">
-                <?php if ($curso->status == 1) : ?>
-                  <i class='fas fa-check-circle' style="color: #39aa7e"></i> Aprovado
-                <?php else : ?>
-                  <i class='fa-solid fa-circle-xmark' style="color: #EC0043"></i> Reprovado
-                <?php endif; ?>
-              </div>
-
-              <div class="col">
-                <button class="btn btn-success btn-sm" data-target="#modal-lg" onclick="editar(<?= $i; ?>)" data-toggle="modal"><i class="far fa-edit"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <script>
-            dados[<?= $i ?>] = {
-              id: "<?= $curso->id ?>",
-              produtor: "<?= $curso->dataProdutor()->nome ?>",
-              email: "<?= $curso->dataProdutor()->email ?>",
-              produto: "<?= $curso->dataProduto()->nome ?>",
-              nome: "<?= $curso->nome ?>",
-              categoria: "<?= $categorias[$curso->assunto] ?>",
-              formato: "<?= $formato[$curso->formato] ?>",
-              liberacao: "<?= $liberacao[$curso->liberacao] ?>",
-              descricao: "<?= $curso->descricao ?>",
-              imagem: "<?= $curso->imagem ?>",
-              status: "<?= $curso->status ?>",
-              alunos: "<?= $alunosCount ?>",
-              aulas: "<?= $aulasCount ?>",
-              created_at: "<?= $curso->created_at ?>",
-              updated_at: "<?= $curso->updated_at ?>",
-            }
-          </script>
-
-
-          <!-- cadastar -->
-          <div class="modal fade" id="modal-lg">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-
-                <div class="modal-header">
-                  <h3 class="card-title"><i class="fa fa-info-circle"></i> Detalhes do curso</h3>
-                  <button type="button" class="close" data-dismiss="modal"> &times;</button>
+                  <div class="win-card-meta">
+                    <span><i class="fas fa-user-friends"></i> <?= $alunosCount; ?> alunos</span>
+                    <span><i class="fas fa-video"></i> <?= $aulasCount; ?> aulas</span>
+                    <?php if (!empty($curso->created_at)) : ?>
+                      <span><i class="far fa-calendar-alt"></i> Criado em <?= date("d/m/Y", strtotime($curso->created_at)); ?></span>
+                    <?php endif; ?>
+                  </div>
                 </div>
 
-                <form action="#" name="cadastro" method="post" style="font-family:inter; font-size:14px">
-                  <input type="hidden" name="id" id="id">
-                  <div class="modal-body" style="background: #f4f6f9">
-                    <div class="card card-body">
-                      <div class="row">
-                        <div class="col-md-2">
-                          <img src="" alt="<?= $curso->nome; ?>" width="100px" height="100px" style="border-radius: 10px;" id="imagem-curso" class="imagem-curso"><br>
-                        </div>
-
-                        <div class="col-md-10">
-                          <h2 id="nome-curso"><?= $curso->nome; ?></h2>
-                          <p id="descricao-curso"><?= $curso->descricao; ?></p>
-                        </div>
-                      </div>
-
-                      <br>
-                      <div class="row">
-                        <div class="col-md-12">
-                          <a class="btn btn-outline-primary" href="#" target="_blank" id="link-curso"><i class="fa fa-eye" aria-hidden="true"></i>VISUALIZAR COMO ALUNO</a>
-                        </div>
-                      </div>
-
-                      <hr>
-                      <div class="row">
-                        <div class="col-md-12">
-                          <i class="fas fa-user-lock" style="color: #2c7be5;"></i> <small>Produtor:</small><br>
-                          <!-- <span id="produtor-curso">< ?= $curso->dataProdutor()->nome; ?></span><br>
-                <span id="email-curso">< ?= $curso->dataProdutor()->email; ?></span> -->
-                        </div>
-                      </div>
-
-                      <hr>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <small>Produto:</small><br>
-                          <i class="fas fa-boxes" style="color: #2c7be5;"></i> <span id="produto-curso">
-                            < ?=$curso->dataProduto()->nome; ?>
-                          </span><br><br>
-
-                          <small>Categoria:</small><br>
-                          <i class="fas fa-tags" style="color: #2c7be5;"></i> <span id="categoria-curso"><?= $categorias[$curso->assunto]; ?></span><br><br>
-
-                          <small>Formato:</small><br>
-                          <i class="far fa-file-alt" style="color: #2c7be5;"></i> <span id="formato-curso"><?= $formato[$curso->formato]; ?></span>
-                        </div>
-
-                        <div class="col-md-6">
-                          <small>Liberação </small><br>
-                          <i class="fas fa-arrow-alt-circle-up" style="color: #2c7be5;"></i> <span id="liberacao-curso"><?= $liberacao[$curso->liberacao]; ?></span><br><br>
-
-                          <?php if (@$curso) : ?>
-                            <?php $alunosCount = $turmaAluno->find("usuario = $curso->usuario AND curso = $curso->id")->count(); ?>
-                            <?php $aulasCount = $aula->find("curso = $curso->id")->count(); ?>
-                            <i class="fa-regular fa-heart" style="color: #EC0043"></i> <span id="alunos-curso"><?= $alunosCount ?></span> alunos <br>
-                            <i class="fas fa-video" style="color: #2c7be5;"></i> <span id="aulas-curso"><?= $aulasCount ?></span> aulas
-                          <?php endif; ?>
-                        </div>
-                      </div>
-
-                      <hr>
-                      <div class="row">
-                        <div class="col-md-12">
-                          <span id="status-curso-icon"></span>
-                          <small>Status:</small><br>
-
-                          <select name="status-curso" id="status-curso" class="form-control col-md-3">
-                            <option value="1">Aprovado</option>
-                            <option value="0">Reprovado</option>
-                          </select>
-                        </div>
-                      </div>
-
-                    </div>
-
+                <div class="win-card-footer">
+                  <span class="<?= $statusClass; ?>" id="status-curso-badge-<?= $curso->id; ?>">
+                    <i class="<?= $curso->status == 1 ? 'fas fa-check-circle' : 'fas fa-times-circle'; ?>"></i>
+                    <?= $statusLabel; ?>
+                  </span>
+                  <div class="win-card-actions">
+                    <a class="btn-win btn-win-ghost" href="<?= url("cursos/detalhe/" . $curso->id); ?>">
+                      <i class="fas fa-arrow-right"></i>
+                      Gerenciar
+                    </a>
+                    <button class="btn-win" data-toggle="modal" data-target="#curso-modal" onclick="editar(<?= $i; ?>)">
+                      <i class="far fa-edit"></i>
+                      Revisar
+                    </button>
                   </div>
+                </div>
+              </article>
 
-                  <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelar">Cancelar</button>
-                    <button class="btn btn-primary" id="salvar-curso">Salvar</button>
-                  </div>
-                </form>
-
-              </div>
-
-            </div>
-
+              <script>
+                dados[<?= $i ?>] = {
+                  id: <?= json_encode($curso->id); ?>,
+                  produtor: <?= json_encode($curso->dataProdutor()->nome); ?>,
+                  email: <?= json_encode($curso->dataProdutor()->email); ?>,
+                  produto: <?= json_encode($curso->dataProduto()->nome); ?>,
+                  nome: <?= json_encode($curso->nome); ?>,
+                  categoria: <?= json_encode($categoriaNome); ?>,
+                  formato: <?= json_encode($formato[$curso->formato] ?? "Formato não informado"); ?>,
+                  liberacao: <?= json_encode($liberacao[$curso->liberacao] ?? "-"); ?>,
+                  descricao: <?= json_encode($curso->descricao); ?>,
+                  imagem: <?= json_encode($curso->imagem); ?>,
+                  status: <?= json_encode($curso->status); ?>,
+                  alunos: <?= json_encode($alunosCount); ?>,
+                  aulas: <?= json_encode($aulasCount); ?>,
+                  created_at: <?= json_encode($curso->created_at); ?>,
+                  updated_at: <?= json_encode($curso->updated_at); ?>
+                };
+              </script>
+              <?php $i++;
+            endforeach; ?>
           </div>
-          <!-- end cadastrar -->
 
-        <?php
-          $i++;
-        endforeach;
-        ?>
+          <div class="win-divider"></div>
 
-      <?php
-        //EXIBE A NAVEGAÇÃO DO PAGINADOR
-        $link = URL_BASE . "/cursos/cursos-cadastrados/";
-
-        //VARIÁVEIS VÊM DO CONTROLADOR AppPedidos
-        $paginador->paginas($total, $pagina, $link);
-
-      else :
-      ?>
-        <h4>Nenhum cursos encontrado!</h4>
+          <div class="d-flex justify-content-center">
+            <?php
+            $link = URL_BASE . "/cursos/cursos-cadastrados/";
+            $paginador->paginas($total, $pagina, $link);
+            ?>
+          </div>
+        </section>
+      <?php else : ?>
+        <section class="win-section">
+          <div class="win-empty-state">
+            Nenhum curso cadastrado por aqui. Assim que um curso for publicado ele aparece nesta lista.
+          </div>
+        </section>
       <?php endif; ?>
-
-    </div><!-- /.container-fluid -->
+    </div>
   </section>
-  <!-- /.content -->
 
   <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
     <i class="fas fa-chevron-up"></i>
   </a>
 </div>
-<!-- /.content-wrapper -->
+
+<div class="modal fade win-modal" id="curso-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-info-circle"></i> Detalhes do curso</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form action="#" name="cadastro" method="post" class="win-form">
+        <input type="hidden" name="id" id="id">
+        <div class="modal-body">
+          <div class="win-card">
+            <div class="d-flex flex-column flex-md-row align-items-start win-flex-gap">
+              <img src="" alt="Imagem do curso" class="win-thumb-square" id="imagem-curso">
+              <div class="d-flex flex-column win-flex-gap-sm">
+                <h3 id="nome-curso" class="mb-0"></h3>
+                <p id="descricao-curso" class="mb-0"></p>
+                <div class="win-chip-group">
+                  <span class="win-chip" id="categoria-curso"></span>
+                  <span class="win-chip" id="formato-curso"></span>
+                  <span class="win-chip" id="liberacao-curso"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="win-divider"></div>
+
+            <div class="win-card-meta flex-column flex-md-row win-flex-gap-sm">
+              <span><i class="fas fa-user-lock"></i> Produtor <strong id="produtor-curso"></strong></span>
+              <span><i class="far fa-envelope"></i> <span id="email-curso"></span></span>
+            </div>
+
+            <div class="win-divider"></div>
+
+            <div class="win-mini-grid">
+              <div class="win-mini-card">
+                <span>Produto</span>
+                <strong id="produto-curso"></strong>
+              </div>
+              <div class="win-mini-card">
+                <span>Alunos</span>
+                <strong><span id="alunos-curso">0</span></strong>
+              </div>
+              <div class="win-mini-card">
+                <span>Aulas</span>
+                <strong><span id="aulas-curso">0</span></strong>
+              </div>
+              <div class="win-mini-card">
+                <span>Atualizado</span>
+                <strong id="curso-atualizado">-</strong>
+              </div>
+            </div>
+
+            <div class="win-divider"></div>
+
+            <a class="btn-win align-self-start" href="#" target="_blank" id="link-curso">
+              <i class="fa fa-eye"></i>
+              Visualizar como aluno
+            </a>
+
+            <div class="win-divider"></div>
+
+            <div class="d-flex flex-column win-flex-gap-sm">
+              <div class="d-flex align-items-center win-flex-gap-sm">
+                <span id="status-curso-icon" class="win-status win-status-warning"></span>
+                <div class="flex-grow-1">
+                  <label class="mb-2">Status</label>
+                  <select name="status-curso" id="status-curso" class="form-control">
+                    <option value="1">Aprovado</option>
+                    <option value="0">Reprovado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar">Cancelar</button>
+          <button class="btn-win" id="salvar-curso" type="submit">
+            <i class="fas fa-save"></i>
+            Salvar alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <?= $v->start("scripts") ?>
 <script>
@@ -251,42 +259,38 @@ $liberacao = array(
     $("#categoria-curso").html(categoria);
     $("#formato-curso").html(formato);
     $("#liberacao-curso").html(liberacao);
-    $("#descricao-curso").html(descricao);
-    $("#imagem-curso").prop("src", "<?= url("uploads/cursos/"); ?>" + imagem);
+    $("#descricao-curso").html(descricao || "");
+    $("#imagem-curso").prop("src", imagem ? "<?= url("uploads/cursos/"); ?>" + imagem : "<?= url("uploads/cursos/default.png"); ?>");
     $("#alunos-curso").html(alunos);
     $("#aulas-curso").html(aulas);
-    $("#link-curso").prop("href", "<?= url("minhas-compras/viewcursos/") ?>" + id)
+    $("#curso-atualizado").html(updated_at ? updated_at : "-");
+    $("#link-curso").prop("href", "<?= url("minhas-compras/viewcursos/") ?>" + id);
 
     $("#status-curso option[value=" + status + "]").prop("selected", true);
 
     if (status == 1) {
-      $("#status-curso-icon").html("<i class='fas fa-check-circle'></i>").css("color", "#39aa7e");
+      $("#status-curso-icon").attr("class", "win-status win-status-success").html("<i class='fas fa-check-circle'></i> Aprovado");
     } else {
-      $("#status-curso-icon").html("<i class='fa-solid fa-circle-xmark'></i>").css("color", "#EC0043");
+      $("#status-curso-icon").attr("class", "win-status win-status-danger").html("<i class='fas fa-times-circle'></i> Reprovado");
     }
   }
 
-  $("#salvar-curso").click((e) => {
+  $("#salvar-curso").on("click", function(e) {
     e.preventDefault();
     salvar();
-  })
+  });
 
   function salvar() {
-    var form = $("form");
+    var form = $("form[name='cadastro']");
 
     $.ajax({
-
       url: "<?= $router->route("cursos.status") ?>",
       data: form.serialize(),
       type: "POST",
-      beforeSend: function() {
-        console.log("atualizando");
-      },
       error: function() {
         console.log("O servidor não conseguiu processar o pedido");
       },
       success: function(callback) {
-        console.log("callback ", callback);
         alert(callback);
         location.reload();
       }

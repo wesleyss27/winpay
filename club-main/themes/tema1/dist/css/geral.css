@@ -13,11 +13,11 @@
 }
 
 .alternadas:nth-child(odd) {
-    background-color: #f8f8f8;
+    background-color: rgba(255, 255, 255, 0.04);
 }
 
 .alternadas:nth-child(even) {
-    background-color: #f1f1f1;
+    background-color: rgba(255, 255, 255, 0.02);
 }
 
 .menu-edicao {

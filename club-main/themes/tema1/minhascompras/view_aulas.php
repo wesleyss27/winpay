@@ -1,746 +1,860 @@
 <?php
 $v->layout("_theme");
 
-
-foreach ($all_aulas as $aul_key => $aul_val) {
-  if ($aul_val->id == $id) {
-    $current_key = $aul_key;
-
-    $prev_key = $current_key - 1;
-    if (!empty($prev_key) && $prev_key > -1) {
-
-      $url_l = url("minhas-compras/viewaulas/" . $all_aulas[$prev_key]->id);
-    } elseif ($prev_key == 0) {
-      $url_l = url("minhas-compras/viewaulas/" . $all_aulas[0]->id);
-    } else {
-
-      $url_l = url("minhas-compras/viewaulas/" . $id);
-    }
-
-    $next_key = $current_key + 1;
-    if (!empty($next_key) && $next_key < count($all_aulas)) {
-      $url_2 = url("minhas-compras/viewaulas/" . $all_aulas[$next_key]->id);
-    } else {
-      $url_2 = url("minhas-compras/viewaulas/" . $id);
-    }
-  }
+$playlist = $all_aulas ?? [];
+if (!$playlist) {
+    $playlist = [];
 }
+if (!is_array($playlist)) {
+    $playlist = [$playlist];
+}
+
+$currentIndex = 0;
+$prevLesson = null;
+$nextLesson = null;
+
+foreach ($playlist as $index => $lessonItem) {
+    if ((int) $lessonItem->id === (int) $id) {
+        $currentIndex = $index;
+        $prevLesson = $playlist[$index - 1] ?? null;
+        $nextLesson = $playlist[$index + 1] ?? null;
+        break;
+    }
+}
+
+$prevUrl = $prevLesson ? url("minhas-compras/viewaulas/" . $prevLesson->id) : null;
+$nextUrl = $nextLesson ? url("minhas-compras/viewaulas/" . $nextLesson->id) : null;
+
+$totalLessons = count($playlist);
+$currentPosition = $totalLessons > 0 ? $currentIndex + 1 : 1;
+
+$courseCover = !empty($curso->imagem)
+    ? url("uploads/cursos/" . $curso->imagem)
+    : url("uploads/cursos/default.png");
+
+$attachments = [];
+if (!empty($aula->arquivo_anexo1)) {
+    $attachments[] = [
+        "label" => "Anexo 1",
+        "file" => $aula->arquivo_anexo1,
+    ];
+}
+if (!empty($aula->arquivo_anexo2)) {
+    $attachments[] = [
+        "label" => "Anexo 2",
+        "file" => $aula->arquivo_anexo2,
+    ];
+}
+if (!empty($aula->arquivo_anexo3)) {
+    $attachments[] = [
+        "label" => "Anexo 3",
+        "file" => $aula->arquivo_anexo3,
+    ];
+}
+
+$heroDescription = $aula->descricao
+    ? mb_strimwidth(strip_tags($aula->descricao), 0, 220, "…")
+    : "Acompanhe o conteúdo desta aula e avance no seu progresso.";
+
+$courseName = htmlspecialchars($curso->nome ?? '', ENT_QUOTES, 'UTF-8');
+$moduleName = htmlspecialchars($modulo->nome ?? '', ENT_QUOTES, 'UTF-8');
+$lessonName = htmlspecialchars($aula->nome ?? '', ENT_QUOTES, 'UTF-8');
+$currentUserName = htmlspecialchars($usuario->nome ?? '', ENT_QUOTES, 'UTF-8');
+$courseCoverAttr = htmlspecialchars($courseCover, ENT_QUOTES, 'UTF-8');
+$prevUrlAttr = $prevUrl ? htmlspecialchars($prevUrl, ENT_QUOTES, 'UTF-8') : null;
+$nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null;
 ?>
 
 <style>
-/* Fundo geral */
-body, .content-wrapper, .container-fluid, .header, .card {
-  background-color: #000 !important;
-  color: #fff;
+.lesson-hero small {
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  color: rgba(244, 208, 63, 0.72);
+  display: inline-block;
+  margin-bottom: 0.35rem;
 }
 
-/* Player de vídeo */
-.video_platform iframe {
-  border-radius: 12px;
+.lesson-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.2rem;
+}
+
+.lesson-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(244, 208, 63, 0.18);
+  border: 1px solid rgba(244, 208, 63, 0.28);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wh-text);
+}
+
+.lesson-layout {
+  display: grid;
+  gap: clamp(1.4rem, 2vw, 2rem);
+}
+
+@media (min-width: 992px) {
+  .lesson-layout {
+    grid-template-columns: minmax(0, 1fr) clamp(280px, 28vw, 360px);
+    align-items: start;
+  }
+}
+
+.lesson-main-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+.lesson-player-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.lesson-video {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--wh-radius-md);
+  border: 1px solid rgba(244, 208, 63, 0.18);
+  background: radial-gradient(circle at 10% 10%, rgba(244, 208, 63, 0.18), transparent 65%);
+  box-shadow: var(--wh-shadow-soft);
+}
+
+.lesson-video iframe,
+.lesson-video video {
+  width: 100%;
+  min-height: clamp(240px, 42vw, 460px);
+  display: block;
   border: none;
 }
 
-/* Sidebar (playlist de aulas) */
-.playlist-item {
-  background-color: #141414;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  padding: 8px 12px;
-  transition: background-color 0.3s ease;
+.lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  color: var(--wh-text-muted);
 }
 
-.playlist-item:hover {
-  background-color: #1f1f1f;
+.lesson-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.86rem;
 }
 
-.playlist-item.active {
-  background-color: rgb(217, 192, 0);
-  color: #000;
-  font-weight: bold;
+.lesson-description {
+  color: var(--wh-text-muted);
+  line-height: 1.7;
 }
 
-.playlist-item.active div,
-.playlist-item.active span {
-  color: #000 !important;
+.lesson-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
-/* Texto na playlist */
-.playlist-item .col {
-  color: #fff;
+.lesson-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
-/* Barra de progresso */
-.progress {
-  background-color: #333;
-  border-radius: 20px;
+.lesson-attachments a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--wh-radius-sm);
+  border: 1px dashed rgba(244, 208, 63, 0.28);
+  color: var(--wh-text);
+  background: rgba(8, 12, 20, 0.82);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.progress-bar {
-  background-color: rgb(217, 192, 0);
-  color: #000;
-  font-weight: 600;
+.lesson-attachments a:hover {
+  border-color: rgba(244, 208, 63, 0.42);
+  background: rgba(8, 12, 20, 0.95);
 }
 
-/* Botões */
-.btn {
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 600;
+.lesson-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.btn-primary,
-.btn-success {
-  background-color: rgb(217, 192, 0);
-  border-color: rgb(217, 192, 0);
-  color: #000;
+.lesson-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
-.btn-primary:hover,
-.btn-success:hover {
-  background-color: rgba(217, 192, 0, 0.9);
-}
-
-.btn-gray {
-  background-color: #1f1f1f;
-  border-color: #333;
-  color: #fff;
-}
-
-.btn-gray:hover {
-  background-color: #333;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  background: none;
-}
-
-.breadcrumb-item a {
-  color: rgb(217, 192, 0);
-}
-
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
-
-/* Títulos */
-h1, h2, h5, h4 {
-  color: rgb(217, 192, 0);
-  font-weight: 600;
-}
-
-/* Textos */
-p, .comment-text, .comment-time {
-  color: #ccc;
-}
-
-/* Área de materiais extras */
-.card-body div[style*="padding: 15px"] {
-  background-color: #141414 !important;
-  color: #fff;
-  border-radius: 10px;
-}
-
-/* Comentários */
-.comentario, .resposta {
-  border-radius: 10px;
-  background-color: #141414 !important;
-  padding: 10px;
-  color: #fff;
-}
-
-/* Input, textarea */
-textarea, input {
-  background-color: #fff;
-  color: #000;
-  border-radius: 8px;
-  border: 1px solid #444;
-}
-
-textarea:focus, input:focus {
-  border-color: rgb(217, 192, 0);
-  box-shadow: 0 0 0 2px rgba(217, 192, 0, 0.4);
-}
-
-/* Avatar */
-.avatar img, .avatar-img {
-  border-radius: 50%;
-  border: 2px solid rgb(217, 192, 0);
-}
-
-/* Estrelas */
-.estrela {
+.lesson-stars i {
+  font-size: 1.4rem;
   color: #bbb;
+  transition: color 0.2s ease, transform 0.2s ease;
   cursor: pointer;
 }
 
-.estrela:hover, .estrela.active {
-  color: #FFD700;
+.lesson-stars i:hover {
+  transform: translateY(-2px);
 }
 
-/* Scroll playlist */
-.scrollbar {
+.lesson-comments-form {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.lesson-comments-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.lesson-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lesson-comment {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1.1rem 1.2rem;
+  background: rgba(8, 12, 20, 0.68);
+  border-radius: var(--wh-radius-sm);
+  border: 1px solid rgba(244, 208, 63, 0.16);
+}
+
+.lesson-comment .avatar img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 208, 63, 0.32);
+  object-fit: cover;
+}
+
+.lesson-comment-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.lesson-comment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lesson-comment-meta h5 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--wh-text);
+  font-weight: 600;
+}
+
+.lesson-comment-time {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wh-text-soft);
+}
+
+.lesson-comment-text {
+  color: var(--wh-text-muted);
+  line-height: 1.6;
+}
+
+.btn-responder {
+  align-self: flex-start;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(244, 208, 63, 0.28);
+  background: transparent;
+  color: rgba(244, 208, 63, 0.85);
+  transition: all 0.2s ease;
+}
+
+.btn-responder:hover {
+  background: rgba(244, 208, 63, 0.12);
+}
+
+.lesson-reply-form {
+  margin-top: 0.9rem;
+  padding: 1rem;
+  border-radius: var(--wh-radius-sm);
+  background: rgba(8, 12, 20, 0.6);
+  border: 1px solid rgba(244, 208, 63, 0.12);
+}
+
+.lesson-reply-form textarea,
+.lesson-reply-form input[type="text"] {
+  width: 100%;
+  border-radius: var(--wh-radius-sm);
+  border: 1px solid rgba(244, 208, 63, 0.24);
+  background: rgba(15, 17, 24, 0.75);
+  color: var(--wh-text);
+  padding: 0.65rem 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.lesson-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+  border-left: 2px solid rgba(244, 208, 63, 0.22);
+  padding-left: 1rem;
+}
+
+.lesson-reply {
+  background: rgba(8, 12, 20, 0.55);
+}
+
+.lesson-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.lesson-playlist-card {
+  position: sticky;
+  top: clamp(1.2rem, 2vw, 2.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.lesson-playlist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 70vh;
   overflow-y: auto;
+  padding-right: 0.3rem;
 }
 
-.scrollbar::-webkit-scrollbar {
-  width: 8px;
+.lesson-playlist-item {
+  display: grid;
+  grid-template-columns: auto 72px 1fr;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: var(--wh-radius-sm);
+  border: 1px solid rgba(244, 208, 63, 0.12);
+  background: rgba(8, 12, 20, 0.62);
+  text-decoration: none;
+  color: var(--wh-text);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.scrollbar::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 10px;
+.lesson-playlist-item:hover {
+  transform: translateX(6px);
+  border-color: rgba(244, 208, 63, 0.36);
 }
 
-.scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #777;
+.lesson-playlist-item.is-active {
+  border-color: rgba(244, 208, 63, 0.55);
+  background: rgba(244, 208, 63, 0.18);
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .m-none {
-    display: none;
+.lesson-playlist-index {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 208, 63, 0.85);
+}
+
+.lesson-playlist-thumb {
+  width: 72px;
+  height: 46px;
+  border-radius: var(--wh-radius-sm);
+  overflow: hidden;
+  background: rgba(244, 208, 63, 0.12);
+}
+
+.lesson-playlist-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lesson-playlist-info h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--wh-text);
+}
+
+.lesson-playlist-info span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--wh-text-soft);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+.lesson-feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+#btn-concluido-desk,
+#btn-concluido-mobile {
+  min-width: 160px;
+}
+
+@media (max-width: 991.98px) {
+  .lesson-playlist-card {
+    position: static;
   }
 
-  .playlist-item .col {
-    font-size: 14px;
+  .lesson-playlist-list {
+    max-height: none;
   }
 }
 </style>
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-
-  <!-- Content Header (Page header) -->
-  <section class="content-header">
-
-    <!-- CONTEINER-FLUID -->
+<div class="content-wrapper win-page">
+  <section class="content">
     <div class="container-fluid">
 
-      <!-- SEÇÃO PLAYER VIDEO E AULAS -->
-      <div class="header bg-dark-octa mb-0">
-
-        <!-- CONTAINER -->
-        <div class="container">
-
-          <!-- ROW NO-GUTTERS -->
-          <div class="row no-gutters">
-            <div class="col-md-8">
-
-              <!-- VIDEO PLAYER -->
-              <div class="video_platform">
-                <?php
-                $url = $aula->link_video;
-
-                if (strpos($url, 'youtube') !== false || strpos($url, 'youtu.be') !== false) {   // https://www.youtube.com/watch?v=YKKMtGhVdhc
-
-                  $youtube_url = 'https://www.youtube.com/embed/';
-
-                  // Now get the 'v=' value & stick on the end
-                  preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $matches);
-                  $v1 = $matches[1];
-
-                  // Final result
-                  $new_url = '<iframe width="100%" height="480" src="' . $youtube_url . $v1 . '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-                } elseif (strpos($url, 'vimeo') > 0) {   // https://player.vimeo.com/video/116582567
-
-                  $vimeo_url = 'https://player.vimeo.com/video/';
-
-                  // Now get the last part of the url
-                  $v1 = substr(strrchr($url, '/'), 1);
-
-                  // Final result
-                  $new_url = '<iframe width="560" height="315" src="' . $vimeo_url . $v1 . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>';
-                } elseif ($aula->script_player) {
-                  $new_url = base64_decode($aula->script_player);
-                } else {
-                  $new_url = '<iframe width="640" height="360" src="' . $aula->link_video . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
-                }
-
-                ?>
-                <?= $new_url; ?>
-              </div>
-              <!-- FIM VIDEO PLAYER -->
-
-            </div>
-
-            <!-- LISTAGEM DE AULAS MÓDULO -->
-            <div class="col-lg-4 col-12 col-md-4 col-sm-12 text-white position-relative d-none d-lg-block">
-              <div class="position-absolute fixed-top h-100 scroll-vertical scrollbar">
-                <?php
-                $i = 1;
-                foreach ($all_aulas as $aulas_val) {
-                  $imagem = $aulas_val->imagem ? $aulas_val->imagem : $curso->imagem;
-                ?>
-                  <a class="row align-items-center no-gutters py-3 px-4 playlist-item <?= ($aulas_val->id == $id) ? "active" : "" ?>" href="<?= url("minhas-compras/viewaulas/" . $aulas_val->id) ?>">
-                    <div class="col-1 font-weight-bold text-white"><?= $i; ?></div>
-
-                    <div class="col-auto">
-                      <img width="70" height="40" class="d-block mr-3" src="<?= url("uploads/cursos/" . $imagem); ?>" />
-                    </div>
-
-                    <div class="col">
-                      <?= $aulas_val->nome; ?>
-                    </div>
-                  </a>
-                <?php $i++;
-                } ?>
-
-              </div>
-            </div>
-            <!-- FIM LISTAGEM AULAS MÓDULO -->
-
-          </div>
-          <!-- FIM ROW NO-GUTTERS -->
-
+      <section class="win-hero lesson-hero" style="background: linear-gradient(135deg, rgba(11, 15, 28, 0.9), rgba(5, 5, 8, 0.92)), url('<?= $courseCoverAttr; ?>') center/cover no-repeat;">
+        <div class="win-page-title">
+          <small><?= $courseName; ?> · <?= $moduleName; ?></small>
+          <h2><?= $lessonName; ?></h2>
         </div>
-        <!-- FIM CONTAINER -->
+        <p><?= $heroDescription; ?></p>
 
-      </div>
-      <!-- FIM HEADER -->
+        <div class="lesson-hero-meta">
+          <span class="lesson-hero-pill"><i class="far fa-circle"></i> Aula <?= str_pad($currentPosition, 2, "0", STR_PAD_LEFT); ?> de <?= $totalLessons; ?></span>
+          <span class="lesson-hero-pill"><i class="far fa-folder-open"></i> <?= $moduleName; ?></span>
+        </div>
 
-      <br>
+        <div class="hero-actions" style="margin-top: 1.4rem;">
+          <?php if ($prevUrlAttr) : ?>
+            <a href="<?= $prevUrlAttr; ?>" class="btn-win-ghost">
+              <i class="far fa-arrow-alt-circle-left"></i>
+              Aula anterior
+            </a>
+          <?php endif; ?>
 
-      <!-- MAIN-CONTENT -->
-      <div class="card card-body">
+          <?php if ($nextUrlAttr) : ?>
+            <a href="<?= $nextUrlAttr; ?>" class="btn-win">
+              Próxima aula
+              <i class="far fa-arrow-alt-circle-right"></i>
+            </a>
+          <?php endif; ?>
+        </div>
+      </section>
 
-        <!-- LEARNING -->
-        <div class="row">
+      <div class="lesson-layout">
+        <div class="lesson-main-stack">
 
-          <!-- CONTAINER LEARNING -->
-          <div class="col-md-8">
+          <div class="win-simple-card lesson-player-card">
+            <div class="lesson-video">
+              <?php
+              $url = $aula->link_video;
 
-            <!-- NAVEGAÇÃO MÓDULO -->
-            <div class="row">
-              <div class="col-md-12 col-9">
-                <ol class="breadcrumb py-0 mb-1 small leading-sm">
-                  <li class="breadcrumb-item d-inline-flex align-items-center">
-                    <a href="<?= url("minhas-compras/viewcursos/" . $curso->id) ?>"><?= $curso->nome; ?></a>
-                  </li>
-                  <li class="breadcrumb-item d-inline-flex align-items-center">
-                    <a href="<?= url("minhas-compras/viewcursos/" . $curso->id) ?>"> <?= $modulo->nome; ?></a>
-                  </li>
-                </ol>
+              if (strpos($url, 'youtube') !== false || strpos($url, 'youtu.be') !== false) {
+                  $youtube_url = 'https://www.youtube.com/embed/';
+                  preg_match('%(?:youtube(?:-nocookie)?\\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\\.be/)([^"&?/ ]{11})%i', $url, $matches);
+                  $videoId = $matches[1] ?? null;
+                  $new_url = $videoId
+                      ? '<iframe src="' . $youtube_url . $videoId . '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>'
+                      : '<iframe src="' . $url . '" frameborder="0" allowfullscreen loading="lazy"></iframe>';
+              } elseif (strpos($url, 'vimeo') !== false) {
+                  $vimeo_url = 'https://player.vimeo.com/video/';
+                  $videoId = substr(strrchr($url, '/'), 1);
+                  $new_url = '<iframe src="' . $vimeo_url . $videoId . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
+              } elseif (!empty($aula->script_player)) {
+                  $new_url = base64_decode($aula->script_player);
+              } else {
+                  $new_url = '<iframe src="' . $aula->link_video . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
+              }
+
+              echo $new_url;
+              ?>
+            </div>
+
+            <div class="lesson-meta">
+              <div class="lesson-meta-item">
+                <i class="far fa-play-circle"></i>
+                <span><?= $courseName; ?></span>
               </div>
-              <div class="d-lg-none col-3">
-                <!-- PAGINADOR VOLTAR E PRÓXIMO -->
-                <div>
-
-                  <div class="col-auto d-flex" style="margin-bottom: 10px">
-                    <!-- <a class="btn btn-white d-inline-flex align-items-center mr-2" title="Hora do Show!" @click.prevent="showOverlay" v-b-tooltip.hover="true" href="#!"><img src="<?= url("themes/tema1/assets/imgs/icons/light.svg") ?>" width="20px"></a> -->
-                    <div class="btn-group pagination">
-                      <a class="btn btn-gray btn-sm" title="Anterior" v-b-tooltip.hover="true" href="<?= $url_l; ?>">
-                        <i class="fas fa-chevron-left"></i>
-                      </a>
-                      <a class="btn btn-gray btn-sm" title="Próximo" v-b-tooltip.hover="true" href="<?= $url_2; ?>">
-                        <i class="fas fa-chevron-right"></i>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <!-- FIM PAGINADOR VOLTAR E PRÓXIMO -->
+              <div class="lesson-meta-item">
+                <i class="far fa-clone"></i>
+                <span><?= $moduleName; ?></span>
+              </div>
+              <div class="lesson-meta-item">
+                <i class="far fa-dot-circle"></i>
+                <span>Aula <?= str_pad($currentPosition, 2, "0", STR_PAD_LEFT); ?></span>
               </div>
             </div>
-            <!-- FIM NAVEGAÇÃO MÓDULO -->
 
-            <h1 class="header-title"><?= $aula->nome; ?></h1>
+            <div class="lesson-description">
+              <?= $aula->descricao; ?>
+            </div>
+          </div>
 
-            <p><?= $aula->descricao; ?></p>
+          <?php if ($attachments) : ?>
+            <div class="win-simple-card lesson-extra">
+              <div>
+                <h3 class="mb-2" style="letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.82rem; color: rgba(244, 208, 63, 0.85);">Material extra</h3>
+                <p class="mb-0" style="color: var(--wh-text-muted);">Complete a aula com os materiais complementares abaixo.</p>
+              </div>
+              <div class="lesson-attachments">
+                <?php foreach ($attachments as $attachment) :
+                    $attachmentUrl = htmlspecialchars(url('uploads/cursos/' . $attachment['file']), ENT_QUOTES, 'UTF-8');
+                    $attachmentLabel = htmlspecialchars($attachment['label'], ENT_QUOTES, 'UTF-8');
+                    $attachmentName = htmlspecialchars(basename($attachment['file']), ENT_QUOTES, 'UTF-8');
+                    ?>
+                  <a href="<?= $attachmentUrl; ?>" download>
+                    <i class="far fa-arrow-alt-circle-down"></i>
+                    <span><?= $attachmentLabel; ?> · <small><?= $attachmentName; ?></small></span>
+                  </a>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php endif; ?>
 
+          <div class="win-simple-card lesson-feedback">
+            <div>
+              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wh-text);">Avaliação</h3>
+              <p style="margin: 0.4rem 0 0; color: var(--wh-text-soft);">Como você avalia esta aula? Sua nota ajuda a melhorar a experiência.</p>
+            </div>
 
-            <div style="padding: 15px; width: 100%; background: #ddd; border-radius: 8px">
-              <h5>Material Extra</h5>
-              <?php if (!empty($aula->arquivo_anexo1)) : ?>
-                <i class="fa-solid fa-download"></i> <a href="<?= url("uploads/cursos/" . $aula->arquivo_anexo1); ?>" download>Baixar Anexo 1</a>
+            <div class="lesson-feedback-actions">
+              <div class="lesson-stars d-none d-lg-flex">
+                <i class="fa-solid fa-star estrela" id="star1" onmouseover="marcada(1, 'star')" onmouseout="normal(1, 'star')" onclick="avaliar(1)"></i>
+                <i class="fa-solid fa-star estrela" id="star2" onmouseover="marcada(2, 'star')" onmouseout="normal(2, 'star')" onclick="avaliar(2)"></i>
+                <i class="fa-solid fa-star estrela" id="star3" onmouseover="marcada(3, 'star')" onmouseout="normal(3, 'star')" onclick="avaliar(3)"></i>
+                <i class="fa-solid fa-star estrela" id="star4" onmouseover="marcada(4, 'star')" onmouseout="normal(4, 'star')" onclick="avaliar(4)"></i>
+                <i class="fa-solid fa-star estrela" id="star5" onmouseover="marcada(5, 'star')" onmouseout="normal(5, 'star')" onclick="avaliar(5)"></i>
+              </div>
+
+              <div class="lesson-stars d-lg-none">
+                <i class="fa-solid fa-star estrela" id="starm1" onmouseover="marcada(1, 'starm')" onmouseout="normal(1, 'starm')" onclick="avaliar(1)"></i>
+                <i class="fa-solid fa-star estrela" id="starm2" onmouseover="marcada(2, 'starm')" onmouseout="normal(2, 'starm')" onclick="avaliar(2)"></i>
+                <i class="fa-solid fa-star estrela" id="starm3" onmouseover="marcada(3, 'starm')" onmouseout="normal(3, 'starm')" onclick="avaliar(3)"></i>
+                <i class="fa-solid fa-star estrela" id="starm4" onmouseover="marcada(4, 'starm')" onmouseout="normal(4, 'starm')" onclick="avaliar(4)"></i>
+                <i class="fa-solid fa-star estrela" id="starm5" onmouseover="marcada(5, 'starm')" onmouseout="normal(5, 'starm')" onclick="avaliar(5)"></i>
+              </div>
+
+              <?php if (!$aulaConcluida) : ?>
+                <button type="button" id="btn-concluido-desk" class="btn btn-win">
+                  <i class="far fa-check-circle"></i>
+                  Marcar como concluída
+                </button>
+              <?php else : ?>
+                <span class="lesson-hero-pill" style="background: rgba(244, 208, 63, 0.22); border-color: rgba(244, 208, 63, 0.42);"><i class="far fa-check-circle"></i> Aula concluída</span>
               <?php endif; ?>
-
-              <?php if (!empty($aula->arquivo_anexo2)) : ?>
-                <i class="fa-solid fa-download"></i> <a href="<?= url("uploads/cursos/" . $aula->arquivo_anexo2); ?>" download>Baixar Anexo 2</a>
-              <?php endif ?>
-
-              <?php if (!empty($aula->arquivo_anexo3)) : ?>
-                <i class="fa-solid fa-download"></i> <a href="<?= url("uploads/cursos/" . $aula->arquivo_anexo3); ?>" download>Baixar Anexo 3</a>
-              <?php endif ?>
             </div>
-            <hr>
+          </div>
 
-            <!-- SEÇÃO COMENTÁRIOS E AVALIAÇÃO -->
-            <!-- AVALIAÇÃO MOBILE -->
-
-            <div class="d-lg-none mb-5">
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between flex-wrap">
-                    <h2>Avaliação</h2>
-                    <i class="fa-solid fa-star estrela" id="starm1" onmouseover="marcada(1, 'starm')" onmouseout="normal(1, 'starm')" onclick="avaliar(1)"></i>
-                    <i class="fa-solid fa-star estrela" id="starm2" onmouseover="marcada(2, 'starm')" onmouseout="normal(2, 'starm')" onclick="avaliar(2)"></i>
-                    <i class="fa-solid fa-star estrela" id="starm3" onmouseover="marcada(3, 'starm')" onmouseout="normal(3, 'starm')" onclick="avaliar(3)"></i>
-                    <i class="fa-solid fa-star estrela" id="starm4" onmouseover="marcada(4, 'starm')" onmouseout="normal(4, 'starm')" onclick="avaliar(4)"></i>
-                    <i class="fa-solid fa-star estrela" id="starm5" onmouseover="marcada(5, 'starm')" onmouseout="normal(5, 'starm')" onclick="avaliar(5)"></i>
-
-                    <?php if (!$aulaConcluida) : ?>
-                      <button type="button" id="btn-concluido-mobile" class="btn btn-block btn-success btn-bordered">Concluído</button>
-                    <?php endif ?>
-                  </div>
-                </div>
+          <div class="win-simple-card">
+            <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap: 0.8rem;">
+              <div>
+                <h3 style="margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; text-transform: uppercase;">Comentários</h3>
+                <p style="margin: 0.35rem 0 0; color: var(--wh-text-soft);">Compartilhe suas dúvidas e interaja com outros alunos.</p>
               </div>
             </div>
 
-            <!-- FIM AVALIAÇÃO MOBILE -->
-
-            <!-- COMENTÁRIOS -->
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h2 class="mb-0">Comentários</h2>
-            </div>
-
-            <div class="comentarios">
-              <form action="<?= $router->route("aulas.comentar") ?>" name="comentar" method="post">
+            <div class="lesson-comments" style="margin-top: 1.4rem;">
+              <form action="<?= $router->route("aulas.comentar") ?>" name="comentar" method="post" class="lesson-comments-form">
                 <input type="hidden" name="produtor" id="produtor" value="<?= $curso->usuario ?>">
                 <input type="hidden" name="modulo" id="modulo" value="<?= $aula->modulo ?>">
                 <input type="hidden" name="curso" id="curso" value="<?= $curso->id ?>">
                 <input type="hidden" name="aula" id="aula" value="<?= $aula->id ?>">
                 <input type="hidden" name="avaliacao" id="avaliacao">
+                <input type="hidden" name="avaliacao_id" id="avaliacao_id" value="<?= $avaliacao->id ?? '' ?>">
+                <input type="hidden" name="nota" id="nota" value="<?= $avaliacao->avaliacao ?? 0 ?>">
 
-                <?php if ($avaliacao) : ?>
-                  <input type="hidden" name="avaliacao_id" id="avaliacao_id" value="<?= $avaliacao->id ?>">
-                  <input type="hidden" name="nota" id="nota" value="<?= $avaliacao->avaliacao ?>">
-                <?php endif ?>
-
-                <div class="row">
-                  <div class="col-md-1">
-                    <div class="avatar avatar-sm">
-                      <?php if (@$usuario->foto) : ?>
-                        <img src="<?= url_octa("uploads/perfil/{$usuario->foto}"); ?>" alt="" width="40px" height="40px" style="border-radius: 50%">
-                      <?php else : ?>
-                        <img width="40" height="40" class="avatar-img rounded-circle" src="https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png" />
-                      <?php endif; ?>
-                    </div>
-                  </div>
-                  <div class="col-md-11">
-                    <textarea name="comentario" id="comentario" class="form-control" cols="30" rows="2"></textarea><br>
-
-                    <div class="right" style="float: right; margin-top: 10px">
-                      <button type="button" class="btn btn-primary" id="btn_comentar">Comentar</button>
-                    </div>
+                <div class="avatar">
+                  <?php if (!empty($usuario->foto)) :
+                      $usuarioAvatar = htmlspecialchars(url_octa("uploads/perfil/{$usuario->foto}"), ENT_QUOTES, 'UTF-8');
+                      ?>
+                    <img src="<?= $usuarioAvatar; ?>" alt="<?= $currentUserName; ?>">
+                  <?php else : ?>
+                    <img src="https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png" alt="Avatar padrão">
+                  <?php endif; ?>
+                </div>
+                <div style="flex: 1;">
+                  <textarea name="comentario" id="comentario" class="form-control" placeholder="Escreva aqui seu comentário"></textarea>
+                  <div class="d-flex justify-content-end" style="margin-top: 0.75rem;">
+                    <button type="button" class="btn btn-win" id="btn_comentar">
+                      <i class="far fa-paper-plane"></i>
+                      Enviar comentário
+                    </button>
                   </div>
                 </div>
               </form>
             </div>
-            <br>
+
             <?php if ($comentarios) : ?>
-              <div class="my-4 comments">
-                  <?php foreach ($comentarios as $comentario) : ?>
-                      <?php 
-                          $respostas = $resposta->find(
-                              "resposta IS NOT NULL AND aula = {$aula->id} AND resposta = {$comentario->id}"
-                          )->fetch(true); 
-                      ?>
+              <div class="lesson-comments-list" style="margin-top: 1.6rem;">
+                <?php foreach ($comentarios as $comentario) :
+                    $comentarioAluno = $comentario->dataAluno();
+                    $comentarioNome = $comentarioAluno ? htmlspecialchars($comentarioAluno->nome, ENT_QUOTES, 'UTF-8') : 'Aluno';
+                    $comentarioFoto = $comentarioAluno->foto ?? null;
+                    $comentarioAvatar = $comentarioFoto ? htmlspecialchars(url_octa("uploads/perfil/{$comentarioFoto}"), ENT_QUOTES, 'UTF-8') : null;
+                    $respostas = $resposta->find(
+                        "resposta IS NOT NULL AND aula = {$aula->id} AND resposta = {$comentario->id}"
+                    )->fetch(true);
+                    ?>
+                  <div class="lesson-comment">
+                    <div class="avatar">
+                      <?php if ($comentarioAvatar) : ?>
+                        <img src="<?= $comentarioAvatar; ?>" alt="<?= $comentarioNome; ?>">
+                      <?php else : ?>
+                        <img src="https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png" alt="Avatar padrão">
+                      <?php endif; ?>
+                    </div>
+                    <div class="lesson-comment-body">
+                      <div class="lesson-comment-meta">
+                        <h5><?= $comentarioNome; ?></h5>
+                        <span class="lesson-comment-time"><?= formataDataHora($comentario->created_at) ?></span>
+                      </div>
+                      <div class="lesson-comment-text">
+                        <?= $comentario->comentario ?>
+                      </div>
+                      <button class="btn-responder" id="responder<?= $comentario->id ?>" onclick="responder(<?= $comentario->id ?>)" type="button">Responder</button>
 
-                      <div class="comment mb-3">
-                          <div class="row">
-                              <div class="col-auto">
-                                  <div class="avatar">
-                                      <img src="<?= $comentario->dataAluno()->foto ? url_octa("uploads/perfil/{$comentario->dataAluno()->foto}") : 'https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png' ?>" width="40" height="40" alt="Avatar">
-                                  </div>
-                              </div>
-                              <div class="col ml-n2">
-                                  <div class="comment-body">
-                                      <div class="d-flex justify-content-between">
-                                          <h5 class="comment-title"><?= $comentario->dataAluno()->nome ?></h5>
-                                          <div class="comment-time"><?= formataDataHora($comentario->created_at) ?></div>
-                                      </div>
-                                      <div class="comment-text"><?= $comentario->comentario ?></div>
-
-                                      <button class="btn-responder" onclick="responder(<?= $comentario->id ?>)">Responder</button>
-
-                                      <div id="div_responder<?= $comentario->id ?>" style="display: none;" class="mt-2">
-                                          <form action="<?= $router->route("aulas.comentar") ?>" method="post">
-                                              <input type="hidden" name="produtor" value="<?= $curso->usuario ?>">
-                                              <input type="hidden" name="modulo" value="<?= $aula->modulo ?>">
-                                              <input type="hidden" name="curso" value="<?= $curso->id ?>">
-                                              <input type="hidden" name="aula" value="<?= $aula->id ?>">
-                                              <input type="hidden" name="resposta" value="<?= $comentario->id ?>">
-
-                                              <input type="text" class="input-resposta" name="comentario" placeholder="Deixe seu comentário">
-
-                                              <button type="button" class="btn btn-sm btn-gray" onclick="cancelar(<?= $comentario->id ?>)">Cancelar</button>
-                                              <button type="button" class="btn btn-sm btn-primary" onclick="btnResponder(<?= $comentario->id ?>)">Comentar</button>
-                                          </form>
-                                      </div>
-                                  </div>
-
-                                  <!-- RESPOSTAS -->
-                                  <?php if ($respostas) : ?>
-                                      <?php foreach ($respostas as $resp) : ?>
-                                          <div class="comment mt-3 ml-5">
-                                              <div class="row">
-                                                  <div class="col-auto">
-                                                      <div class="avatar">
-                                                          <img src="<?= $resp->dataAluno()->foto ? url_octa("uploads/perfil/{$resp->dataAluno()->foto}") : 'https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png' ?>" width="40" height="40" alt="Avatar">
-                                                      </div>
-                                                  </div>
-                                                  <div class="col ml-n2">
-                                                      <div class="comment-body">
-                                                          <div class="d-flex justify-content-between">
-                                                              <h5 class="comment-title"><?= $resp->dataAluno()->nome ?></h5>
-                                                              <div class="comment-time"><?= formataDataHora($resp->created_at) ?></div>
-                                                          </div>
-                                                          <div class="comment-text"><?= $resp->comentario ?></div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      <?php endforeach; ?>
-                                  <?php endif; ?>
-                                  <!-- FIM RESPOSTAS -->
-                              </div>
+                      <div id="div_responder<?= $comentario->id ?>" class="lesson-reply-form" style="display: none;">
+                        <form action="<?= $router->route("aulas.comentar") ?>" method="post" name="responder<?= $comentario->id ?>">
+                          <input type="hidden" name="produtor" value="<?= $curso->usuario ?>">
+                          <input type="hidden" name="modulo" value="<?= $aula->modulo ?>">
+                          <input type="hidden" name="curso" value="<?= $curso->id ?>">
+                          <input type="hidden" name="aula" value="<?= $aula->id ?>">
+                          <input type="hidden" name="resposta" value="<?= $comentario->id ?>">
+                          <textarea id="comentario_resposta<?= $comentario->id ?>" name="comentario" rows="2" placeholder="Responder a <?= $comentarioNome; ?>"></textarea>
+                          <div class="d-flex justify-content-end" style="gap: 0.6rem;">
+                            <button type="button" class="btn btn-win-ghost" onclick="cancelar(<?= $comentario->id ?>)">Cancelar</button>
+                            <button type="button" class="btn btn-win" onclick="btnResponder(<?= $comentario->id ?>)">Comentar</button>
                           </div>
+                        </form>
                       </div>
-                  <?php endforeach; ?>
 
-                  <a class="btn btn-white btn-block mt-4" href="#">Ver mais</a>
-              </div>
-          <?php else : ?>
-              <p>Nenhum comentário ainda.</p>
-          <?php endif; ?>
-
-
-          </div>
-
-          <!-- LATERAL -->
-          <style>
-            @media(max-width: 500px) {
-              .m-none {
-                display: none;
-              }
-            }
-          </style>
-          <div class="col-md-4 m-none">
-            <!-- PAGINADOR VOLTAR E PRÓXIMO -->
-            <div>
-
-            <style>
-              .btn {
-                border-radius: 8px;
-                padding: 8px 16px;
-                font-weight: 600;
-                transition: background-color 0.3s ease, transform 0.2s ease;
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                text-decoration: none;
-              }
-
-              .btn:hover {
-                transform: translateY(-2px);
-              }
-
-              .btn-primary {
-                background-color: rgb(217, 192, 0);
-                border: 1px solid rgb(217, 192, 0);
-                color: #000;
-              }
-
-              .btn-primary:hover {
-                background-color: rgba(217, 192, 0, 0.9);
-              }
-
-              .btn-gray {
-                background-color: #1f1f1f;
-                border: 1px solid #333;
-                color: #fff;
-              }
-
-              .btn-gray:hover {
-                background-color: #333;
-              }
-
-              .pagination {
-                display: flex;
-                gap: 10px;
-              }
-            </style>
-
-            <div class="col-auto d-flex pagination" style="float:right; margin-bottom: 10px">
-
-              <?php if ($url_l != url("minhas-compras/viewaulas/" . $id)) : ?>
-                <a class="btn btn-gray" href="<?= $url_l; ?>">
-                  <i class="fas fa-chevron-left"></i> 
-                  <span>Voltar aula</span>
-                </a>
-              <?php endif; ?>
-
-              <?php if ($url_2 != url("minhas-compras/viewaulas/" . $id)) : ?>
-                <a class="btn btn-primary" href="<?= $url_2; ?>">
-                  <span>Próxima aula</span> 
-                  <i class="fas fa-play"></i>
-                </a>
-              <?php endif; ?>
-
-            </div>
-
-
-              <div style="clear: both;"></div>
-            </div>
-            <!-- FIM PAGINADOR VOLTAR E PRÓXIMO -->
-
-            <!-- AVALIAÇÃO DESKTOP -->
-            <div class="sticky-top">
-              <!-- <div class="row align-items-center no-gutters mb-h">
-                    <div class="col">
-                      <div class="progress ">
-                        <div class="progress-bar" style="width: 44%"></div>
-                      </div>
+                      <?php if ($respostas) : ?>
+                        <div class="lesson-replies">
+                          <?php foreach ($respostas as $resp) :
+                              $respAluno = $resp->dataAluno();
+                              $respNome = $respAluno ? htmlspecialchars($respAluno->nome, ENT_QUOTES, 'UTF-8') : 'Aluno';
+                              $respFoto = $respAluno->foto ?? null;
+                              $respAvatar = $respFoto ? htmlspecialchars(url_octa("uploads/perfil/{$respFoto}"), ENT_QUOTES, 'UTF-8') : null;
+                              ?>
+                            <div class="lesson-comment lesson-reply">
+                              <div class="avatar">
+                                <?php if ($respAvatar) : ?>
+                                  <img src="<?= $respAvatar; ?>" alt="<?= $respNome; ?>">
+                                <?php else : ?>
+                                  <img src="https://static-00.iconduck.com/assets.00/avatar-icon-2048x2048-ilrgk6vk.png" alt="Avatar padrão">
+                                <?php endif; ?>
+                              </div>
+                              <div class="lesson-comment-body">
+                                <div class="lesson-comment-meta">
+                                  <h5><?= $respNome; ?></h5>
+                                  <span class="lesson-comment-time"><?= formataDataHora($resp->created_at) ?></span>
+                                </div>
+                                <div class="lesson-comment-text">
+                                  <?= $resp->comentario ?>
+                                </div>
+                              </div>
+                            </div>
+                          <?php endforeach; ?>
+                        </div>
+                      <?php endif; ?>
                     </div>
-
-                    <div class="col-auto">
-                      <small class="align-text-top text-upcase text-muted ml-2">
-                        44%
-                      </small>
-                    </div>
-                  </div> -->
-
-              <style>
-                .estrela {
-                  color: #bbb;
-                }
-
-                .estrela:hover {
-                  cursor: pointer;
-                  color: #ff0
-                }
-              </style>
-
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between flex-wrap">
-                    <h2>Avaliação</h2>
-                    <i class="fa-solid fa-star estrela" id="star1" onmouseover="marcada(1, 'star')" onmouseout="normal(1, 'star')" onclick="avaliar(1)"></i>
-                    <i class="fa-solid fa-star estrela" id="star2" onmouseover="marcada(2, 'star')" onmouseout="normal(2, 'star')" onclick="avaliar(2)"></i>
-                    <i class="fa-solid fa-star estrela" id="star3" onmouseover="marcada(3, 'star')" onmouseout="normal(3, 'star')" onclick="avaliar(3)"></i>
-                    <i class="fa-solid fa-star estrela" id="star4" onmouseover="marcada(4, 'star')" onmouseout="normal(4, 'star')" onclick="avaliar(4)"></i>
-                    <i class="fa-solid fa-star estrela" id="star5" onmouseover="marcada(5, 'star')" onmouseout="normal(5, 'star')" onclick="avaliar(5)"></i>
-
-                    <?php if (!$aulaConcluida) : ?>
-                      <button type="button" id="btn-concluido-desk" class="btn btn-block btn-success btn-bordered">Concluído</button>
-                    <?php endif ?>
                   </div>
-                </div>
+                <?php endforeach; ?>
               </div>
-
-
-            </div>
-            <!-- FIM AVALIAÇÃO DESKTOP -->
-            <!-- FIM SEÇÃO COMENTÁRIOS E AVALIAÇÃO -->
+            <?php else : ?>
+              <p style="margin-top: 1.2rem; color: var(--wh-text-soft);">Ainda não há comentários para esta aula. Seja o primeiro a compartilhar algo!</p>
+            <?php endif; ?>
           </div>
-          <!-- FIM LATERAL -->
-
         </div>
+
+        <aside class="lesson-sidebar">
+          <div class="win-simple-card lesson-playlist-card">
+            <div>
+              <h3 style="margin: 0; font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase;">Playlist do módulo</h3>
+              <p style="margin: 0.3rem 0 0; color: var(--wh-text-soft);">Avance ou retome as aulas quando desejar.</p>
+            </div>
+
+            <div class="lesson-playlist-list">
+              <?php if ($playlist) : ?>
+                <?php foreach ($playlist as $index => $lesson) :
+                  $lessonImage = !empty($lesson->imagem) ? url("uploads/cursos/" . $lesson->imagem) : $courseCover;
+                  $lessonImage = htmlspecialchars($lessonImage, ENT_QUOTES, 'UTF-8');
+                  $lessonNameItem = htmlspecialchars($lesson->nome ?? '', ENT_QUOTES, 'UTF-8');
+                  $lessonUrl = htmlspecialchars(url("minhas-compras/viewaulas/" . $lesson->id), ENT_QUOTES, 'UTF-8');
+                  $isActive = (int) $lesson->id === (int) $id;
+                  ?>
+                  <a class="lesson-playlist-item <?= $isActive ? 'is-active' : '' ?>" href="<?= $lessonUrl; ?>">
+                    <span class="lesson-playlist-index">A<?= str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></span>
+                    <div class="lesson-playlist-thumb">
+                      <img src="<?= $lessonImage; ?>" alt="<?= $lessonNameItem; ?>">
+                    </div>
+                    <div class="lesson-playlist-info">
+                      <h4><?= $lessonNameItem; ?></h4>
+                      <?php if ($isActive) : ?>
+                        <span>Assistindo agora</span>
+                      <?php else : ?>
+                        <span>Abrir aula</span>
+                      <?php endif; ?>
+                    </div>
+                  </a>
+                <?php endforeach; ?>
+              <?php else : ?>
+                <p style="color: var(--wh-text-soft);">Nenhuma aula cadastrada neste módulo ainda.</p>
+              <?php endif; ?>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row" style="gap: 0.6rem;">
+              <?php if ($prevUrlAttr) : ?>
+                <a href="<?= $prevUrlAttr; ?>" class="btn btn-win-ghost" style="flex: 1; text-align: center;">
+                  <i class="far fa-arrow-alt-circle-left"></i>
+                  Aula anterior
+                </a>
+              <?php endif; ?>
+              <?php if ($nextUrlAttr) : ?>
+                <a href="<?= $nextUrlAttr; ?>" class="btn btn-win" style="flex: 1; text-align: center;">
+                  Próxima aula
+                  <i class="far fa-arrow-alt-circle-right"></i>
+                </a>
+              <?php endif; ?>
+            </div>
+          </div>
+        </aside>
       </div>
-      <!-- FIM INFORMAÇÕES AULA -->
-
     </div>
-
   </section>
-
 </div>
 
 <?= $v->start("scripts") ?>
 <script>
   function normal(num, id = 'star') {
-    for (i = 5; i > num; i--) {
-      $("#" + id + i).css("color", "#bbb");
+    if (!num) {
+      return;
+    }
+
+    for (let i = 5; i > num; i--) {
+      $('#' + id + i).css('color', '#bbb');
     }
   }
 
   function marcada(num, id = 'star') {
-    for (i = 1; i <= num; i++) {
-      $("#" + id + i).css("color", "#ff0");
-      console.log(id);
+    if (!num) {
+      return;
+    }
+
+    for (let i = 1; i <= num; i++) {
+      $('#' + id + i).css('color', '#ff0');
     }
   }
 
-  var avaliacao = $("#nota").val();
-  marcada(avaliacao);
-  marcada(avaliacao, 'starm');
-  console.log(avaliacao);
+  const avaliacaoAtual = parseInt($('#nota').val() || '0', 10);
+  marcada(avaliacaoAtual);
+  marcada(avaliacaoAtual, 'starm');
 
   function avaliar(num, id = 'star') {
-    for (i = 1; i <= num; i++) {
-      $("#" + id + i).css("color", "#ff0");
+    for (let i = 1; i <= 5; i++) {
+      $('#' + id + i).css('color', i <= num ? '#ff0' : '#bbb');
     }
 
-    $("#avaliacao").attr("value", num);
-    var form = $("form[name=comentar]");
-    console.log(form.serialize());
+    $('#avaliacao').val(num);
+    $('#nota').val(num);
+    const form = $('form[name=comentar]');
 
     $.ajax({
       url: "<?= $router->route("aulas.avaliar") ?>",
-      type: "POST",
+      type: 'POST',
       data: form.serialize(),
-      success: (callback) => {
+      success: function(callback) {
         alert(callback);
         location.reload();
       }
-    })
+    });
   }
 
-  $("#btn-concluido-desk, #btn-concluido-mobile").click((e) => {
+  $('#btn-concluido-desk, #btn-concluido-mobile').on('click', function(e) {
     e.preventDefault();
-    var form = $("form[name=comentar]");
+    const form = $('form[name=comentar]');
     concluido(form);
   });
 
   function concluido(form) {
     $.ajax({
       url: "<?= $router->route("aulas.concluir") ?>",
-      type: "POST",
+      type: 'POST',
       data: form.serialize(),
-      success: (callback) => {
+      success: function(callback) {
         alert(callback);
+        location.reload();
       }
-    })
+    });
   }
 
-  $("#btn_comentar").click((e) => {
+  $('#btn_comentar').on('click', function(e) {
     e.preventDefault();
-    var form = $("form[name=comentar]");
-    var comentario = $("#comentario").val();
-    if (comentario)
+    const form = $('form[name=comentar]');
+    const comentario = $('#comentario').val().trim();
+    if (comentario) {
       salvar(form);
-    else
-      alert("sem comentarios")
+    } else {
+      alert('Digite um comentário antes de enviar.');
+    }
   });
 
   function salvar(form) {
     $.ajax({
       url: "<?= $router->route("aulas.comentar") ?>",
-      type: "POST",
+      type: 'POST',
       data: form.serialize(),
-      success: (callback) => {
+      success: function(callback) {
         alert(callback);
+        location.reload();
       }
-    })
+    });
   }
 
   function responder(id) {
-    $("#responder" + id).hide();
-    $("#div_responder" + id).show();
+    $('#responder' + id).hide();
+    $('#div_responder' + id).slideDown();
   }
 
   function cancelar(id) {
-    $("#responder" + id).show();
-    $("#div_responder" + id).hide();
+    $('#div_responder' + id).slideUp(function() {
+      $('#responder' + id).show();
+    });
   }
 
   function btnResponder(id) {
-    var form = $("form[name=responder" + id + "]");
-    var comentario = $("#comentario_resposta" + id).val();
-    if (comentario)
+    const form = $('form[name=responder' + id + ']');
+    const comentario = $('#comentario_resposta' + id).val().trim();
+    if (comentario) {
       salvar(form);
-    else
-      alert("sem comentarios")
+    } else {
+      alert('Digite um comentário antes de enviar.');
+    }
   }
 </script>
 <?= $v->end() ?>

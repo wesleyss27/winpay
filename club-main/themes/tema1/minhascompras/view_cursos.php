@@ -1,254 +1,273 @@
-<?php $v->layout("_theme"); ?>
+<?php
+$v->layout("_theme");
+
+$imgCover = !empty($cursos->imagem)
+    ? url("uploads/cursos/" . $cursos->imagem)
+    : url("uploads/cursos/default.png");
+
+$totalAulas = (int) $aulaObj->find("curso = {$cursos->id}")->count();
+$registrosConcluidos = $aulaCl->find("aluno = {$_SESSION["id"]} AND curso = {$cursos->id}")->fetch(true);
+$idsConcluidos = [];
+if ($registrosConcluidos) {
+    foreach ($registrosConcluidos as $registro) {
+        $idsConcluidos[] = (int) $registro->aula;
+    }
+}
+$contadorConcluidas = count($idsConcluidos);
+$progress = $totalAulas > 0 ? round(($contadorConcluidas / $totalAulas) * 100) : 0;
+
+$descricaoCurso = $cursos->descricao ? strip_tags($cursos->descricao) : "Pronto para mergulhar em um novo conteúdo?";
+$descricaoCurso = mb_strimwidth($descricaoCurso, 0, 220, "…");
+
+$semana = 0;
+if (!empty($turma)) {
+    $dias = floor((time() - strtotime($turma->created_at)) / 86400);
+    $semana = $dias;
+}
+
+$modulosDisponiveis = [];
+if ($modulos) {
+    foreach ($modulos as $modulo) {
+        $liberado = (
+            $cursos->liberacao == 1 ||
+            ($cursos->liberacao == 3 && $semana >= 7) ||
+            empty($turma)
+        );
+
+        if ($liberado) {
+            $modulosDisponiveis[] = $modulo;
+        }
+    }
+}
+
+$proximaAula = null;
+if ($modulosDisponiveis) {
+    foreach ($modulosDisponiveis as $modulo) {
+        foreach ($aulas as $aula) {
+            if ($aula->modulo != $modulo->id) {
+                continue;
+            }
+
+            if (!in_array($aula->id, $idsConcluidos, true)) {
+                $proximaAula = $aula;
+                break 2;
+            }
+        }
+    }
+}
+
+if (!$proximaAula && $aulas) {
+    $proximaAula = $aulas[0];
+}
+
+$ctaUrl = $proximaAula ? url("minhas-compras/viewaulas/" . $proximaAula->id) : url("minhas-compras");
+$certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas);
+
+?>
 
 <style>
-body, .content-wrapper, .main-content, .container, .content {
-  background-color: #000 !important;
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
+:root {
+  --course-accent: #f4d03f;
+  --course-accent-rgb: 244, 208, 63;
 }
 
-.sticky-top {
-  background-color: #141414;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(217, 192, 0, 0.05);
-}
-
-.sticky-top img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-
-h2, h5, h4, h3 {
-  color: rgb(217, 192, 0);
-  font-weight: 600;
-}
-
-p {
-  color: #aaa;
-}
-
-.progress {
-  background-color: #333;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  background-color: rgb(217, 192, 0);
-  color: #000;
-  font-weight: 600;
-}
-
-.btn {
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-success, .btn-primary {
-  background-color: rgb(217, 192, 0);
-  border-color: rgb(217, 192, 0);
-  color: #000;
-}
-
-.btn-success:hover, .btn-primary:hover {
-  background-color: rgba(217, 192, 0, 0.9);
-}
-
-a {
-  color: rgb(217, 192, 0);
-}
-
-a:hover {
-  color: rgba(217, 192, 0, 0.8);
-}
-
-.modulos-area {
-  background-color: #141414;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(217, 192, 0, 0.05);
-  color: #fff;
-}
-
-.accordion {
-  background-color: #1e1e1e;
-  color: rgb(217, 192, 0);
-  cursor: pointer;
-  padding: 14px 18px;
-  width: 100%;
-  text-align: left;
-  border: none;
-  outline: none;
-  transition: 0.3s;
-  border-radius: 8px;
-  margin-bottom: 10px;
+.lesson-card {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-}
-
-.accordion:hover {
-  background-color: #333;
-}
-
-.accordion.active {
-  background-color: rgb(217, 192, 0);
-  color: #000;
-}
-
-.accordion .icon {
-  transition: transform 0.3s ease;
-}
-
-.accordion.active .icon {
-  transform: rotate(180deg);
-}
-
-.panel {
-  padding: 0 18px;
-  display: none;
-  background-color: #141414;
+  border-radius: var(--wh-radius-md) !important;
+  min-width: clamp(220px, 32vw, 260px);
+  padding: 0;
   overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  border: 1px solid rgba(244, 208, 63, 0.14);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  background: linear-gradient(135deg, rgba(11, 15, 28, 0.75), rgba(5, 5, 8, 0.9));
+  color: inherit;
+  text-decoration: none;
 }
 
-.aula-item {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 12px 18px;
-  margin-bottom: 10px;
-  color: #ccc;
+.lesson-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(var(--course-accent-rgb), 0.6);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+}
+
+.lesson-card.completed {
+  border-color: rgba(var(--course-accent-rgb), 0.55);
+}
+
+.lesson-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, rgba(244, 208, 63, 0.1), transparent);
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.aula-item:hover {
-  background-color: #2a2a2a;
-  color: rgb(217, 192, 0);
-  border-color: rgb(217, 192, 0);
-  transform: translateY(-2px);
+.lesson-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
 }
 
-.aula-item i {
-  margin-right: 10px;
-  color: rgb(217, 192, 0);
+.lesson-card figcaption {
+  padding: 1.1rem 1.4rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-.aula-item span {
-  flex: 1;
-  font-weight: 500;
+.lesson-card h4 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
-@media (max-width: 768px) {
-  .sticky-top {
-    margin-bottom: 20px;
+.lesson-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+  color: rgba(148, 163, 184, 0.82);
+}
+
+.lesson-status.completed {
+  background: rgba(var(--course-accent-rgb), 0.22);
+  color: var(--course-accent);
+}
+
+.lesson-status.upnext {
+  background: rgba(var(--course-accent-rgb), 0.12);
+  color: var(--course-accent);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.2rem;
+}
+
+.hero-actions .btn-win {
+  background: var(--course-accent);
+  color: #050507;
+}
+
+.hero-actions .btn-win-ghost {
+  border-color: var(--course-accent);
+  color: var(--course-accent);
+}
+
+.win-progress-bar {
+  background: linear-gradient(90deg, var(--course-accent), rgba(var(--course-accent-rgb), 0.65));
+}
+
+@media (max-width: 575.98px) {
+  .lesson-card {
+    min-width: 80vw;
   }
 }
 </style>
 
-<div class="content-wrapper">
+<div class="content-wrapper win-page">
   <section class="content">
-    <div class="main-content px-md-5">
-      <div class="container pt-3 pt-md-5 pt-lg-6">
-        <div class="row mx-lg-n4 mb-lg-5">
+    <div class="container-fluid">
 
-          <!-- Sidebar -->
-          <div class="col-lg-4 px-lg-4">
-            <div class="sticky-top mb-4 mb-md-0 py-md-5">
-              <?php
-              $img = !empty($cursos->imagem) ? url("uploads/cursos/" . $cursos->imagem) : url("uploads/cursos/default.png");
-              ?>
+      <section class="win-hero" style="background: linear-gradient(135deg, rgba(11, 15, 28, 0.88), rgba(5, 5, 8, 0.9)), url('<?= $imgCover; ?>') center/cover no-repeat;">
+        <div class="win-page-title">
+          <small>Curso adquirido</small>
+          <h2><?= $cursos->nome; ?></h2>
+        </div>
+        <p><?= $descricaoCurso; ?></p>
 
-              <img src="<?= $img; ?>"><br><br>
+        <div class="win-progress" style="margin-top: 1rem;">
+          <div class="win-progress-bar" style="width: <?= $progress; ?>%;"></div>
+        </div>
+        <span class="win-section-subtitle" style="margin-top: 0.6rem;">
+          <?= $contadorConcluidas; ?> de <?= $totalAulas; ?> aulas concluídas (<?= $progress; ?>%)
+        </span>
 
-              <?php
-              $aulasTotal = $aulaObj->find("curso = $cursos->id")->count();
-              $aulasConcluidas = $aulaCl->find("aluno = " . $_SESSION["id"] . " AND curso = $cursos->id")->count();
-              $porcent = $aulasTotal > 0 ? round($aulasConcluidas / $aulasTotal * 100) : 0;
-              ?>
+        <div class="hero-actions">
+          <a href="<?= $ctaUrl; ?>" class="btn-win">
+            <i class="fas fa-play"></i>
+            Continuar aprendendo
+          </a>
+          <?php if ($certificadoDisponivel) : ?>
+            <a href="<?= url("certificados/ver/" . $cursos->id); ?>" class="btn-win btn-win-ghost" target="_blank">
+              <i class="fas fa-award"></i>
+              Certificado disponível
+            </a>
+          <?php endif; ?>
+        </div>
+      </section>
 
-              <div class="progress" style="height: 20px;">
-                <div class="progress-bar" role="progressbar" style="width: <?= $porcent ?>%;" aria-valuenow="<?= $porcent ?>" aria-valuemin="0" aria-valuemax="100">
-                  <?= "$aulasConcluidas/$aulasTotal" ?>
-                </div>
-              </div>
-
-              <?php if ($aulasConcluidas == $aulasTotal && $aulasTotal > 0) : ?>
-                <br>
-                <a href="<?= url("certificados/ver/$cursos->id") ?>" class="btn btn-success" target="_blank">Certificado</a>
-                <br>
-              <?php endif ?>
-              <br>
-
-              <h2><?= $title ?></h2>
-              <p><?= $cursos->descricao; ?></p>
+      <?php if ($modulosDisponiveis) : ?>
+        <?php foreach ($modulosDisponiveis as $modulo) :
+          $descricaoModulo = $modulo->descricao ? mb_strimwidth(strip_tags($modulo->descricao), 0, 140, "…") : "Avance para o próximo nível de conhecimento.";
+        ?>
+          <section class="win-section">
+            <div class="win-section-header">
+              <h2><?= $modulo->nome; ?></h2>
+              <span class="win-section-subtitle"><?= $descricaoModulo; ?></span>
             </div>
+
+            <div class="win-slider">
+              <?php foreach ($aulas as $aula) :
+                if ($aula->modulo != $modulo->id) {
+                    continue;
+                }
+
+                $completou = in_array($aula->id, $idsConcluidos, true);
+                $statusClass = $completou ? 'completed' : 'upnext';
+                $statusLabel = $completou ? 'Concluída' : 'Assistir agora';
+              ?>
+                <a href="<?= url("minhas-compras/viewaulas/" . $aula->id); ?>" class="lesson-card <?= $statusClass; ?>">
+                  <figure class="lesson-thumb">
+                    <img src="<?= $imgCover; ?>" alt="<?= $aula->nome; ?>">
+                  </figure>
+                  <figcaption>
+                    <span class="lesson-status <?= $statusClass; ?>">
+                      <i class="fas <?= $completou ? 'fa-check-circle' : 'fa-play'; ?>"></i>
+                      <?= $statusLabel; ?>
+                    </span>
+                    <h4><?= mb_strimwidth($aula->nome, 0, 52, "…"); ?></h4>
+                    <?php if (!empty($aula->descricao)) : ?>
+                      <p class="win-card-text"><?= mb_strimwidth(strip_tags($aula->descricao), 0, 120, "…"); ?></p>
+                    <?php endif; ?>
+                  </figcaption>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </section>
+        <?php endforeach; ?>
+      <?php else : ?>
+        <section class="win-section">
+          <div class="win-empty-state">
+            Os módulos deste curso ainda não estão liberados para você. Volte mais tarde ou confira com o suporte.
           </div>
-
-          <!-- Conteúdo dos módulos -->
-          <div class="col-lg-8 px-lg-4 modulos-area">
-            <?php
-            if (!empty($modulos)) :
-                $first = true; // ✅ Controla o primeiro módulo
-                foreach ($modulos as $modulo) :
-                    $semana = $turma ? floor((strtotime(date("Y-m-d H:i:s")) - strtotime($turma->created_at)) / (60 * 60 * 24)) : 1;
-
-                    if (
-                        $cursos->liberacao == 1 ||
-                        ($cursos->liberacao == 3 && $semana >= 7) ||
-                        is_null($turma)
-                    ) :
-            ?>
-                        <div class="mb-3">
-                            <button class="accordion <?= $first ? 'active' : '' ?>">
-                                <?= $modulo->nome; ?>
-                                <span class="icon">▼</span>
-                            </button>
-                            <div class="panel" style="display: <?= $first ? 'block' : 'none' ?>;">
-                                <?php
-                                foreach ($aulas as $aula) :
-                                    if ($aula->modulo == $modulo->id) :
-                                ?>
-                                        <div class="aula-item" onclick="window.location.href='<?= url('minhas-compras/viewaulas/' . $aula->id) ?>'">
-                                            <i class="fa fa-play-circle"></i>
-                                            <span><?= $aula->nome ?></span>
-                                        </div>
-                                <?php
-                                    endif;
-                                endforeach;
-                                ?>
-                            </div>
-                        </div>
-            <?php
-                        $first = false; // ✅ Após o primeiro, não aplica mais
-                    endif;
-                endforeach;
-            else :
-                echo "<p style='color: #888;'>Nenhum módulo encontrado.</p>";
-            endif;
-            ?>
-        </div>
-        </div>
-      </div>
+        </section>
+      <?php endif; ?>
     </div>
   </section>
 </div>
 
 <?= $v->start("scripts") ?>
 <script>
-  document.querySelectorAll(".accordion").forEach((acc) => {
-    acc.addEventListener("click", function() {
-      this.classList.toggle("active");
-      const panel = this.nextElementSibling;
-      panel.style.display = (panel.style.display === "block") ? "none" : "block";
+  document.querySelectorAll('.lesson-card').forEach(card => {
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        card.click();
+      }
     });
   });
 </script>

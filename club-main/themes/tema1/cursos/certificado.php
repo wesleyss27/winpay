@@ -1,221 +1,254 @@
 <?php
 $v->layout("_theme");
+
 if ($_SESSION["tipo"] == 6) {
 	header("Location: " . url("vendas"));
 }
+
+$fontesDisponiveis = [
+	"Anton" => "Anton",
+	"Arial" => "Arial",
+	"Great Vibes" => "Great Vibes",
+	"Poppins" => "Poppins",
+	"REM" => "REM",
+	"Times New Roman" => "Times New Roman"
+];
+
+$fundo = @$certificado->fundo ? url("uploads/cursos/$certificado->fundo") : url("themes/imgs/background-certificado.jpg");
+$fonte_titulo = @$certificado->fonte_titulo ?: 'REM';
+$cor_titulo = @$certificado->cor_titulo ?: '#1D465F';
+$fonte_subtitulo = @$certificado->fonte_subtitulo ?: 'Great Vibes';
+$cor_subtitulo = @$certificado->cor_subtitulo ?: '#000000';
+$fonte_destaque = @$certificado->fonte_destaque ?: 'Poppins';
+$cor_destaque = @$certificado->cor_destaque ?: '#000000';
+$fonte_descricao = @$certificado->fonte_descricao ?: 'Poppins';
+$cor_descricao = @$certificado->cor_descricao ?: '#000000';
 ?>
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-	<!-- Content Header (Page header) -->
-
-	<section class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 style="font-family:inter;padding-left: 15px;"><?= $title ?></h1>
-				</div>
-			</div>
-		</div><!-- /.container-fluid -->
-	</section>
-
-	<!-- Main content -->
+<div class="content-wrapper win-page">
 	<section class="content">
-		<?php $v->insert("cursos/menu", ['curso' => $curso]); ?>
-
-		<style>
-			#form {
-				text-align: left !important;
-			}
-		</style>
-		<?php if (@$_GET["msg"]) : ?>
-			<div class="alert alert-info">
-				<?= $_GET['msg'] ?>
-			</div>
-		<?php endif ?>
-
-		<?php
-		$fundo = @$certificado->fundo ? url("uploads/cursos/$certificado->fundo") : url("themes/imgs/background-certificado.jpg");
-		$fonte_titulo = @$certificado->fonte_titulo ? $certificado->fonte_titulo : 'REM';
-		$cor_titulo = @$certificado->cor_titulo ? $certificado->cor_titulo : '#1D465F';
-		$fonte_subtitulo = @$certificado->fonte_subtitulo ? $certificado->fonte_subtitulo : 'Great Vibes';
-		$cor_subtitulo = @$certificado->cor_subtitulo ? $certificado->cor_subtitulo : '#000';
-		$fonte_destaque = @$certificado->fonte_destaque ? $certificado->fonte_destaque : 'Poppins';
-		$cor_destaque = @$certificado->cor_destaque ? $certificado->cor_destaque : '#000';
-		$fonte_descricao = @$certificado->fonte_descricao ? $certificado->fonte_descricao : 'Poppins';
-		$cor_descricao = @$certificado->cor_descricao ? $certificado->cor_descricao : '#000';
-		?>
-
-		<div class="card card-body">
-			<form action="<?= $router->route("certificados.salvar"); ?>" id="form" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="curso" value="<?= $curso->id ?>">
-				<input type="hidden" name="id" value="<?= @$certificado->id ?>">
-
-				<div class="row">
-					<div class="col-md-3">
-						<label for="">Título</label>
-						<select name="fonte_titulo" id="" class="form-control">
-							<option value="Anton" <?= @$fonte_titulo == "Anton" ? 'selected' : '' ?>>Anton</option>
-							<option value="Arial" <?= @$fonte_titulo == "Arial" ? 'selected' : '' ?>>Arial</option>
-							<option value="Great Vibes" <?= @$fonte_titulo == "Great Vibes" ? 'selected' : '' ?>>Great Vibes</option>
-							<option value="Poppins" <?= @$fonte_titulo == "Poppins" ? 'selected' : '' ?>>Poppins</option>
-							<option value="REM" <?= @$fonte_titulo == "REM" ? 'selected' : '' ?>>REM</option>
-							<option value="Times New Roman" <?= @$fonte_titulo == "Times New Roman" ? 'selected' : '' ?>>Times New Roman</option>
-						</select>
-					</div>
-
-					<div class="col-md-3">
-						<label for="">Cor do título</label><br>
-						<input type="color" name="cor_titulo" id="" value="<?= @$cor_titulo ?>">
-					</div>
-
-					<div class="col-md-3">
-						<label for="">Subtítulo</label>
-						<select name="fonte_subtitulo" id="" class="form-control">
-							<option value="Anton" <?= @$fonte_subtitulo == "Anton" ? 'selected' : '' ?>>Anton</option>
-							<option value="Arial" <?= @$fonte_subtitulo == "Arial" ? 'selected' : '' ?>>Arial</option>
-							<option value="Great Vibes" <?= @$fonte_subtitulo == "Great Vibes" ? 'selected' : '' ?>>Great Vibes</option>
-							<option value="Poppins" <?= @$fonte_subtitulo == "Poppins" ? 'selected' : '' ?>>Poppins</option>
-							<option value="REM" <?= @$fonte_subtitulo == "REM" ? 'selected' : '' ?>>REM</option>
-							<option value="Times New Roman" <?= @$fonte_subtitulo == "Times New Roman" ? 'selected' : '' ?>>Times New Roman</option>
-						</select>
-					</div>
-
-					<div class="col-md-3">
-						<label for="">Cor do subtítulo</label><br>
-						<input type="color" name="cor_subtitulo" id="" value="<?= @$cor_subtitulo ?>">
-					</div>
-
+		<div class="container-fluid">
+			<header class="win-page-header">
+				<div class="win-page-title">
+					<small>Certificados · <?= $curso->nome; ?></small>
+					<h1><?= $title ?></h1>
 				</div>
-				<div class="row">
-					<div class="col-md-3">
-						<label for="">Destaque</label>
-						<select name="fonte_destaque" id="" class="form-control">
-							<option value="Anton" <?= @$fonte_destaque == "Anton" ? 'selected' : '' ?>>Anton</option>
-							<option value="Arial" <?= @$fonte_destaque == "Arial" ? 'selected' : '' ?>>Arial</option>
-							<option value="Great Vibes" <?= @$fonte_destaque == "Great Vibes" ? 'selected' : '' ?>>Great Vibes</option>
-							<option value="Poppins" <?= @$fonte_destaque == "Poppins" ? 'selected' : '' ?>>Poppins</option>
-							<option value="REM" <?= @$fonte_destaque == "REM" ? 'selected' : '' ?>>REM</option>
-							<option value="Times New Roman" <?= @$fonte_destaque == "Times New Roman" ? 'selected' : '' ?>>Times New Roman</option>
-						</select>
-					</div>
+				<div class="win-page-actions">
+					<a href="<?= url("certificados/ver/$curso->id") ?>" target="_blank" class="btn-win btn-win-ghost">
+						<i class="fas fa-external-link-alt"></i>
+						Visualizar certificado
+					</a>
+				</div>
+			</header>
 
-					<div class="col-md-3">
-						<label for="">Cor de destaque</label><br>
-						<input type="color" name="cor_destaque" id="" value="<?= @$cor_destaque ?>">
-					</div>
+			<?php $v->insert("cursos/menu", ['curso' => $curso]); ?>
 
-					<div class="col-md-3">
-						<label for="">Descrição</label>
-						<select name="fonte_descricao" id="" class="form-control">
-							<option value="Anton" <?= @$fonte_descricao == "Anton" ? 'selected' : '' ?>>Anton</option>
-							<option value="Arial" <?= @$fonte_descricao == "Arial" ? 'selected' : '' ?>>Arial</option>
-							<option value="Great Vibes" <?= @$fonte_descricao == "Great Vibes" ? 'selected' : '' ?>>Great Vibes</option>
-							<option value="Poppins" <?= @$fonte_descricao == "Poppins" ? 'selected' : '' ?>>Poppins</option>
-							<option value="REM" <?= @$fonte_descricao == "REM" ? 'selected' : '' ?>>REM</option>
-							<option value="Times New Roman" <?= @$fonte_descricao == "Times New Roman" ? 'selected' : '' ?>>Times New Roman</option>
-						</select>
+			<?php if (@$_GET["msg"]) : ?>
+				<section class="win-section">
+					<div class="win-badge">
+						<i class="fas fa-info-circle"></i>
+						<?= $_GET['msg']; ?>
 					</div>
+				</section>
+			<?php endif; ?>
 
-					<div class="col-md-3">
-						<label for="">Cor da descrição</label><br>
-						<input type="color" name="cor_descricao" id="" value="<?= @$cor_descricao ?>">
-					</div>
+			<section class="win-section">
+				<div class="win-section-header">
+					<h2>Configuração visual</h2>
+					<span class="win-section-subtitle">Defina fontes, cores e o fundo que serão utilizados no certificado de conclusão.</span>
 				</div>
 
-				<br>
-				<div class="row">
-					<div class="col-md-3">
-						<label for="">Fundo</label>
-						<input type="file" name="fundo" id="" class="form-control">
+				<form action="<?= $router->route("certificados.salvar"); ?>" id="form" method="post" enctype="multipart/form-data" class="win-form">
+					<input type="hidden" name="curso" value="<?= $curso->id; ?>">
+					<input type="hidden" name="id" value="<?= @$certificado->id; ?>">
 
-						<input type="checkbox" name="fundo_padrao" id="" value="1"> Fundo Padrão
+					<div class="win-form-grid win-form-grid-2">
+						<div class="form-group">
+							<label for="fonte_titulo">Fonte do título</label>
+							<select name="fonte_titulo" id="fonte_titulo" class="form-control">
+								<?php foreach ($fontesDisponiveis as $fonteValor => $fonteLabel) : ?>
+									<option value="<?= $fonteValor; ?>" <?= $fonte_titulo === $fonteValor ? 'selected' : ''; ?>><?= $fonteLabel; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="cor_titulo">Cor do título</label><br>
+							<input type="color" name="cor_titulo" id="cor_titulo" value="<?= $cor_titulo; ?>">
+						</div>
+
+						<div class="form-group">
+							<label for="fonte_subtitulo">Fonte do subtítulo</label>
+							<select name="fonte_subtitulo" id="fonte_subtitulo" class="form-control">
+								<?php foreach ($fontesDisponiveis as $fonteValor => $fonteLabel) : ?>
+									<option value="<?= $fonteValor; ?>" <?= $fonte_subtitulo === $fonteValor ? 'selected' : ''; ?>><?= $fonteLabel; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="cor_subtitulo">Cor do subtítulo</label><br>
+							<input type="color" name="cor_subtitulo" id="cor_subtitulo" value="<?= $cor_subtitulo; ?>">
+						</div>
+
+						<div class="form-group">
+							<label for="fonte_destaque">Fonte do destaque</label>
+							<select name="fonte_destaque" id="fonte_destaque" class="form-control">
+								<?php foreach ($fontesDisponiveis as $fonteValor => $fonteLabel) : ?>
+									<option value="<?= $fonteValor; ?>" <?= $fonte_destaque === $fonteValor ? 'selected' : ''; ?>><?= $fonteLabel; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="cor_destaque">Cor do destaque</label><br>
+							<input type="color" name="cor_destaque" id="cor_destaque" value="<?= $cor_destaque; ?>">
+						</div>
+
+						<div class="form-group">
+							<label for="fonte_descricao">Fonte da descrição</label>
+							<select name="fonte_descricao" id="fonte_descricao" class="form-control">
+								<?php foreach ($fontesDisponiveis as $fonteValor => $fonteLabel) : ?>
+									<option value="<?= $fonteValor; ?>" <?= $fonte_descricao === $fonteValor ? 'selected' : ''; ?>><?= $fonteLabel; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="cor_descricao">Cor da descrição</label><br>
+							<input type="color" name="cor_descricao" id="cor_descricao" value="<?= $cor_descricao; ?>">
+						</div>
 					</div>
-					<div class="col-md-3">
-						<label style="color:transparent">|</label><br>
-						<?php if ($certificado) : ?>
-							<button type="submit" class="btn btn-primary">Salvar</button>
-						<?php else : ?>
-							<button type="submit" class="btn btn-primary">Habilitar Certificado</button>
-						<?php endif ?>
+
+					<div class="win-divider"></div>
+
+					<div class="win-form-grid">
+						<div class="form-group">
+							<label for="fundo">Imagem de fundo</label>
+							<div class="attachment">
+								<label class="filelabel" for="fundo">
+									<i class="fa fa-image"></i>
+									<span class="title">Carregar nova imagem</span>
+								</label>
+								<input type="file" name="fundo" id="fundo" class="form-control">
+							</div>
+							<div class="form-check mt-2">
+								<input class="form-check-input" type="checkbox" name="fundo_padrao" id="fundo_padrao" value="1">
+								<label class="form-check-label" for="fundo_padrao">
+									Usar fundo padrão da plataforma
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="win-form-actions">
+						<button type="submit" class="btn-win">
+							<i class="fas fa-save"></i>
+							Salvar configurações
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="win-section">
+				<div class="win-section-header">
+					<h2>Pré-visualização</h2>
+					<span class="win-section-subtitle">Veja como o certificado será exibido para os alunos.</span>
+				</div>
+
+				<style>
+					@import url("https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=REM:wght@900&display=swap");
+
+					.preview-certificado {
+						position: relative;
+						border-radius: var(--wh-radius-lg);
+						overflow: hidden;
+						box-shadow: var(--wh-shadow-soft);
+						border: 1px solid rgba(244, 208, 63, 0.16);
+						background: linear-gradient(135deg, rgba(15, 17, 24, 0.85), rgba(5, 5, 8, 0.9));
+					}
+
+					.preview-certificado .canvas {
+						padding: 110px 80px 100px;
+						min-height: 560px;
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
+						text-align: center;
+						background: url(<?= $fundo ?>) center/cover no-repeat;
+						color: #000;
+					}
+
+					.preview-certificado .titulo {
+						font-size: 4.6rem;
+						margin-bottom: 0.2em;
+						font-family: <?= json_encode($fonte_titulo) ?>;
+						color: <?= $cor_titulo ?>;
+						text-transform: uppercase;
+						letter-spacing: 0.16em;
+					}
+
+					.preview-certificado .subtitulo {
+						font-family: <?= json_encode($fonte_subtitulo) ?>;
+						font-size: 2.4rem;
+						margin-top: -1.6rem;
+						color: <?= $cor_subtitulo ?>;
+						letter-spacing: 0.32em;
+						text-transform: uppercase;
+					}
+
+					.preview-certificado .descricao {
+						margin-top: 2.2rem;
+						font-size: 1.6rem;
+						line-height: 1.6;
+						max-width: 720px;
+						color: <?= $cor_descricao ?>;
+						font-family: <?= json_encode($fonte_descricao) ?>;
+					}
+
+					.preview-certificado .destaque {
+						display: block;
+						font-size: 2.3rem;
+						font-weight: 600;
+						color: <?= $cor_destaque ?>;
+						font-family: <?= json_encode($fonte_destaque) ?>;
+						margin: 0.6rem 0;
+					}
+
+					.preview-certificado .assinaturas {
+						display: flex;
+						gap: 3rem;
+						margin-top: 2.8rem;
+						justify-content: center;
+					}
+
+					.preview-certificado .assinatura {
+						min-width: 220px;
+						border-top: 1px solid rgba(0, 0, 0, 0.35);
+						padding-top: 0.8rem;
+						font-size: 0.95rem;
+						text-transform: uppercase;
+						letter-spacing: 0.14em;
+					}
+				</style>
+
+				<div class="preview-certificado">
+					<div class="canvas">
+						<h1 class="titulo">Certificado</h1>
+						<h2 class="subtitulo">de conclusão</h2>
+
+						<p class="descricao">
+							Certificamos que
+							<span class="destaque"><?= $curso->dataProdutor()->nome ?? 'Nome do aluno'; ?></span>
+							concluiu o curso
+							<span class="destaque"><?= $curso->nome; ?></span>
+							em <?= date('d/m/Y'); ?>
+						</p>
+
+						<div class="assinaturas">
+							<div class="assinatura">Coordenação</div>
+							<div class="assinatura">Instrutor responsável</div>
+						</div>
 					</div>
 				</div>
-			</form>
-
-			<br><br>
-
-			<style>
-				@import url("https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=REM:wght@900&display=swap");
-
-				.corpo {
-					padding-top: 100px;
-					height: 707px;
-					width: 1000px;
-					border: 1px solid #666;
-					text-align: center;
-					background: url(<?= $fundo ?>) no-repeat;
-					background-size: cover;
-					color: #000;
-					/* display: flex;
-                align-items: center; */
-				}
-
-				.titulo {
-					text-align: center;
-					font-size: 80px;
-					font-family: <?= $fonte_titulo ?>;
-					/* text-shadow: 2px 2px 2px rgb(247, 141, 2); */
-					color: <?= $cor_titulo ?>;
-				}
-
-				.subtitulo {
-					text-align: center;
-					font-family: <?= $fonte_subtitulo ?>;
-					font-size: 40px;
-					margin-top: -40px;
-					letter-spacing: 4px;
-					color: <?= $cor_subtitulo ?>;
-				}
-
-				.descricao {
-					font-size: 30px;
-					font-family: <?= $fonte_descricao ?>;
-					color: <?= $cor_descricao ?>;
-				}
-
-				.destaque {
-					font-size: 40px;
-					font-weight: 600;
-					font-family: <?= $fonte_destaque ?>;
-					color: <?= $cor_destaque ?>;
-				}
-			</style>
-
-			<div class="corpo">
-				<h1 class="titulo">CERTIFICADO</h1>
-				<h2 class="subtitulo">de conclusão</h2>
-
-				<br>
-				<p class="descricao">
-					Certificamos que <br>
-					<span class="destaque"><?= $curso->dataProdutor->nome ?></span>
-					<br><br>concluiu o curso <br>
-					<span class="destaque"><?= $curso->nome ?></span>
-				</p>
-
-				<p class="descricao"><?= date('d/m/Y') ?></p>
-			</div>
+			</section>
 		</div>
-
 	</section>
-
 </div>
-<style>
-	section.content {
-		padding-top: 0px !important;
-	}
-
-	.content-header {
-		padding-bottom: 0px;
-	}
-</style>

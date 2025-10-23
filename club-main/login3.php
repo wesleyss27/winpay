@@ -11,200 +11,393 @@ if ($url_atual == "http://localhost") {
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - WinPay</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Material+Symbols+Outlined&display=swap" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 
   <style>
+    :root {
+      --color-bg: #050507;
+      --color-card: rgba(12, 13, 20, 0.82);
+      --color-border: rgba(255, 255, 255, 0.08);
+      --color-text: #f9fafb;
+      --color-muted: #9ca3af;
+      --color-accent: #f4d03f;
+      --color-accent-soft: rgba(244, 208, 63, 0.16);
+      --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #121212;
-      color: white;
-      font-family: 'Poppins', sans-serif;
       min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(244, 208, 63, 0.24), transparent 55%),
+        radial-gradient(circle at 86% 24%, rgba(244, 208, 63, 0.18), transparent 60%),
+        var(--color-bg);
+      position: relative;
+      color: var(--color-text);
+      padding: 2.5rem 1.5rem;
     }
 
-    .login-container {
-      width: 100%;
-      max-width: 420px;
-      padding: 40px 30px;
-      background: #1e1e1e;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('themes/tema1/assets/pattern.svg') repeat;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .auth-shell {
+      position: relative;
+      width: min(480px, 92vw);
+      padding: clamp(2.4rem, 4vw, 3.1rem);
+      border-radius: 26px;
+      border: 1px solid var(--color-border);
+      background: rgba(5, 5, 8, 0.72);
+      backdrop-filter: blur(22px);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
       animation: fadeIn 0.8s ease;
     }
 
+    .auth-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at 80% 0%, rgba(244, 208, 63, 0.22), transparent 60%);
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
     @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-20px);}
-      to {opacity: 1; transform: translateY(0);}
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .login-container h3 {
-      margin-bottom: 20px;
+    .auth-header {
       text-align: center;
+      margin-bottom: clamp(2rem, 4vw, 2.4rem);
+      position: relative;
+      z-index: 1;
     }
 
-    .login-container .logo {
-      width: 80px;
-      margin: 0 auto 15px;
-      display: block;
+    .auth-logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 22px;
+      background: rgba(244, 208, 63, 0.12);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1rem;
+      color: var(--color-accent);
+      box-shadow: inset 0 0 0 1px rgba(244, 208, 63, 0.18);
+      font-size: 2rem;
     }
 
-    .form-group label {
-      font-weight: 500;
+    .auth-header h1 {
+      font-size: clamp(1.7rem, 3vw, 1.95rem);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+
+    .auth-header p {
+      color: var(--color-muted);
+      font-size: 0.95rem;
+    }
+
+    .auth-form {
+      display: grid;
+      gap: 1.6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .field-label {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--color-text);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper .material-symbols-outlined {
+      position: absolute;
+      left: 1rem;
+      color: var(--color-accent);
+      font-size: 1.35rem;
+      opacity: 0.85;
     }
 
     .form-control {
-      background-color: #2a2a2a;
-      border: 1px solid #444;
-      color: white;
-      border-radius: 8px;
+      width: 100%;
+      padding: 0.95rem 1.1rem 0.95rem 2.7rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(12, 13, 20, 0.85);
+      color: var(--color-text);
+      transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     .form-control::placeholder {
-      color: #aaa;
+      color: var(--color-muted);
     }
 
-    .input-group-text {
-      background-color: #2a2a2a;
-      border: 1px solid #444;
-      color: #FFD700;
-      border-radius: 8px 0 0 8px;
+    .form-control:focus {
+      border-color: rgba(244, 208, 63, 0.45);
+      box-shadow: 0 0 0 4px rgba(244, 208, 63, 0.12);
+      background: rgba(12, 13, 20, 0.95);
+      color: var(--color-text);
     }
 
-    .btn-primary {
-      width: 100%;
-      background-color: #FFD700;
-      color: black;
-      font-weight: bold;
+    .toggle-password {
+      position: absolute;
+      right: 0.75rem;
       border: none;
-      border-radius: 8px;
-      padding: 10px;
-      transition: background-color 0.3s ease;
+      background: transparent;
+      color: var(--color-muted);
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
-    .btn-primary:hover {
-      background-color: #e6c200;
+    .toggle-password:hover {
+      background: rgba(244, 208, 63, 0.1);
+      color: var(--color-accent);
     }
 
-    .login-links {
+    .btn-auth {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      background: linear-gradient(95deg, rgba(244, 208, 63, 0.92), rgba(244, 208, 63, 0.75));
+      color: #050507;
+      box-shadow: 0 18px 32px rgba(244, 208, 63, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-auth:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 24px 38px rgba(244, 208, 63, 0.32);
+      color: #050507;
+    }
+
+    .auth-links {
+      margin-top: 1.6rem;
       text-align: center;
-      margin-top: 15px;
+      font-size: 0.9rem;
+      color: var(--color-muted);
     }
 
-    .login-links a {
-      color: #FFD700;
+    .auth-links a {
+      color: var(--color-accent);
+      font-weight: 500;
       text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .auth-links a:hover {
+      color: #d7b22c;
     }
 
     .modal-content {
-      background-color: #1e1e1e;
-      color: white;
+      border-radius: 20px;
+      border: 1px solid rgba(244, 208, 63, 0.18);
+      background: rgba(10, 12, 18, 0.95);
+      color: var(--color-text);
+      box-shadow: var(--shadow-lg);
     }
 
     .modal-header,
     .modal-footer {
-      border-color: #444;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .modal .form-control {
+      background: rgba(13, 15, 22, 0.85);
+      border-radius: 12px;
+    }
+
+    .btn-secondary,
+    .btn-primary {
+      border-radius: 12px;
+      padding: 0.75rem 1.4rem;
+      font-weight: 600;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--color-text);
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: #050507;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(148, 163, 184, 0.18);
+      color: var(--color-text);
+    }
+
+    .btn-primary:hover {
+      background: #d7b22c;
+      color: #050507;
     }
   </style>
 </head>
+
 <body>
 
-<div class="login-container">
-  <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Logo" class="logo">
-  <h3>Acesse sua conta</h3>
+  <div class="auth-shell">
+    <header class="auth-header">
+      <div class="auth-logo material-symbols-outlined">shield</div>
+      <h1>Acesse sua conta</h1>
+      <p>Entre com seus dados para continuar gerindo seus resultados.</p>
+    </header>
 
-  <?= $v->insert("themes/tema1/fragmentos/msg-cadastrar-editar", []); ?>
+    <?= $v->insert("themes/tema1/fragmentos/msg-cadastrar-editar", []); ?>
 
-  <form action="<?= $router->route("login.logar"); ?>" method="post">
-    <input type="hidden" name="redirect" value="<?= @$redirect ?>">
+    <form action="<?= $router->route("login.logar"); ?>" method="post" class="auth-form">
+      <input type="hidden" name="redirect" value="<?= @$redirect ?>">
 
-    <div class="form-group">
-      <label for="email">Email ou login</label>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-user"></i></span>
+      <div class="form-field">
+        <label class="field-label" for="email">Email ou login</label>
+        <div class="input-wrapper">
+          <span class="material-symbols-outlined">mail</span>
+          <input type="text" id="email" name="email" class="form-control" placeholder="nome@empresa.com" autocomplete="username" required>
         </div>
-        <input type="text" name="email" class="form-control" placeholder="Digite seu email ou login" required>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="senha">Senha</label>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-lock"></i></span>
+      <div class="form-field">
+        <label class="field-label" for="senha">Senha</label>
+        <div class="input-wrapper">
+          <span class="material-symbols-outlined">lock</span>
+          <input type="password" id="senha" name="senha" class="form-control" placeholder="Digite sua senha" autocomplete="current-password" required>
+          <button type="button" class="toggle-password" aria-label="Mostrar senha">
+            <span class="material-symbols-outlined">visibility</span>
+          </button>
         </div>
-        <input type="password" name="senha" class="form-control" placeholder="Digite sua senha" required>
       </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary">Entrar</button>
+      <button type="submit" class="btn-auth">
+        Entrar
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
 
-    <div class="login-links">
-      <a href="#!" data-toggle="modal" data-target="#myModal">Esqueceu sua senha?</a> <!--  • 
-      <a href="<?= url('cadastro'); ?>">Cadastre-se</a> -->
-    </div>
-  </form>
-</div>
+      <div class="auth-links">
+        <a href="#!" data-toggle="modal" data-target="#myModal">Esqueceu sua senha?</a>
+      </div>
+    </form>
+  </div>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form action="#" method="post">
-        <div class="modal-header">
-          <h5 class="modal-title">Esqueceu a senha</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form action="#" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title">Esqueceu a senha</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
 
-        <div class="modal-body">
-          <p>Informe o email cadastrado:</p>
-          <input type="email" name="email2" id="email2" class="form-control" placeholder="Seu email" required>
-        </div>
+          <div class="modal-body">
+            <p>Informe o email cadastrado:</p>
+            <input type="email" name="email2" id="email2" class="form-control" placeholder="Seu email" required>
+          </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary" id="salvar">Enviar</button>
-        </div>
-      </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="salvar">Enviar</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  $("#salvar").click(function(e) {
-    e.preventDefault();
-    var email = $("#email2").val();
-    salvar("<?= $router->route("appusuarios.esqueceuSenha") ?>");
-  });
+  <script>
+    (function () {
+      const toggleButton = document.querySelector('.toggle-password');
+      const passwordInput = document.getElementById('senha');
 
-  function salvar(url) {
-    var form = $("form");
-    $.ajax({
-      url: url,
-      data: form.serialize(),
-      type: "POST",
-      success: function(response) {
-        if (response === "Email enviado com sucesso.") {
-          alert("Verifique o email informado para redefinir sua senha.");
-          location.reload();
-        } else {
-          alert(response);
-        }
+      if (toggleButton && passwordInput) {
+        toggleButton.addEventListener('click', function () {
+          const isHidden = passwordInput.type === 'password';
+          passwordInput.type = isHidden ? 'text' : 'password';
+          this.querySelector('.material-symbols-outlined').textContent = isHidden ? 'visibility_off' : 'visibility';
+          this.setAttribute('aria-label', isHidden ? 'Ocultar senha' : 'Mostrar senha');
+        });
       }
+    }());
+
+    $("#salvar").click(function (e) {
+      e.preventDefault();
+      salvar("<?= $router->route("appusuarios.esqueceuSenha") ?>");
     });
-  }
-</script>
+
+    function salvar(url) {
+      var form = $("form");
+      $.ajax({
+        url: url,
+        data: form.serialize(),
+        type: "POST",
+        success: function (response) {
+          if (response === "Email enviado com sucesso.") {
+            alert("Verifique o email informado para redefinir sua senha.");
+            location.reload();
+          } else {
+            alert(response);
+          }
+        }
+      });
+    }
+  </script>
 
 </body>
+
 </html>

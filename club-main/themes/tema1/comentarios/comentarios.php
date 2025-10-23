@@ -1,106 +1,105 @@
 <?php
 $v->layout("_theme");
+
 if ($_SESSION["tipo"] == 6) {
 	header("Location: " . url("vendas"));
 }
 ?>
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-	<!-- Content Header (Page header) -->
+<div class="content-wrapper win-page">
+    <section class="content">
+        <div class="container-fluid">
+            <header class="win-page-header">
+                <div class="win-page-title">
+                    <small>Engajamento</small>
+                    <h1><?= $title ?></h1>
+                </div>
+                <div class="win-page-actions">
+                    <span class="win-badge">
+                        <i class="far fa-comments"></i>
+                        <?= @$count ?? 0 ?> comentários
+                    </span>
+                </div>
+            </header>
 
-	<section class="content-header">
-		<div class="container-fluid">
-			<div class="row mb-2">
-				<div class="col-sm-6">
-					<h1 style="font-family:inter;padding-left: 15px;"><?= $title ?></h1>
-				</div>
-			</div>
-		</div><!-- /.container-fluid -->
-	</section>
+            <?php $v->insert("cursos/menu", ['curso' => $curso]); ?>
 
-	<!-- Main content -->
-	<section class="content">
-		
-		<?php $v->insert("cursos/menu", ['curso' => $curso]); ?>
+            <section class="win-section">
+                <div class="win-section-header">
+                    <h2>Comentários recebidos</h2>
+                    <span class="win-section-subtitle">Controle respostas, status e moderação</span>
+                </div>
 
-		<div class="card">
-			<div class="card-header">
-				<div class="row">
-					Total de comentários: <?= @$count ?>
-				</div>
-			</div>
+                <?php if ($comentarios) : ?>
+                    <div class="win-table-wrapper">
+                        <table class="table win-table">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Comentário</th>
+                                    <th>Aula</th>
+                                    <th>Status</th>
+                                    <th>Data</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($comentarios as $comentario) : ?>
+                                    <tr>
+                                        <td><?= $comentario->dataAluno()->nome ?></td>
+                                        <td><?= $comentario->comentario ?></td>
+                                        <td>
+                                            <?= $comentario->dataModulo()->nome ?>
+                                            <small class="d-block text-muted"><i class="fas fa-arrow-right"></i> <?= $comentario->dataAula()->nome ?></small>
+                                        </td>
+                                        <td>
+                                            <span class="win-status <?= $comentario->status == 1 ? 'win-status-success' : 'win-status-warning' ?>">
+                                                <?= $comentario->status == 1 ? 'Visível' : 'Oculto' ?>
+                                            </span>
+                                        </td>
+                                        <td><?= formataDataHora($comentario->created_at) ?></td>
+                                        <td>
+                                            <div class="acao_editar">
+                                                <a href="javascript:void(0);" class="course_action"><i class="fas fa-ellipsis-v"></i></a>
+                                                <div class="acao" style="display:none;">
+                                                    <?php if ($comentario->status == 1) : ?>
+                                                        <span><a href="#" onclick="bloquear_aluno(<?= @$comentario->id; ?>)">Ocultar comentário</a></span><br>
+                                                    <?php else : ?>
+                                                        <span><a href="#" onclick="desbloquear_aluno(<?= @$comentario->id; ?>)">Reativar comentário</a></span><br>
+                                                    <?php endif; ?>
+                                                    <span><a href="#" onclick="excluir_aluno(<?= @$comentario->id; ?>)">Remover definitivamente</a></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
 
-			<?php if ($comentarios) : ?>
-				<div class="card-body p-0">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th scope="col">Aluno</th>
-								<th scope="col">Comentário</th>
-								<th scope="col">Aula</th>
-								<th scope="col">Status</th>
-								<th scope="col">Data</th>
-								<th scope="col"></th>
-							</tr>
-						</thead>
-
-						<tbody>
-							<?php foreach ($comentarios as $comentario) : ?>
-								<tr>
-									<td><?= $comentario->dataAluno()->nome ?></td>
-									<td><?= $comentario->comentario ?></td>
-									<td>
-										<?= $comentario->dataModulo()->nome ?> 
-										<small><i class="fas fa-arrow-right"></i></small> 
-										<?= $comentario->dataAula()->nome ?></td>
-									<td><?= $comentario->status ?></td>
-									<td><?= formataDataHora($comentario->created_at) ?></td>
-									<td>
-										<div class="acao_editar">
-											<a href="javascript:void();" class="course_action"><i class="fas fa-ellipsis-v"></i></a>
-											<div class="acao" style="display:none;">
-												<?php if ($comentario->status == 1) : ?>
-													<span><a href="#" onclick="bloquear_aluno(<?= @$comentario->id; ?>)">Bloquear acesso</a></span><br>
-												<?php else : ?>
-													<span><a href="#" onclick="desbloquear_aluno(<?= @$comentario->id; ?>)">Desbloquear acesso</a></span><br>
-												<?php endif ?>
-												<span><a href="#" onclick="excluir_aluno(<?= @$comentario->id; ?>)">Excluir aluno da turma</a></span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
-				</div>
-
-				<?php
-				//EXIBE A NAVEGAÇÃO DO PAGINADOR
-				$uri = explode("?", $_SERVER["REQUEST_URI"], 2);
-				$link = URL_BASE . "/cursos/comentarios/$curso->id/";
-
-				//VARIÁVEIS VÊM DO CONTROLADOR AppPedidos
-				$paginador->paginas($total, $pagina, $link, @$uri[1]);
-
-				?>
-			<?php else : ?>
-				<div class="card-body">
-					<h4>Nenhum aluno encontrado!</h4>
-				</div>
-
-			<?php endif; ?>
-		</div>
-
-	</section>
-
+                    <div class="d-flex justify-content-center mt-3">
+                        <?php
+                        $uri = explode("?", $_SERVER["REQUEST_URI"], 2);
+                        $link = URL_BASE . "/cursos/comentarios/$curso->id/";
+                        $paginador->paginas($total, $pagina, $link, @$uri[1]);
+                        ?>
+                    </div>
+                <?php else : ?>
+                    <div class="win-empty-state">
+                        Nenhum comentário por aqui ainda. Assim que seus alunos começarem a interagir, você verá todos nesta página.
+                    </div>
+                <?php endif; ?>
+            </section>
+        </div>
+    </section>
 </div>
-<style>
-	section.content {
-		padding-top: 0px !important;
-	}
 
-	.content-header {
-		padding-bottom: 0px;
-	}
-</style>
+<?= $v->start("scripts") ?>
+<script>
+    $(function() {
+        $(document).on('click', '.course_action', function() {
+            $(this).next('.acao').toggle();
+        });
+    });
+</script>
+<?= $v->end() ?>

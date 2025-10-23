@@ -311,6 +311,7 @@ class AppCursos
             header("Location: " . url("cursos/editarcursos?course_id?" . $data['course_id'] . "&msg=" . $msg . "&classCss=" . $classCss));
         }
     }
+
     // FIM EDITAR CURSOS
 
     // MÓDULOS

@@ -1,32 +1,47 @@
 <style>
-/* Footer fundo preto */
+/* Footer */
 .main-footer {
-  background-color: #000;
-  color: #fff;
-  border-top: 1px solid #333;
-  padding: 10px 20px;
+  background: linear-gradient(90deg, rgba(5, 5, 8, 0.96) 0%, rgba(9, 12, 18, 0.96) 60%, rgba(15, 18, 28, 0.96) 100%);
+  color: #f9fafb;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1rem 1.5rem;
   text-align: center;
   font-size: 0.9rem;
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+}
+
+.content-wrapper {
+  padding-bottom: 60px;
 }
 
 .main-footer a {
   color: rgb(217, 192, 0);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .main-footer a:hover {
   text-decoration: underline;
-  color: rgba(217, 192, 0, 0.8);
+  color: rgba(217, 192, 0, 0.82);
 }
 
 .main-footer b {
   color: rgb(217, 192, 0);
 }
 
-/* Sidebar fundo preto */
+/* Control Sidebar */
 .control-sidebar {
-  background-color: #000 !important;
-  color: #fff;
+  background: rgba(5, 5, 8, 0.95) !important;
+  color: #f9fafb;
 }
 
 .control-sidebar h5,
@@ -39,7 +54,7 @@
 }
 
 .control-sidebar a:hover {
-  color: rgba(217, 192, 0, 0.8);
+  color: rgba(217, 192, 0, 0.82);
 }
 
 /* Texto oculto para responsividade */
@@ -110,27 +125,19 @@ span.oculta {
 <!--script src="<?= url("themes/tema1/dist/js/pusher.js") ?>"></script-->
   
 <script>
-    var i = 0;
-    $("#push-menu").click(() => {
-      if (i == 0) {
-        $("#logo-menu").attr({
-          "src": "<?= url_octa("themes/imgs/logo-icon.png") ?>"
-        }).css({
-          "width": "35",
-          "margin-left": "5px"
-        });
-        $("#icone-menu-bar").prop("class", "fas fa-chevron-right");
-        i = 1;
-      } else {
-        $("#logo-menu").attr({
-          "src": "<?= url_octa("themes/imgs/logo4.png") ?>"
-        }).css({
-          "width": "145",
-          "margin-left": "-20px"
-        });
-        $("#icone-menu-bar").prop("class", "fas fa-chevron-left");
-        i = 0;
-      }
+  $(function () {
+    var $body = $('body');
+    var $icons = $('.menu-toggle-icon');
 
-    });
-  </script>
+    function updateIcon() {
+      if ($body.hasClass('sidebar-collapse')) {
+        $icons.removeClass('fa-chevron-left').addClass('fa-bars');
+      } else {
+        $icons.removeClass('fa-bars').addClass('fa-chevron-left');
+      }
+    }
+
+    $(document).on('collapsed.lte.pushmenu shown.lte.pushmenu', updateIcon);
+    updateIcon();
+  });
+</script>
