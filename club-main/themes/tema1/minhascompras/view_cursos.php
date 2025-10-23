@@ -72,18 +72,43 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   --course-radius-lg: 28px;
 }
 
+.course-view-page {
+  --hero-horizontal-pad: clamp(0.8rem, 4vw, 2.4rem);
+}
+
+.course-view-page .content {
+  padding: clamp(0.8rem, 2.5vw, 1.6rem) var(--hero-horizontal-pad) clamp(2rem, 4vw, 2.8rem);
+}
+
 .course-view-page .container-fluid {
   display: flex;
   flex-direction: column;
   gap: clamp(2rem, 3vw, 3.5rem);
+  padding: 0;
+}
+
+.course-view-page .container-fluid > .win-section,
+.course-view-page .container-fluid > .win-empty-state,
+.course-view-page .container-fluid > section:not(.win-hero) {
+  padding-inline: var(--hero-horizontal-pad);
+}
+
+.course-view-page .win-slider {
+  overflow-y: visible;
+  gap: clamp(1rem, 2.2vw, 2rem);
+  padding-bottom: clamp(2.4rem, 4vw, 3.2rem);
 }
 
 .course-view-page .win-hero {
   position: relative;
   display: block;
+  width: calc(100% + (var(--hero-horizontal-pad) * 2));
+  max-width: none;
   padding: 0;
-  min-height: clamp(260px, 42vw, 420px);
+  height: clamp(220px, 38vh, 340px);
   border-radius: var(--course-radius-lg);
+  margin-left: calc(-1 * var(--hero-horizontal-pad));
+  margin-right: calc(-1 * var(--hero-horizontal-pad));
   overflow: hidden;
   background-color: #050508;
   box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
@@ -97,6 +122,16 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   display: block;
   transform: scale(1);
   transition: transform 0.6s ease;
+}
+
+.course-view-page .win-hero > img,
+.course-view-page .win-hero > .hero-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.course-view-page .win-hero > img {
+  position: absolute;
 }
 
 .course-view-page .win-hero::after {
@@ -241,109 +276,86 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 .lesson-card {
   position: relative;
   display: block;
-  min-width: clamp(210px, 28vw, 260px);
-  aspect-ratio: 16 / 9;
-  border-radius: 20px;
+  flex: 0 0 clamp(240px, 26vw, 320px);
+  width: clamp(240px, 26vw, 320px);
+  max-width: clamp(240px, 26vw, 320px);
+  aspect-ratio: 6 / 5;
+  border-radius: 24px;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(8, 9, 20, 0.88), rgba(3, 4, 12, 0.9));
+  background: linear-gradient(135deg, rgba(8, 9, 20, 0.85), rgba(3, 4, 12, 0.95));
   color: inherit;
   text-decoration: none;
-  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.45);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.48);
+  transition: transform 0.32s ease, box-shadow 0.32s ease, filter 0.32s ease;
+  transform-origin: center;
 }
 
 .lesson-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.75);
-  transform: scale(1);
-  transition: transform 0.5s ease, filter 0.4s ease;
+  filter: brightness(0.9);
+  transition: transform 0.45s ease, filter 0.35s ease;
 }
 
 .lesson-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 30, 0) 45%, rgba(5, 6, 12, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(8, 10, 20, 0.12) 0%, rgba(5, 6, 12, 0.42) 55%, rgba(5, 6, 12, 0.85) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-.lesson-card__chip {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.14);
-  color: rgba(255, 255, 255, 0.85);
-  transition: opacity 0.25s ease;
-}
-
-.lesson-card.completed .lesson-card__chip {
-  background: rgba(var(--course-accent-rgb), 0.18);
-  color: var(--course-accent);
 }
 
 .lesson-card__overlay {
   position: absolute;
   inset: 0;
-  padding: 1.2rem;
+  padding: clamp(1.2rem, 2.4vw, 1.6rem);
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.6rem;
+  align-items: flex-end;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(5, 6, 12, 0) 10%, rgba(5, 6, 12, 0.68) 100%);
   opacity: 0;
-  transform: translateY(14%);
+  transform: translateY(12%);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
 
-.lesson-card__status {
+.lesson-card__button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
+  gap: 0.55rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  background: rgba(5, 6, 12, 0.82);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
 }
 
-.lesson-card.completed .lesson-card__status {
+.lesson-card__button i {
+  font-size: 0.9rem;
+}
+
+.lesson-card.completed .lesson-card__button {
+  background: rgba(var(--course-accent-rgb), 0.18);
   color: var(--course-accent);
-}
-
-.lesson-card__title {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.lesson-card__description {
-  margin: 0;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.68);
-  line-height: 1.4;
 }
 
 .lesson-card:hover,
 .lesson-card:focus-visible {
-  transform: translateY(-10px);
-  box-shadow: 0 28px 55px rgba(0, 0, 0, 0.55);
+  transform: scale(1.08) translateY(-6px);
+  box-shadow: 0 36px 70px rgba(0, 0, 0, 0.6);
+  z-index: 5;
 }
 
 .lesson-card:hover img,
 .lesson-card:focus-visible img {
-  transform: scale(1.06);
+  transform: scale(1.05);
   filter: brightness(1);
 }
 
@@ -353,19 +365,16 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 }
 
 .lesson-card:hover .lesson-card__overlay,
-.lesson-card:focus-visible .lesson-card__overlay,
-.lesson-card:focus-within .lesson-card__overlay {
+.lesson-card:focus-visible .lesson-card__overlay {
   opacity: 1;
   transform: translateY(0);
-  pointer-events: auto;
-}
-
-.lesson-card:hover .lesson-card__chip,
-.lesson-card:focus-visible .lesson-card__chip {
-  opacity: 0;
 }
 
 @media (hover: none) {
+  .lesson-card {
+    transform: none !important;
+  }
+
   .lesson-card::before {
     opacity: 1;
   }
@@ -373,11 +382,6 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   .lesson-card__overlay {
     opacity: 1;
     transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .lesson-card__chip {
-    opacity: 0;
   }
 }
 
@@ -388,7 +392,9 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 
 @media (max-width: 575.98px) {
   .lesson-card {
-    min-width: 80vw;
+    flex: 0 0 82vw;
+    width: 82vw;
+    max-width: 82vw;
   }
 }
 </style>
@@ -447,21 +453,21 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
                 $statusClass = $completou ? 'completed' : 'upnext';
                 $statusLabel = $completou ? 'Concluída' : 'Assistir agora';
               ?>
-                <a href="<?= url("minhas-compras/viewaulas/" . $aula->id); ?>" class="lesson-card <?= $statusClass; ?>">
-                  <img src="<?= $imgCover; ?>" alt="<?= $aula->nome; ?>">
-                  <span class="lesson-card__chip">
-                    <i class="fas <?= $completou ? 'fa-check' : 'fa-play'; ?>"></i>
-                    <?= $statusLabel; ?>
-                  </span>
+                <?php
+                  $aulaCover = !empty($aula->imagem)
+                      ? url("uploads/cursos/" . $aula->imagem)
+                      : $imgCover;
+                  $lessonNameAttr = htmlspecialchars($aula->nome, ENT_QUOTES, 'UTF-8');
+                  $buttonLabel = $completou ? 'Rever aula' : 'Assistir agora';
+                  $buttonIcon = $completou ? 'fa-redo-alt' : 'fa-play';
+                ?>
+                <a href="<?= url("minhas-compras/viewaulas/" . $aula->id); ?>" class="lesson-card <?= $statusClass; ?>" aria-label="<?= $statusLabel; ?> - <?= $lessonNameAttr; ?>">
+                  <img src="<?= $aulaCover; ?>" alt="<?= $aula->nome; ?>">
                   <div class="lesson-card__overlay">
-                    <span class="lesson-card__status">
-                      <i class="fas <?= $completou ? 'fa-check-circle' : 'fa-play-circle'; ?>"></i>
-                      <?= $statusLabel; ?>
+                    <span class="lesson-card__button <?= $completou ? 'completed' : ''; ?>" aria-hidden="true">
+                      <i class="fas <?= $buttonIcon; ?>"></i>
+                      <?= $buttonLabel; ?>
                     </span>
-                    <h4 class="lesson-card__title"><?= mb_strimwidth($aula->nome, 0, 60, "…"); ?></h4>
-                    <?php if (!empty($aula->descricao)) : ?>
-                      <p class="lesson-card__description"><?= mb_strimwidth(strip_tags($aula->descricao), 0, 140, "…"); ?></p>
-                    <?php endif; ?>
                   </div>
                 </a>
               <?php endforeach; ?>
