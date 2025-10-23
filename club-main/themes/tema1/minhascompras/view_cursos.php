@@ -118,8 +118,10 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 .course-view-page .win-hero img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  background: radial-gradient(circle at 50% 50%, rgba(15, 19, 32, 0.68), rgba(5, 6, 12, 1));
   transform: scale(1);
   transition: transform 0.6s ease;
 }
@@ -186,7 +188,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 
 .course-view-page .win-hero:hover img,
 .course-view-page .win-hero:focus-within img {
-  transform: scale(1.04);
+  transform: scale(1);
 }
 
 .course-view-page .win-hero:hover .hero-overlay,
