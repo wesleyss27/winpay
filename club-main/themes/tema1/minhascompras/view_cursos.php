@@ -115,12 +115,28 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   isolation: isolate;
 }
 
+.course-view-page .win-hero::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(12, 15, 30, 0.9) 0%, rgba(5, 6, 12, 1) 65%),
+    var(--hero-cover, none);
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+  background-size: 100% 100%, cover;
+  filter: blur(24px);
+  transform: scale(1.15);
+  z-index: 0;
+}
+
 .course-view-page .win-hero img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
+  z-index: 2;
   transform: scale(1);
   transition: transform 0.6s ease;
 }
@@ -129,6 +145,10 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 .course-view-page .win-hero > .hero-overlay {
   position: absolute;
   inset: 0;
+}
+
+.course-view-page .win-hero > .hero-overlay {
+  z-index: 3;
 }
 
 .course-view-page .win-hero > img {
@@ -142,6 +162,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   background: linear-gradient(180deg, rgba(5, 5, 8, 0.05) 0%, rgba(5, 5, 8, 0.65) 70%, rgba(5, 5, 8, 0.92) 100%);
   opacity: 0;
   transition: opacity 0.4s ease;
+  z-index: 1;
 }
 
 .course-view-page .hero-overlay {
@@ -187,7 +208,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
 
 .course-view-page .win-hero:hover img,
 .course-view-page .win-hero:focus-within img {
-  transform: scale(1.04);
+  transform: scale(1);
 }
 
 .course-view-page .win-hero:hover .hero-overlay,
@@ -360,7 +381,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   <section class="content">
     <div class="container-fluid">
 
-      <section class="win-hero" tabindex="0">
+      <section class="win-hero" tabindex="0" style="--hero-cover: url('<?= $imgCover; ?>');">
         <img src="<?= $imgCover; ?>" alt="<?= $cursos->nome; ?>">
         <div class="hero-overlay">
           <div class="hero-actions">
