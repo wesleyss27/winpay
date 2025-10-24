@@ -8,7 +8,7 @@
     --sidebar-accent: #f4d03f;
     --sidebar-accent-soft: rgba(244, 208, 63, 0.16);
     --sidebar-width: 250px;
-    --sidebar-width-collapsed: 4.6rem;
+    --sidebar-width-collapsed: 5.2rem;
   }
 
   #aside {
@@ -202,6 +202,14 @@
   body.sidebar-collapse #aside .brand-logo-sidebar {
     padding: 1.2rem 0;
     text-align: center;
+  }
+
+  body.sidebar-collapse #aside .brand-badge {
+    justify-content: center;
+  }
+
+  body.sidebar-collapse #aside .brand-badge-text {
+    display: none;
   }
 
   body.sidebar-collapse #aside .brand-title {
