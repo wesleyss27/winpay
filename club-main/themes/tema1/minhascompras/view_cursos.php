@@ -105,7 +105,7 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
   width: calc(100% + (var(--hero-horizontal-pad) * 2));
   max-width: none;
   padding: 0;
-  height: clamp(160px, 26vh, 300px);
+  height: clamp(220px, 32vh, 360px);
   border-radius: var(--course-radius-lg);
   margin-left: calc(-1 * var(--hero-horizontal-pad));
   margin-right: calc(-1 * var(--hero-horizontal-pad));
