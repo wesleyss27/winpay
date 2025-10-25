@@ -92,8 +92,6 @@ class AppProdutos
         $planosCount = (new Plano())->find("produto = '{$data["codigo"]}'")->count();
         $paginas = ceil($planosCount / $offset);
         $planos = (new Plano())->find("produto = '{$data["codigo"]}'")->limit($offset)->offset($paginador->paginador($pagina, $offset))->fetch(true);
-        echo(var_dump($planos));
-        exit;
         echo $this->view->render("produtos/planos", [
             "title" => "Planos",
             "produto" => $produto,
@@ -125,9 +123,9 @@ class AppProdutos
         $plano->usuario = $_SESSION["id"];
         $plano->preco = $data["preco"];
         $plano->descricao = $data["descricao"];
-        $plano->privado = @$data["privado"] == "" ? 0 : 1;
-        $plano->status = $data["status"];
-        $plano->ativo = @$data["ativo"] == "" ? 0 : 1;
+        $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
+        $plano->status = isset($data["status"]) ? (int)$data["status"] : null;
+        $plano->ativo = isset($data["ativo"]) ? (int)$data["ativo"] : 0;
         $plano->televendas = @$data["televendas"];
 
         if($plano->save()){
@@ -154,9 +152,9 @@ class AppProdutos
         $plano->quantidade = @$data["quantidade"];
         $plano->preco = $data["preco"];
         $plano->descricao = $data["descricao"];
-        $plano->privado = @$data["privado"] == "" ? 0 : 1;
-        $plano->status = $data["status"];
-        $plano->ativo = @$data["ativo"] == "" ? 0 : 1;
+        $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
+        $plano->status = isset($data["status"]) ? (int)$data["status"] : null;
+        $plano->ativo = isset($data["ativo"]) ? (int)$data["ativo"] : 0;
         $plano->televendas = @$data["televendas"];
 
         if($plano->save()){
