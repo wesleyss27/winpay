@@ -1978,16 +1978,51 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?= url("pagamentos/js/qrcode.js?" . time()); ?>"></script>
-    <script src="https://js.stripe.com/v2"></script>
     <script>
-        /// ===== STRIPE TOKEN (substitui o createCardToken do MP) =====
-        Stripe.setPublishableKey('pk_live_51L71ZDDz40aT01pjXhBYscU0bP3fe0raUAo2icNluCVAnWztMBLjtqe2rQvbvDIQK0mewU6vzSI5wFBdPA3SrJGk00GXNqjFz7');
+        const ADQUIRENTE_ATUAL = '<?= strtolower((string)@$nome_adquirente); ?>';
+        const PAGARME_PUBLIC_KEY = 'pk_xl3Qe47ilU9aPX6v';
+        const PAGARME_SCRIPT_URL = 'https://assets.pagar.me/pagarme-js/4.13/pagarme.min.js';
+        let pagarmeLoaderPromise;
 
-        const btn = document.getElementById('btn-cartao');
-        btn.addEventListener('click', gerarStripeTokenV2);
+        function ensurePagarmeLoaded() {
+            if (typeof pagarme !== 'undefined') {
+                return Promise.resolve();
+            }
 
-        async function gerarStripeTokenV2(e){
-            e.preventDefault();
+            if (!pagarmeLoaderPromise) {
+                pagarmeLoaderPromise = new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = PAGARME_SCRIPT_URL;
+                    script.async = true;
+                    script.onload = () => resolve();
+                    script.onerror = () => {
+                        pagarmeLoaderPromise = null;
+                        reject(new Error('Não foi possível carregar a biblioteca PagarMe'));
+                    };
+                    document.head.appendChild(script);
+                });
+            }
+
+            return pagarmeLoaderPromise;
+        }
+
+        if (ADQUIRENTE_ATUAL === 'pagarme') {
+            ensurePagarmeLoaded().catch(error => {
+                console.error('Falha ao pré-carregar PagarMe:', error);
+            });
+        }
+
+        async function gerarPagarmeToken(e){
+            if (e && typeof e.preventDefault === 'function') {
+                e.preventDefault();
+            }
+
+            if (ADQUIRENTE_ATUAL !== 'pagarme') {
+                if (typeof dadosCartao === 'function') {
+                    dadosCartao();
+                }
+                return;
+            }
 
             const numero = document.getElementById('numcart').value.replace(/\D/g,'');
             const nome   = document.getElementById('titular').value;
@@ -1996,31 +2031,36 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
             let   ano    = document.getElementById('ano-val').value;        // "24" ou "2024"
             if (ano.length === 2) ano = '20' + ano;                          // normaliza para 4 dígitos
 
+            const mesNormalizado = mes.length === 1 ? `0${mes}` : mes.padStart ? mes.padStart(2, '0') : mes;
+            const expiration = `${mesNormalizado}${ano.slice(-2)}`;
+
             const cardData = {
-            number: numero,
-            cvc: cvc,
-            exp_month: mes,
-            exp_year: ano,
-            name: nome
-            // opcional: address_zip, address_line1, etc.
+                card_number: numero,
+                card_holder_name: nome,
+                card_expiration_date: expiration,
+                card_cvv: cvc
             };
 
-            Stripe.card.createToken(cardData, function(status, response){
-            if (response.error) {
-                console.error('Stripe v2 error:', response.error.message);
-                alert(response.error.message || 'Não foi possível gerar o token do cartão.');
-                return;
-            }
+            try {
+                await ensurePagarmeLoaded();
 
-            // OK: token gerado (ex.: "tok_1Px...")
-            const token = response.id;
-            document.getElementById('MPHiddenInputToken').value = token;
+                if (typeof pagarme === 'undefined') {
+                    throw new Error('Biblioteca PagarMe não carregada');
+                }
 
-            // segue seu fluxo existente
-            if (token) {
-                dadosCartao();
+                const client = await pagarme.client.connect({ encryption_key: PAGARME_PUBLIC_KEY });
+                const cardHash = await client.security.encrypt(cardData);
+
+                document.getElementById('MPHiddenInputToken').value = cardHash;
+
+                if (cardHash) {
+                    dadosCartao();
+                }
+            } catch (error) {
+                console.error('PagarMe encryption error:', error);
+                const message = error?.response?.errors?.[0]?.message || error?.message || 'Não foi possível gerar o token do cartão.';
+                alert(message);
             }
-            });
         }
 
         //}
@@ -2816,9 +2856,13 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
         // ENVIA DADOS DE TRANSAÇÃO CARTÃO
         $("#btn-cartao").click((e) => {
-            e.preventDefault();
-            //dadosCartao();
-
+            if (typeof gerarPagarmeToken === "function") {
+                gerarPagarmeToken(e);
+            } else {
+                e.preventDefault();
+                console.error('Função de tokenização do cartão não disponível.');
+                alert('Não foi possível iniciar o processamento do cartão. Atualize a página e tente novamente.');
+            }
         });
         // FIM ENVIA DADOS DE TRANSAÇÃO CARTÃO
         var tgdeveloper = {
@@ -2925,7 +2969,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
             } else {
                 var form = $("form[name=checkout], form[name=form-cupom], form[name=cartao]");
                 var url = "<?= @$checkout->adquirente == "redrocket" ? $router->route("checkout.transacao") : $router->route("checkout.transacaoTransparente") ?>";
-                // console.log(tt);
+                console.log(url);
 
                 salvar(form, url, "dadosCartao");
             }

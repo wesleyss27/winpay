@@ -872,17 +872,17 @@ class AppCheckout
         $cobrancaAsaas = new AsaasCobrancas();
 
         if ($data["forma_pagamento"] == 1) {
-            //$pagarme = new PagarMe;
-            $pagarme = new Stripe;
+            $pagarme = new PagarMe;
+            //$pagarme = new Stripe;
             $transacao = $pagarme->compraCartao($data);
             
             // $stripe = new Stripe;
             // $transacao = $stripe->compraCartao($data);
 
             var_dump($transacao);
-            error_log(json_encode($transacao, true));
+            error_log("resposta pagarme cartão". json_encode($transacao));
             $data["transacao"] = @$transacao->id;
-            $data["status_transacao"] = @$status_transacaoM[@$transacao->status];
+            $data["status_transacao"] = @$status_transacaoP[@$transacao->status];
             // $data["status_transacao"] = @$status_stripe[@$transacao->status];
             // $data["meio_pagamento"] = "Stripe";
             $data["meio_pagamento"] = "PagarMe";

@@ -113,8 +113,11 @@ class AppComissao
 
         $primeiroSaque = (new Comissao())->find("usuario = $usuario AND tipo = 2")->count();
 
-        //$saldoPagarme = (new PagarMe)->saldo($user->pagarme_conta);
-        $saldoPagarme = (new Winpay)->saldo($user->pagarme_conta);
+        $walletIdUsuario = $user->winpay_conta ?: $user->pagarme_conta;
+        $saldoPagarme = $walletIdUsuario ? (new Winpay)->saldo($walletIdUsuario) : null;
+        if (!$saldoPagarme) {
+            $saldoPagarme = (object)[];
+        }
 
         echo $this->view->render("comissao/comissao", [
             "title" => "Saldos e Extratos",
@@ -155,9 +158,16 @@ class AppComissao
         }
 
         $usuario = (new Usuario())->findById($this->section->getId());
+        $walletId = $usuario->winpay_conta ?: $usuario->pagarme_conta;
 
-        $saldoPagarme = (new Winpay)->saldo($usuario->pagarme_conta);
-        $available_amount = $saldoPagarme->balance - 367;
+        if (!$walletId) {
+            echo "Conta de wallet não encontrada para este usuário.";
+            return;
+        }
+
+        $saldoWallet = (new Winpay)->saldo($walletId);
+        $saldoWallet = $saldoWallet ?: (object)['balance' => 0];
+        $available_amount = floatval($saldoWallet->balance ?? 0) - 367;
 
         if ( $withdraw_value > $available_amount ) {
             echo "É necessário informar um valor inferior a " . number_format($available_amount, 2, ',', '.');
@@ -1634,17 +1644,24 @@ class AppComissao
             return;
         }
 
-        if ( $saque->status == 2 ) {
+        if ($saque->status == 2) {
 
-            $pagarMe = (new PagarMe)->saque($user->pagarme_conta, $value);
+            $walletId = $user->winpay_conta ?: $user->pagarme_conta;
 
-            if ( ! isset($pagarMe->id)) {
-                echo "Erro ao solicitar saque, entre em contato com o suporte RedRocket";
+            if (!$walletId) {
+                echo "Conta de wallet não encontrada para este usuário.";
                 return;
             }
 
-            if ($pagarMe->status == 'failed' && $pagarMe->status == 'canceled') {
-                echo "Erro ao solicitar saque, entre em contato com o suporte";
+            $resultadoSaque = (new WinPay)->saque($walletId, $value);
+
+            if (!$resultadoSaque) {
+                echo "Erro ao solicitar saque, tente novamente mais tarde.";
+                return;
+            }
+
+            if ((isset($resultadoSaque->success) && !$resultadoSaque->success) || isset($resultadoSaque->error)) {
+                echo "Erro ao solicitar saque, entre em contato com o suporte RedRocket";
                 return;
             }
 
@@ -1813,9 +1830,12 @@ class AppComissao
         if ($banco->save()) {
             $data["nome"] = $data["titular"];
             $data["email"] = $_SESSION["email"];
-            //$pagarMe = (new PagarMe)->criarRecebedor($data);
             $data["id"] = $this->section->getId();
-            $pagarMe = (new WinPay)->criarWallet($data);
+
+            $pagarMe = (new PagarMe)->criarRecebedor($data);
+            $winPay  = (new WinPay)->criarWallet($data);
+
+            error_log(json_encode($pagarMe, true));
 
             $arquivo = fopen(DIRETORIO . "logs/dados-recebedor.txt", 'a+');
 
@@ -1824,18 +1844,47 @@ class AppComissao
 
             $texto = date("d/m/Y H:i:s");
             $texto .= "Usuario: {$data["nome"]} | {$_SESSION["email"]}\n";
-            $texto .= "Recebedor: {" . @$pagarMe->id . "\n";
+            if (@$pagarMe->id) {
+                $texto .= "Recebedor PagarMe: {$pagarMe->id}\n";
+            }
+            if (@$winPay->id) {
+                $texto .= "Recebedor WinPay: {$winPay->id}\n";
+            }
             $texto .= "*********************************************************\n";
             fwrite($arquivo, $texto . "\n");
             fclose($arquivo);
 
+            $atualizouBanco = false;
+
             if (isset($pagarMe->id)) {
                 $banco->pagarme_conta = $pagarMe->id;
+                $atualizouBanco = true;
+            }
+
+            if (isset($winPay->id)) {
+                $banco->winpay_conta = $winPay->id;
+                $atualizouBanco = true;
+            }
+
+            if ($atualizouBanco) {
                 $banco->save();
 
                 $usuario = (new Usuario)->findById($this->section->getId());
-                $usuario->pagarme_conta = $pagarMe->id;
-                $usuario->save();
+                $salvouUsuario = false;
+
+                if (isset($pagarMe->id)) {
+                    $usuario->pagarme_conta = $pagarMe->id;
+                    $salvouUsuario = true;
+                }
+
+                if (isset($winPay->id)) {
+                    $usuario->winpay_conta = $winPay->id;
+                    $salvouUsuario = true;
+                }
+
+                if ($salvouUsuario) {
+                    $usuario->save();
+                }
             }
 
             $data["email"] = "ws.silva19@gmail.com";
@@ -1887,12 +1936,17 @@ class AppComissao
         }
 
         if ($banco->save()) {
+            $data["nome"] = $data["titular"];
+            $data["email"] = $_SESSION["email"];
+            $data["id"] = $this->section->getId();
+
+            $usuario = null;
+            $salvarBancoNovamente = false;
+            $salvarUsuario = false;
+
             if (!$banco->pagarme_conta) {
-                $data["nome"] = $data["titular"];
-                $data["email"] = $_SESSION["email"];
                 $pagarMe = (new PagarMe)->criarRecebedor($data);
 
-                var_dump($pagarMe);
                 $arquivo = fopen(DIRETORIO . "logs/dados-recebedor.txt", 'a+');
 
                 if ($arquivo == false)
@@ -1900,19 +1954,52 @@ class AppComissao
 
                 $texto = date("d/m/Y H:i:s");
                 $texto .= "\nUsuario: {$data["nome"]} | {$_SESSION["email"]}\n";
-                $texto .= "Recebedor: {" . @$pagarMe->id . "\n";
+                $texto .= "Recebedor PagarMe: " . (@$pagarMe->id ?: 'sem retorno') . "\n";
                 $texto .= "*********************************************************\n";
                 fwrite($arquivo, $texto . "\n");
                 fclose($arquivo);
 
                 if (isset($pagarMe->id)) {
                     $banco->pagarme_conta = $pagarMe->id;
-                    $banco->save();
+                    $salvarBancoNovamente = true;
 
-                    $usuario = (new Usuario)->findById($this->section->getId());
+                    $usuario = $usuario ?: (new Usuario)->findById($this->section->getId());
                     $usuario->pagarme_conta = $pagarMe->id;
-                    $usuario->save();
+                    $salvarUsuario = true;
                 }
+            }
+
+            if (!$banco->winpay_conta) {
+                $winPay = (new WinPay)->criarWallet($data);
+
+                $arquivo = fopen(DIRETORIO . "logs/dados-recebedor.txt", 'a+');
+
+                if ($arquivo == false)
+                    die('Não foi possível criar o arquivo.');
+
+                $texto = date("d/m/Y H:i:s");
+                $texto .= "\nUsuario: {$data["nome"]} | {$_SESSION["email"]}\n";
+                $texto .= "Recebedor WinPay: " . (@$winPay->id ?: 'sem retorno') . "\n";
+                $texto .= "*********************************************************\n";
+                fwrite($arquivo, $texto . "\n");
+                fclose($arquivo);
+
+                if (isset($winPay->id)) {
+                    $banco->winpay_conta = $winPay->id;
+                    $salvarBancoNovamente = true;
+
+                    $usuario = $usuario ?: (new Usuario)->findById($this->section->getId());
+                    $usuario->winpay_conta = $winPay->id;
+                    $salvarUsuario = true;
+                }
+            }
+
+            if ($salvarBancoNovamente) {
+                $banco->save();
+            }
+
+            if ($salvarUsuario && $usuario) {
+                $usuario->save();
             }
 
             echo "Atualizado com sucesso";
