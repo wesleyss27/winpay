@@ -29,7 +29,7 @@ class PagarMe
 
   public function executa($url, $metodo, $json = null)
   {
-    $autorization = base64_encode( $this->token . ":Red02842324*" );
+    $autorization = base64_encode( $this->token . ":" );
 
     $curl = curl_init();
 
@@ -235,6 +235,7 @@ class PagarMe
     // echo $dados["json"];
     // exit;
     // return $dados;
+    error_log("dados para request cartão pagarme".json_encode($dados));
     return $this->executa($dados["url"], "POST", $dados["json"]);
   }
 
