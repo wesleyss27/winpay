@@ -10,20 +10,21 @@
       <a href="<?= url_club() ?>" class="dropdown-item" target="_blank">
         <p>
           <img src="<?= url("themes/imgs/logos/logo-icon.png") ?>" alt="" width="20px">
-          <span style="color: #023770">Club WINPAY</span>
+          <span>Club WINPAY</span>
         </p>
       </a>
-
+      <!--
       <div class="dropdown-divider"></div>
 
       <a href="<?= url("ecommerce") ?>" class="dropdown-item">
         <p>
           <img src="<?= url("themes/imgs/logos/logo-icon.png") ?>" alt="" width="20px">
-          <span style="color: #023770">Ecommerce</span>
+          <span>Ecommerce</span>
           <span class="badge bg-vermelho-gradient">Novo</span>
         </p>
       </a>
     </div>
+-->
 
   </li>
 </div>
