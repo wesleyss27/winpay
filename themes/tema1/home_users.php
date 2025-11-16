@@ -369,11 +369,6 @@ if ($_SESSION["tipo"] == 6) {
           <!-- GRÁFICO -->
           <div class="col-lg-12 col-12">
             <div class="winpay-card p-3">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h3 class="card-title">
-                  <i class="fas fa-chart-area me-1"></i> Suas comissões - mês atual e anterior
-                </h3>
-              </div>
 
               <!-- Pequena legenda opcional -->
               <small class="text-center d-block mb-2">Clique em uma opção para ocultar</small>
