@@ -19,6 +19,159 @@ if ($produto->usuario != $section->getId()) {
 }
 ?>
 
+<style>
+    .url-table-wrapper {
+        overflow-x: auto;
+        padding: 14px 18px;
+        background: rgba(5, 5, 5, 0.6);
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        margin: 0 12px 25px;
+        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.45);
+    }
+
+    .url-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 14px;
+        font-family: "Inter", sans-serif;
+        color: #f5f5f5;
+    }
+
+    .url-table thead th {
+        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.7rem;
+        letter-spacing: 0.18rem;
+        text-transform: uppercase;
+        padding: 16px 18px;
+    }
+
+    .url-table tbody tr {
+        background: rgba(8, 8, 9, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .url-table tbody td {
+        border: none;
+        padding: 18px 20px;
+        vertical-align: middle;
+        background: transparent;
+        font-size: 0.9rem;
+    }
+
+    .url-table tbody td:first-child {
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+    }
+
+    .url-table tbody td:last-child {
+        border-top-right-radius: 18px;
+        border-bottom-right-radius: 18px;
+    }
+
+    .url-table__desc-title {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .url-table__desc small {
+        display: block;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.18rem;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+
+    .url-table__link a {
+        color: rgba(255, 255, 255, 0.85);
+        word-break: break-all;
+    }
+
+    .url-table__link a:hover {
+        color: #ffdd00;
+        text-decoration: none;
+    }
+
+    .url-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        letter-spacing: 0.08rem;
+        text-transform: uppercase;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .privacy-pill {
+        display: inline-block;
+        padding: 7px 18px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.16rem;
+        font-size: 0.7rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .privacy-pill.is-private {
+        background: rgba(244, 63, 94, 0.2);
+        border-color: rgba(244, 63, 94, 0.35);
+        color: #ff9ab0;
+    }
+
+    .privacy-pill.is-public {
+        background: rgba(34, 197, 94, 0.18);
+        border-color: rgba(34, 197, 94, 0.35);
+        color: #9ef3c0;
+    }
+
+    .url-table__actions {
+        text-align: center;
+    }
+
+    .url-action-stack {
+        display: inline-flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .url-action-stack .btn {
+        min-width: 110px;
+        border-radius: 999px;
+        letter-spacing: 0.12rem;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    @media (max-width: 768px) {
+        .url-table thead {
+            display: none;
+        }
+
+        .url-table,
+        .url-table tbody,
+        .url-table tr,
+        .url-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .url-table tbody tr {
+            margin-bottom: 16px;
+        }
+    }
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -85,9 +238,9 @@ if ($produto->usuario != $section->getId()) {
                     <script>
                         var dados = [];
                     </script>
-                    <div style="overflow-x: auto;">
+                    <div class="url-table-wrapper">
 
-                        <table class="table table-striped projects" style="font-size:13px">
+                        <table class="table url-table">
                             <thead>
                                 <tr style="font-family:inter">
                                     <th scope="col">Descrição</th>
@@ -100,20 +253,32 @@ if ($produto->usuario != $section->getId()) {
                             <tbody>
                                 <?php foreach ($urls as $url) : ?>
                                     <tr style="font-family:inter">
-                                        <th><?= $url->descricao; ?></th>
-                                        <td><a href="<?= $url->url; ?>"><?= $url->url; ?></a></td>
-                                        <td><?= $ativo[$url->privada]; ?></td>
-                                        <?php if ($url->usuario ==  $section->getId()) : ?>
-                                            <td>
-                                                <?php if (!@$_SESSION["subusuario"] || $permissao->editar == 1) : ?>
-                                                    <button class="btn btn-warning btn-sm" data-target="#modal-lg" onclick="editar(<?= $i; ?>)" data-toggle="modal"><i class="fas fa-edit"></i></button>
-                                                <?php endif ?>
-                                                
-                                                <?php if (!@$_SESSION["subusuario"] || $permissao->excluir == 1) : ?>
-                                                    <button class="btn btn-danger btn-excluir btn-sm" onclick="excluir(<?= $url->id; ?>)"><i class="fas fa-times"></i></button>
-                                                <?php endif ?>
-                                            </td>
-                                        <?php endif; ?>
+                                        <td class="url-table__desc">
+                                            <span class="url-table__desc-title"><?= $url->descricao; ?></span>
+                                            <small>ID #<?= $url->id; ?></small>
+                                        </td>
+                                        <td class="url-table__link">
+                                            <a href="<?= $url->url; ?>" target="_blank"><?= $url->url; ?></a>
+                                            <?php if ($url->pv) : ?>
+                                                <span class="url-chip"><i class="fas fa-bullseye"></i> Página de vendas</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <span class="privacy-pill <?= $url->privada ? 'is-private' : 'is-public' ?>"><?= $ativo[$url->privada]; ?></span>
+                                        </td>
+                                        <td class="url-table__actions">
+                                            <?php if ($url->usuario ==  $section->getId()) : ?>
+                                                <div class="url-action-stack">
+                                                    <?php if (!@$_SESSION["subusuario"] || $permissao->editar == 1) : ?>
+                                                        <button class="btn btn-warning btn-sm" data-target="#modal-lg" onclick="editar(<?= $i; ?>)" data-toggle="modal"><i class="fas fa-edit"></i></button>
+                                                    <?php endif ?>
+
+                                                    <?php if (!@$_SESSION["subusuario"] || $permissao->excluir == 1) : ?>
+                                                        <button class="btn btn-danger btn-excluir btn-sm" onclick="excluir(<?= $url->id; ?>)"><i class="fas fa-times"></i></button>
+                                                    <?php endif ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
 
                                     <script>

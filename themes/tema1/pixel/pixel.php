@@ -775,7 +775,7 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
               <div class="pix-form-group token">
                 <label>Domínio Url:</label>
                 <input type="text" name="dominio_url" id="dominio_url" class="form-control" placeholder="Domínio Url">
-                <small class="pix-form-note">Caso fique em branco será enviado a url https://pay.redrocketpay.com/...</small>
+                <small class="pix-form-note">Caso fique em branco será enviado a url https://app.winpay.digital/...</small>
               </div>
             </div>
           </div>
