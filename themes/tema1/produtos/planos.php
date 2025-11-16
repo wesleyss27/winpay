@@ -14,14 +14,192 @@ $status = array(
     3 => "REPROVADO",
     4 => "BLOQUEADO"
 );
+$tipoCobranca = array(
+    1 => "Venda única",
+    2 => "Assinatura",
+    3 => "Recorrência",
+    4 => "Produto físico"
+);
 $ativo = array(
     1 => "SIM",
     0 => "NÃO"
+);
+
+$statusColor = array(
+    1 => "#fbbf24",
+    2 => "#22c55e",
+    3 => "#f87171",
+    4 => "#f97316"
 );
 if ($_SESSION["tipo"] == 6) {
     header("Location: " . url("vendas"));
 }
 ?>
+
+<style>
+    .product-shell {
+        font-family: "Inter", sans-serif;
+        color: #f5f5f5;
+    }
+
+    .product-hero {
+        background: radial-gradient(circle at top, rgba(255, 221, 0, 0.18), rgba(8, 8, 8, 0.95));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        padding: 1.8rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 28px 55px rgba(0, 0, 0, 0.42);
+    }
+
+    .product-hero__kicker {
+        text-transform: uppercase;
+        letter-spacing: 0.35rem;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .product-hero__title {
+        margin: 0.3rem 0 0.4rem;
+        font-size: 1.8rem;
+    }
+
+    .product-hero__subtitle {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .product-hero__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 0.9rem;
+    }
+
+    .product-chip {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        padding: 0.3rem 0.85rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.08rem;
+        text-transform: uppercase;
+    }
+
+    .product-status-pill {
+        border-radius: 999px;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #111;
+    }
+
+    .product-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        background: rgba(7, 7, 7, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 18px 20px;
+        margin-bottom: 24px;
+        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35);
+    }
+
+    .product-tabs a {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #f5f5f5;
+        padding: 0.55rem 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .product-tabs a:hover {
+        background: rgba(255, 221, 0, 0.16);
+        border-color: rgba(255, 221, 0, 0.55);
+        color: #ffdd00;
+        text-decoration: none;
+    }
+
+    .plan-board {
+        margin-top: 1.5rem;
+    }
+
+    .plan-board__header {
+        background: linear-gradient(90deg, #2c1b6d, #140539);
+        border-radius: 16px 16px 10px 10px;
+        padding: 1rem 1.4rem;
+        display: grid;
+        grid-template-columns: 1fr 1.4fr 1fr 1fr 1fr auto;
+        gap: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2rem;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .plan-board__row {
+        margin-top: 0.9rem;
+        padding: 1.2rem 1.4rem;
+        border-radius: 18px;
+        background: rgba(15, 15, 16, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        display: grid;
+        grid-template-columns: 1fr 1.4fr 1fr 1fr 1fr auto;
+        gap: 0.75rem;
+        align-items: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        font-size: 0.95rem;
+    }
+
+    .plan-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.8rem;
+        background: rgba(255, 221, 0, 0.18);
+        border-radius: 999px;
+        letter-spacing: 0.08rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .plan-meta {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+    .plan-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+    }
+
+    .plan-actions .btn {
+        min-width: 34px;
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media (max-width: 992px) {
+        .plan-board__header {
+            display: none;
+        }
+
+        .plan-board__row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            font-size: 0.85rem;
+        }
+    }
+</style>
 
 
 <!-- Content Wrapper. Contains page content -->
@@ -48,28 +226,34 @@ if ($_SESSION["tipo"] == 6) {
     </section>
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content product-shell">
 
-        <!-- SE PRODUTOR MOSTRAR OPÇÕES DE EDIÇÃO -->
-        <div class="callout menu-edicao">
+        <div class="product-hero">
+            <div class="product-hero__kicker">Produto</div>
+            <h2 class="product-hero__title"><?= $produto->nome; ?></h2>
+            <p class="product-hero__subtitle">Crie e administre planos e ofertas associados a este produto.</p>
+            <div class="product-hero__chips">
+                <span class="product-chip">Código: <?= $produto->codigo; ?></span>
+                <?php if (!empty($produto->tipo_cobranca) && !empty($tipoCobranca[$produto->tipo_cobranca])) : ?>
+                    <span class="product-chip"><?= $tipoCobranca[$produto->tipo_cobranca]; ?></span>
+                <?php endif; ?>
+                <span class="product-status-pill" style="background: <?= $statusColor[$produto->status] ?? '#4b5563'; ?>;">
+                    <?= $status[$produto->status] ?? 'STATUS'; ?>
+                </span>
+            </div>
+        </div>
+
+        <div class="product-tabs">
             <?php if ($section->permissaoModuloBool("meus_produtos")) : ?>
                 <a href="<?= url("produtos/detalhe/") . $produto->id; ?>">Detalhes</a>
             <?php endif ?>
             <?php if ($produto->usuario == $section->getId()) :
                 $v->insert("produtos/menu-produto", ["produto" => $produto]);
             endif; ?>
-            <!-- FIM SE PRODUTOR MOSTRAR OPÇÕES DE EDIÇÃO -->
-
             <?php if ($section->permissaoModuloBool("campanha_produto")) : ?>
                 <a href="<?= url("produtos/campanhas/") . $produto->id; ?>">Campanhas</a>
-            <?php endif ?>
+            <?php endif; ?>
         </div>
-
-        <!-- <section class="card">
-            <div class="card-body">
-                * Não é necessário cadastrar planos para vender o produto, basta cadastrar um checkout.
-            </div>
-        </section> -->
 
         <?= $v->insert("fragmentos/msg-cadastrar-editar", []); ?>
 
@@ -89,7 +273,7 @@ if ($_SESSION["tipo"] == 6) {
             </div>
         </form>
         <!-- Default box -->
-        <div class="card">
+        <div class="card plan-table-card">
             <div class="card-header">
 
                 <?php if ($produto->status == 3 || $produto->status == 4) : ?>
