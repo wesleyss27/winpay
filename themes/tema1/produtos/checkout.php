@@ -31,6 +31,185 @@ $modelo_checkout = array(
 );
 ?>
 
+<style>
+    .checkout-table-scroll {
+        overflow-x: auto;
+        padding: 12px 15px 5px;
+        background: rgba(5, 5, 5, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        margin: 0 12px 25px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .checkout-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+        font-family: "Inter", sans-serif;
+        color: #f5f5f5;
+    }
+
+    .checkout-table thead th {
+        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18rem;
+        padding: 14px 16px;
+    }
+
+    .checkout-table tbody tr {
+        background: rgba(7, 7, 8, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .checkout-table tbody td {
+        border: none;
+        padding: 18px 20px;
+        background: transparent;
+        vertical-align: middle;
+        font-size: 0.92rem;
+    }
+
+    .checkout-table tbody td:first-child {
+        border-top-left-radius: 18px;
+        border-bottom-left-radius: 18px;
+    }
+
+    .checkout-table tbody td:last-child {
+        border-top-right-radius: 18px;
+        border-bottom-right-radius: 18px;
+    }
+
+    .checkout-table__code-id {
+        text-transform: uppercase;
+        letter-spacing: 0.3rem;
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .checkout-table__code-tag {
+        display: inline-block;
+        margin: 6px 0;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(255, 221, 0, 0.15);
+        color: #ffdd00;
+        font-weight: 600;
+        letter-spacing: 0.12rem;
+        font-size: 0.8rem;
+    }
+
+    .checkout-table__link {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.78rem;
+        word-break: break-all;
+    }
+
+    .checkout-table__link:hover {
+        color: #ffdd00;
+        text-decoration: none;
+    }
+
+    .checkout-table__name {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .checkout-table__product small {
+        display: block;
+        margin-top: 6px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.78rem;
+        letter-spacing: 0.08rem;
+        text-transform: uppercase;
+    }
+
+    .price-chip {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 221, 0, 0.18);
+        color: #ffdd00;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.05rem;
+    }
+
+    .checkout-table__price small {
+        display: block;
+        margin-top: 6px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.75rem;
+    }
+
+    .privacy-pill {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.15rem;
+        font-size: 0.7rem;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .checkout-action-stack {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .checkout-table__actions {
+        text-align: center;
+    }
+
+    .checkout-table__actions .btn-link {
+        color: #ffdd00;
+    }
+
+    .checkout-action-stack .btn {
+        min-width: 110px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 0.12rem;
+    }
+
+    @media (max-width: 768px) {
+        .checkout-table thead {
+            display: none;
+        }
+
+        .checkout-table tbody,
+        .checkout-table tr,
+        .checkout-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .checkout-table tbody tr {
+            margin-bottom: 18px;
+        }
+
+        .checkout-table tbody td {
+            padding: 10px 14px;
+        }
+
+        .checkout-table__price,
+        .checkout-table__privacy {
+            text-align: left;
+        }
+    }
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -121,13 +300,14 @@ $modelo_checkout = array(
                         var dados = [];
                     </script>
 
-                    <div style="overflow: auto">
-                        <table class="table table-striped" style="font-family:inter; font-size:13px;">
+                    <div class="checkout-table-scroll">
+                        <table class="table checkout-table">
                             <thead>
                                 <tr>
                                     <th scope="col">Código</th>
                                     <th scope="col">Nome</th>
                                     <th scope="col">Produto / Plano</th>
+                                    <th scope="col">Valor</th>
                                     <th scope="col">Privado</th>
                                     <!-- <th scope="col">Order Bump</th> -->
                                     <th scope="col">Duplicar</th>
@@ -138,22 +318,30 @@ $modelo_checkout = array(
                             <tbody>
                                 <?php
                                 $i = 0;
-
                                 foreach ($checkout as $checkout) :
-
+                                    $valorProduto = $checkout->plano ? $checkout->dataPlano()->preco : $checkout->dataProduto()->preco;
+                                    $origemValor = $checkout->plano ? "Plano associado" : "Produto base";
                                 ?>
                                     <tr>
-                                        <td>
-                                            <b>#<?= $checkout->id ?></b><br>
-                                            <b><?= $checkout->codigo ?></b><br>
-                                            <a href="<?= url("checkout/" . $checkout->codigo) ?>" target="_blank"><?= url("checkout/<b>" . $checkout->codigo . "</b>") ?></a>
+                                        <td class="checkout-table__code">
+                                            <div class="checkout-table__code-id">#<?= $checkout->id ?></div>
+                                            <span class="checkout-table__code-tag"><?= $checkout->codigo ?></span><br>
+                                            <a href="<?= url("checkout/" . $checkout->codigo) ?>" target="_blank" class="checkout-table__link"><?= url("checkout/" . $checkout->codigo) ?></a>
                                         </td>
-                                        <td><?= $checkout->descricao ?></td>
-                                        <td>
+                                        <td class="checkout-table__name"><?= $checkout->descricao ?></td>
+                                        <td class="checkout-table__product">
                                             <?= $checkout->dataProduto()->nome; ?>
-                                            <?= $checkout->plano ? "<br> > {$checkout->dataPlano()->nome} < " : ""; ?>
+                                            <?php if ($checkout->plano) : ?>
+                                                <small>Plano: <?= $checkout->dataPlano()->nome; ?></small>
+                                            <?php endif; ?>
                                         </td>
-                                        <td><?= $ativo[@$checkout->privado] ?></td>
+                                        <td class="checkout-table__price">
+                                            <span class="price-chip">R$ <?= number_format($valorProduto ?? 0, 2, ",", ".") ?></span>
+                                            <small><?= $origemValor; ?></small>
+                                        </td>
+                                        <td class="checkout-table__privacy">
+                                            <span class="privacy-pill"><?= $ativo[@$checkout->privado] ?></span>
+                                        </td>
                                         <!-- <td>< ?= $order_bump[@$checkout->usar_order_bump] ?></td> -->
                                         <form action="#" method="post" name="linha<?= $checkout->id; ?>" action="<?= $router->route("produtos.checkoutCadastro") ?>">
                                             <input type="hidden" name="descricao" value="<?= $checkout->descricao ?> - copy">
@@ -251,22 +439,26 @@ $modelo_checkout = array(
                                         <?php $j++;
                                             endforeach;
                                         endforeach; ?> -->
-                                            <td>
+                                            <td class="checkout-table__actions">
                                                 <?php if (!@$_SESSION["subusuario"] || $permissao->adicionar == 1) : ?>
-                                                    <button class="btn btn-link" onclick="duplicar(<?= $checkout->id; ?>)"><i class="far fa-copy"></i></button>
+                                                    <div class="checkout-action-stack">
+                                                        <button class="btn btn-link" onclick="duplicar(<?= $checkout->id; ?>)"><i class="far fa-copy"></i></button>
+                                                    </div>
                                                 <?php endif ?>
                                             </td>
 
                                         </form>
 
-                                        <td>
-                                            <?php if (!@$_SESSION["subusuario"] || $permissao->editar == 1) : ?>
-                                                <button class="btn btn-warning btn-editar" data-toggle="modal" data-target="#modal-lg" onclick="editar(<?= $i; ?>)"><i class="fa fa-edit"></i></button>
-                                            <?php endif ?>
+                                        <td class="checkout-table__actions">
+                                            <div class="checkout-action-stack">
+                                                <?php if (!@$_SESSION["subusuario"] || $permissao->editar == 1) : ?>
+                                                    <button class="btn btn-warning btn-editar" data-toggle="modal" data-target="#modal-lg" onclick="editar(<?= $i; ?>)"><i class="fa fa-edit"></i></button>
+                                                <?php endif ?>
 
-                                            <?php if (!@$_SESSION["subusuario"] || $permissao->excluir == 1) : ?>
-                                                <button class="btn btn-danger btn-excluir" onclick="excluir(<?= $checkout->id; ?>)"><i class="fa fa-times"></i></button>
-                                            <?php endif ?>
+                                                <?php if (!@$_SESSION["subusuario"] || $permissao->excluir == 1) : ?>
+                                                    <button class="btn btn-danger btn-excluir" onclick="excluir(<?= $checkout->id; ?>)"><i class="fa fa-times"></i></button>
+                                                <?php endif ?>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
