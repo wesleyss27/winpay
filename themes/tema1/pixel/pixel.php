@@ -274,14 +274,11 @@ small {
 }
 
 .facebook, .taboola, .google, .token {
-  display: none !important;
-  border-left: 3px solid #FFDD00 !important;
-  padding-left: 20px !important;
-  margin: 20px 0 !important;
+  display: none;
 }
 
 .facebook.show, .taboola.show, .google.show, .token.show {
-  display: block !important;
+  display: block;
 }
 
 .modal-footer {
@@ -438,6 +435,40 @@ small {
 .table thead th:last-child, .table tbody td:last-child {
   width: 120px !important;
   min-width: 120px !important;
+}
+
+.pix-form-section {
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.pix-form-title {
+  text-transform: uppercase;
+  letter-spacing: 0.25rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 12px;
+}
+
+.pix-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px 24px;
+}
+
+.pix-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.pix-form-note {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+  margin-top: 6px;
 }
 
 @media (max-width: 768px) {
@@ -701,10 +732,10 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
 
           <input type="hidden" name="id" id="id">
 
-          <div class="card card-body">
-
-            <div class="row">
-              <div class="col-md-6">
+          <div class="pix-form-section">
+            <div class="pix-form-title">Configurações iniciais</div>
+            <div class="pix-form-grid">
+              <div class="pix-form-group">
                 <label>Plataforma: *</label>
                 <select name="plataforma" id="plataforma" class="form-control">
                   <option value="Facebook">Facebook</option>
@@ -714,93 +745,81 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
                   <option value="GoogleTagManager">Google Tag Manager</option>
                   <option value="TikTok">TikTok</option>
                   <option value="Kwai">Kwai</option>
-                </select><br>
+                </select>
               </div>
 
-              <div class="col-md-6">
+              <div class="pix-form-group">
                 <label>Nome do Pixel: *</label>
-                <input type="text" name="nome" id='nome' class="form-control" placeholder="Nome"><br>
+                <input type="text" name="nome" id='nome' class="form-control" placeholder="Nome">
               </div>
             </div>
           </div>
 
           <!-- < ?php if (@$_SESSION["testador"] == 1) : ?> -->
-          <div class="facebook">
-            <hr>
-            <div class="card card-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Tipo de Integração:</label>
-                  <select name="tipo_integracao" id="tipo_integracao" class="form-control">
-                    <option value="navegador">Navegador</option>
-                    <option value="api">API Conversão</option>
-                  </select>
-                </div>
-
-                <div class="col-md-6 token">
-                  <label>Token de Acesso:</label>
-                  <input type="text" name="token_acesso" id="token_acesso" class="form-control" placeholder="Token de acesso"><br>
-                </div>
+          <div class="facebook pix-form-section">
+            <div class="pix-form-title">Integração Facebook</div>
+            <div class="pix-form-grid">
+              <div class="pix-form-group">
+                <label>Tipo de Integração:</label>
+                <select name="tipo_integracao" id="tipo_integracao" class="form-control">
+                  <option value="navegador">Navegador</option>
+                  <option value="api">API Conversão</option>
+                </select>
               </div>
 
-              <div class="row">
-                <div class="col-md-6 token">
-                  <label>Domínio Url:</label>
-                  <input type="text" name="dominio_url" id="dominio_url" class="form-control" placeholder="Domínio Url"><br>
-                  <small>Caso fique em branco será enviado a url https://pay.redrocketpay.com/...</small>
-                </div>
+              <div class="pix-form-group token">
+                <label>Token de Acesso:</label>
+                <input type="text" name="token_acesso" id="token_acesso" class="form-control" placeholder="Token de acesso">
+              </div>
+
+              <div class="pix-form-group token">
+                <label>Domínio Url:</label>
+                <input type="text" name="dominio_url" id="dominio_url" class="form-control" placeholder="Domínio Url">
+                <small class="pix-form-note">Caso fique em branco será enviado a url https://pay.redrocketpay.com/...</small>
               </div>
             </div>
           </div>
           <!-- < ?php endif; ?> -->
 
-          <hr>
-          <div class="card card-body">
-            <div class="row">
-              <div class="col-md-6">
+          <div class="pix-form-section">
+            <div class="pix-form-title">Identificação do Pixel</div>
+            <div class="pix-form-grid">
+              <div class="pix-form-group">
                 <label>Id: (pixel)*</label>
                 <input type="text" name="id_pixel" id="id_pixel" class="form-control" placeholder="Pixel">
-                <small class="google">(Caso seja do Google, não colocar tag de conversão. Ex.: AU-123456789-0,AU-123456789-1)</small>
-                <small class="token"><b>Integração por api de conversão, colocar somente 1 pixel</b><br><br></small>
-
-                <small class="facebook">Limite máximo de 30 pixels do Facebook caso a integração seja NAVEGADOR. Separe com vírgula(,) e sem espaços em branco.</small>
+                <small class="pix-form-note google">(Caso seja do Google, não colocar tag de conversão. Ex.: AU-123456789-0,AU-123456789-1)</small>
+                <small class="pix-form-note token"><b>Integração por api de conversão, colocar somente 1 pixel</b></small>
+                <small class="pix-form-note facebook">Limite máximo de 30 pixels do Facebook caso a integração seja NAVEGADOR. Separe com vírgula(,) e sem espaços em branco.</small>
               </div>
 
-              <div class="col-md-6">
-                <div class="google">
-                  <label>Tag de Conversão Google: (Caso o pixel seja do Google)</label>
-                  <input type="text" name="tag_conversao" id="tag_conversao" class="form-control" placeholder="ID_do_pixel/Tag_de_conversão">
-                  <small>Ex.: AW-566715011/Y3BCCKGagb4CEIPFnY4C,AW-166715012/P3BCCKGagb4CEIPFnY4B</small>
-                  <small>Limite de 15 tags de conversão. Separe com vírgula(,) e sem espaços em branco.</small>
-                  <br><br>
-                </div>
-              </div>
-            </div>
-
-            <div class="taboola">
-              <hr>
-              <div class="row">
-                <div class="col-md-6">
-                  <label>Evento Taboola:</label>
-                  <input type="text" name="evento_taboola" id="evento_taboola" class="form-control">
-                  <br>
-                </div>
-
-                <div class="col-md-6">
-                  <label>Evento Purchase Taboola:</label>
-                  <input type="text" name="purchase_taboola" id="purchase_taboola" class="form-control">
-                  <br>
-                </div>
+              <div class="pix-form-group google">
+                <label>Tag de Conversão Google: (Caso o pixel seja do Google)</label>
+                <input type="text" name="tag_conversao" id="tag_conversao" class="form-control" placeholder="ID_do_pixel/Tag_de_conversão">
+                <small class="pix-form-note">Ex.: AW-566715011/Y3BCCKGagb4CEIPFnY4C,AW-166715012/P3BCCKGagb4CEIPFnY4B</small>
+                <small class="pix-form-note">Limite de 15 tags de conversão. Separe com vírgula(,) e sem espaços em branco.</small>
               </div>
             </div>
           </div>
 
-          <!-- <label>Observação:</label>
-                <textarea  name="observacao" id='observacao' class="form-control input-lg"></textarea><br> -->
-          <hr>
-          <div class="card card-body">
-            <div class="row">
-              <div class="col-md-6">
+          <div class="taboola pix-form-section">
+            <div class="pix-form-title">Eventos Taboola</div>
+            <div class="pix-form-grid">
+              <div class="pix-form-group">
+                <label>Evento Taboola:</label>
+                <input type="text" name="evento_taboola" id="evento_taboola" class="form-control">
+              </div>
+
+              <div class="pix-form-group">
+                <label>Evento Purchase Taboola:</label>
+                <input type="text" name="purchase_taboola" id="purchase_taboola" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="pix-form-section">
+            <div class="pix-form-title">Execução</div>
+            <div class="pix-form-grid">
+              <div class="pix-form-group">
                 <label>Executar no Boleto:</label>
                 <select name="boleto" id="boleto" class="form-control">
                   <option value="1" selected>Sim</option>
@@ -808,8 +827,9 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
                 </select>
               </div>
 
-              <div class="col-md-6">
-                <label>Executar no Checkout:</label> InitiateCheckout
+              <div class="pix-form-group">
+                <label>Executar no Checkout:</label>
+                <small class="pix-form-note">Evento padrão: InitiateCheckout</small>
                 <select name="executar_checkout" id="executar_checkout" class="form-control">
                   <option value="1" selected>Sim</option>
                   <option value="0">Não</option>
@@ -818,10 +838,10 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
             </div>
           </div>
 
-          <hr>
-          <div class="card card-body">
-            <div class="row">
-              <div class="col-md-6">
+          <div class="pix-form-section">
+            <div class="pix-form-title">Disponibilidade</div>
+            <div class="pix-form-grid">
+              <div class="pix-form-group">
                 <label>Ativo:</label>
                 <select name="status" id="status" class="form-control">
                   <option value="1" selected>Sim</option>
@@ -829,11 +849,9 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
                 </select>
               </div>
 
-              <div class="col-md-6">
-                <div class="valor_enviado">
-                  <label>Valor que será enviado:</label>
-                  <input type="text" name="valor" id="valor" class="form-control"><br>
-                </div>
+              <div class="pix-form-group valor_enviado">
+                <label>Valor que será enviado:</label>
+                <input type="text" name="valor" id="valor" class="form-control">
               </div>
             </div>
           </div>
@@ -975,7 +993,7 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
       "selected": true
     });
     cancelar();
-    $(".valor_enviado").css("display", "inline");
+    $(".valor_enviado").css("display", "block");
 
   });
 
@@ -992,7 +1010,7 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
     $("#editar").css("display", "none");
     $("#plataforma option[value=Kwai]").prop("selected", true);
     cancelar();
-    $(".valor_enviado").css("display", "inline");
+    $(".valor_enviado").css("display", "block");
   });
 
 
@@ -1001,34 +1019,40 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
     var plataforma = $("#plataforma").val();
 
     if (plataforma == "GoogleAnalitics") {
-      $(".google").css("display", "inline");
+      $(".google").css("display", "block");
       $(".taboola").css("display", "none");
       $(".facebook").css("display", "none");
-      $(".valor_enviado").css("display", "inline");
+      $(".valor_enviado").css("display", "block");
 
     } else if (plataforma == "Taboola") {
-      $(".taboola").css("display", "inline");
+      $(".taboola").css("display", "block");
       $(".google").css("display", "none");
       $(".facebook").css("display", "none");
-      $(".valor_enviado").css("display", "inline");
+      $(".valor_enviado").css("display", "block");
 
+    } else if (plataforma == "Facebook") {
+      $(".facebook").css("display", "block");
+      $(".taboola").css("display", "none");
+      $(".google").css("display", "none");
+      $(".valor_enviado").css("display", "block");
     } else if (plataforma == "TikTok") {
       $(".taboola").css("display", "none");
       $(".google").css("display", "none");
       $(".facebook").css("display", "none");
-      $(".valor_enviado").css("display", "inline");
+      $(".valor_enviado").css("display", "block");
     } else if (plataforma == "Kwai") {
       $(".taboola").css("display", "none");
       $(".google").css("display", "none");
       $(".facebook").css("display", "none");
-      $(".kwai").css("display", "inline");
-      $(".valor_enviado").css("display", "inline");
+      $(".kwai").css("display", "block");
+      $(".valor_enviado").css("display", "block");
     } else {
       $(".taboola").css("display", "none");
       $(".google").css("display", "none");
-      $(".valor_enviado").css("display", "inline");
+      $(".valor_enviado").css("display", "block");
     }
   });
+  $("#plataforma").trigger("change");
 
 
   $("#salvar").click(function(e) {
@@ -1142,7 +1166,7 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
         $(".google").hide();
         $(".taboola").hide();
         $(".facebook").hide();
-        $(".valor_enviado").css("display", "inline");
+        $(".valor_enviado").css("display", "block");
         break;
       case "Kwai":
         $(".google").hide();
