@@ -331,11 +331,6 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
         $pixels = explode(",", $checkout->dataPixelFacebook()->id_pixel);
         $valor = @$checkout->dataPixelFacebook()->valor ? $checkout->dataPixelFacebook()->valor : $venda->valor_liquido;
-        echo "
-        <!-- PIXEL FACEBOOK CHECKOUT -->
-        <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&fbq_event=InitiateCheckout") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
-        ";
-
         foreach ($pixels as $pixel2) :
             // echo "$forma_pagamento " . $checkout->dataPixelFacebook()->boleto;
           
