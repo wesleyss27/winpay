@@ -511,7 +511,21 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
             </div>
 
             <div class="lesson-description">
-              <?= $aula->descricao; ?>
+              <?php
+              $lessonDescription = $aula->descricao ?? '';
+              $encodedDescription = htmlspecialchars($lessonDescription, ENT_QUOTES, 'UTF-8');
+              $linkedDescription = preg_replace_callback(
+                  '~((?:https?://|www\.)[^\s<]+)~i',
+                  function ($matches) {
+                      $display = $matches[0];
+                      $href = stripos($display, 'http') === 0 ? $display : 'https://' . $display;
+                      $safeHref = htmlspecialchars($href, ENT_QUOTES, 'UTF-8');
+                      return '<a href="' . $safeHref . '" target="_blank" rel="noopener noreferrer">' . $display . '</a>';
+                  },
+                  $encodedDescription
+              );
+              echo nl2br($linkedDescription);
+              ?>
             </div>
           </div>
 
