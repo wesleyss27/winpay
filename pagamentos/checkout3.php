@@ -3110,10 +3110,12 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                             // EXIBE O CÓDIGO PIX PARA COPIA E BOTÃO
                             $("#inp-copiar").val(data[1].qr_code);
                             $("#btn-pix-confirmar").show();
+                            startPixStatusWatcher(data[1].venda);
 
                             // REDIRECIONA AO FINALIZAR COMPRA
                             $("#btn-pix-confirmar").off("click").on("click", function (e) {
                                 e.preventDefault();
+                                stopPixStatusWatcher();
                                 location.href = "<?= url("checkout/finalizar-compra/") ?>" + data[1].venda;
                             });
                         }else if (data[1].msg == "CPF inválido") {
@@ -3216,6 +3218,53 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
         }
         // FIM GERA QRCODE
 
+        var pixStatusInterval = null;
+
+        function startPixStatusWatcher(vendaId) {
+            stopPixStatusWatcher();
+
+            if (!vendaId) {
+                return;
+            }
+
+            pixStatusInterval = setInterval(function() {
+                $.ajax({
+                    url: "<?= $router->route("checkout.consultarPix") ?>",
+                    type: "POST",
+                    data: { venda: vendaId },
+                    success: function(response) {
+                        var result;
+                        try {
+                            result = typeof response === "object" ? response : JSON.parse(response);
+                        } catch (e) {
+                            return;
+                        }
+
+                        if (!result || result.success === false) {
+                            return;
+                        }
+
+                        if (result.pago && result.redirect) {
+                            stopPixStatusWatcher();
+                            location.href = result.redirect;
+                        } else if (result.cancelado) {
+                            stopPixStatusWatcher();
+                            if (result.motivo) {
+                                $("#aviso_pix").html("Pagamento Pix cancelado: " + result.motivo).show();
+                            }
+                        }
+                    }
+                });
+            }, 7000);
+        }
+
+        function stopPixStatusWatcher() {
+            if (pixStatusInterval) {
+                clearInterval(pixStatusInterval);
+                pixStatusInterval = null;
+            }
+        }
+
         // OPÇÕES TAB PIX
         $(".instrucao_pix").hide();
         $("#btn-pix-confirmar").hide();
@@ -3293,6 +3342,14 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
             });
         }
         // FIM CADASTRO CARRINHO ABANDONADO
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            if (e.target.id !== "nav-pix-tab") {
+                stopPixStatusWatcher();
+            }
+        });
+
+        $(window).on("beforeunload", stopPixStatusWatcher);
     </script>
     <!-- FIM SCRIPTS JAVASCRIPT -->
 

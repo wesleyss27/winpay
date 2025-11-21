@@ -1077,6 +1077,25 @@ $srcObrigado = @$obrigado[$venda->forma_pagamento];
     ">
         <iframe src="<?= $srcObrigado; ?>" frameborder="0" width="100%" height="100%" style="border: none;"></iframe>
     </div>
+    <script>
+        (function() {
+            var thankUrl = <?= json_encode(trim($srcObrigado)); ?>;
+            if (!thankUrl) {
+                return;
+            }
+
+            try {
+                thankUrl = thankUrl.trim();
+                if (!/^https?:\/\//i.test(thankUrl) && thankUrl.indexOf("//") !== 0) {
+                    var protocol = window.location.protocol === "https:" ? "https://" : "http://";
+                    thankUrl = protocol + thankUrl.replace(/^\/+/, "");
+                }
+                window.location.replace(thankUrl);
+            } catch (e) {
+                window.location.href = thankUrl;
+            }
+        })();
+    </script>
 <?php endif; ?>
 
 <!-- LOAD -->

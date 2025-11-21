@@ -630,6 +630,7 @@ $router->get("/redirect", "AppCheckout:redirect", "checkout.redirect");
 
 $router->get("/atualizar-pix", "AppCheckout:atualizarPix", "checkout.atualizarPix");
 $router->get("/servico-pix", "AppCheckout:verificarServicoPix", "checkout.servicoPix");
+$router->post("/consultar-pix", "AppCheckout:consultarPixAjax", "checkout.consultarPix");
 $router->post("/cancela-pix", "AppEstorno:cancelamentoPix", "checkout.cancelamentoPix");
 $router->post("/cancela-venda-pix", "AppEstorno:cancelarVenda", "checkout.cancelarVenda");
 $router->post("/cancelamento-pix", "AppEstorno:autenticidade", "checkout.autenticidade");
