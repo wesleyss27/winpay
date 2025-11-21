@@ -1817,6 +1817,62 @@ class AppCheckout
         return $data;
     }
 
+    public function consultarPixAjax($data)
+    {
+        $vendaId = filter_input(INPUT_POST, "venda", FILTER_VALIDATE_INT);
+
+        if (!$vendaId) {
+            echo json_encode([
+                "success" => false,
+                "message" => "Venda inválida"
+            ]);
+            return;
+        }
+
+        $venda = (new Venda())->findById($vendaId);
+
+        if (!$venda) {
+            echo json_encode([
+                "success" => false,
+                "message" => "Venda não encontrada"
+            ]);
+            return;
+        }
+
+        $payload = [
+            "venda" => $venda->id,
+            "nit" => $venda->nit_pix,
+            "produtor" => $venda->produtor
+        ];
+
+        $consulta = null;
+
+        if ($venda->forma_pagamento == 3 && $venda->meio_pagamento == "Pix") {
+            $consulta = $this->consultarPix($payload);
+            $venda = (new Venda())->findById($vendaId);
+        }
+
+        $status = (int) $venda->status_transacao;
+
+        $response = [
+            "success" => true,
+            "status" => $status,
+            "pago" => $status == 4,
+            "redirect" => url("checkout/finalizar-compra/") . $venda->id
+        ];
+
+        if (!empty($consulta["msg-status"])) {
+            $response["mensagem"] = $consulta["msg-status"];
+        }
+
+        if ($status == 5 || $status == 6 || $status == 7) {
+            $response["cancelado"] = true;
+            $response["motivo"] = $venda->motivo;
+        }
+
+        echo json_encode($response);
+    }
+
     public function atualizarPix()
     {
         $inicio = @$_GET["inicio"];
