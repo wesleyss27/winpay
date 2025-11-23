@@ -130,6 +130,7 @@ class AppTurmas
                             $turma->usuario = $curso->usuario;
                             $turma->aluno = $venda->id_comprador;
                             $turma->curso = $curso->id;
+                            $turma->status = 1;
 
                             $data["nome"] = $venda->dataEndereco()->nome;
                             $data["email"] = $venda->dataEndereco()->email;
