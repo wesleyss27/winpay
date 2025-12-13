@@ -13,12 +13,12 @@ class Emails
         $mail = new PHPMailer;
         $mail->isSMTP();
         //$mail->SMTPDebug = 2;
-        $mail->Host = 'smtp.hostinger.com';
+        $mail->Host = 'smtpout.secureserver.net';
         $mail->Port = 587;
         $mail->SMTPAuth = true;
         $mail->CharSet = 'UTF-8';
         $mail->Username = 'suporte@winpay.digital';
-        $mail->Password = 'X278g113';
+        $mail->Password = 'Ws@01042006';
         $mail->setFrom('suporte@winpay.digital', 'Suporte WinPay');
         $mail->addReplyTo('suporte@winpay.digital', 'Suporte WinPay');
 

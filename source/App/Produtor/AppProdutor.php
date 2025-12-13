@@ -421,7 +421,7 @@ class AppProdutor
             <h2>Parabéns ' . @$usuarios->nome_abreviado . '</h2><br>
            ' . $mensagem . '</div>
             </header>';
-            $email->enviaSendGrid(@$msg);
+            $email->enviaPhpMailer(@$msg);
         }
         echo "<br>$msg[mensagem]";
 

@@ -154,7 +154,7 @@ class AppNotificacao
             $email  = $email->enviaSendGrid($boleto);
         } else {
             $cartao = $email->vendaRealizada($dados);
-            $email  = $email->enviaSendGrid($cartao);
+            $email  = $email->enviaPhpMailer($cartao);
         }
 
         if (@$data["afiliado"]) {

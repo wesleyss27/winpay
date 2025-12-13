@@ -1704,7 +1704,7 @@ class AppCheckout
         $dados["url"] = url("checkout/obrigado");
 
         $_SESSION["pagamento"] = @$data;
-        // (new AppProcessos(null))->processos($data);
+        (new AppProcessos(null))->processos($data);
         
         echo json_encode($dados);
     }

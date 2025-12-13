@@ -193,13 +193,13 @@ class AppLogin
             $data["id"] = $usuario->id;
 
             $cadastroUsers = (new Emails())->cadastroUsuario($data);
-            $enviaEmail = (new Emails())->enviaSendGrid($cadastroUsers);
+            $enviaEmail = (new Emails())->enviaPhp($cadastroUsers);
 
             $data["email"] = "suporte@winpay.digital";
             $data["assunto"] = "Novo usuário cadastrado";
             $data["mensagem"] = "Novo usuário cadastrado <br>" . 
                                 "Nome: $usuario->nome <br>";
-            $enviaEmail = (new Emails())->enviaSendGrid($data);
+            $enviaEmail = (new Emails())->enviaPhp($data);
         }
 
         $data["msg"] = $msg;

@@ -276,7 +276,7 @@ class AppProdutos
                 );
 
                 if($status != $data["status"]){
-                    $email->enviaSendGrid($alertas[$data["status"]]);
+                    $email->enviaPhp($alertas[$data["status"]]);
                 }
             } 
             else {
@@ -376,7 +376,7 @@ class AppProdutos
                 $data["mensagem"] = "Novo produto cadastrado <br>" . 
                                     "Nome do produto: $produto->nome <br>" .
                                     "Produtor: " . $produto->dataProdutor()->nome;
-                $enviaEmail = (new Emails())->enviaSendGrid($data);
+                $enviaEmail = (new Emails())->enviaPhp($data);
             }
 
             $dados["url"] = $produto->pagina_venda;
@@ -446,7 +446,7 @@ class AppProdutos
             $data["mensagem"] = "Novo produto cadastrado <br>" . 
                                 "Nome do produto: $produto->nome <br>" .
                                 "Produtor: " . $produto->dataProdutor()->nome;
-            $enviaEmail = (new Emails())->enviaSendGrid($data);
+            $enviaEmail = (new Emails())->enviaPhp($data);
         }
         else
             $produto->status = $data["status"];
@@ -536,7 +536,7 @@ class AppProdutos
                 $data["produto"] = $afiliacao->dataProduto()->nome;
 
                 $emailAfiliado = $email->afiliacaoExcluir($data);
-                $email->enviaSendGrid($emailAfiliado);
+                $email->enviaPhp($emailAfiliado);
 
                 $afiliacao->destroy();
             }
@@ -598,7 +598,7 @@ class AppProdutos
                 $data["gerente"] = $gerente[$coproducao->gerente];
                 
                 $coproducaoEmail = $email->coproducaoCadastro($data);
-                $email->enviaSendGrid($coproducaoEmail);
+                $email->enviaPhp($coproducaoEmail);
                 
             }
             else 
@@ -643,7 +643,7 @@ class AppProdutos
             $data["gerente"] = $gerente[$coproducao->gerente];
             
             $coproducaoEmail = $email->coproducaoEditar($data);
-            $email->enviaSendGrid($coproducaoEmail);
+            $email->enviaPhp($coproducaoEmail);
         }
         else 
         {
@@ -670,7 +670,7 @@ class AppProdutos
         $data["gerente"] = $gerente[$coproducao->gerente];
         
         $coproducaoEmail = $email->coproducaoExcluir($data);
-        $email->enviaSendGrid($coproducaoEmail);
+        $email->enviaPhp($coproducaoEmail);
 
         if($coproducao->destroy()){
             echo "Excluido com sucesso";
