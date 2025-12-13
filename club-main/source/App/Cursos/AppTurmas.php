@@ -290,7 +290,7 @@ class AppTurmas
         Bons estudos!
         ";
         // $cadastroUsers = (new Emails())->cadastroUsuario($data);
-        $enviaEmail = (new Emails())->enviaSendGrid($data);
+        $enviaEmail = (new Emails())->enviaPhp($data);
         // echo $enviaEmail;
     }
 

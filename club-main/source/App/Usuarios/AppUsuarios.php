@@ -301,7 +301,7 @@ class AppUsuarios
                                  <br><br><br><a href='".url("usuarios/redefinir-senha/$usuario->id/$recuperar->codigo")."' class='btn'>Redefinir senha</a><br><br><br>";
             
             $mail = new Emails();
-            $email = $mail->enviaSendGrid($data);
+            $email = $mail->enviaPhp($data);
             echo $email;
         }
     }
@@ -464,7 +464,7 @@ class AppUsuarios
 
             $data["id"] = $user->id;
             $cadastroUsers = (new Emails())->cadastroUsuarioCompra($data);
-            $enviaEmail = (new Emails())->enviaSendGrid($cadastroUsers);
+            $enviaEmail = (new Emails())->enviaPhp($cadastroUsers);
         } else {
             $resp["msg"] = $usuario->fail()->getMessage();
         }

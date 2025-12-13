@@ -13,14 +13,14 @@ class Emails
         $mail = new PHPMailer;
         $mail->isSMTP();
         //$mail->SMTPDebug = 2;
-        $mail->Host = 'smtp.hostinger.com';
-        $mail->Port = 465;
+        $mail->Host = 'smtpout.secureserver.net';
+        $mail->Port = 587;
         $mail->SMTPAuth = true;
         $mail->CharSet = 'UTF-8';
-        $mail->Username = 'suporte.oficial@redrocketpay.com';
-        $mail->Password = 'OLD'; //'@X278g113'
-        $mail->setFrom('suporte.oficial@redrocketpay.com', 'Suporte RedRocket');
-        $mail->addReplyTo('suporte.oficial@redrocketpay.com', 'Suporte RedRocket');
+        $mail->Username = 'suporte@winpay.digital';
+        $mail->Password = 'Ws@01042006'; //'@X278g113'
+        $mail->setFrom('suporte@winpay.digital', 'Suporte WinPay');
+        $mail->addReplyTo('suporte@winpay.digital', 'Suporte WinPay');
 
         $mail->addAddress($data["email"], $data["nome"]);
 
@@ -29,11 +29,11 @@ class Emails
         //$mail->msgHTML(file_get_contents('message.html'), __DIR__);
         $mail->Body = $this->message($data);
         //$mail->addAttachment('test.txt');
-        // if (!$mail->send()) {
-        //     return 'Email não foi enviado: ' . $mail->ErrorInfo;
-        // } else {
-        //     return 'Email enviado com sucesso.';
-        // }
+        if (!$mail->send()) {
+            return 'Email não foi enviado: ' . $mail->ErrorInfo;
+        } else {
+            return 'Email enviado com sucesso.';
+        }
     }
 
     public function enviaSendGrid($data)

@@ -455,7 +455,7 @@ class AppProcessos
 
         $msg = @$mensagem[$pagamento][$status];
         if ($msg)
-            $envia = $email->enviaSendGrid($msg);
+            $envia = $email->enviaPhpMailer($msg);
 
         return @$envia;
     }
@@ -532,7 +532,7 @@ class AppProcessos
         $msg = @$mensagem[@$pagamento][@$status];
 
         if (@$msg)
-            $envia = $email->enviaSendGrid($msg);
+            $envia = $email->enviaPhpMailer($msg);
 
         // $this->logs($data, "processos");
 

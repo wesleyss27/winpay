@@ -94,10 +94,10 @@ class AppNotificacao
 
         if(@$data["forma_pagamento"] == 1){
             $boleto = $email->boletoGerado($dados);
-            $email  = $email->enviaSendGrid($boleto);
+            $email  = $email->enviaPhp($boleto);
         } else {
             $cartao = $email->vendaRealizada($dados);
-            $email  = $email->enviaSendGrid($cartao);
+            $email  = $email->enviaPhp($cartao);
         }
         
         if (@$data["afiliado"]) {
@@ -106,10 +106,10 @@ class AppNotificacao
 
             if(@$data["forma_pagamento"] == 1){
                 $boleto = $email->boletoGerado($data);
-                $email  = $email->enviaSendGrid($boleto);
+                $email  = $email->enviaPhp($boleto);
             } else {
                 $cartao = $email->vendaRealizada($data);
-                $email  = $email->enviaSendGrid($cartao);
+                $email  = $email->enviaPhp($cartao);
             }
         }
 
