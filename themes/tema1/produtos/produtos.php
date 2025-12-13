@@ -218,42 +218,18 @@ if ($produtos) {
     margin: 0;
   }
 
-  .catalog-arrows {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .catalog-arrow {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    color: #f5f5f5;
-    cursor: pointer;
-    transition: transform 0.25s ease, background 0.25s ease;
-  }
-
-  .catalog-arrow:hover {
-    transform: translateY(-2px);
-    background: rgba(217, 192, 0, 0.25);
-  }
-
   .catalog-slider {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(220px, 16vw);
     gap: 1.5rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 0.5rem 0 1rem;
-    scrollbar-width: none;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    padding: 0.5rem 0 0;
+    overflow: visible;
   }
 
-  .catalog-slider::-webkit-scrollbar {
-    display: none;
+  @media (min-width: 1200px) {
+    .catalog-slider {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
   }
 
   .catalog-item {
@@ -475,20 +451,12 @@ if ($produtos) {
   <section class="content catalog-content">
     <?php if ($produtos && $groupedProdutos) : ?>
       <?php foreach ($groupedProdutos as $categoriaNome => $lista) : ?>
-        <div class="catalog-row" data-slider-container>
+        <div class="catalog-row">
           <header class="catalog-row__head">
             <h2 class="catalog-row__title"><?= $categoriaNome ?></h2>
-            <div class="catalog-arrows">
-              <button class="catalog-arrow" type="button" aria-label="Ver anteriores" data-prev>
-                <span class="material-symbols-rounded">chevron_left</span>
-              </button>
-              <button class="catalog-arrow" type="button" aria-label="Ver proximos" data-next>
-                <span class="material-symbols-rounded">chevron_right</span>
-              </button>
-            </div>
           </header>
 
-          <div class="catalog-slider" data-slider>
+          <div class="catalog-slider">
             <?php foreach ($lista as $produto) : ?>
               <?php
                 $foto = url("uploads/produtos/default.jpg");
@@ -541,25 +509,6 @@ if ($produtos) {
   function redirecionar(url) {
     location.href = url;
   }
-
-  document.querySelectorAll('[data-slider-container]').forEach((container) => {
-    const slider = container.querySelector('[data-slider]');
-    const prev = container.querySelector('[data-prev]');
-    const next = container.querySelector('[data-next]');
-    const scrollAmount = () => {
-      const item = slider.querySelector('.catalog-item');
-      return item ? item.getBoundingClientRect().width * 1.2 : 280;
-    };
-
-    prev?.addEventListener('click', (event) => {
-      event.preventDefault();
-      slider.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
-    });
-    next?.addEventListener('click', (event) => {
-      event.preventDefault();
-      slider.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
-    });
-  });
 
   $("#sinc_shopify").click((e) => {
     e.preventDefault();
