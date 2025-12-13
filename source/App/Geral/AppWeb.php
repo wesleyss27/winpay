@@ -25,6 +25,7 @@ use Source\Models\Permissao\Section;
 use Source\Models\Sessao\Sessao;
 use Source\Models\Usuarios\Usuario;
 use Source\Models\Vendas\Venda;
+use Source\Helpers\Emails;
 
 session_start();
 
@@ -682,8 +683,234 @@ class AppWeb
 
     public function ferramentaEmail($data)
     {
+        $usuarioTipo = $this->section->getTipo();
+        $usuarioId = $this->section->getId();
+
+        if (!in_array($usuarioTipo, [1, 4])) {
+            header("Location: " . url());
+            exit;
+        }
+
+        $statusOpcoes = [
+            "paga" => [
+                "label" => "Pagas",
+                "codigos" => [4, 8],
+            ],
+            "pendente" => [
+                "label" => "Pendentes",
+                "codigos" => [1, 2, 3],
+            ],
+            "cancelada" => [
+                "label" => "Canceladas",
+                "codigos" => [5, 6, 7],
+            ],
+            "todas" => [
+                "label" => "Todas",
+                "codigos" => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            ],
+        ];
+
+        $filtroProduto = "excluir = 0 AND status != 6 AND status != 0";
+        if ($usuarioTipo !== 1) {
+            $filtroProduto .= " AND usuario = {$usuarioId}";
+        }
+
+        $produtos = (new Produto())
+            ->find($filtroProduto)
+            ->order("nome ASC")
+            ->fetch(true);
+
+        $parseManualEmails = function (?string $raw) {
+            $destinos = [];
+            if (!$raw) {
+                return $destinos;
+            }
+
+            $lista = preg_split('/[\r\n,;]+/', $raw);
+
+            foreach ($lista as $item) {
+                $email = strtolower(trim($item));
+                if (!$email) {
+                    continue;
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    continue;
+                }
+
+                $nome = ucfirst(explode("@", $email)[0]);
+                $destinos[$email] = [
+                    "nome" => $nome ?: "Contato",
+                    "email" => $email,
+                    "origem" => "manual",
+                ];
+            }
+
+            return $destinos;
+        };
+
+        $feedback = null;
+        $resultadoEnvio = null;
+        $old = [
+            "produto_id" => null,
+            "status_filtro" => "todas",
+            "assunto" => "",
+            "mensagem" => "",
+            "destinatarios_extra" => "",
+        ];
+
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $produtoId = filter_input(INPUT_POST, "produto_id", FILTER_SANITIZE_NUMBER_INT);
+            $statusFiltro = $_POST["status_filtro"] ?? "paga";
+            $assunto = trim($_POST["assunto"] ?? "");
+            $mensagem = $_POST["mensagem"] ?? "";
+            $destinatariosExtra = trim($_POST["destinatarios_extra"] ?? "");
+            if (!$produtoId) {
+                $statusFiltro = "todas"; // ignora filtro quando sem produto
+            }
+
+            $old = [
+                "produto_id" => $produtoId,
+                "status_filtro" => $statusFiltro,
+                "assunto" => $assunto,
+                "mensagem" => $mensagem,
+                "destinatarios_extra" => $destinatariosExtra,
+            ];
+
+            $destinosManuais = $parseManualEmails($destinatariosExtra);
+
+            if ((!$produtoId && empty($destinosManuais)) || !$assunto || !$mensagem) {
+                $feedback = [
+                    "tipo" => "danger",
+                    "mensagem" => "Informe o produto ou adicione emails manualmente, e preencha assunto e mensagem para disparar.",
+                ];
+            } elseif ($produtoId && !isset($statusOpcoes[$statusFiltro])) {
+                $feedback = [
+                    "tipo" => "danger",
+                    "mensagem" => "Selecione uma opção de status válida.",
+                ];
+            } else {
+                $destinatarios = [];
+
+                if ($produtoId) {
+                    $statusCodes = implode(", ", array_map("intval", $statusOpcoes[$statusFiltro]["codigos"]));
+                    $filtroVendas = "produto = :produto AND status_transacao IN ({$statusCodes})";
+                    $params = "produto={$produtoId}";
+
+                    if ($usuarioTipo !== 1) {
+                        $filtroVendas .= " AND produtor = :produtor";
+                        $params .= "&produtor={$usuarioId}";
+                    }
+
+                    $vendas = (new Venda())->find($filtroVendas, $params)->fetch(true);
+
+                    if ($vendas) {
+                        foreach ($vendas as $venda) {
+                            $comprador = $venda->dataComprador();
+
+                            if (!$comprador || !@$comprador->email) {
+                                continue;
+                            }
+
+                            $email = strtolower(trim($comprador->email));
+
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                continue;
+                            }
+
+                            $destinatarios[$email] = [
+                                "nome" => $comprador->nome ?? "Cliente",
+                                "email" => $email,
+                                "origem" => "filtro",
+                            ];
+                        }
+                    }
+                }
+
+                if ($destinosManuais) {
+                    foreach ($destinosManuais as $email => $dados) {
+                        $destinatarios[$email] = $dados;
+                    }
+                }
+
+                if (empty($destinatarios)) {
+                    $feedback = [
+                        "tipo" => "warning",
+                        "mensagem" => "Nenhum destinatário encontrado para os filtros aplicados e/ou emails manuais informados.",
+                    ];
+                } else {
+                    $envio = new Emails();
+                    $sucesso = 0;
+                    $falha = 0;
+                    $logs = [];
+                    $manualCount = $destinosManuais ? count($destinosManuais) : 0;
+                    $filtroCount = count($destinatarios) - $manualCount;
+
+                    foreach ($destinatarios as $destinatario) {
+                        $payload = [
+                            "assunto" => $assunto,
+                            "mensagem" => $mensagem,
+                            "nome" => $destinatario["nome"],
+                            "email" => $destinatario["email"],
+                        ];
+
+                        $retorno = $envio->enviaPhpMailer($payload);
+                        $ok = stripos($retorno, "sucesso") !== false;
+
+                        if ($ok) {
+                            $sucesso++;
+                        } else {
+                            $falha++;
+                        }
+
+                        $logs[] = [
+                            "email" => $destinatario["email"],
+                            "nome" => $destinatario["nome"],
+                            "retorno" => $retorno,
+                        ];
+                    }
+
+                    $resultadoEnvio = [
+                        "total" => count($destinatarios),
+                        "sucesso" => $sucesso,
+                        "falha" => $falha,
+                        "status" => $produtoId ? $statusOpcoes[$statusFiltro]["label"] : "Manual",
+                        "manual" => $manualCount,
+                        "automatico" => $filtroCount,
+                        "logs" => $logs,
+                    ];
+
+                    $feedback = [
+                        "tipo" => $falha > 0 ? "warning" : "success",
+                        "mensagem" => "Disparo concluído. {$sucesso} enviado(s), {$falha} falhou(aram).",
+                    ];
+                }
+            }
+
+            $_SESSION["ferramenta_email_feedback"] = $feedback;
+            $_SESSION["ferramenta_email_resultado"] = $resultadoEnvio;
+
+            header("Location: " . url("emails"));
+            exit;
+        }
+
+        if (isset($_SESSION["ferramenta_email_feedback"])) {
+            $feedback = $_SESSION["ferramenta_email_feedback"];
+            unset($_SESSION["ferramenta_email_feedback"]);
+        }
+
+        if (isset($_SESSION["ferramenta_email_resultado"])) {
+            $resultadoEnvio = $_SESSION["ferramenta_email_resultado"];
+            unset($_SESSION["ferramenta_email_resultado"]);
+        }
+
         echo $this->view->render("ferramentas/ferramenta-emails", [
-            "title" => "Ferramenta de Envio de Emails RedRocket"
+            "title" => "Disparo de Emails",
+            "produtos" => $produtos,
+            "statusOpcoes" => $statusOpcoes,
+            "feedback" => $feedback,
+            "resultadoEnvio" => $resultadoEnvio,
+            "old" => $old,
         ]);
     }
 

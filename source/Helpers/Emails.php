@@ -26,8 +26,10 @@ class Emails
 
         $mail->isHTML(true);
         $mail->Subject = $data["assunto"];
-        //$mail->msgHTML(file_get_contents('message.html'), __DIR__);
-        $mail->Body = $this->message($data);
+
+        // Monta o corpo e embeda imagens base64 (Summernote) como inline attachments
+        $body = $this->message($data);
+        $mail->Body = $this->embedBase64Images($mail, $body);
         //$mail->addAttachment('test.txt');
         if (!$mail->send()) {
             return 'Email não foi enviado: ' . $mail->ErrorInfo;
@@ -184,6 +186,29 @@ class Emails
             $dados .= 'Email de suporte: ' . @$data["email_suporte"];
 
         return $dados;
+    }
+
+    /**
+     * Converte imagens base64 (ex.: inseridas pelo Summernote) em imagens inline (cid)
+     * para garantir que os clientes de email exibam corretamente.
+     */
+    private function embedBase64Images(PHPMailer $mail, string $html): string
+    {
+        $pattern = '/<img([^>]+)src=["\']data:(image\/[^;]+);base64,([^"\']+)["\']([^>]*)>/i';
+
+        return preg_replace_callback($pattern, function ($match) use ($mail) {
+            $mime = $match[2];
+            $data = base64_decode($match[3]);
+
+            if (!$data) {
+                return $match[0];
+            }
+
+            $cid = "inlineimg" . uniqid();
+            $mail->addStringEmbeddedImage($data, $cid, "img-" . uniqid(), "base64", $mime);
+
+            return "<img{$match[1]}src=\"cid:{$cid}\"{$match[4]}>";
+        }, $html);
     }
 
     public function enviaEmail($data)
