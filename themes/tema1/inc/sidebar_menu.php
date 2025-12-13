@@ -649,7 +649,7 @@
 
                   <li class="nav-item sub-item" title="">
                     <a href="<?= url("emails") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">mail</span>
-                      <p>Ferramenta de Emails</p>
+                      <p>Envio de Emails</p>
                     </a>
                   </li>
 

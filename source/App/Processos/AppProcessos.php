@@ -495,15 +495,15 @@ class AppProcessos
         );
 
         // 🔔 Enviar notificação push apenas se for pixGerado (pagamento = 3, status = 1)
-        if ((int)$pagamento === 3 && (int)$status === 1) {
-            $titulo = "PIX gerado com sucesso!";
-            //$mensagemPush = "Pedido gerado para o produto: {$data["produto"]} - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
-            $mensagemPush = "Pedido gerado - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+        //if ((int)$pagamento === 3 && (int)$status === 1) {
+        //    $titulo = "PIX gerado com sucesso!";
+        //    //$mensagemPush = "Pedido gerado para o produto: {$data["produto"]} - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
+        //    $mensagemPush = "Pedido gerado - R$ " . number_format($data["valor_bruto"], 2, ",", ".");
 
-            $checkoutApp = new CheckoutAppProcessos(null);
+        //    $checkoutApp = new CheckoutAppProcessos(null);
             
-            $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
-        }
+        //    $checkoutApp->enviarNotificacaoUsuarioEspecifico($data["produtor"], $titulo, $mensagemPush);
+        //}
 
         // 🔔 Enviar notificação push para pixGeradoPago (pagamento = 3, status = 4)
         if ((int)$pagamento === 3 && (int)$status === 4) {
