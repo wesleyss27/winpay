@@ -25,6 +25,7 @@ use Source\Models\Permissao\Section;
 use Source\Models\Sessao\Sessao;
 use Source\Models\Usuarios\Usuario;
 use Source\Models\Vendas\Venda;
+use Source\Models\Checkout\Checkout;
 use Source\Helpers\Emails;
 
 session_start();
@@ -757,7 +758,22 @@ class AppWeb
             "assunto" => "",
             "mensagem" => "",
             "destinatarios_extra" => "",
+            "checkout_codigo" => "",
         ];
+
+        $checkouts = [];
+        $checkoutFiltroBase = $usuarioTipo !== 1 ? "usuario = :usuario" : "1=1";
+        $checkoutParams = $usuarioTipo !== 1 ? "usuario={$usuarioId}" : null;
+        $listaCheckout = (new Checkout())->find($checkoutFiltroBase, $checkoutParams)->order("produto ASC")->fetch(true);
+        if ($listaCheckout) {
+            foreach ($listaCheckout as $checkoutItem) {
+                $checkouts[] = [
+                    "codigo" => $checkoutItem->codigo,
+                    "descricao" => $checkoutItem->descricao,
+                    "produto_id" => (int) $checkoutItem->produto,
+                ];
+            }
+        }
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $produtoId = filter_input(INPUT_POST, "produto_id", FILTER_SANITIZE_NUMBER_INT);
@@ -765,6 +781,7 @@ class AppWeb
             $assunto = trim($_POST["assunto"] ?? "");
             $mensagem = $_POST["mensagem"] ?? "";
             $destinatariosExtra = trim($_POST["destinatarios_extra"] ?? "");
+            $checkoutCodigo = trim($_POST["checkout_codigo"] ?? "");
             if (!$produtoId) {
                 $statusFiltro = "todas"; // ignora filtro quando sem produto
             }
@@ -775,14 +792,33 @@ class AppWeb
                 "assunto" => $assunto,
                 "mensagem" => $mensagem,
                 "destinatarios_extra" => $destinatariosExtra,
+                "checkout_codigo" => $checkoutCodigo,
             ];
 
             $destinosManuais = $parseManualEmails($destinatariosExtra);
 
-            if ((!$produtoId && empty($destinosManuais)) || !$assunto || !$mensagem) {
+            $temFiltroVendas = $produtoId || $checkoutCodigo;
+
+            $checkoutProdutoId = null;
+            if ($checkoutCodigo) {
+                $filtroBase = "codigo = :checkout";
+                $paramsBase = "checkout={$checkoutCodigo}";
+
+                if ($usuarioTipo !== 1) {
+                    $filtroBase .= " AND usuario = :usuario";
+                    $paramsBase .= "&usuario={$usuarioId}";
+                }
+
+                $checkoutObj = (new Checkout())->find($filtroBase, $paramsBase)->fetch();
+                if ($checkoutObj && $checkoutObj->produto) {
+                    $checkoutProdutoId = (int) $checkoutObj->produto;
+                }
+            }
+
+            if ((!$temFiltroVendas && empty($destinosManuais)) || !$assunto || !$mensagem) {
                 $feedback = [
                     "tipo" => "danger",
-                    "mensagem" => "Informe o produto ou adicione emails manualmente, e preencha assunto e mensagem para disparar.",
+                    "mensagem" => "Informe produto ou checkout, ou adicione emails manualmente, e preencha assunto e mensagem para disparar.",
                 ];
             } elseif ($produtoId && !isset($statusOpcoes[$statusFiltro])) {
                 $feedback = [
@@ -792,16 +828,30 @@ class AppWeb
             } else {
                 $destinatarios = [];
 
-                if ($produtoId) {
+                if ($temFiltroVendas) {
                     $statusCodes = implode(", ", array_map("intval", $statusOpcoes[$statusFiltro]["codigos"]));
-                    $filtroVendas = "produto = :produto AND status_transacao IN ({$statusCodes})";
-                    $params = "produto={$produtoId}";
+                    $filtroVendas = "status_transacao IN ({$statusCodes})";
+                    $paramsArr = [];
+
+                    if ($produtoId) {
+                        $filtroVendas .= " AND produto = :produto";
+                        $paramsArr[] = "produto={$produtoId}";
+                    } elseif ($checkoutProdutoId) {
+                        $filtroVendas .= " AND produto = :produto";
+                        $paramsArr[] = "produto={$checkoutProdutoId}";
+                    }
+
+                    if ($checkoutCodigo) {
+                        $filtroVendas .= " AND url_checkout LIKE :checkout";
+                        $paramsArr[] = "checkout=%{$checkoutCodigo}%";
+                    }
 
                     if ($usuarioTipo !== 1) {
                         $filtroVendas .= " AND produtor = :produtor";
-                        $params .= "&produtor={$usuarioId}";
+                        $paramsArr[] = "produtor={$usuarioId}";
                     }
 
+                    $params = implode("&", $paramsArr);
                     $vendas = (new Venda())->find($filtroVendas, $params)->fetch(true);
 
                     if ($vendas) {
@@ -907,6 +957,7 @@ class AppWeb
         echo $this->view->render("ferramentas/ferramenta-emails", [
             "title" => "Disparo de Emails",
             "produtos" => $produtos,
+            "checkouts" => $checkouts,
             "statusOpcoes" => $statusOpcoes,
             "feedback" => $feedback,
             "resultadoEnvio" => $resultadoEnvio,

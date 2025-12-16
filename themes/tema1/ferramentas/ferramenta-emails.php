@@ -121,9 +121,24 @@
                   </div>
 
                   <div class="form-group col-md-4">
-                    <label for="assunto">Assunto</label>
-                    <input type="text" class="form-control" id="assunto" name="assunto" value="<?= htmlspecialchars(@$old["assunto"] ?? "", ENT_QUOTES, "UTF-8") ?>" required>
+                    <label for="checkout_codigo">Checkout (opcional)</label>
+                    <select name="checkout_codigo" id="checkout_codigo" class="form-control">
+                      <option value="">Sem filtro por checkout</option>
+                      <?php if (!empty($checkouts)) : ?>
+                        <?php foreach ($checkouts as $checkout) : ?>
+                          <option value="<?= $checkout["codigo"] ?>" data-produto="<?= $checkout["produto_id"] ?>" <?= @$old["checkout_codigo"] == $checkout["codigo"] ? "selected" : "" ?>>
+                            <?= $checkout["descricao"] ? "{$checkout["codigo"]} - {$checkout["descricao"]}" : $checkout["codigo"] ?>
+                          </option>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
+                    </select>
+                    <small class="email-admin__muted">Filtra vendas pelo checkout usado na compra.</small>
                   </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="assunto">Assunto</label>
+                  <input type="text" class="form-control" id="assunto" name="assunto" value="<?= htmlspecialchars(@$old["assunto"] ?? "", ENT_QUOTES, "UTF-8") ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -158,6 +173,24 @@
                 <span class="email-admin__muted ml-2"><?= $resultadoEnvio["status"] ?> | <?= $resultadoEnvio["total"] ?> destinatário(s)</span>
               </div>
               <div class="card-body">
+                <?php
+                  $totalEnvio = max(1, (int) $resultadoEnvio["total"]);
+                  $percentSucesso = round(((int) $resultadoEnvio["sucesso"] / $totalEnvio) * 100);
+                  $percentFalha = 100 - $percentSucesso;
+                ?>
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between email-admin__muted mb-1">
+                    <span>Andamento do disparo</span>
+                    <span><?= $percentSucesso ?>% concluído</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: <?= $percentSucesso ?>%;" aria-valuenow="<?= $percentSucesso ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                    <?php if ($percentFalha > 0) : ?>
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: <?= $percentFalha ?>%;" aria-valuenow="<?= $percentFalha ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                    <?php endif; ?>
+                  </div>
+                </div>
+
                 <div class="email-admin__stats mb-3">
                   <div class="stat">
                     <span class="email-admin__muted d-block">Total</span>
@@ -232,9 +265,39 @@
 <?php $v->start("scripts"); ?>
 <script>
   (function() {
+    let checkouts = [];
+    let oldCheckout = "";
+
     const toggleStatus = () => {
       const hasProduto = $('#produto_id').val() !== '';
       $('#status_filtro').prop('disabled', !hasProduto);
+      filterCheckouts();
+    };
+
+    const filterCheckouts = () => {
+      const produtoId = $('#produto_id').val();
+      const select = $('#checkout_codigo');
+      const current = select.val();
+
+      select.find('option').hide();
+      select.find('option[value=""]').show();
+
+      checkouts.forEach((c) => {
+        const match = !produtoId || String(c.produto_id) === String(produtoId);
+        if (match) {
+          select.find(`option[value="${c.codigo}"]`).show();
+        }
+      });
+
+      if (produtoId) {
+        if (!select.find(`option[value="${current}"]:visible`).length) {
+          select.val('');
+        }
+      } else {
+        if (oldCheckout) {
+          select.val(oldCheckout);
+        }
+      }
     };
 
     const initSummernote = () => {
@@ -264,7 +327,14 @@
     };
 
     $(function() {
+      checkouts = <?= json_encode($checkouts ?? []) ?>;
+      oldCheckout = "<?= addslashes($old['checkout_codigo'] ?? '') ?>";
+
       $('#produto_id').on('change', toggleStatus);
+      $('#checkout_codigo').on('change', () => {
+        oldCheckout = $('#checkout_codigo').val();
+      });
+
       toggleStatus();
       initSummernote();
     });
