@@ -601,6 +601,11 @@
 
               <ul class="nav nav-treeview">
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("integracoes")) : ?>
+                  <li class="nav-item sub-item" title="">
+                    <a href="<?= url("emails") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">mail</span>
+                      <p>Envio de Emails</p>
+                    </a>
+                  </li>
                   <li class="nav-item sub-item">
                     <a href="<?= url("integracoes") ?>" class="nav-link txt-branco-octa"><span class="material-symbols-rounded nav-icon">hub</span>
                       <p>Integrações</p>
@@ -644,12 +649,6 @@
                   <li class="nav-item sub-item" title="Links para verificação de processos internos">
                     <a href="<?= url("links-uteis") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">link</span>
                       <p>Links úteis</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item sub-item" title="">
-                    <a href="<?= url("emails") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">mail</span>
-                      <p>Envio de Emails</p>
                     </a>
                   </li>
 
