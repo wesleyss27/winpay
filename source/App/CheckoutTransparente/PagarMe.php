@@ -88,6 +88,8 @@ class PagarMe
       $type = "company";
 
     $ano_val = substr(@$data["ano-val"], -2);
+    $numero_cartao = preg_replace('/\D+/', '', (string) ($data["numcart"] ?? ""));
+    $cvv = preg_replace('/\D+/', '', (string) ($data["cvv"] ?? ""));
 
     $dados["url"] = $this->endpoint . "/orders";
 
@@ -133,11 +135,11 @@ class PagarMe
                       "installments": ' . @$data["parcela"] . ',
                       "statement_descriptor": "' . $this->nome_fatura . '",
                       "card": {
-                          "number": "' . @$data["numcart"] . '",
+                          "number": "' . $numero_cartao . '",
                           "holder_name": "' . @$data["titular"] . '",
                           "exp_month": "' . @$data["mes-val"] . '",
                           "exp_year": "' . @$ano_val . '",
-                          "cvv": "' . @$data["cvv"] . '",
+                          "cvv": "' . $cvv . '",
                           "billing_address": {
                             "line_1": "' . @$data["numero"] . ', ' . @$data["rua"] . ', ' . @$data["bairro"] . '",
                             "zip_code": "' . @$data["cep"] . '",

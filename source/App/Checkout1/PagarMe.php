@@ -155,6 +155,9 @@ class PagarMe
     @$data['estado'] = @$data['estado'] ? @$data['estado'] : 'SC';
     @$data['cep'] = @$data['cep'] ? @$data['cep'] : '88355378';
 
+    $numero_cartao = preg_replace('/\D+/', '', (string) ($data["numcart"] ?? ""));
+    $cvv = preg_replace('/\D+/', '', (string) ($data["cvv"] ?? ""));
+
     $split = $this->split($data);
 
     $dados["url"] = $this->endpoint . "orders";
@@ -212,13 +215,13 @@ class PagarMe
               "city": "' . @$data["cidade"] . '",
               "line_1": "' .
       @$data["numero"] . ', ' .
-      @$data["rua"] . ', ' .
-      @$data["bairro"] .
+              @$data["rua"] . ', ' .
+              @$data["bairro"] .
       '",
               "zip_code": "' . @$data["cep"] . '"
             },
-            "number": "' . @$data["numcart"] . '",
-            "cvv": "' . @$data["cvv"] . '",
+            "number": "' . $numero_cartao . '",
+            "cvv": "' . $cvv . '",
             "exp_month": "' . @$data["mes-val"] . '",
             "exp_year": "' . @$ano_val . '",
             "holder_name": "' . @$data["titular"] . '",
