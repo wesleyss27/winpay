@@ -491,7 +491,13 @@ class AppCheckout
             $data["telefone"] = substr($telefone, 2, 12);
         }
 
+        if (!empty($data["numcart"])) {
+            $data["numcart"] = preg_replace('/\D+/', '', $data["numcart"]);
+        }
 
+        if (!empty($data["cvv"])) {
+            $data["cvv"] = preg_replace('/\D+/', '', $data["cvv"]);
+        }
 
         $data["pais"] = "BR";
 
