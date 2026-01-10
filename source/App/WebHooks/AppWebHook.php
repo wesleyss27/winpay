@@ -178,37 +178,83 @@ class AppWebHook
     public function postbackPagarMe($data)
     {
         header('Content-Type: application/json');
-        // Pega o RAW data da requisição
         $json = file_get_contents('php://input');
-        // Converte os dados recebidos
         $response = json_decode($json);
-        // print_r($response);
-        error_log(json_encode(["message" => $response]));
+        // loga o payload bruto para depuração
+        
 
-        parse_str($response->payload, $payload);
-        $payload = json_encode($payload);
-        $payload = json_decode($payload);
-        // var_dump($payload);
+        $status = null;
+        $payID = null;
+        $motivo = null;
+        $finalizada = null;
+        $ultimo_evento = date("Y-m-d H:i:s");
 
-        // exit;
-        if (@$payload->current_status == "paid") {
-            $status = 4;
-            $payID = $payload->id;
-            $finalizada = date("Y-m-d H:i:s");
-            $ultimo_evento = $finalizada;
-        } else if (@$payload->current_status == "refused") {
-            $status = 5;
-            $payID = $payload->id;
-            $motivo = @$payload->soft_descriptor;
-            $ultimo_evento = date("Y-m-d H:i:s");
-            // $finalizada = date("Y-m-d H:i:s");
-            $finalizada = NULL;
-        } else if (@$payload->current_status == "refunded") {
-            $status = 6;
-            $payID = $payload->id;
-            $ultimo_evento = date("Y-m-d H:i:s");
-            // $finalizada = date("Y-m-d H:i:s");
-            $finalizada = NULL;
+        // Modelo atual PagarMe: dados na raiz (ou embrulhados em message)
+        $event = isset($response->message) ? $response->message : $response;
+
+        if (isset($event->data)) {
+            $payload = $event->data;
+            error_log(json_encode($payload->id));
+            $statusString = $payload->status ?? ($payload->last_transaction->status ?? null);
+
+            $statusMap = [
+                "paid"            => 4,
+                "processing"      => 2,
+                "pending"         => 1,
+                "waiting_payment" => 1,
+                "refused"         => 5,
+                "failed"          => 5,
+                "canceled"        => 5,
+                "refunded"        => 6,
+            ];
+
+            if ($statusString && isset($statusMap[$statusString])) {
+                $status = $statusMap[$statusString];
+            }
+
+            $payID = $payload->id ?? null; // charge id (ch_...) salvo em venda->transacao
+
+            if ($status === 4) {
+                $paidAt = $payload->paid_at ?? ($payload->last_transaction->created_at ?? null);
+                $finalizada = $paidAt ? date("Y-m-d H:i:s", strtotime($paidAt)) : date("Y-m-d H:i:s");
+                $ultimo_evento = $finalizada;
+            } elseif (in_array($status, [5, 6])) {
+                $motivo = $payload->last_transaction->gateway_response->message ?? null;
+            }
+        }
+        // Formato legado (payload urlencoded)
+        elseif (isset($response->payload)) {
+            parse_str($response->payload, $payload);
+            $payload = json_decode(json_encode($payload));
+            error_log(json_encode($payload->id));
+
+            if (@$payload->current_status == "paid") {
+                $status = 4;
+                $payID = $payload->id;
+                $finalizada = date("Y-m-d H:i:s");
+                $ultimo_evento = $finalizada;
+            } else if (@$payload->current_status == "refused") {
+                $status = 5;
+                $payID = $payload->id;
+                $motivo = @$payload->soft_descriptor;
+                $ultimo_evento = date("Y-m-d H:i:s");
+                $finalizada = NULL;
+            } else if (@$payload->current_status == "refunded") {
+                $status = 6;
+                $payID = $payload->id;
+                $ultimo_evento = date("Y-m-d H:i:s");
+                $finalizada = NULL;
+            }
+        } else {
+            error_log("postbackPagarMe: formato desconhecido");
+            echo "Payload inválido";
+            return;
+        }
+
+        if (!$payID || $status === null) {
+            error_log("postbackPagarMe: status ou id ausentes");
+            echo "Payload inválido";
+            return;
         }
 
         $venda = (new Venda())->find("transacao = '$payID'")->fetch();
