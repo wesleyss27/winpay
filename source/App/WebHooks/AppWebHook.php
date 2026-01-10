@@ -315,8 +315,12 @@ class AppWebHook
                 $dados["produto"] = $venda->dataProduto()->nome;
             }
 
-            $dados["venda"] = $venda->id;
-            $processos = (new AppProcessos())->processos($dados);
+            $dados["venda"] = (int) $venda->id;
+            if ($dados["venda"]) {
+                $processos = (new AppProcessos())->processos($dados);
+            } else {
+                error_log("postbackPagarMe: venda sem id para transacao {$payID}");
+            }
 
             $arquivo = fopen('postback-pagarme.txt', 'a+');
             fwrite($arquivo, implode($dados) . "\n");
