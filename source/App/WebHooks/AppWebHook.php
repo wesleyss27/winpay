@@ -183,6 +183,7 @@ class AppWebHook
         // Converte os dados recebidos
         $response = json_decode($json);
         // print_r($response);
+        error_log(json_encode(["message" => $response]));
 
         parse_str($response->payload, $payload);
         $payload = json_encode($payload);
