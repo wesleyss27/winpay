@@ -304,7 +304,7 @@ class PagarMe
       $type = "company";
     $split = $this->split($data);
 
-    $dados["url"] = URL_BASE . "/webhook/pagarme";
+    $dados["url"] = $this->endpoint . "/orders";
 
     $dados["json"] = '{
       "items": [
