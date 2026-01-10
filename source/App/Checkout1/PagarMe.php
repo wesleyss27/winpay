@@ -160,7 +160,7 @@ class PagarMe
 
     $split = $this->split($data);
 
-    $dados["url"] = URL_BASE . "/webhook/bspay";
+    $dados["url"] = $this->endpoint . "orders";
     $ano_val = substr(@$data["ano-val"], -2);
     $dados["json"] = '
     {
@@ -304,7 +304,7 @@ class PagarMe
       $type = "company";
     $split = $this->split($data);
 
-    $dados["url"] = $this->endpoint . "/orders";
+    $dados["url"] = URL_BASE . "/webhook/pagarme";
 
     $dados["json"] = '{
       "items": [
