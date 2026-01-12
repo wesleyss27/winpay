@@ -260,6 +260,9 @@ class AppWebHook
         $venda = (new Venda())->find("transacao = '$payID'")->fetch();
         if ($venda) {
 
+            $statusAnterior = $venda->status_transacao;
+            $dispararProcessos = $statusAnterior != $status;
+
             echo @$finalizada . "<br>";
             $venda->status_transacao = $status;
             $venda->data_finalizada = @$finalizada != "" ? $finalizada : NULL;
@@ -316,7 +319,7 @@ class AppWebHook
             }
 
             $dados["venda"] = (int) $venda->id;
-            if ($dados["venda"]) {
+            if ($dispararProcessos && $dados["venda"]) {
                 $processos = (new AppProcessos())->processos($dados);
             } else {
                 error_log("postbackPagarMe: venda sem id para transacao {$payID}");
