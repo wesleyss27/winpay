@@ -351,9 +351,13 @@
       </div>
       <div class="winpay-card-content">
         <span class="winpay-card-title">Disponível para saque</span>
-        <h3 id="disponivelValue" class="winpay-card-value hidden-value" data-mask="R$ ••••••••">
+        <!--<h3 id="disponivelValue" class="winpay-card-value hidden-value" data-mask="R$ ••••••••">
           R$ <?= number_format($saldo->valor, 2, ',', '.') ?>
+        </h3> -->
+        <h3 id="disponivelValue" class="winpay-card-value hidden-value" data-mask="R$ ••••••••">
+          R$ <?= formataNumero(!empty($saldoPagarme->available_amount) ? $saldoPagarme->available_amount / 100 : 0) ?>
         </h3>
+        
         <span class="winpay-card-helper">Valor disponível para saque</span>
       </div>
     </div>
