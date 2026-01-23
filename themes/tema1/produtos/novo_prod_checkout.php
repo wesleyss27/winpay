@@ -270,7 +270,7 @@ $order_bump = array(
                             <label>Modelo do checkout:</label>
                             <select name="modelo_checkout" id="modelo_checkout" class="form-control">
                                 <option value="3" selected>Modelo Padrão</option>
-                                <!-- <option value="4">Modelo 2</option> -->
+                                <!--  <option value="4">Modelo 2</option> -->
                             </select>
                         </div>
                         <div class="col-md-6">
