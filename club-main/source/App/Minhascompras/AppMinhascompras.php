@@ -86,7 +86,7 @@ class AppMinhascompras
         $cursos = (new Cursos())->findById($data["codigo"]);
         $moduloss = $modulos->find("curso = :idc", "idc={$data["codigo"]}")->order("id ASC")->fetch(true);
         $modulosCount = $modulos->find("curso = :idc", "idc={$data["codigo"]}")->order("id ASC")->count();
-        $aulass = $aulas->find("curso = :idc", "idc={$data["codigo"]}")->order("id ASC")->fetch(true);
+        $aulass = $aulas->find("curso = :idc", "idc={$data["codigo"]}")->order("ordem ASC, id ASC")->fetch(true);
         $usuario = (new UsuarioDados())->find("usuario = $cursos->usuario")->fetch();
         $turma = (new Turmaaluno())->find("curso = {$data["codigo"]} AND aluno = " . $_SESSION["id"])->fetch();
         $aulaCl = (new AulaConcluida);
@@ -109,7 +109,7 @@ class AppMinhascompras
     {
         $aula = (new Aulas())->findById($data["codigo"]);
         $modulo = (new Modulos())->find("id = :idc", "idc={$aula->modulo}")->fetch();
-        $all_aulas = (new Aulas())->find("modulo = :idc", "idc={$aula->modulo}")->order("id ASC")->fetch(true);
+        $all_aulas = (new Aulas())->find("modulo = :idc", "idc={$aula->modulo}")->order("ordem ASC, id ASC")->fetch(true);
 
         // var_dump($aulas);
         $curso = (new Cursos())->findById($aula->curso);
