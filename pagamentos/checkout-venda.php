@@ -614,13 +614,14 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
 <style>
 :root {
-  --bg: #f5f7fb;
+  --bg: #f3f5fb;
   --card: #ffffff;
-  --stroke: #d7deea;
-  --accent: #2d7df6;
-  --accent-2: #0fba7a;
-  --text: #1b2330;
-  --muted: #5f6b7a;
+  --stroke: #d8e2f0;
+  --accent: #16a34a;
+  --accent-2: #0b8a3a;
+  --text: #12212f;
+  --muted: #64748b;
+  --warning: #fbbf24;
 }
 
 body {
@@ -758,20 +759,245 @@ small {
   box-shadow: 0 10px 26px rgba(28, 41, 65, 0.14);
 }
 
-#pix-page.active {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 40px;
-  background: var(--bg);
-  min-height: 100vh;
+.modern-grid {
+  gap: 24px;
+}
+.no-gutters-sm {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.no-gutters-sm > [class^="col-"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+@media (min-width: 768px) {
+  .modern-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    align-items: start;
+  }
+  .modern-grid > [class^="col-"] {
+    max-width: 100%;
+    flex: 0 0 auto;
+    width: 100%;
+  }
 }
 
-#pix-page .row {
+.step-header {
+  display: flex;
+  align-items: center;
+  background: #f7f9fc;
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 12px 14px;
+  gap: 12px;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 10px 20px rgba(22, 163, 74, 0.18);
+}
+
+.step-number.green {
+  background: linear-gradient(135deg, #15a34a, #0a8a3d);
+}
+
+.step-title {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.step-badge {
+  margin-left: auto;
+  background: #e8f6ed;
+  color: var(--accent);
+  border: 1px solid #cdebd8;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.step-badge.light {
+  background: #f8fafc;
+  border-color: var(--stroke);
+  color: #1f2937;
+}
+
+.payment-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.payment-card .nav-link.active {
+  background-color: #e8f6ed;
+  border-color: #cdebd8;
+  color: #0b6b3c;
+}
+
+.resumo-lateral {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 40px rgba(17, 24, 39, 0.08);
+  border-radius: 16px;
+}
+
+.resumo-topo .icone-selo {
+  background: #0ea44b;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(16, 164, 75, 0.2);
+}
+
+.resumo-precos {
+  background: #f8fbff;
+  border: 1px dashed #d7deea;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.resumo-precos .total-linha {
+  border-top: 1px dashed #d7deea;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.valor-total {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.pagar-pix-cta {
+  background: linear-gradient(135deg, #16a34a, #0b8a3a);
+  border: none;
+  font-weight: 800;
+  padding: 0.95rem;
+}
+
+.pagar-pix-cta:hover {
+  opacity: 0.96;
+}
+
+.resumo-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eef2f7;
+  flex-shrink: 0;
+}
+
+.resumo-thumb img {
   width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trust-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.06);
+}
+
+.icone-selo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  background: #e2e8f0;
+  color: #1f2937;
+}
+
+.icone-selo.success {
+  background: #e8f6ed;
+  color: #0a7f46;
+}
+
+.icone-selo.warning {
+  background: #fff6e5;
+  color: #b45309;
+}
+
+.icone-selo.info {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.hero-security {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 28px rgba(17, 24, 39, 0.07);
+}
+
+.pix-modal .modal-content {
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.pix-modal-card {
+  padding: 4px;
+}
+
+.contador-badge {
+  background: #fff0e0;
+  color: #b45309;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.pix-nota {
+  background: #e8f6ed;
+  color: #0a7f46;
+  border: 1px solid #cdebd8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 600;
+}
+
+.pix-passos {
+  padding-left: 18px;
+  color: var(--text);
+}
+
+.pix-passos li {
+  margin-bottom: 6px;
+}
+
+.qrcode-box {
+  width: 220px;
+  height: 220px;
+  margin: 10px auto;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
 }
 
 .tab-checkout-tabs {
@@ -994,10 +1220,25 @@ small {
         </div>
         <!-- FIM HEADER -->
 
-        <!-- CORPO CENTRAL DO CHECKOUT -->
-        <div class="row mt-4">
-            <!-- LADO ESQUERDO - DADOS -->
+        <div class="row mb-3">
             <div class="col-12">
+                <div class="hero-security">
+                    <span class="icone-selo success"><i class="fas fa-shield-alt"></i></span>
+                    <div>
+                        <smstrongall>Ambiente 100% seguro e criptografado</strong>
+                    </div>
+                    <div class="ml-auto d-flex align-items-center">
+                        <i class="fas fa-star text-warning mr-1"></i><span class="font-weight-bold">4.9</span>
+                        <small class="text-muted ml-1">(+1.300 avaliações)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORPO CENTRAL DO CHECKOUT -->
+        <div class="row mt-4 modern-grid align-items-start no-gutters-sm">
+            <!-- LADO ESQUERDO - DADOS -->
+            <div class="col-sm-7 col-lg-8">
                 <!-- FORMULÁRIO DADOS PESSOAIS -->
                 <?php
                 $cartao = (new Cartao())->find("usuario = $checkout->usuario AND status = 2")->count();
@@ -1010,6 +1251,13 @@ small {
                 // echo $checkout->adquirente;
                 ?>
                 <form action="<?= $url_transacao; ?>" method="post" name="checkout">
+                    <div class="step-header mb-3">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p class="step-title mb-0">Preencha seus dados</p>
+                        </div>
+                        <div class="step-badge"><i class="fas fa-shield-alt mr-1"></i>Ambiente 100% Seguro</div>
+                    </div>
                     <!-- DADOS PESSOAIS -->
                     <div class="corpo mb-4">
                         <?php if (@$cookies->id) : ?>
@@ -1189,12 +1437,17 @@ small {
                     <?php endif; ?>
                     <!-- FIM SEÇÃO FORMULÁRIO ENTREGA -->
                 </form>
-            </div>
-            <!-- FIM LADO ESQUERDO -->
 
-            <!-- LADO DIREITO - PAGAMENTO -->
-            <div class="col-12">
-                <div class="corpo mb-4">
+                <!-- PASSO 2 - PAGAMENTO -->
+                <div class="corpo mb-4 payment-card">
+                    <div class="step-header mb-3">
+                        <div class="step-number green">2</div>
+                        <div>
+                            <p class="step-title mb-0">Escolha uma forma de pagamento</p>
+                            <small class="text-muted">Receba mais rápido pagando via Pix</small>
+                        </div>
+                        <div class="step-badge light"><i class="fas fa-lock mr-1"></i>Criptografia ativa</div>
+                    </div>
                     <!-- CUPOM DE DESCONTO -->
                     <!-- <div class="row">
                         <div class="col-md-12">
@@ -1730,8 +1983,75 @@ small {
                     </div>
                 </div>
                 <!-- FIM FORMAS PAGAMENTO -->
+            </div><!-- /col-lg-8 -->
+
+            <div class="col-sm-5 col-lg-4">
+                <div class="corpo mb-3 resumo-lateral">
+                    <div class="resumo-topo d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="icone-selo"><i class="fas fa-shield-alt"></i></span>
+                            <div>
+                                <p class="mb-0 text-muted small">Ambiente 100% Seguro</p>
+                                <p class="mb-0 fw-bold">VOCÊ ESTÁ COMPRANDO</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php $foto = $plano->foto ? $plano->foto : $produto->foto; ?>
+                    <div class="d-flex align-items-center resumo-produto mb-3">
+                        <div class="resumo-thumb">
+                            <img src="<?= url("uploads/produtos/$foto") ?>" alt="Produto" class="img-fluid">
+                        </div>
+                        <div class="ml-3">
+                            <h5 class="mb-1"><?= @$produto->nome ?> <?= @$checkout->plano ? "• " . @$plano->nome : "" ?></h5>
+                            <?php if (@$checkout->mostrar_preco) : ?>
+                                <p class="mb-0 text-muted small">Oferta exclusiva disponível agora</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="resumo-precos">
+                        <?php if (@$checkout->mostrar_preco) : ?>
+                            <div class="d-flex justify-content-between">
+                                <span>Valor</span>
+                                <strong>R$ <?= number_format(@$plano->preco, 2, ",", ".") ?></strong>
+                            </div>
+                        <?php endif; ?>
+                        <div class="d-flex justify-content-between total-linha">
+                            <span>Total:</span>
+                            <span class="valor-total">R$ <?= number_format($preco, 2, ",", ".") ?></span>
+                        </div>
+                    </div>
+
+                    <a href="#pix-tab" class="btn btn-success btn-block pagar-pix-cta mt-3">
+                        <i class="fas fa-qrcode mr-2"></i>Pagar R$ <?= number_format($preco, 2, ",", ".") ?>
+                    </a>
+                </div>
+
+                <div class="corpo trust-card">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="icone-selo success"><i class="fas fa-check-circle"></i></span>
+                        <div>
+                            <p class="mb-0 fw-bold">Garantia 100% Segura</p>
+                            <small>Ambiente criptografado com proteção antifraude.</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="icone-selo warning"><i class="fas fa-truck"></i></span>
+                        <div>
+                            <p class="mb-0 fw-bold">Fácil e rápido</p>
+                            <small>Liberação imediata em pagamentos Pix ou Cartão.</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="icone-selo info"><i class="fas fa-star"></i></span>
+                        <div>
+                            <p class="mb-0 fw-bold">Satisfação garantida</p>
+                            <small>Suporte dedicado e reembolso conforme política.</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- FIM LADO DIREITO -->
         </div>
         <!-- FIM CORPO CENTRAL -->
 
@@ -1741,42 +2061,57 @@ small {
     </div>
     <!-- FIM CONTAINER PRINCIPAL -->
 
-    <div id="pix-page" style="display: none; padding: 40px; background: #f5f7fb; min-height: 100vh;">
-    <div class="text-center mb-4">
-        <h2 style="color: #28a745; font-weight: bold;">Compra com Pix</h2>
-        <p style="font-size: 15px; color: #4b5563;">Siga as instruções para efetuar o pagamento via Pix</p>
-    </div>
-
-    <div class="row justify-content-center align-items-start" style="max-width: 1000px; margin: auto;">
-        <!-- LADO ESQUERDO - Instruções -->
-        <div class="col-md-6 mb-4">
-            <h3 style="font-weight: bold;">Falta pouco! Siga os passos abaixo para realizar o pagamento</h3>
-            <ol style="font-size: 15px; line-height: 1.6;">
-                <li><strong>Pagar com QR code:</strong> aponte a câmera do seu celular para o código QR Code</li>
-                <li><strong>Finalize o pagamento</strong> após verificar as informações</li>
-                <li><strong>Ou use Pix Copia e Cola:</strong> copie o código abaixo</li>
-            </ol>
-            <input type="text" class="form-control mb-3" id="inp-copiar" readonly style="background: #fff; border: 1px solid #d7deea;">
-            <button class="btn btn-warning btn-lg" onclick="copiarPix()" style="font-weight: 500;">Copiar Código Pix</button>
+    <div class="modal fade pix-modal" id="pixModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content pix-modal-card">
+                <div class="modal-header">
+                    <div>
+                        <p class="mb-0 text-muted small">Pagamento via Pix</p>
+                        <h5 class="mb-0 font-weight-bold">Finalize em poucos segundos</h5>
+                    </div>
+                    <div class="contador-badge">
+                        <i class="far fa-clock mr-1"></i><span id="contador_pix">05:00</span>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <div class="pix-nota mb-3">Pague com Pix e a confirmação acontece em segundos.</div>
+                            <ol class="pix-passos">
+                                <li>Abra o app do seu banco e entre no ambiente Pix.</li>
+                                <li>Escolha “Pagar com QR Code” e aponte para o código ao lado.</li>
+                                <li>Prefere Pix Copia e Cola? Copie o código abaixo.</li>
+                            </ol>
+                            <div class="input-group copia-codigo">
+                                <input type="text" class="form-control" id="inp-copiar" readonly>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" type="button" onclick="copiarPix()">Copiar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="pix-card shadow-sm">
+                                <p class="mb-1 text-muted">Aponte a câmera aqui</p>
+                                <div id="qrcode" class="qrcode-box"></div>
+                                <p class="mt-2 mb-1 font-weight-bold">Valor: R$ <?= number_format($preco, 2, ",", ".") ?></p>
+                                <button id="btn-pix-confirmar" class="btn btn-success btn-block mt-2" style="display: none;">Já fiz o pagamento</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- LADO DIREITO - QR Code e Ações -->
-        <div class="col-md-6 text-center p-4 rounded" style="box-shadow: 0 0 15px rgba(0,0,0,0.05); background: #fff; color: black">
-            <p style="font-size: 14px;">Sua oferta encerra em <span id="contador_pix" style="color: red; font-weight: bold;">05:00</span></p>
-            <p class="mb-2"><strong>Aponte a câmera aqui</strong></p>
-            <div id="qrcode" style="margin: 10px auto; width: 220px; height: 220px;"></div>
-            <p class="mt-3;"><strong>Valor do Pix: R$ <?= number_format($preco, 2, ",", ".") ?></strong></p>
-            <button id="btn-pix-confirmar" class="btn btn-success btn-lg mt-3" style="display: none;">Já fiz o Pagamento</button>
-        </div>
     </div>
-</div>
 
 
 <!-- JS necessário -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 
-<<script>
+<script>
     function iniciarContador(segundos) {
         const el = document.getElementById("contador_pix");
         let restante = segundos;
@@ -3070,11 +3405,8 @@ small {
                         if (data[0].msg == "Venda salva com sucesso" && data[0].status_transacao) {
                             $("#cpf").removeClass('input-error');
 
-                            // ESCONDE A PÁGINA ATUAL E MOSTRA A TELA PIX
-                            document.querySelector(".container-75")?.style.setProperty("display", "none");
-                            document.body.querySelector(".row.mt-4").style.display = "none";
-                            document.getElementById("pix-page").style.display = "block";
-                            window.scrollTo({ top: 0, behavior: "smooth" });
+                            // EXIBE MODAL PIX
+                            $('#pixModal').modal('show');
                             iniciarContador(300);
 
                             // GERA E EXIBE O QR CODE
@@ -3266,6 +3598,15 @@ small {
             } else {
                 $("#btn-pix").show();
                 $("#servico-pix").hide();
+            }
+        });
+
+        $(".pagar-pix-cta").on("click", function(e) {
+            e.preventDefault();
+            const target = document.querySelector(".payment-card") || document.getElementById("nav-tab");
+            if (target) {
+                const top = target.getBoundingClientRect().top + window.scrollY - 50;
+                window.scrollTo({ top, behavior: "smooth" });
             }
         });
         // FIM OPÇÕES TAB PIX
