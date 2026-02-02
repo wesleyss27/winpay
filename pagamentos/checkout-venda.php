@@ -770,7 +770,7 @@ small {
   padding-left: 8px;
   padding-right: 8px;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .modern-grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
@@ -949,6 +949,11 @@ small {
   align-items: center;
   gap: 12px;
   box-shadow: 0 12px 28px rgba(17, 24, 39, 0.07);
+}
+
+.sidebar-col { order: 0; }
+@media (max-width: 992px) {
+  .sidebar-col { order: -1; margin-bottom: 12px; }
 }
 
 .pix-modal .modal-content {
@@ -1985,7 +1990,7 @@ small {
                 <!-- FIM FORMAS PAGAMENTO -->
             </div><!-- /col-lg-8 -->
 
-            <div class="col-sm-5 col-lg-4">
+            <div class="col-12 col-sm-5 col-lg-4 sidebar-col">
                 <div class="corpo mb-3 resumo-lateral">
                     <div class="resumo-topo d-flex align-items-center justify-content-between mb-3">
                         <div class="d-flex align-items-center gap-2">
