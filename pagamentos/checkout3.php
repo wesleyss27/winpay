@@ -3128,13 +3128,13 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                             // EXIBE O CÓDIGO PIX PARA COPIA E BOTÃO
                             $("#inp-copiar").val(data[1].qr_code);
                             $("#btn-pix-confirmar").show();
-                            startPixStatusWatcher(data[0].venda);
+                            startPixStatusWatcher(data[1].venda);
 
                             // REDIRECIONA AO FINALIZAR COMPRA
                             $("#btn-pix-confirmar").off("click").on("click", function (e) {
                                 e.preventDefault();
                                 stopPixStatusWatcher();
-                                location.href = "<?= url("checkout/finalizar-compra/") ?>" + data[0].venda;
+                                location.href = "<?= url("checkout/finalizar-compra/") ?>" + data[1].venda;
                             });
                         }else if (data[0].msg == "CPF inválido") {
                             $("#cpf").addClass('input-error');
