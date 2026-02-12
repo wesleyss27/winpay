@@ -3107,8 +3107,8 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                         //console.log('numero 1', data[1]);
                         //console.log('numero 0', data[0].qrcode);
                         console.log('numero 1', data);
-                        if (data[1].msg == "Venda salva com sucesso" && data[1].status_transacao) {
-                        //if (data[0].msg == "Venda salva com sucesso" && data[0].status_transacao) {
+                        //if (data[1].msg == "Venda salva com sucesso" && data[1].status_transacao) {
+                        if (data[0].msg == "Venda salva com sucesso" && data[0].status_transacao) {
                             $("#cpf").removeClass('input-error');
 
                             // ESCONDE A PÁGINA ATUAL E MOSTRA A TELA PIX
@@ -3122,19 +3122,19 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                             $('#qrcode').empty().qrcode({
                                 width: 220,
                                 height: 220,
-                                text: data[1].qr_code
+                                text: data[0].qr_code
                             });
 
                             // EXIBE O CÓDIGO PIX PARA COPIA E BOTÃO
-                            $("#inp-copiar").val(data[1].qr_code);
+                            $("#inp-copiar").val(data[0].qr_code);
                             $("#btn-pix-confirmar").show();
-                            startPixStatusWatcher(data[1].venda);
+                            startPixStatusWatcher(data[0].venda);
 
                             // REDIRECIONA AO FINALIZAR COMPRA
                             $("#btn-pix-confirmar").off("click").on("click", function (e) {
                                 e.preventDefault();
                                 stopPixStatusWatcher();
-                                location.href = "<?= url("checkout/finalizar-compra/") ?>" + data[1].venda;
+                                location.href = "<?= url("checkout/finalizar-compra/") ?>" + data[0].venda;
                             });
                         }else if (data[0].msg == "CPF inválido") {
                             $("#cpf").addClass('input-error');
