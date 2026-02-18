@@ -541,6 +541,19 @@ class PagarMe
    */
   public function reembolso($chargeId, $amount = null, $bankAccount = null)
   {
+    // Log request
+    $log = [
+      "when" => date("Y-m-d H:i:s"),
+      "chargeId" => $chargeId,
+      "amount" => $amount,
+      "bank_account" => $bankAccount
+    ];
+    file_put_contents(
+      DIRETORIO . "logs/pagarme-reembolso.log",
+      json_encode($log, JSON_UNESCAPED_UNICODE) . PHP_EOL,
+      FILE_APPEND
+    );
+
     $payload = [];
     if ($amount !== null) {
       $payload["amount"] = (int)$amount;
