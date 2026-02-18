@@ -495,7 +495,21 @@ class AppReembolsos
         $amount = (int) round($reembolso->valor_total * 100);
 
         $pagarme = new PagarMe();
-        $resp = $pagarme->reembolso($transacao, $amount, null);
+
+        // Se for order_id (or_), busca o charge correspondente
+        $chargeId = $transacao;
+        if (strpos($transacao, "or_") === 0) {
+            $list = $pagarme->cobrancaPorPedido(["transacao" => $transacao]);
+            if (@$list->data && @$list->data[0]->id) {
+                $chargeId = $list->data[0]->id;
+            } else {
+                http_response_code(400);
+                echo json_encode(["erro" => "Charge não encontrada para este pedido"]);
+                return;
+            }
+        }
+
+        $resp = $pagarme->reembolso($chargeId, $amount, null);
 
         if (@$resp->status == "canceled" || @$resp->status == "failed" || @$resp->id) {
             $reembolso->status = 4; // concluído
