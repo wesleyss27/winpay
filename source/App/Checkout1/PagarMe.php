@@ -532,4 +532,26 @@ class PagarMe
 
     return $this->executa($url, "POST", $json);
   }
+
+  /**
+   * Cancela/estorna uma cobrança
+   * @param string $chargeId Código da cobrança no Pagar.me
+   * @param int|null $amount Valor em centavos (opcional). Se null, estorna total.
+   * @param array|null $bankAccount Dados bancários (necessário para boleto).
+   */
+  public function reembolso($chargeId, $amount = null, $bankAccount = null)
+  {
+    $payload = [];
+    if ($amount !== null) {
+      $payload["amount"] = (int)$amount;
+    }
+    if ($bankAccount) {
+      $payload["bank_account"] = $bankAccount;
+    }
+
+    $json = $payload ? json_encode($payload) : null;
+    $url = $this->endpoint . "charges/" . $chargeId;
+
+    return $this->executa($url, "DELETE", $json);
+  }
 }

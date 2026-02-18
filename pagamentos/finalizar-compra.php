@@ -27,6 +27,11 @@ $forma_pagamento = $venda->forma_pagamento;
 $up = @$upsell ? true : false;
 $waCookie = (strpos($_SERVER['HTTP_COOKIE'] ?? '', 'from_whatsapp=1') !== false);
 $waQS = $waCookie ? '&wa=1' : '';
+// ID único por compra para deduplicar Pixel (browser) x CAPI na Meta
+$eventIdPurchase = bin2hex(random_bytes(16));
+// Sinais de navegador usados pela Meta para casar com o clique do anúncio
+$fbp = $_COOKIE['_fbp'] ?? null;
+$fbc = $_COOKIE['_fbc'] ?? null;
 
 if (@$cookies) {
     // var_dump($cookies);
@@ -307,10 +312,17 @@ if (@$facebook) {
                 $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
+                // event_id + dados hashed (email/telefone) melhoram o match servidor x navegador
+                $dados["event_id"] = $eventIdPurchase;
+                $dados["fbp"] = $fbp;
+                $dados["fbc"] = $fbc;
+                $dados["action_source"] = "website";
+                $dados["email"] = $venda->dataEndereco()->email ?? null;
+                $dados["telefone"] = $venda->dataEndereco()->telefone ?? null;
 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel&valor=$valor&fbq_event=Purchase") . "$waQS'
+                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel&valor=$valor&fbq_event=Purchase&event_id=$eventIdPurchase") . "$waQS'
           frameborder='0' height='0' width='0' style='top:-20px; position:absolute'></iframe>
                 ";
 
@@ -352,10 +364,17 @@ if (@$facebook) {
                 $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
+                // event_id + dados hashed (email/telefone) melhoram o match servidor x navegador
+                $dados["event_id"] = $eventIdPurchase;
+                $dados["fbp"] = $fbp;
+                $dados["fbc"] = $fbc;
+                $dados["action_source"] = "website";
+                $dados["email"] = $venda->dataEndereco()->email ?? null;
+                $dados["telefone"] = $venda->dataEndereco()->telefone ?? null;
 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&valor=$valor&fbq_event=Purchase") . "$waQS'
+                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&valor=$valor&fbq_event=Purchase&event_id=$eventIdPurchase") . "$waQS'
           frameborder='0' height='0' width='0' style='top:-20px; position:absolute'></iframe>
                 ";
 

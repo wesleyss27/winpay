@@ -2,11 +2,105 @@
 
 namespace Source\App\Facebook;
 
+/**
+ * Envia eventos para a Conversions API.
+ * Mantém a assinatura existente, mas agora aceita event_id, fbp/fbc,
+ * custom_data e user_data reais (hash SHA256).
+ */
 class AppFacebook
 {
+    private function notEmpty($value): bool
+    {
+        return !($value === null || $value === '' || $value === []);
+    }
+
+    private function onlyDigits(?string $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+        $digits = preg_replace('/\D+/', '', $value);
+        return $digits !== '' ? $digits : null;
+    }
+
+    private function hashValue(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        return hash('sha256', trim(mb_strtolower($value)));
+    }
+
+    private function buildUserData(array $data): array
+    {
+        $userData = $data['user_data'] ?? [];
+
+        // Sinais do navegador
+        $userData['client_ip_address']  = $userData['client_ip_address']  ?? ($data['ip'] ?? null);
+        $userData['client_user_agent']  = $userData['client_user_agent']  ?? ($data['user_agent'] ?? null);
+        $userData['fbc']                = $userData['fbc']                ?? ($data['fbc'] ?? null);
+        $userData['fbp']                = $userData['fbp']                ?? ($data['fbp'] ?? null);
+        $userData['external_id']        = $userData['external_id']        ?? ($data['external_id'] ?? null);
+
+        // Dados pessoais – hash obrigatória
+        if (!empty($data['email'])) {
+            $userData['em'][] = $this->hashValue($data['email']);
+        }
+        if (!empty($data['telefone'])) {
+            $phoneDigits = $this->onlyDigits($data['telefone']);
+            if ($phoneDigits) {
+                $userData['ph'][] = $this->hashValue($phoneDigits);
+            }
+        }
+        if (!empty($data['first_name'])) {
+            $userData['fn'][] = $this->hashValue($data['first_name']);
+        }
+        if (!empty($data['last_name'])) {
+            $userData['ln'][] = $this->hashValue($data['last_name']);
+        }
+        if (!empty($data['city'])) {
+            $userData['ct'] = $this->hashValue($data['city']);
+        }
+        if (!empty($data['state'])) {
+            $userData['st'] = $this->hashValue($data['state']);
+        }
+        if (!empty($data['zip'])) {
+            $zipDigits = $this->onlyDigits($data['zip']);
+            if ($zipDigits) {
+                $userData['zp'] = $this->hashValue($zipDigits);
+            }
+        }
+        if (!empty($data['country'])) {
+            $userData['country'] = $this->hashValue($data['country']);
+        }
+
+        return array_filter($userData, [$this, 'notEmpty']);
+    }
+
+    private function buildCustomData(array $data): ?array
+    {
+        if (!empty($data['custom_data'])) {
+            return array_filter($data['custom_data'], [$this, 'notEmpty']);
+        }
+
+        // retrocompatibilidade: se só existir "valor", monta currency/value
+        if (isset($data['valor'])) {
+            return [
+                'currency' => 'BRL',
+                'value'    => (float)$data['valor'],
+            ];
+        }
+
+        return null;
+    }
+
     public function executar($url, $metodo, $dados)
     {
-	$curl = curl_init();
+        $curl = curl_init();
+
+        if (is_array($dados)) {
+            $dados = json_encode($dados);
+        }
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
@@ -26,7 +120,6 @@ class AppFacebook
         $response = curl_exec($curl);
 
         curl_close($curl);
-        //echo $response;
 
         $data["dados"] = $dados;
         $data["url"] = $url;
@@ -37,51 +130,49 @@ class AppFacebook
 
     public function pixel($data)
     {
+        $pixelId = $data['pixel'] ?? null;
+        $token   = $data['token'] ?? null;
 
-        $url = "https://graph.facebook.com/v18.0/{$data['pixel']}/events?access_token={$data['token']}";
-        $json = '{
-            "data": [
-                {
-                    "event_name": "' . @$data["evento"] . '",
-                    "event_time": ' . time() . ',
-                    "action_source": "website",
-                    "event_source_url": "' . @$data["site_url"] . '",
-                    "user_data": {
-                        "em": [
-                            "309a0a5c3e211326ae75ca18196d301a9bdbd1a882a4d2569511033da23f0abd"
-                          ],
-                        "ph": [
-                            "254aa248acb47dd654ca3ea53f48c2c26d641d23d7e2e93a1ec56258df7674c4",
-                            "6f4fcb9deaeadc8f9746ae76d97ce1239e98b404efe5da3ee0b7149740f89ad6"
-                        ],
-                        "client_ip_address": "' . @$data["ip"] . '",
-                        "client_user_agent": "' . @$data["user_agent"] . '",
-                        "fbc": "fb.1.1554763741205.AbCdEfGhIjKlMnOpQrStUvWxYz1234567890",
-                        "fbp": "fb.1.1558571054389.1098115397"
-                    }';
-
-        if (@$data["valor"]) {
-            $json .= ',"custom_data": {
-                        "currency": "BRL",
-                        "value": "' . @$data["valor"] . '"
-                    }';
+        if (!$pixelId || !$token) {
+            return null;
         }
-        $json .= '
-                }
-            ]
-        }';
 
-        return $this->executar($url, "POST", $json);
+        $event = [
+            'event_name'       => $data['evento'] ?? 'InitiateCheckout',
+            'event_time'       => $data['event_time'] ?? time(),
+            'event_id'         => $data['event_id'] ?? null, // usado para deduplicar com o pixel do navegador
+            'event_source_url' => $data['site_url'] ?? null,
+            'action_source'    => $data['action_source'] ?? 'website',
+            'user_data'        => $this->buildUserData($data),
+        ];
+
+        $custom = $this->buildCustomData($data);
+        if ($custom) {
+            $event['custom_data'] = $custom;
+        }
+
+        $event = array_filter($event, [$this, 'notEmpty']);
+
+        $payload = [
+            'data' => [$event]
+        ];
+
+        if (!empty($data['test_event_code'])) {
+            $payload['test_event_code'] = $data['test_event_code'];
+        }
+
+        $url = "https://graph.facebook.com/v18.0/{$pixelId}/events?access_token={$token}";
+
+        return $this->executar($url, "POST", $payload);
     }
 
     public function logs($data, $arq)
     {
-        // var_dump($data);
-        $diretorio = "/xampp2/htdocs/redrocket/";
         $arquivo = fopen(DIRETORIO . "logs/$arq.txt", 'a+');
 
-        if ($arquivo == false)
+        if ($arquivo == false) {
             die('Não foi possível criar o arquivo.');
+        }
 
         $texto = "{\n";
         $texto .= ' "data": "' . date("d/m/Y H:i:s") . '",' . "\n";
@@ -90,8 +181,9 @@ class AppFacebook
                 if ($chave == "numcart" || $chave == "cvv" || $chave == "ano-val") {
                     $valor = "-";
                 }
-                if ($chave != "codigo_order_bump")
+                if ($chave != "codigo_order_bump") {
                     $texto .= ' "' . $chave . '": "' . $valor . '",' . "\n";
+                }
             }
         } else {
             $texto .= "Erro dos dados";
@@ -102,31 +194,4 @@ class AppFacebook
         fwrite($arquivo, $texto . "\n\n");
         fclose($arquivo);
     }
-
-    // "em": [
-    //     "' . @$data["email_hash"] . '"
-    // ],
-    // "ph": [
-    //     "' . @$data["telefone_hash"] . '"
-    // ],
-    // "fn": [
-    //     "' . @$data["nome_hash"] . '"
-    // ],
-    // "st": [
-    //     "' . @$data["estado_hash"] . '"
-    // ],
-    // "zp": [
-    //     "' . @$data["cep_hash"] . '"
-    // ],
 }
-
-// include "../../../../vendor/autoload.php";
-
-// $data["evento"] = "PageView";
-// $data["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-// $data["ip"] = $_SERVER["REMOTE_ADDR"];
-// $data["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
-// $data["pixel"] = "952025535749682";
-// $data["token"] = "EAANMiW59o9YBABXxrkd2Fnfy0xUk0G4HfJp1DWjSD2ArgvDV8jbW1vZB8Bdj3AFz2jJZBpgK8wc0BXrulL93hyVvqrDx85aE6QjyobZB6UU1yoSBQU8dW723YPVmTRs9bmA8MRrIXJX56L2IzqAMBzuAMfQkVfHeT19xDmpx93oHLZBwrQ71";
-
-// $facebook = (new AppFacebook())->pixel($data);
