@@ -116,7 +116,7 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
           </thead>
           <tbody>
             <?php if ($reembolsos) : foreach ($reembolsos as $r) : ?>
-              <tr data-id="<?= $r->id ?>">
+              <tr data-id="<?= $r->id ?>" data-transacao="<?= @$r->transacao ?>">
                 <td>#<?= $r->id ?></td>
                 <td>R$ <?= number_format($r->valor_total, 2, ",", ".") ?></td>
                 <td>
@@ -249,7 +249,7 @@ document.querySelectorAll(".btn-estornar").forEach(btn => {
     fetch("<?= url('reembolsos/estornar') ?>", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `id=${encodeURIComponent(id)}`
+      body: `id=${encodeURIComponent(id)}&transacao=${encodeURIComponent(tr.dataset.transacao || '')}`
     })
     .then(r => r.json())
     .then(resp => {

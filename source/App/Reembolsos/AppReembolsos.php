@@ -83,6 +83,8 @@ class AppReembolsos
                 $r->afiliado_nome  = $this->buscaNomeUsuario($r->afiliado_id);
                 $r->comprador_nome = $this->buscaNomeUsuario($r->comprador_id);
                 $r->comprador_cpf  = $this->buscaCpfUsuarioDados($r->comprador_id);
+                $vendaRef = $r->venda_id ? (new Venda())->findById($r->venda_id) : null;
+                $r->transacao = $vendaRef ? $vendaRef->transacao : null;
             }
         }
 
@@ -477,17 +479,23 @@ class AppReembolsos
             return;
         }
 
-        $venda = $reembolso->venda_id ? (new Venda())->findById($reembolso->venda_id) : null;
-        if (!$venda || !$venda->transacao) {
+        $transacao = @$data["transacao"];
+        $venda = null;
+        if (!$transacao) {
+            $venda = $reembolso->venda_id ? (new Venda())->findById($reembolso->venda_id) : null;
+            $transacao = $venda ? $venda->transacao : null;
+        }
+
+        if (!$transacao) {
             http_response_code(400);
-            echo json_encode(["erro" => "Venda ou transação não encontrada para estorno"]);
+            echo json_encode(["erro" => "Transação não encontrada para estorno"]);
             return;
         }
 
         $amount = (int) round($reembolso->valor_total * 100);
 
         $pagarme = new PagarMe();
-        $resp = $pagarme->reembolso($venda->transacao, $amount, null);
+        $resp = $pagarme->reembolso($transacao, $amount, null);
 
         if (@$resp->status == "canceled" || @$resp->status == "failed" || @$resp->id) {
             $reembolso->status = 4; // concluído
