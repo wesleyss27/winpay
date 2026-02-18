@@ -83,6 +83,7 @@ class AppReembolsos
                 $r->afiliado_nome  = $this->buscaNomeUsuario($r->afiliado_id);
                 $r->comprador_nome = $this->buscaNomeUsuario($r->comprador_id);
                 $r->comprador_cpf  = $this->buscaCpfUsuarioDados($r->comprador_id);
+                $r->comprador_telefone = $this->buscaTelefoneUsuarioDados($r->comprador_id);
                 $vendaRef = $r->venda_id ? (new Venda())->findById($r->venda_id) : null;
                 $r->transacao = $vendaRef ? $vendaRef->transacao : null;
             }
@@ -268,6 +269,13 @@ class AppReembolsos
         return $d ? $d->cpf_cnpj : null;
     }
 
+    private function buscaTelefoneUsuarioDados($usuarioId)
+    {
+        if (!$usuarioId) return null;
+        $d = (new UsuarioDados())->find("usuario = {$usuarioId}")->fetch();
+        return $d ? $d->telefone : null;
+    }
+
     /**
      * Atualiza status da solicitação
      * POST: id, status (0..4)
@@ -369,13 +377,14 @@ class AppReembolsos
         $afiliadoNome  = $reembolso->afiliado_id ? (@$reembolso->afiliado_nome ?: $this->buscaNomeUsuario($reembolso->afiliado_id)) : "-";
         $compradorNome = $reembolso->comprador_id ? (@$reembolso->comprador_nome ?: $this->buscaNomeUsuario($reembolso->comprador_id)) : "-";
         $compradorCpf  = $this->buscaCpfUsuarioDados($reembolso->comprador_id);
+        $compradorTel  = $this->buscaTelefoneUsuarioDados($reembolso->comprador_id);
 
         echo "<tr><th>ID</th><td>{$reembolso->id}</td></tr>";
         echo "<tr><th>Status</th><td>{$reembolso->status}</td></tr>";
         echo "<tr><th>Valor Total</th><td>R$ " . number_format($reembolso->valor_total, 2, ',', '.') . "</td></tr>";
         echo "<tr><th>Produtor</th><td>{$produtorNome}</td></tr>";
         echo "<tr><th>Afiliado</th><td>{$afiliadoNome}</td></tr>";
-        echo "<tr><th>Comprador</th><td>{$compradorNome} " . ($compradorCpf ? "<br><small>CPF: {$compradorCpf}</small>" : "") . "</td></tr>";
+        echo "<tr><th>Comprador</th><td>{$compradorNome} " . ($compradorCpf ? "<br><small>CPF: {$compradorCpf}</small>" : "") . ($compradorTel ? "<br><small>Tel: {$compradorTel}</small>" : "") . "</td></tr>";
         echo "<tr><th>Motivo</th><td>" . nl2br(htmlspecialchars($reembolso->motivo ?? '')) . "</td></tr>";
         echo "<tr><th>Criado em</th><td>" . $reembolso->criado_em . "</td></tr>";
         echo "</table>";

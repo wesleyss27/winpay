@@ -109,6 +109,7 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
               <th>Produtor</th>
               <th>Afiliado</th>
               <th>Comprador</th>
+              <th>Contato</th>
               <th>Criado em</th>
               <th>Ver</th>
               <?php if ($canChange): ?><th>Ações</th><?php endif; ?>
@@ -128,6 +129,7 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
                 <td><?= $r->produtor_nome ?? $r->produtor_id ?></td>
                 <td><?= $r->afiliado_nome ?? $r->afiliado_id ?></td>
                 <td><?= $r->comprador_nome ?? $r->comprador_id ?></td>
+                <td><?= $r->comprador_telefone ? htmlspecialchars($r->comprador_telefone) : "-" ?></td>
                 <td><?= date("d/m/Y H:i", strtotime($r->criado_em)) ?></td>
                 <td><button class="btn btn-xs btn-info btn-detalhes">Ver</button></td>
                 <?php if ($canChange): ?>
