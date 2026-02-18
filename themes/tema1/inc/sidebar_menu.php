@@ -269,6 +269,13 @@
             </a>
           </li>
 
+          <li class="nav-item" title="Solicitar reembolso de uma compra">
+            <a href="<?= url('pagamentos/solicitar-reembolso') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+              <span class="material-symbols-rounded nav-icon">swap_horizontal_circle</span>
+              <p> Solicitar Reembolso </p>
+            </a>
+          </li>
+
           <li class="nav-item" title="Veja e edite seus dados pessoais">
             <a href="<?= url('usuarios/perfil/' . $_SESSION["id"]) ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
               <span class="material-symbols-rounded nav-icon">person</span>
@@ -342,6 +349,13 @@
                       </a>
                     </li>
                   <?php endif ?>
+
+                  <li class="nav-item sub-item" title="Solicitações de reembolso / chargeback">
+                    <a href="<?= url('reembolsos') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                      <span class="material-symbols-rounded nav-icon">swap_horizontal_circle</span>
+                      <p>Reembolsos &amp; Chargeback</p>
+                    </a>
+                  </li>
 
                   <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("vendas_coprodutor")) : ?>
                     <li class="nav-item sub-item" title="Veja suas vendas">

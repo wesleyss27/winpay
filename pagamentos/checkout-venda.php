@@ -61,6 +61,12 @@ $obrigado_boleto    = $produto->obrigado_boleto;
 $obrigado_cartao    = $produto->obrigado_cartao;
 $obrigado_analise   = $produto->obrigado_analise;
 
+// ID único por carregamento para deduplicar Pixel (browser) x CAPI na Meta
+$eventIdCheckout    = bin2hex(random_bytes(16));
+// Sinais de navegador usados pela Meta para casar com o clique do anúncio
+$fbp                = $_COOKIE['_fbp'] ?? null;
+$fbc                = $_COOKIE['_fbc'] ?? null;
+
 $taxa_redrocket     = $taxa_transacao;
 $valor_redrocket    = number_format((@$preco * (@$taxa_redrocket / 100)) + 1, 2, ".", "");
 $valor_liquido      = @$preco - @$valor_redrocket;
@@ -295,22 +301,27 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
         $facebookPixels = explode(",", @$facebookApi->id_pixel);
 
         foreach ($facebookPixels as $pixel) :
-            if ($facebookApi->id)
-                $fb_pixel = (new Pixel())->findById($facebookApi->id);
+                    if ($facebookApi->id)
+                        $fb_pixel = (new Pixel())->findById($facebookApi->id);
 
-            if (@$facebookApi->executar_checkout == 1) :
-                if ($fb_pixel && $fb_pixel->tipo_integracao == "api") :
-                    $dados = array();
-                    $dados["pixel"] = $pixel;
-                    $dados["token"] = $fb_pixel->token_acesso;
-                    $dados["evento"] = "InitiateCheckout";
-                    $dados["site_url"] = @$fb_pixel->dominio_url ? @$fb_pixel->dominio_url : "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                    $dados["ip"] = $_SERVER["REMOTE_ADDR"];
-                    $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
+                    if (@$facebookApi->executar_checkout == 1) :
+                        if ($fb_pixel && $fb_pixel->tipo_integracao == "api") :
+                            $dados = array();
+                            $dados["pixel"] = $pixel;
+                            $dados["token"] = $fb_pixel->token_acesso;
+                            $dados["evento"] = "InitiateCheckout";
+                            $dados["site_url"] = @$fb_pixel->dominio_url ? @$fb_pixel->dominio_url : "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                            $dados["ip"] = $_SERVER["REMOTE_ADDR"];
+                            $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
+                            // event_id + fbp/fbc permitem deduplicar servidor x navegador na Meta
+                            $dados["event_id"] = $eventIdCheckout;
+                            $dados["fbp"] = $fbp;
+                            $dados["fbc"] = $fbc;
+                            $dados["action_source"] = "website";
 
-                    echo "
+                            echo "
                     <!-- PIXEL FACEBOOK CHECKOUT -->
-                        <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel&fbq_event=InitiateCheckout") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                        <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel&fbq_event=InitiateCheckout&event_id=$eventIdCheckout") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
                     ";
 
                     $fb_afiliado = (new AppFacebook())->pixel($dados);
@@ -343,6 +354,11 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
+                // event_id + fbp/fbc permitem deduplicar servidor x navegador na Meta
+                $dados["event_id"] = $eventIdCheckout;
+                $dados["fbp"] = $fbp;
+                $dados["fbc"] = $fbc;
+                $dados["action_source"] = "website";
 
                 if (strpos($_SERVER['HTTP_COOKIE'] ?? '', 'from_whatsapp=1') !== false) {
                     $dados['custom_data']['channel'] = 'whatsapp'; // opcional
@@ -351,7 +367,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
-                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&fbq_event=InitiateCheckout$wa") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
+                    <iframe src='" . url("pagamentos/pixel-base.php?pixel=$pixel2&fbq_event=InitiateCheckout&event_id=$eventIdCheckout") . "' frameborder='0' height='0' width='0' style='top: -20px; position: absolute'></iframe>
                 ";
 
                 $fb = (new AppFacebook())->pixel($dados);

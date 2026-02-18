@@ -106,6 +106,25 @@ $router->get("/{errcode}", "AppWeb:error");
 $router->get("/testeResult", "Teste:teste");
 $router->post("/teste", "Teste:teste2");
 
+/*
+* NAMESPACE Reembolsos
+*/
+$router->namespace("Source\App\Reembolsos");
+$router->group("reembolsos");
+$router->get("/", "AppReembolsos:index", "reembolsos.index");
+$router->post("/solicitar", "AppReembolsos:solicitar", "reembolsos.solicitar");
+$router->get("/produtos", "AppReembolsos:produtos", "reembolsos.produtos");
+$router->post("/status", "AppReembolsos:status", "reembolsos.status");
+$router->get("/detalhe", "AppReembolsos:detalhe", "reembolsos.detalhe");
+$router->get("/export", "AppReembolsos:export", "reembolsos.export");
+$router->post("/estornar", "AppReembolsos:estornar", "reembolsos.estornar");
+$router->group(null);
+
+$router->namespace("Source\App\Pagamentos");
+$router->group("pagamentos");
+$router->get("/solicitar-reembolso", "AppPagamentos:solicitarReembolso", "pagamentos.solicitar-reembolso");
+$router->group(null);
+
 
 /*
 * NAMESPACE Source\App\Vendas

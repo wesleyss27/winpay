@@ -3,6 +3,7 @@
     $eventos = @$_GET["ev"];
     $fbq_event = @$_GET["fbq_event"] ?? '';
     $valor = @$_GET["valor"] ?? '';
+    $eventId = @$_GET["event_id"] ?? '';
 ?>
 
     <!-- Facebook Pixel Code -->
@@ -16,12 +17,12 @@
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '<?= $pixel ?>');
-    fbq('track', 'PageView');
+    fbq('track', 'PageView'<?= $eventId ? ", {eventID: '" . $eventId . "'}" : "" ?>);
     <?php if( $fbq_event == "InitiateCheckout" ) : ?>
-        fbq('track', "InitiateCheckout" );
+        fbq('track', "InitiateCheckout"<?= $eventId ? ", {eventID: '" . $eventId . "'}" : "" ?> );
     <?php endif; ?>
     <?php if( $fbq_event == "Purchase" ) : ?>
-        fbq('track', 'Purchase',  {currency: 'brl', value: "<?php echo $valor ?>"} );
+        fbq('track', 'Purchase',  {currency: 'brl', value: "<?php echo $valor ?>"}<?= $eventId ? ", {eventID: '" . $eventId . "'}" : "" ?> );
     <?php endif; ?>
     </script>
     <noscript>
