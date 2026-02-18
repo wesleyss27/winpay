@@ -263,6 +263,7 @@ document.querySelectorAll(".btn-estornar").forEach(btn => {
         if (select) select.disabled = true;
         const saveBtn = tr.querySelector(".btn-status-save");
         if (saveBtn) saveBtn.disabled = true;
+        location.reload();
       } else {
         alert(resp?.erro || "Erro ao estornar");
         btn.disabled = false;
