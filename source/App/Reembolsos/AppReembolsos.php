@@ -202,6 +202,20 @@ class AppReembolsos
             $produtoId  = $produtoId ?: @$p["produto_id"];
         }
 
+        // Evita duplicidade: se já houver reembolso aberto para a mesma venda, bloqueia nova criação
+        if ($vendaId) {
+            $reembolsoEmAberto = (new Reembolso())
+                ->find("venda_id = :venda AND status IN (0,1,3)", "venda={$vendaId}")
+                ->fetch();
+            if ($reembolsoEmAberto) {
+                http_response_code(409);
+                echo json_encode([
+                    "erro" => "Já existe uma solicitação de reembolso para esta venda em análise. Acompanhe o pedido existente antes de abrir outro."
+                ]);
+                return;
+            }
+        }
+
         $reembolso = new Reembolso();
         $reembolso->venda_id    = $vendaId;
         $reembolso->produto_id  = $produtoId;
