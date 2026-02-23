@@ -300,7 +300,7 @@ include "lista-bancos.php";
 
           <hr>
           <div class="card card-body">
-            Para realizar alteração dos dados da conta bancaria, enviar email para suporte.oficial@redrocketpay.com com o Assunto: Alteração de conta bancaria.
+            Para realizar alteração dos dados da conta bancaria, enviar email para suporte@winpay.digital com o Assunto: Alteração de conta bancaria.
           </div>
 
         </div>
