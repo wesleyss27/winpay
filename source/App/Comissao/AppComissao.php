@@ -1778,7 +1778,7 @@ class AppComissao
 
         $files = new File();
         if (@$_FILES["imagem"]["name"]) {
-            $banco->imagem_conta = @$files->upload($_FILES["imagem"], PASTA . "banco/", 2);
+            $banco->imagem_conta = @$files->upload($_FILES["imagem"], PASTA . "banco/", 5);
         }
 
         exit;
@@ -1813,7 +1813,7 @@ class AppComissao
 
         $files = new File();
         if (@$_FILES["imagem"]["name"]) {
-            $banco->imagem_conta = @$files->upload($_FILES["imagem"], PASTA . "banco/", 2);
+            $banco->imagem_conta = @$files->upload($_FILES["imagem"], PASTA . "banco/", 5);
         }
 
         /*if($banco->cpf != @$data["cpf_usuario"])
@@ -1823,7 +1823,7 @@ class AppComissao
 
         //var_dump($data);
         if ($banco->imagem_conta == "") {
-            header("Location: " . url("banco?msg=Necessário enviar a imagem da conta. Máximo 2 mb. Somente imagem do tipo .jpg, .jpeg, .png ou documento PDF&classCss=bg-danger"));
+            header("Location: " . url("banco?msg=Necessário enviar a imagem da conta. Máximo 5 mb. Somente imagem do tipo .jpg, .jpeg, .png ou documento PDF&classCss=bg-danger"));
             exit;
         }
 
@@ -1924,14 +1924,14 @@ class AppComissao
 
         $files = new File();
         if (@$_FILES["imagem"]["name"]) {
-            $banco->imagem_conta = @$files->upload($_FILES["imagem"], PASTA . "banco/", 2);
+            $banco->imagem_conta = @$files->upload($_FILES["imagem"], PASTA . "banco/", 5);
             if (@$data["imagem_conta"]) @unlink(PASTA . "banco/" . @$data["imagem_conta"]);
         } else {
             $banco->imagem_conta = $data["imagem_conta"];
         }
 
         if ($banco->imagem_conta == "") {
-            header("Location: " . url("banco?msg=Necessário enviar a imagem da conta. Máximo 2 mb. Somente imagem do tipo .jpg, .jpeg, .png ou documento PDF&classCss=bg-danger"));
+            header("Location: " . url("banco?msg=Necessário enviar a imagem da conta. Máximo 5 mb. Somente imagem do tipo .jpg, .jpeg, .png ou documento PDF&classCss=bg-danger"));
             exit;
         }
 

@@ -220,7 +220,7 @@ include "lista-bancos.php";
                 <label>Imagem da conta:</label>
                 <input type="file" name="imagem" id="imagem" class="form-control">
                 <input type="hidden" name="imagem_conta" id="imagem_conta" required>
-                <small>Imagem no formato jpg ou png. Tamanha máximo de 2 mb</small><br>
+                <small>Imagem no formato jpg ou png. Tamanho máximo de 5 mb</small><br>
               </div>
 
               <div class="col-md-6">
