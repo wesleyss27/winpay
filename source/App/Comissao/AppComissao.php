@@ -1827,15 +1827,22 @@ class AppComissao
             exit;
         }
 
+        $data["nome"] = $data["titular"];
+        $data["email"] = $_SESSION["email"];
+        $data["id"] = $this->section->getId();
+
+        $pagarMe = (new PagarMe)->criarRecebedor($data);
+
+        error_log(json_encode($pagarMe, true));
+
+        if (!isset($pagarMe->id)) {
+            $msgErro = isset($pagarMe->message) ? $pagarMe->message : "Erro ao criar recebedor na PagarMe";
+            header("Location: " . url("banco?msg=" . urlencode($msgErro) . "&classCss=bg-danger"));
+            exit;
+        }
+
         if ($banco->save()) {
-            $data["nome"] = $data["titular"];
-            $data["email"] = $_SESSION["email"];
-            $data["id"] = $this->section->getId();
-
-            $pagarMe = (new PagarMe)->criarRecebedor($data);
             $winPay  = (new WinPay)->criarWallet($data);
-
-            error_log(json_encode($pagarMe, true));
 
             $arquivo = fopen(DIRETORIO . "logs/dados-recebedor.txt", 'a+');
 
@@ -1844,9 +1851,7 @@ class AppComissao
 
             $texto = date("d/m/Y H:i:s");
             $texto .= "Usuario: {$data["nome"]} | {$_SESSION["email"]}\n";
-            if (@$pagarMe->id) {
-                $texto .= "Recebedor PagarMe: {$pagarMe->id}\n";
-            }
+            $texto .= "Recebedor PagarMe: {$pagarMe->id}\n";
             if (@$winPay->id) {
                 $texto .= "Recebedor WinPay: {$winPay->id}\n";
             }
@@ -1854,38 +1859,23 @@ class AppComissao
             fwrite($arquivo, $texto . "\n");
             fclose($arquivo);
 
-            $atualizouBanco = false;
-
-            if (isset($pagarMe->id)) {
-                $banco->pagarme_conta = $pagarMe->id;
-                $atualizouBanco = true;
-            }
+            $banco->pagarme_conta = $pagarMe->id;
 
             if (isset($winPay->id)) {
                 $banco->winpay_conta = $winPay->id;
-                $atualizouBanco = true;
             }
 
-            if ($atualizouBanco) {
-                $banco->save();
+            $banco->save();
 
-                $usuario = (new Usuario)->findById($this->section->getId());
-                $salvouUsuario = false;
+            $usuario = (new Usuario)->findById($this->section->getId());
 
-                if (isset($pagarMe->id)) {
-                    $usuario->pagarme_conta = $pagarMe->id;
-                    $salvouUsuario = true;
-                }
+            $usuario->pagarme_conta = $pagarMe->id;
 
-                if (isset($winPay->id)) {
-                    $usuario->winpay_conta = $winPay->id;
-                    $salvouUsuario = true;
-                }
-
-                if ($salvouUsuario) {
-                    $usuario->save();
-                }
+            if (isset($winPay->id)) {
+                $usuario->winpay_conta = $winPay->id;
             }
+
+            $usuario->save();
 
             $data["email"] = "ws.silva19@gmail.com";
             $data["assunto"] = "Conta bancária cadastrada";
