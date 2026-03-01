@@ -17,10 +17,10 @@ class Emails
         $mail->Port = 587;
         $mail->SMTPAuth = true;
         $mail->CharSet = 'UTF-8';
-        $mail->Username = 'suporte@winpay.digital';
+        $mail->Username = 'comercial@winpay.digital';
         $mail->Password = 'Ws@01042006'; //'@X278g113'
-        $mail->setFrom('suporte@winpay.digital', 'Suporte WinPay');
-        $mail->addReplyTo('suporte@winpay.digital', 'Suporte WinPay');
+        $mail->setFrom('comercial@winpay.digital', 'Suporte WinPay');
+        $mail->addReplyTo('comercial@winpay.digital', 'Suporte WinPay');
 
         $mail->addAddress($data["email"], $data["nome"]);
 
