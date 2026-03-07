@@ -450,8 +450,8 @@
             <section class="card" id="step-success" style="display:none;">
                 <div class="success">
                     <div class="icon"><i class="fa-solid fa-check"></i></div>
-                    <h2>Solicitação enviada com sucesso!</h2>
-                    <p class="subtitle" style="margin-top:8px;">O produtor foi notificado e você receberá um e-mail com a atualização do reembolso.</p>
+                    <h2>Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.</h2>
+                    <p class="subtitle" style="margin-top:8px;">Em até 5 dias úteis traremos atualização do seu pedido de reembolso.</p>
                     <div class="actions" style="justify-content:center;">
                         <button class="btn secondary" onclick="location.href='/'">Voltar ao Início</button>
                     </div>
