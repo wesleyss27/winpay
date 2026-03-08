@@ -317,8 +317,19 @@ if (@$facebook) {
                 $dados["fbp"] = $fbp;
                 $dados["fbc"] = $fbc;
                 $dados["action_source"] = "website";
-                $dados["email"] = $venda->dataEndereco()->email ?? null;
-                $dados["telefone"] = $venda->dataEndereco()->telefone ?? null;
+                $_end = $venda->dataEndereco();
+                $_cmp = $venda->dataComprador();
+                $dados["email"]      = ($_end->email ?? null) ?: ($_cmp->email ?? null);
+                $dados["telefone"]   = ($_end->telefone ?? null) ?: ($_cmp->telefone ?? null);
+                $_nomeRaw = ($_end->nome ?? null) ?: ($_cmp->nome ?? null);
+                $_nomeSplit = explode(" ", trim($_nomeRaw ?? ''), 2);
+                $dados["first_name"]  = $_nomeSplit[0] ?: null;
+                $dados["last_name"]   = $_nomeSplit[1] ?? null;
+                $dados["city"]        = $_end->cidade ?? null;
+                $dados["state"]       = $_end->estado ?? null;
+                $dados["zip"]         = $_end->cep ?? null;
+                $dados["country"]     = 'br';
+                $dados["external_id"] = ($_end->cpf_cnpj ?? null) ?: ($_cmp->cpf_cnpj ?? null);
 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
@@ -369,8 +380,19 @@ if (@$facebook) {
                 $dados["fbp"] = $fbp;
                 $dados["fbc"] = $fbc;
                 $dados["action_source"] = "website";
-                $dados["email"] = $venda->dataEndereco()->email ?? null;
-                $dados["telefone"] = $venda->dataEndereco()->telefone ?? null;
+                $_end = $venda->dataEndereco();
+                $_cmp = $venda->dataComprador();
+                $dados["email"]      = ($_end->email ?? null) ?: ($_cmp->email ?? null);
+                $dados["telefone"]   = ($_end->telefone ?? null) ?: ($_cmp->telefone ?? null);
+                $_nomeRaw = ($_end->nome ?? null) ?: ($_cmp->nome ?? null);
+                $_nomeSplit = explode(" ", trim($_nomeRaw ?? ''), 2);
+                $dados["first_name"]  = $_nomeSplit[0] ?: null;
+                $dados["last_name"]   = $_nomeSplit[1] ?? null;
+                $dados["city"]        = $_end->cidade ?? null;
+                $dados["state"]       = $_end->estado ?? null;
+                $dados["zip"]         = $_end->cep ?? null;
+                $dados["country"]     = 'br';
+                $dados["external_id"] = ($_end->cpf_cnpj ?? null) ?: ($_cmp->cpf_cnpj ?? null);
 
                 echo "
                 <!-- PIXEL FACEBOOK CHECKOUT -->
