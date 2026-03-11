@@ -42,6 +42,12 @@ class AppHome
 
     public function home($data)
     {
+        // Se for aluno (tipo 6), direciona para a área correta
+        if (!empty($_SESSION["tipo"]) && (int) $_SESSION["tipo"] === 6) {
+            header("Location: " . url("minhas-compras"));
+            exit;
+        }
+
         $paginador = new Paginador();
         $pagina = @$data["page"];
         $offset = 16;
