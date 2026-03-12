@@ -154,6 +154,85 @@ class AppReembolsos
     }
 
     /**
+     * Consulta pública de status por CPF (e opcionalmente id).
+     * GET: cpf, id (opcional)
+     */
+    public function consultaPublica($data)
+    {
+        header("Content-Type: application/json");
+
+        $cpf = preg_replace('/\\D/', '', @$data["cpf"] ?? @$_GET["cpf"]);
+
+        if (!$cpf) {
+            echo json_encode(["erro" => "CPF obrigatório"]);
+            return;
+        }
+
+        $comprador = (new UsuarioDados())->find("REPLACE(REPLACE(REPLACE(REPLACE(cpf_cnpj,'.',''),'-',''),'/',''),' ','') = '{$cpf}'")->fetch();
+        if (!$comprador) {
+            echo json_encode(["erro" => "Nenhuma solicitação encontrada para este CPF", "reembolsos" => []]);
+            return;
+        }
+
+        $userId = (int) $comprador->usuario;
+
+        // Também considera reembolsos vinculados às vendas deste comprador
+        $vendas = (new Venda())->find("comprador = {$userId}", null, "id")->fetch(true);
+        $idsVendas = $vendas ? array_filter(array_map(fn($v) => (int) $v->id, $vendas)) : [];
+
+        $filtros = [];
+        $filtros[] = "comprador_id = {$userId}";
+        if ($idsVendas) {
+            $in = implode(",", $idsVendas);
+            $filtros[] = "venda_id IN ({$in})";
+        }
+
+        $where = implode(" OR ", $filtros);
+
+        $lista = (new Reembolso())->find($where)->order("id DESC")->fetch(true);
+        if (!$lista) {
+            echo json_encode(["erro" => "Nenhuma solicitação encontrada para este CPF", "reembolsos" => []]);
+            return;
+        }
+
+        $statusMap = [
+            0 => "Pendente",
+            1 => "Aprovado",
+            2 => "Reprovado",
+            3 => "Processando",
+            4 => "Concluído"
+        ];
+
+        $resp = [];
+        foreach ($lista as $r) {
+            $itens = json_decode($r->itens ?? "[]", true) ?: [];
+            $resp[] = [
+                "id"             => (int) $r->id,
+                "status"         => (int) $r->status,
+                "status_label"   => $statusMap[$r->status] ?? $r->status,
+                "valor_total"    => (float) $r->valor_total,
+                "motivo"         => $r->motivo,
+                "criado_em"      => $r->criado_em,
+                "atualizado_em"  => @$r->atualizado_em,
+                "venda_id"       => $r->venda_id,
+                "itens"          => array_map(function ($i) {
+                    return [
+                        "nome"       => @$i["nome"] ?? @$i["name"] ?? null,
+                        "valor"      => isset($i["valor"]) ? (float) $i["valor"] : (isset($i["price"]) ? (float) $i["price"] : null),
+                        "venda_id"   => @$i["venda_id"],
+                        "produto_id" => @$i["produto_id"]
+                    ];
+                }, $itens)
+            ];
+        }
+
+        echo json_encode([
+            "reembolsos" => $resp,
+            "cpf" => $cpf
+        ]);
+    }
+
+    /**
      * Endpoint para salvar solicitação (JSON ou form-data)
      * Espera: cpf, comprador_id (opcional), produtos[{venda_id, produto_id, produtor_id, afiliado_id, valor}], motivo
      */
