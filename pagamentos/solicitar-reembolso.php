@@ -385,6 +385,9 @@
             <section class="card" id="step-1">
                 <h2>Digite seu CPF</h2>
                 <p class="subtitle">Informe o CPF utilizado na compra para localizar seus pedidos.</p>
+                <p class="subtitle" style="margin-top:-4px; font-size:0.95rem;">
+                    Já tem um pedido em andamento? <a href="/pagamentos/status-reembolso" style="color:var(--primary); font-weight:700; text-decoration:none;">Acompanhe o status aqui</a>.
+                </p>
                 <label for="cpf">CPF <span class="tooltip" title="Usamos o CPF para encontrar suas compras.">i</span></label>
                 <div class="field">
                     <span class="icon"><i class="fa-regular fa-id-card"></i></span>
@@ -453,6 +456,7 @@
                     <h2>Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.</h2>
                     <p class="subtitle" style="margin-top:8px;">Em até 5 dias úteis traremos atualização do seu pedido de reembolso.</p>
                     <div class="actions" style="justify-content:center;">
+                        <button class="btn" onclick="location.href='/pagamentos/status-reembolso'">Acompanhar status</button>
                         <button class="btn secondary" onclick="location.href='/'">Voltar ao Início</button>
                     </div>
                 </div>

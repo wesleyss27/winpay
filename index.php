@@ -115,6 +115,7 @@ $router->get("/", "AppReembolsos:index", "reembolsos.index");
 $router->post("/solicitar", "AppReembolsos:solicitar", "reembolsos.solicitar");
 $router->get("/produtos", "AppReembolsos:produtos", "reembolsos.produtos");
 $router->post("/status", "AppReembolsos:status", "reembolsos.status");
+$router->get("/status-publico", "AppReembolsos:consultaPublica", "reembolsos.status-publico");
 $router->get("/detalhe", "AppReembolsos:detalhe", "reembolsos.detalhe");
 $router->get("/export", "AppReembolsos:export", "reembolsos.export");
 $router->post("/estornar", "AppReembolsos:estornar", "reembolsos.estornar");
@@ -123,6 +124,7 @@ $router->group(null);
 $router->namespace("Source\App\Pagamentos");
 $router->group("pagamentos");
 $router->get("/solicitar-reembolso", "AppPagamentos:solicitarReembolso", "pagamentos.solicitar-reembolso");
+$router->get("/status-reembolso", "AppPagamentos:statusReembolso", "pagamentos.status-reembolso");
 $router->group(null);
 
 
