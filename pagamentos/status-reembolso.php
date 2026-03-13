@@ -296,7 +296,9 @@ document.addEventListener("DOMContentLoaded", () => {
             </li>
         `).join("");
 
-        const motivoHtml = item.motivo ? `<div class=\"motivo\"><strong>Motivo informado:</strong><br>${escapeHtml(item.motivo)}</div>` : "";
+        const motivoHtml = item.motivo ? `<div class=\"motivo\"><strong>Motivo informado pelo cliente:</strong><br>${escapeHtml(item.motivo)}</div>` : "";
+        const motivoRecusaHtml = item.motivo_recusa ? `<div class=\"motivo\" style=\"border-color:rgba(239,68,68,0.35); color:var(--red);\"><strong>Motivo da reprovação:</strong><br>${escapeHtml(item.motivo_recusa)}</div>` : "";
+        const contestacaoHtml = item.contestacao ? `<div class=\"motivo\" style=\"border-color:rgba(59,130,246,0.35); color:var(--blue);\"><strong>Contestação enviada:</strong><br>${escapeHtml(item.contestacao)}${item.contestado_em ? `<br><small>Enviado em ${formatDate(item.contestado_em)}</small>` : ""}</div>` : "";
 
         return `
             <div class=\"status-card\">
@@ -316,6 +318,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <p class=\"hint\" style=\"margin-top:6px;\">${escapeHtml(info.desc)}</p>
                 ${motivoHtml}
+                ${motivoRecusaHtml}
+                ${contestacaoHtml}
+                ${item.status === 2 ? `<button class=\"btn\" data-contestar=\"${item.id}\">Contestar decisão</button>` : ""}
             </div>
         `;
     }
@@ -381,6 +386,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnBuscar.addEventListener("click", buscar);
     cpfInput.addEventListener("keyup", (e) => { if (e.key === "Enter") buscar(); });
+
+    // Delegação para botões de contestação
+    document.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-contestar]");
+        if (!btn) return;
+        const id = btn.getAttribute("data-contestar");
+        const cpf = cpfInput.value.trim();
+        const texto = prompt("Descreva sua contestação para o produtor:");
+        if (!texto) return;
+        btn.disabled = true;
+        fetch("/reembolsos/contestar", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `id=${encodeURIComponent(id)}&cpf=${encodeURIComponent(cpf)}&contestacao=${encodeURIComponent(texto)}`
+        })
+        .then(r => r.json())
+        .then(resp => {
+            if (resp && resp.ok) {
+                alert("Contestação enviada. Voltamos o status para pendente.");
+                buscar();
+            } else {
+                alert(resp?.erro || "Não foi possível enviar a contestação.");
+            }
+        })
+        .catch(() => alert("Erro ao enviar contestação."))
+        .finally(() => { btn.disabled = false; });
+    });
 });
 </script>
 </body>

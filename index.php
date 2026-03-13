@@ -115,6 +115,7 @@ $router->get("/", "AppReembolsos:index", "reembolsos.index");
 $router->post("/solicitar", "AppReembolsos:solicitar", "reembolsos.solicitar");
 $router->get("/produtos", "AppReembolsos:produtos", "reembolsos.produtos");
 $router->post("/status", "AppReembolsos:status", "reembolsos.status");
+$router->post("/contestar", "AppReembolsos:contestar", "reembolsos.contestar");
 $router->get("/status-publico", "AppReembolsos:consultaPublica", "reembolsos.status-publico");
 $router->get("/detalhe", "AppReembolsos:detalhe", "reembolsos.detalhe");
 $router->get("/export", "AppReembolsos:export", "reembolsos.export");

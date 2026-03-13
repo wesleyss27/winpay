@@ -13,6 +13,7 @@ use Source\Models\Vendas\Venda;
 use Source\Helpers\Emails;
 use Source\Helpers\Paginador;
 use Source\App\Checkout1\PagarMe;
+use CoffeeCode\DataLayer\Connect;
 
 class AppReembolsos
 {
@@ -206,12 +207,22 @@ class AppReembolsos
         $resp = [];
         foreach ($lista as $r) {
             $itens = json_decode($r->itens ?? "[]", true) ?: [];
+
+            $motivoCliente = $r->motivo ?? null;
+            $motivoRecusa = null;
+            if ($motivoCliente && preg_match("~\\[RECUSA\\](.*)$~s", $motivoCliente, $m)) {
+                $motivoRecusa = trim($m[1]);
+                $motivoCliente = trim(preg_replace("~\\[RECUSA\\].*$~s", "", $motivoCliente));
+            }
             $resp[] = [
                 "id"             => (int) $r->id,
                 "status"         => (int) $r->status,
                 "status_label"   => $statusMap[$r->status] ?? $r->status,
                 "valor_total"    => (float) $r->valor_total,
-                "motivo"         => $r->motivo,
+                "motivo"         => $motivoCliente,
+                "motivo_recusa"  => $motivoRecusa,
+                "contestacao"    => $r->contestacao ?? null,
+                "contestado_em"  => $r->contestado_em ?? null,
                 "criado_em"      => $r->criado_em,
                 "atualizado_em"  => @$r->atualizado_em,
                 "venda_id"       => $r->venda_id,
@@ -229,6 +240,75 @@ class AppReembolsos
         echo json_encode([
             "reembolsos" => $resp,
             "cpf" => $cpf
+        ]);
+    }
+
+    /**
+     * Cliente contesta reprovação: volta status para pendente e registra contestação.
+     * Espera: id, cpf, contestacao (texto)
+     */
+    public function contestar($data)
+    {
+        header("Content-Type: application/json");
+
+        $id = @$data["id"] ?? @$data["reembolso_id"];
+        $contestacao = trim(@$data["contestacao"] ?? "");
+        $cpf = preg_replace('/\\D/', '', @$data["cpf"] ?? "");
+
+        if (!$id || !$contestacao || !$cpf) {
+            http_response_code(400);
+            echo json_encode(["erro" => "Parâmetros obrigatórios: id, cpf e contestação"]);
+            return;
+        }
+
+        $reembolso = (new Reembolso())->findById($id);
+        if (!$reembolso) {
+            http_response_code(404);
+            echo json_encode(["erro" => "Solicitação não encontrada"]);
+            return;
+        }
+
+        // Confere se CPF pertence ao comprador da solicitação
+        $dadosComprador = $reembolso->comprador_id ? (new UsuarioDados())->find("usuario = {$reembolso->comprador_id}")->fetch() : null;
+        $cpfComprador = $dadosComprador ? preg_replace('/\\D/', '', $dadosComprador->cpf_cnpj) : null;
+        if (!$cpfComprador || $cpfComprador !== $cpf) {
+            http_response_code(403);
+            echo json_encode(["erro" => "CPF não autorizado para contestar esta solicitação"]);
+            return;
+        }
+
+        // Só pode contestar se estiver reprovado
+        if ((int)$reembolso->status !== 2) {
+            http_response_code(400);
+            echo json_encode(["erro" => "A contestação só é permitida para solicitações reprovadas"]);
+            return;
+        }
+
+        $reembolso->contestacao = $contestacao;
+        $reembolso->contestado_em = date("Y-m-d H:i:s");
+        $reembolso->status = 0; // volta para pendente
+
+        // Grava direto no banco para evitar qualquer bloqueio de DataLayer
+        $pdo = Connect::getInstance();
+        $stmt = $pdo->prepare("
+            UPDATE reembolsos SET
+                status = 0,
+                contestacao = :contestacao,
+                contestado_em = NOW(),
+                atualizado_em = NOW()
+            WHERE id = :id
+        ");
+        $stmt->execute([
+            ":contestacao" => $contestacao,
+            ":id" => $reembolso->id
+        ]);
+
+        $fresh = (new Reembolso())->findById($reembolso->id);
+        echo json_encode([
+            "ok" => true,
+            "status" => 0,
+            "status_db" => $fresh ? (int)$fresh->status : null,
+            "contestado_em" => $fresh->contestado_em ?? null
         ]);
     }
 
@@ -272,6 +352,7 @@ class AppReembolsos
         $afiliadoId = null;
         $vendaId = null;
         $produtoId = null;
+        $vendasEmAberto = [];
 
         foreach ($produtos as $p) {
             $valorTotal += (float) @$p["valor"];
@@ -279,20 +360,27 @@ class AppReembolsos
             $afiliadoId = $afiliadoId ?: @$p["afiliado_id"];
             $vendaId    = $vendaId ?: @$p["venda_id"];
             $produtoId  = $produtoId ?: @$p["produto_id"];
+
+            // Verifica duplicidade por venda: bloqueia se já existir pedido aberto (pendente/aprovado/processando)
+            if (!empty($p["venda_id"])) {
+                $idVenda = (int) $p["venda_id"];
+                $jaExiste = (new Reembolso())
+                    ->find("venda_id = :venda AND status IN (0,1,3)", "venda={$idVenda}")
+                    ->fetch();
+                if ($jaExiste) {
+                    $vendasEmAberto[] = $idVenda;
+                }
+            }
         }
 
-        // Evita duplicidade: se já houver reembolso aberto para a mesma venda, bloqueia nova criação
-        if ($vendaId) {
-            $reembolsoEmAberto = (new Reembolso())
-                ->find("venda_id = :venda AND status IN (0,1,3)", "venda={$vendaId}")
-                ->fetch();
-            if ($reembolsoEmAberto) {
-                http_response_code(409);
-                echo json_encode([
-                    "erro" => "Já existe uma solicitação de reembolso para esta venda em análise. Acompanhe o pedido existente antes de abrir outro."
-                ]);
-                return;
-            }
+        // Bloqueia se qualquer venda selecionada já tiver reembolso em aberto
+        if ($vendasEmAberto) {
+            http_response_code(409);
+            $lista = implode(", ", $vendasEmAberto);
+            echo json_encode([
+                "erro" => "Já existe uma solicitação de reembolso em análise para a venda(s): {$lista}. Acompanhe o pedido existente antes de abrir outro."
+            ]);
+            return;
         }
 
         $reembolso = new Reembolso();
@@ -383,6 +471,7 @@ class AppReembolsos
 
         $id = @$data["id"];
         $novoStatus = @$data["status"];
+        $motivoRecusa = @$data["motivo_recusa"] ?? @$data["motivo"] ?? null;
 
         if (!$id || $novoStatus === null) {
             http_response_code(400);
@@ -393,6 +482,13 @@ class AppReembolsos
         if (!in_array((int)$novoStatus, [0,1,2,3,4])) {
             http_response_code(400);
             echo json_encode(["erro" => "Status inválido"]);
+            return;
+        }
+
+        // Se for reprovar, motivo é obrigatório
+        if ((int)$novoStatus === 2 && !$motivoRecusa) {
+            http_response_code(400);
+            echo json_encode(["erro" => "Informe o motivo da reprovação"]);
             return;
         }
 
@@ -421,13 +517,49 @@ class AppReembolsos
             return;
         }
 
-        $reembolso->status = (int)$novoStatus;
-        if ($reembolso->save()) {
-            echo json_encode(["ok" => true, "status" => $reembolso->status]);
-        } else {
-            http_response_code(500);
-            echo json_encode(["erro" => $reembolso->fail()->getMessage()]);
+        // Normaliza motivo: preserva motivo original do cliente e anexa motivo da reprovação
+        if ((int)$novoStatus === 2) {
+            $motivoBase = preg_replace("~\\[RECUSA\\].*$~s", "", $reembolso->motivo ?? "");
+            $motivoBase = trim($motivoBase);
+            $motivoRecusa = trim((string) $motivoRecusa);
+            $reembolso->motivo = trim(($motivoBase ? $motivoBase . "\n\n" : "") . "[RECUSA] " . $motivoRecusa);
+            // zera contestação
+            if (property_exists($reembolso, "contestacao")) {
+                $reembolso->contestacao = null;
+            }
+            if (property_exists($reembolso, "contestado_em")) {
+                $reembolso->contestado_em = null;
+            }
         }
+
+        $reembolso->status = (int)$novoStatus;
+        // Persistência direta para evitar qualquer cache/atributo protegido
+        $pdo = Connect::getInstance();
+        $stmt = $pdo->prepare("
+            UPDATE reembolsos SET
+                status = :status,
+                motivo = :motivo,
+                contestacao = :contestacao,
+                contestado_em = :contestado_em,
+                atualizado_em = NOW()
+            WHERE id = :id
+        ");
+        $stmt->execute([
+            ":status" => $reembolso->status,
+            ":motivo" => $reembolso->motivo,
+            ":contestacao" => $reembolso->contestacao ?? null,
+            ":contestado_em" => $reembolso->contestado_em ?? null,
+            ":id" => $reembolso->id
+        ]);
+
+        // Recarrega do banco para garantir que persistiu
+        $fresh = (new Reembolso())->findById($id);
+        echo json_encode([
+            "ok" => true,
+            "status" => $reembolso->status,
+            "status_db" => $fresh ? (int)$fresh->status : null,
+            "atualizado_em" => $fresh->atualizado_em ?? null
+        ]);
     }
 
     /**
@@ -479,6 +611,9 @@ class AppReembolsos
         echo "<tr><th>Afiliado</th><td>{$afiliadoNome}</td></tr>";
         echo "<tr><th>Comprador</th><td>{$compradorNome} " . ($compradorCpf ? "<br><small>CPF: {$compradorCpf}</small>" : "") . ($compradorTel ? "<br><small>Tel: {$compradorTel}</small>" : "") . "</td></tr>";
         echo "<tr><th>Motivo</th><td>" . nl2br(htmlspecialchars($reembolso->motivo ?? '')) . "</td></tr>";
+        if ($reembolso->contestacao) {
+            echo "<tr><th>Contestação</th><td>" . nl2br(htmlspecialchars($reembolso->contestacao)) . ($reembolso->contestado_em ? "<br><small>Enviada em: {$reembolso->contestado_em}</small>" : "") . "</td></tr>";
+        }
         echo "<tr><th>Criado em</th><td>" . $reembolso->criado_em . "</td></tr>";
         echo "</table>";
 
