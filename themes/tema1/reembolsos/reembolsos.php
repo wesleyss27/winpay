@@ -193,12 +193,23 @@ document.querySelectorAll(".btn-status-save").forEach(btn => {
     const id = tr.dataset.id;
     const select = tr.querySelector(".status-select");
     const val = select.value;
+    let body = `id=${encodeURIComponent(id)}&status=${encodeURIComponent(val)}`;
+
+    // Se for reprovar, solicita motivo
+    if (val == 2) {
+      const motivo = prompt("Motivo da reprovação:");
+      if (!motivo) {
+        return;
+      }
+      body += `&motivo_recusa=${encodeURIComponent(motivo)}`;
+    }
+
     btn.disabled = true;
     btn.textContent = "Salvando...";
     fetch("<?= url('reembolsos/status') ?>", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `id=${encodeURIComponent(id)}&status=${encodeURIComponent(val)}`
+      body
     })
     .then(r => r.json())
     .then(resp => {
@@ -212,7 +223,12 @@ document.querySelectorAll(".btn-status-save").forEach(btn => {
         };
         const pill = tr.querySelector(".status-pill");
         pill.textContent = map[val] || "N/D";
-        pill.className = "badge status-pill " + (val == 0 ? "badge-warning" : (val == 4 ? "badge-success" : "badge-secondary"));
+        pill.className = "reb-chip " + (val == 0 ? "pending" : (val == 4 ? "success" : "neutral")) + " status-pill";
+        // força update na dropdown para refletir
+        select.value = val;
+        if (resp.status_db !== undefined && resp.status_db != val) {
+          alert("Aviso: API retornou status salvo como " + resp.status_db + ". Atualize a página para conferir.");
+        }
       } else {
         alert(resp?.erro || "Erro ao salvar status");
       }
