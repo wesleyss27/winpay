@@ -527,6 +527,7 @@ class AppCursos
         $aulas->link_video = @$data["link_video"];
         $aulas->script_player = $script_player;
         $aulas->descricao = $data["aulas_descricao"];
+        $aulas->dias_liberacao = isset($data["dias_liberacao"]) && $data["dias_liberacao"] !== "" ? (int)$data["dias_liberacao"] : null;
 
         if (!empty($data['course_id'])) {
             if (empty(@$_FILES["imagem"]["name"])) {
@@ -647,6 +648,7 @@ class AppCursos
         $aula->link_video = @$data["link_video"];
         $aula->script_player = $script_player;
         $aula->descricao = $data["aulas_descricao"];
+        $aula->dias_liberacao = isset($data["dias_liberacao"]) && $data["dias_liberacao"] !== "" ? (int)$data["dias_liberacao"] : null;
 
         if (!empty($data['course_id'])) {
             if (empty(@$_FILES["imagem"]["name"])) {

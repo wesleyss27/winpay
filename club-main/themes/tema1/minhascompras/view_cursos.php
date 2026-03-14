@@ -48,7 +48,11 @@ if ($modulosDisponiveis) {
                 continue;
             }
 
-            if (!in_array($aula->id, $idsConcluidos, true)) {
+            $aulaDisponivelParaProxima = ($aula->dias_liberacao === null || $aula->dias_liberacao === '')
+                || empty($turma)
+                || $dias >= (int)$aula->dias_liberacao;
+
+            if ($aulaDisponivelParaProxima && !in_array($aula->id, $idsConcluidos, true)) {
                 $proximaAula = $aula;
                 break 2;
             }
@@ -382,27 +386,45 @@ $certificadoDisponivel = ($totalAulas > 0 && $contadorConcluidas === $totalAulas
                     continue;
                 }
 
-                $completou = in_array($aula->id, $idsConcluidos, true);
-                $statusClass = $completou ? 'completed' : 'upnext';
-                $statusLabel = $completou ? 'Concluída' : 'Assistir agora';
+                $aulaLiberada = ($aula->dias_liberacao === null || $aula->dias_liberacao === '')
+                    || empty($turma)
+                    || $dias >= (int)$aula->dias_liberacao;
+                $diasRestantes = $aulaLiberada ? 0 : (int)$aula->dias_liberacao - $dias;
+
+                $completou = $aulaLiberada && in_array($aula->id, $idsConcluidos, true);
+                $statusLabel = $completou ? 'Concluída' : ($aulaLiberada ? 'Assistir agora' : 'Bloqueada');
               ?>
                 <?php
                   $aulaCover = !empty($aula->imagem)
                       ? url("uploads/cursos/" . $aula->imagem)
                       : $imgCover;
                   $lessonNameAttr = htmlspecialchars($aula->nome, ENT_QUOTES, 'UTF-8');
-                  $buttonLabel = $completou ? 'Rever aula' : 'Assistir agora';
-                  $buttonIcon = $completou ? 'fa-redo-alt' : 'fa-play';
                 ?>
-                <a href="<?= url("minhas-compras/viewaulas/" . $aula->id); ?>" class="lesson-card <?= $statusClass; ?>" aria-label="<?= $statusLabel; ?> - <?= $lessonNameAttr; ?>">
-                  <img src="<?= $aulaCover; ?>" alt="<?= $aula->nome; ?>">
-                  <div class="lesson-card__overlay">
-                    <span class="lesson-card__button <?= $completou ? 'completed' : ''; ?>" aria-hidden="true">
-                      <i class="fas <?= $buttonIcon; ?>"></i>
-                      <?= $buttonLabel; ?>
-                    </span>
+                <?php if ($aulaLiberada) : ?>
+                  <?php
+                    $buttonLabel = $completou ? 'Rever aula' : 'Assistir agora';
+                    $buttonIcon = $completou ? 'fa-redo-alt' : 'fa-play';
+                  ?>
+                  <a href="<?= url("minhas-compras/viewaulas/" . $aula->id); ?>" class="lesson-card <?= $completou ? 'completed' : 'upnext'; ?>" aria-label="<?= $statusLabel; ?> - <?= $lessonNameAttr; ?>">
+                    <img src="<?= $aulaCover; ?>" alt="<?= $aula->nome; ?>">
+                    <div class="lesson-card__overlay">
+                      <span class="lesson-card__button <?= $completou ? 'completed' : ''; ?>" aria-hidden="true">
+                        <i class="fas <?= $buttonIcon; ?>"></i>
+                        <?= $buttonLabel; ?>
+                      </span>
+                    </div>
+                  </a>
+                <?php else : ?>
+                  <div class="lesson-card lesson-card--locked" aria-label="Bloqueada - <?= $lessonNameAttr; ?>" title="Disponível em <?= $diasRestantes; ?> <?= $diasRestantes == 1 ? 'dia' : 'dias'; ?>">
+                    <img src="<?= $aulaCover; ?>" alt="<?= $aula->nome; ?>" style="filter:brightness(0.35) grayscale(0.6);">
+                    <div class="lesson-card__overlay" style="opacity:1;transform:translateY(0);">
+                      <span class="lesson-card__button" aria-hidden="true" style="background:rgba(5,6,12,0.85);color:rgba(255,255,255,0.7);">
+                        <i class="fas fa-lock"></i>
+                        Em <?= $diasRestantes; ?> <?= $diasRestantes == 1 ? 'dia' : 'dias'; ?>
+                      </span>
+                    </div>
                   </div>
-                </a>
+                <?php endif; ?>
               <?php endforeach; ?>
             </div>
           </section>
