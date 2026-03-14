@@ -51,6 +51,12 @@ $anexo3 = $aula->arquivo_anexo3 ?? '';
                         <?php endif; ?>
 
                         <div class="form-group">
+                            <label for="dias_liberacao">Liberar após (dias)</label>
+                            <input type="number" class="form-control" id="dias_liberacao" name="dias_liberacao" min="0" placeholder="Ex.: 7 — deixe vazio para liberar imediatamente" value="<?= $aula->dias_liberacao ?? '' ?>">
+                            <small class="win-form-hint" style="display:block;margin-top:0.35rem;color:var(--wh-text-soft);">Número de dias após o cadastro do aluno para liberar esta aula. Deixe vazio para liberar imediatamente.</small>
+                        </div>
+
+                        <div class="form-group">
                             <label for="link_video">Link do vídeo</label>
                             <input type="url" class="form-control" id="link_video" name="link_video" value="<?= $aula->link_video ?? '' ?>">
                         </div>

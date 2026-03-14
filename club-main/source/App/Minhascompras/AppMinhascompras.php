@@ -108,6 +108,19 @@ class AppMinhascompras
     public function viewaulas($data)
     {
         $aula = (new Aulas())->findById($data["codigo"]);
+
+        // Verifica liberação por dias após cadastro do aluno
+        if ($aula && $aula->dias_liberacao !== null && $aula->dias_liberacao !== '') {
+            $turma = (new Turmaaluno())->find("curso = {$aula->curso} AND aluno = " . $_SESSION["id"])->fetch();
+            if ($turma) {
+                $diasDesde = floor((time() - strtotime($turma->created_at)) / 86400);
+                if ($diasDesde < (int)$aula->dias_liberacao) {
+                    header("Location: " . url("minhas-compras/viewcursos/" . $aula->curso));
+                    exit;
+                }
+            }
+        }
+
         $modulo = (new Modulos())->find("id = :idc", "idc={$aula->modulo}")->fetch();
         $all_aulas = (new Aulas())->find("modulo = :idc", "idc={$aula->modulo}")->order("ordem ASC, id ASC")->fetch(true);
 
