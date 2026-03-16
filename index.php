@@ -844,6 +844,13 @@ $router->post("/", "AppEncomendas:calcularFrete", "encomendas.frete"); //Calcula
 
 
 /*
+* NAMESPACE Source\App\PixelLead
+*/
+$router->namespace("Source\App\PixelLead");
+$router->group("api");
+$router->post("/pixel-lead", "AppPixelLead:store", "pixellead.store");
+
+/*
 * Processos
 */
 $router->dispatch();
