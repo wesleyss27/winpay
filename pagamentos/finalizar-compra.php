@@ -32,6 +32,17 @@ $eventIdPurchase = bin2hex(random_bytes(16));
 // Sinais de navegador usados pela Meta para casar com o clique do anúncio
 $fbp = $_COOKIE['_fbp'] ?? null;
 $fbc = $_COOKIE['_fbc'] ?? null;
+// Fallback por IP: recupera fbc capturado pelo roundbr quando o cliente
+// veio via WhatsApp e não possui o cookie _fbc
+if (!$fbc) {
+    $clientIp = $_SERVER['HTTP_X_FORWARDED_FOR']
+        ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0])
+        : $_SERVER['REMOTE_ADDR'];
+    $pixelLead = (new \Source\Models\PixelLead\PixelLead())->findByIp($clientIp);
+    if ($pixelLead && $pixelLead->fbc) {
+        $fbc = $pixelLead->fbc;
+    }
+}
 
 if (@$cookies) {
     // var_dump($cookies);
