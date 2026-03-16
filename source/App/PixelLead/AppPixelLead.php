@@ -22,17 +22,19 @@ class AppPixelLead
     {
         header('Content-Type: application/json');
 
-        // Autenticação simples por chave compartilhada
+        // Autenticação simples por chave compartilhada (campo "secret" no body)
         if (defined('ROUNDBR_WEBHOOK_SECRET') && ROUNDBR_WEBHOOK_SECRET !== '') {
-            $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-            if ($authHeader !== 'Bearer ' . ROUNDBR_WEBHOOK_SECRET) {
+            $rawBody = file_get_contents('php://input');
+            $bodyCheck = json_decode($rawBody, true);
+            if (($bodyCheck['secret'] ?? '') !== ROUNDBR_WEBHOOK_SECRET) {
                 http_response_code(401);
                 echo json_encode(['error' => 'Unauthorized']);
                 return;
             }
+            $body = $bodyCheck;
+        } else {
+            $body = json_decode(file_get_contents('php://input'), true);
         }
-
-        $body = json_decode(file_get_contents('php://input'), true);
 
         if (!$body) {
             http_response_code(400);
