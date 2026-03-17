@@ -319,7 +319,7 @@ if (@$facebook) {
                 $dados["pixel"] = $pixel;
                 $dados["token"] = $fb_pixel->token_acesso;
                 $dados["evento"] = "Purchase";
-                $dados["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                //$dados["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                 $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
@@ -382,7 +382,7 @@ if (@$facebook) {
                 $dados["pixel"] = $pixel2;
                 $dados["token"] = $checkout->dataPixelFacebook()->token_acesso;
                 $dados["evento"] = "Purchase";
-                $dados["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                //$dados["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                 $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
