@@ -72,7 +72,16 @@ if (!$fbc) {
     $clientIp = $_SERVER['HTTP_X_FORWARDED_FOR']
         ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0])
         : $_SERVER['REMOTE_ADDR'];
-    $pixelLead = (new \Source\Models\PixelLead\PixelLead())->findByIp($clientIp);
+    $_plModel  = new \Source\Models\PixelLead\PixelLead();
+    $pixelLead = $_plModel->findByIp($clientIp);
+    // DEBUG TEMPORÁRIO
+    file_put_contents(DIRETORIO . "logs/pixel-lead-debug.txt",
+        date("d/m/Y H:i:s") . " | [checkout] ip={$clientIp}"
+        . " | lead=" . ($pixelLead ? $pixelLead->id : 'nenhum')
+        . " | fbc=" . ($pixelLead && $pixelLead->fbc ? 'sim' : 'nao')
+        . " | erro=" . ($_plModel->fail() ? $_plModel->fail()->getMessage() : 'ok')
+        . "\n", FILE_APPEND
+    );
     if ($pixelLead && $pixelLead->fbc) {
         $fbc = $pixelLead->fbc;
     }
