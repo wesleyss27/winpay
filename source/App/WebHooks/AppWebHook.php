@@ -524,9 +524,56 @@ class AppWebHook
         date_default_timezone_set("America/Recife");
         header('Content-Type: application/json');
 
-        // 1) RAW body e decode (sem validação de assinatura)
+        // 1) RAW body
         $payload = @file_get_contents('php://input');
-        $event   = json_decode($payload);
+
+        // 2) Verificação de assinatura Stripe (Stripe-Signature)
+        //    O segredo whsec_... fica em configuracao_checkout.chave_producao (id=9)
+        //    Ref: https://docs.stripe.com/webhooks/signatures
+        $cfgStripe   = (new ConfiguracaoCheckout())->findById(9);
+        $cfgSandbox  = (new ConfiguracaoCheckout())->findById(1);
+        $webhookSecret = ($cfgSandbox->sandbox == 1)
+            ? (string)($cfgStripe->chave_sandbox   ?? '')
+            : (string)($cfgStripe->chave_producao  ?? '');
+
+        if (!empty($webhookSecret)) {
+            $sigHeader = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
+            $tolerance = 300; // 5 minutos
+
+            // Extrai t= e v1= do header
+            $ts  = null;
+            $v1s = [];
+            foreach (explode(',', $sigHeader) as $part) {
+                [$k, $v] = array_pad(explode('=', $part, 2), 2, '');
+                if ($k === 't')  $ts    = (int)$v;
+                if ($k === 'v1') $v1s[] = $v;
+            }
+
+            $assinaturaValida = false;
+            if ($ts && $v1s) {
+                // Verifica tolerância de tempo
+                if (abs(time() - $ts) <= $tolerance) {
+                    $signedPayload = "{$ts}.{$payload}";
+                    $expected      = hash_hmac('sha256', $signedPayload, $webhookSecret);
+                    foreach ($v1s as $v1) {
+                        if (hash_equals($expected, $v1)) {
+                            $assinaturaValida = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!$assinaturaValida) {
+                error_log("[Stripe Webhook] Assinatura inválida ou expirada.");
+                http_response_code(400);
+                echo json_encode(['error' => 'Assinatura inválida']);
+                return;
+            }
+        }
+
+        // 3) Decode do payload
+        $event = json_decode($payload);
 
         if (json_last_error() !== JSON_ERROR_NONE || !$event) {
             http_response_code(400);
@@ -571,6 +618,14 @@ class AppWebHook
                 $status     = 4; // Finalizada
                 $payID      = $paymentIntentId;
                 $finalizada = $ultimo_evento;
+                break;
+
+            // Pix: QR code escaneado, BCB processando a transferência
+            // Stripe envia este evento enquanto aguarda confirmação do banco
+            // Ref: https://docs.stripe.com/payments/pix#pix-payment-flow
+            case 'payment_intent.processing':
+                $status = 2; // Em análise
+                $payID  = $paymentIntentId;
                 break;
 
             case 'payment_intent.payment_failed':
