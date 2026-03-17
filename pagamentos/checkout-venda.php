@@ -310,7 +310,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                             $dados["pixel"] = $pixel;
                             $dados["token"] = $fb_pixel->token_acesso;
                             $dados["evento"] = "InitiateCheckout";
-                            $dados["site_url"] = @$fb_pixel->dominio_url ? @$fb_pixel->dominio_url : "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                            //$dados["site_url"] = @$fb_pixel->dominio_url ? @$fb_pixel->dominio_url : "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                             $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                             $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                             // event_id + fbp/fbc permitem deduplicar servidor x navegador na Meta
@@ -350,7 +350,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 $dados["pixel"] = $pixel2;
                 $dados["token"] = $checkout->dataPixelFacebook()->token_acesso;
                 $dados["evento"] = "InitiateCheckout";
-                $dados["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                //$dados["site_url"] = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
                 $dados["ip"] = $_SERVER["REMOTE_ADDR"];
                 $dados["user_agent"] = $_SERVER["HTTP_USER_AGENT"];
                 $dados["valor"] = $valor;
