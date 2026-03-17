@@ -15,13 +15,29 @@ class PixelLead extends DataLayer
     /**
      * Busca o registro mais recente associado ao IP informado,
      * criado nas últimas 2 horas.
+     * Usa PDO direto para evitar o rowCount() do DataLayer que não é
+     * confiável em SELECT no MariaDB.
      */
     public function findByIp(string $ip): ?self
     {
-        return $this->find(
-            "ip = :ip AND created_at >= DATE_SUB(NOW(), INTERVAL 2 HOUR)",
-            "ip={$ip}"
-        )->order("created_at DESC")->limit(1)->fetch();
+        try {
+            $pdo  = \CoffeeCode\DataLayer\Connect::getInstance();
+            $stmt = $pdo->prepare(
+                "SELECT * FROM pixel_leads WHERE ip = :ip AND created_at >= DATE_SUB(NOW(), INTERVAL 2 HOUR) ORDER BY created_at DESC LIMIT 1"
+            );
+            $stmt->execute([':ip' => $ip]);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if (!$row) {
+                return null;
+            }
+            foreach ($row as $key => $value) {
+                $this->$key = $value;
+            }
+            return $this;
+        } catch (\PDOException $e) {
+            $this->fail = $e;
+            return null;
+        }
     }
 }
 
