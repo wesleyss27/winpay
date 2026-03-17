@@ -23,7 +23,7 @@ class PixelLead extends DataLayer
         try {
             $pdo  = \CoffeeCode\DataLayer\Connect::getInstance();
             $stmt = $pdo->prepare(
-                "SELECT * FROM pixel_leads WHERE ip = :ip AND created_at >= DATE_SUB(NOW(), INTERVAL 2 HOUR) ORDER BY created_at DESC LIMIT 1"
+                "SELECT * FROM pixel_leads WHERE ip = :ip ORDER BY created_at DESC LIMIT 1"
             );
             $stmt->execute([':ip' => $ip]);
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
