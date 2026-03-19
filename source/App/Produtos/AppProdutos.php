@@ -270,6 +270,7 @@ class AppProdutos
         $produto->email_suporte = @$data["email_suporte"];
         $produto->email_chargeback = @$data["email_chargeback"];
         $produto->whatsapp_checkout = @$data["whatsapp_checkout"];
+        $produto->link_suporte_whatsapp = @$data["link_suporte_whatsapp"];
         $produto->garantia = @$data["garantia"];
         $produto->pagina_venda = @$data["pagina_venda"];
         $produto->obrigado_cartao = @$data["obrigado_cartao"];
@@ -506,6 +507,7 @@ class AppProdutos
         $produto->email_suporte = $data["email_suporte"];
         $produto->email_chargeback = @$data["email_chargeback"];
         $produto->whatsapp_checkout = $data["whatsapp_checkout"];
+        $produto->link_suporte_whatsapp = @$data["link_suporte_whatsapp"];
         $produto->garantia = $data["garantia"];
         // $produto->pagina_venda = @$data["pagina_venda"];
         $produto->obrigado_cartao = @$data["obrigado_cartao"];

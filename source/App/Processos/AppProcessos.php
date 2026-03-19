@@ -418,6 +418,7 @@ class AppProcessos
             "motivo" => $venda->motivo,
             "link_boleto" => $venda->link_boleto,
             "email_suporte" => $venda->dataProduto()->email_suporte,
+            "link_suporte_whatsapp" => $venda->dataProduto()->link_suporte_whatsapp,
             "telefone" => $telefoneContato,
         );
 
