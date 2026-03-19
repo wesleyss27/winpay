@@ -277,6 +277,15 @@ if ($produto->usuario != $section->getId()) {
               <small>Email usado para recebimento de chargebacks além do email do produtor. Se não preenchido será usado o email de suporte</small>
             </div>
             <!-- FIM EMAIL SUPORTE -->
+
+            <!-- LINK SUPORTE WHATSAPP -->
+            <div class="col-md-4">
+              <label style="margin-top:10px">Link de Suporte WhatsApp (email)</label>
+              <i class="fas fa-question-circle" title="Link completo do WhatsApp para suporte (ex: https://wa.me/5511999999999). Se preenchido, aparecerá um botão no email do pedido."></i>
+              <input type="url" id="link_suporte_whatsapp" name="link_suporte_whatsapp" class="form-control form-control" value="<?= $produto->link_suporte_whatsapp ?>" placeholder="https://wa.me/55...">
+              <small>Aparece como botão no email de confirmação do pedido</small>
+            </div>
+            <!-- FIM LINK SUPORTE WHATSAPP -->
           </div>
         </div>
         <!-- fim .card-body -->
