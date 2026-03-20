@@ -13,6 +13,9 @@ use Source\Models\Vendas\Venda;
 use Source\Helpers\Emails;
 use Source\Helpers\Paginador;
 use Source\App\Checkout1\PagarMe;
+use Source\App\Checkout1\Stripe;
+use Source\App\Checkout1\EfiBank;
+use Source\App\Checkout1\AppProcessos;
 use CoffeeCode\DataLayer\Connect;
 
 class AppReembolsos
@@ -138,16 +141,23 @@ class AppReembolsos
         foreach ($vendas as $v) {
             $produto = $v->dataProduto();
             $valorProduto = $v->valor_produto ?: $v->valor_bruto ?: $v->valor_liquido;
+
+            // Verifica se já há reembolso em aberto (pendente/aprovado/processando) para esta venda
+            $refundPendente = (bool) (new Reembolso())
+                ->find("venda_id = :vid AND status IN (0,1,3)", "vid={$v->id}")
+                ->fetch();
+
             $resp[] = [
-                "id"          => (int) $v->id,
-                "name"        => $produto ? $produto->nome : "Produto #{$v->produto}",
-                "price"       => (float) $valorProduto,
-                "date"        => date("d/m/Y", strtotime($v->created_at)),
-                "img"         => $produto && $produto->foto ? url("uploads/produtos/{$produto->foto}") : "https://via.placeholder.com/96x96.png?text=WP",
-                "venda_id"    => (int) $v->id,
-                "produto_id"  => (int) $v->produto,
-                "produtor_id" => (int) $v->produtor,
-                "afiliado_id" => $v->afiliado ? (int) $v->afiliado : null
+                "id"              => (int) $v->id,
+                "name"            => $produto ? $produto->nome : "Produto #{$v->produto}",
+                "price"           => (float) $valorProduto,
+                "date"            => date("d/m/Y", strtotime($v->created_at)),
+                "img"             => $produto && $produto->foto ? url("uploads/produtos/{$produto->foto}") : "https://via.placeholder.com/96x96.png?text=WP",
+                "venda_id"        => (int) $v->id,
+                "produto_id"      => (int) $v->produto,
+                "produtor_id"     => (int) $v->produtor,
+                "afiliado_id"     => $v->afiliado ? (int) $v->afiliado : null,
+                "refund_pendente" => $refundPendente,
             ];
         }
 
@@ -393,10 +403,51 @@ class AppReembolsos
         $reembolso->motivo      = $motivo;
         $reembolso->itens       = json_encode($produtos, JSON_UNESCAPED_UNICODE);
         $reembolso->status      = 0; // pendente
+        $reembolso->criado_em   = date("Y-m-d H:i:s"); // usa timezone do PHP (Config.php), não do MySQL
 
         if ($reembolso->save()) {
+            // ---------------------------------------------------------------
+            // Reembolso automático: valor <= R$70 e venda criada há até 7 dias
+            // ---------------------------------------------------------------
+            $autoOk   = false;
+            $autoErro = false;
+
+            if ($vendaId && $valorTotal <= 70.00) {
+                $vendaRef = (new Venda())->findById($vendaId);
+                if ($vendaRef && $vendaRef->created_at) {
+                    $diasDesdeVenda = (time() - strtotime($vendaRef->created_at)) / 86400;
+                    if ($diasDesdeVenda <= 7) {
+                        $transacao      = $vendaRef->transacao;
+                        $amountCentavos = (int) round($valorTotal * 100);
+                        $gwRef          = @$vendaRef->gateway_usado ?: @$vendaRef->meio_pagamento;
+                        $gateway        = $this->detectarGateway($transacao, $gwRef);
+                        try {
+                            $respGw = $this->executarEstorno($gateway, $transacao, $amountCentavos);
+                            if ($this->estornoSucedeu($gateway, $respGw)) {
+                                $autoOk = true;
+                                $pdo = Connect::getInstance();
+                                $pdo->prepare("UPDATE reembolsos SET status = 4, auto_reembolsado = 1, atualizado_em = NOW() WHERE id = :id")
+                                    ->execute([":id" => $reembolso->id]);
+                                $this->atualizarVendaDevolvida($vendaId);
+                                $this->bloquearAcessoMembrosCurso($reembolso);
+                                $this->notificarReembolsoConcluido($reembolso, true);
+                            } else {
+                                throw new \Exception("Gateway retornou falha no estorno automático");
+                            }
+                        } catch (\Throwable $e) {
+                            $autoErro = true;
+                            error_log("[Reembolso Auto] id={$reembolso->id} gateway={$gateway}: " . $e->getMessage());
+                            Connect::getInstance()
+                                ->prepare("UPDATE reembolsos SET auto_reembolso_erro = 1, atualizado_em = NOW() WHERE id = :id")
+                                ->execute([":id" => $reembolso->id]);
+                        }
+                    }
+                }
+            }
+            // ---------------------------------------------------------------
+
             $this->notificar($reembolso);
-            echo json_encode(["ok" => true, "id" => $reembolso->id]);
+            echo json_encode(["ok" => true, "id" => $reembolso->id, "auto_reembolsado" => $autoOk, "auto_erro" => $autoErro]);
         } else {
             http_response_code(500);
             echo json_encode(["erro" => $reembolso->fail()->getMessage()]);
@@ -716,12 +767,8 @@ class AppReembolsos
             return;
         }
 
-        $transacao = @$data["transacao"];
-        $venda = null;
-        if (!$transacao) {
-            $venda = $reembolso->venda_id ? (new Venda())->findById($reembolso->venda_id) : null;
-            $transacao = $venda ? $venda->transacao : null;
-        }
+        $venda = $reembolso->venda_id ? (new Venda())->findById($reembolso->venda_id) : null;
+        $transacao = @$data["transacao"] ?: ($venda ? $venda->transacao : null);
 
         if (!$transacao) {
             http_response_code(400);
@@ -729,32 +776,168 @@ class AppReembolsos
             return;
         }
 
-        $amount = (int) round($reembolso->valor_total * 100);
+        $amount  = (int) round($reembolso->valor_total * 100);
+        $gateway = $this->detectarGateway($transacao, $venda ? ($venda->gateway_usado ?? $venda->meio_pagamento) : null);
 
-        $pagarme = new PagarMe();
-
-        // Se for order_id (or_), busca o charge correspondente
-        $chargeId = $transacao;
-        if (strpos($transacao, "or_") === 0) {
-            $list = $pagarme->cobrancaPorPedido(["transacao" => $transacao]);
-            if (@$list->data && @$list->data[0]->id) {
-                $chargeId = $list->data[0]->id;
-            } else {
-                http_response_code(400);
-                echo json_encode(["erro" => "Charge não encontrada para este pedido"]);
-                return;
-            }
+        try {
+            $resp = $this->executarEstorno($gateway, $transacao, $amount);
+        } catch (\Throwable $e) {
+            error_log("[Reembolso] Estorno falhou gateway={$gateway}: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(["erro" => $e->getMessage()]);
+            return;
         }
 
-        $resp = $pagarme->reembolso($chargeId, $amount, null);
+        $ok = $this->estornoSucedeu($gateway, $resp);
 
-        if (@$resp->status == "canceled" || @$resp->status == "failed" || @$resp->id) {
-            $reembolso->status = 4; // concluído
-            $reembolso->save();
-            echo json_encode(["ok" => true, "status" => 4, "resp" => $resp]);
+        if ($ok) {
+            $pdo = Connect::getInstance();
+            $pdo->prepare("UPDATE reembolsos SET status = 4, atualizado_em = NOW() WHERE id = :id")
+                ->execute([":id" => $reembolso->id]);
+            $this->atualizarVendaDevolvida($reembolso->venda_id);
+            $this->bloquearAcessoMembrosCurso($reembolso);
+            $this->notificarReembolsoConcluido($reembolso, false);
+            echo json_encode(["ok" => true, "status" => 4, "gateway" => $gateway, "resp" => $resp]);
         } else {
             http_response_code(400);
-            echo json_encode(["erro" => "Falha ao estornar", "resp" => $resp]);
+            echo json_encode(["erro" => "Falha ao estornar no gateway {$gateway}", "gateway" => $gateway, "resp" => $resp]);
+        }
+    }
+
+    /**
+     * Bloqueia o acesso do comprador ao curso no Site Membros (octaclube) quando o produto
+     * for do tipo curso com membros = "octaclube". Idempotente: se já bloqueado, não causa erro.
+     */
+    private function bloquearAcessoMembrosCurso(Reembolso $reembolso): void
+    {
+        if (!$reembolso->venda_id || !$reembolso->comprador_id) return;
+        try {
+            $pdo = Connect::getInstance();
+
+            // Busca o produto da venda e verifica se é octaclube
+            $stmtV = $pdo->prepare("SELECT produto FROM vendas WHERE id = :id LIMIT 1");
+            $stmtV->execute([':id' => $reembolso->venda_id]);
+            $venda = $stmtV->fetch(\PDO::FETCH_OBJ);
+            if (!$venda) return;
+
+            $stmtP = $pdo->prepare("SELECT membros FROM produtos WHERE id = :id LIMIT 1");
+            $stmtP->execute([':id' => $venda->produto]);
+            $produto = $stmtP->fetch(\PDO::FETCH_OBJ);
+            if (!$produto || $produto->membros !== 'octaclube') return;
+
+            // Busca o curso vinculado ao produto
+            $stmt = $pdo->prepare("SELECT id FROM cursos WHERE produto = :produto LIMIT 1");
+            $stmt->execute([':produto' => $venda->produto]);
+            $curso = $stmt->fetch(\PDO::FETCH_OBJ);
+            if (!$curso) return;
+
+            // Bloqueia todas as matrículas ativas do aluno neste curso (status 2 = bloqueado)
+            $pdo->prepare(
+                "UPDATE turmaaluno SET status = 2, updated_at = NOW()
+                 WHERE aluno = :aluno AND curso = :curso AND status = 1"
+            )->execute([':aluno' => $reembolso->comprador_id, ':curso' => $curso->id]);
+
+            error_log("[Reembolso] Acesso ao curso {$curso->id} bloqueado para comprador {$reembolso->comprador_id} (reembolso #{$reembolso->id})");
+        } catch (\Throwable $e) {
+            error_log("[Reembolso] Falha ao bloquear acesso ao curso (reembolso #{$reembolso->id}): " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Envia push notification ao produtor informando que o reembolso foi concluído.
+     */
+    private function notificarReembolsoConcluido(Reembolso $reembolso, bool $automatico): void
+    {
+        if (!$reembolso->produtor_id) return;
+        try {
+            $tipo     = $automatico ? 'automático' : 'manual';
+            $valor    = number_format($reembolso->valor_total, 2, ',', '.');
+            $titulo   = "Reembolso #{$reembolso->id} concluído";
+            $mensagem = "O reembolso de R$ {$valor} foi processado ({$tipo}).";
+            (new AppProcessos(null))->enviarNotificacaoUsuarioEspecifico(
+                $reembolso->produtor_id, $titulo, $mensagem
+            );
+        } catch (\Throwable $e) {
+            error_log("[Reembolso Notif] id={$reembolso->id}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Marca a venda associada como DEVOLVIDA (status_transacao = 6).
+     */
+    private function atualizarVendaDevolvida(?int $vendaId): void
+    {
+        if (!$vendaId) return;
+        Connect::getInstance()
+            ->prepare("UPDATE vendas SET status_transacao = 6, updated_at = NOW() WHERE id = :id")
+            ->execute([":id" => $vendaId]);
+    }
+
+    /**
+     * Detecta o gateway pelo prefixo do ID de transação ou pelo campo gateway_usado/meio_pagamento.
+     */
+    private function detectarGateway(string $transacao, ?string $gatewayOuMeio): string
+    {
+        // Detecção pelo prefixo do ID de transação (mais confiável)
+        if (str_starts_with($transacao, 'pi_'))                              return 'stripe';
+        if (str_starts_with($transacao, 'or_') || str_starts_with($transacao, 'ch_')) return 'pagarme';
+        if (is_numeric($transacao))                                          return 'efibank';
+
+        // Fallback pelo campo salvo na venda
+        $mp = strtolower((string)$gatewayOuMeio);
+        if (str_contains($mp, 'stripe'))  return 'stripe';
+        if (str_contains($mp, 'efi'))     return 'efibank';
+
+        return 'pagarme';
+    }
+
+    /**
+     * Chama o método de estorno do gateway correto.
+     */
+    private function executarEstorno(string $gateway, string $transacao, int $amountCentavos): mixed
+    {
+        switch ($gateway) {
+
+            case 'stripe':
+                $stripeData = str_starts_with($transacao, 'pi_')
+                    ? ["payment_intent" => $transacao, "valor" => $amountCentavos]
+                    : ["transacao"      => $transacao, "valor" => $amountCentavos];
+                return (new Stripe())->estornoCartao($stripeData);
+
+            case 'efibank':
+                if (!is_numeric($transacao)) {
+                    // Pix EfiBank: reembolso Pix requer endToEndId que não é o txid.
+                    // Não é possível estornar automaticamente sem o E2E ID do pagamento recebido.
+                    throw new \Exception("Reembolso Pix EfiBank não pode ser feito automaticamente: registre o estorno manualmente no painel EfiBank.");
+                }
+                $efi = new EfiBank();
+                return $efi->reembolso((int)$transacao);
+
+            case 'pagarme':
+            default:
+                $pagarme  = new PagarMe();
+                $chargeId = $transacao;
+                if (str_starts_with($transacao, 'or_')) {
+                    $list = $pagarme->cobrancaPorPedido(["transacao" => $transacao]);
+                    if (@$list->data && @$list->data[0]->id) {
+                        $chargeId = $list->data[0]->id;
+                    } else {
+                        throw new \Exception("Charge PagarMe não encontrada para o pedido {$transacao}");
+                    }
+                }
+                return $pagarme->reembolso($chargeId, $amountCentavos, null);
+        }
+    }
+
+    /**
+     * Verifica se a resposta do gateway indica estorno bem-sucedido.
+     */
+    private function estornoSucedeu(string $gateway, $resp): bool
+    {
+        switch ($gateway) {
+            case 'stripe':  return !empty($resp->id);
+            case 'efibank': return isset($resp->data->status) && $resp->data->status === 'canceled';
+            default:        return @$resp->status === 'canceled' || @$resp->status === 'failed' || !empty($resp->id);
         }
     }
 }

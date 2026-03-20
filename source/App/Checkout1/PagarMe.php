@@ -50,6 +50,7 @@ class PagarMe
     ));
 
     $response = curl_exec($curl);
+    error_log("[GatewayManager][PIX]{$response}'"); 
 
     $arquivo = fopen(DIRETORIO . "logs/dados-pagarme.txt", 'a+');
 

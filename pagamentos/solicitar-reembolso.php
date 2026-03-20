@@ -349,6 +349,21 @@
             .actions .btn { width: auto; min-width: 180px; }
             .actions .btn.secondary { min-width: 150px; }
         }
+        .product.blocked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .product.blocked .checkbox { display: none; }
+        .refund-pending-badge {
+            display: inline-block;
+            background: #fff3d4;
+            color: #b57700;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -453,8 +468,8 @@
             <section class="card" id="step-success" style="display:none;">
                 <div class="success">
                     <div class="icon"><i class="fa-solid fa-check"></i></div>
-                    <h2>Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.</h2>
-                    <p class="subtitle" style="margin-top:8px;">Em até 5 dias úteis traremos atualização do seu pedido de reembolso.</p>
+                    <h2 id="success-title">Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.</h2>
+                    <p class="subtitle" id="success-subtitle" style="margin-top:8px;">Em até 5 dias úteis traremos atualização do seu pedido de reembolso.</p>
                     <div class="actions" style="justify-content:center;">
                         <button class="btn" onclick="location.href='/pagamentos/status-reembolso'">Acompanhar status</button>
                         <button class="btn secondary" onclick="location.href='/'">Voltar ao Início</button>
@@ -585,22 +600,37 @@
         products.splice(0, products.length, ...list); // sobrescreve mock com dados reais
         list.forEach(prod => {
             const el = document.createElement("div");
-            el.className = "product";
-            el.innerHTML = `
-                <img src="${prod.img}" alt="${prod.name}">
-                <div>
-                    <h4>${prod.name}</h4>
-                    <div class="meta">Compra em ${prod.date}</div>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="price">R$ ${currency(prod.price)}</div>
-                    <div class="checkbox" data-id="${prod.id}">
-                        <i class="fa-solid fa-check" style="display:none;"></i>
+
+            if (prod.refund_pendente) {
+                el.className = "product blocked";
+                el.innerHTML = `
+                    <img src="${prod.img}" alt="${prod.name}">
+                    <div>
+                        <h4>${prod.name}</h4>
+                        <div class="meta">Compra em ${prod.date}</div>
+                        <span class="refund-pending-badge">⏳ Reembolso em andamento</span>
                     </div>
-                </div>
-            `;
-            const check = el.querySelector(".checkbox");
-            check.addEventListener("click", () => toggleProduct(prod.id, el, check));
+                    <div class="price">R$ ${currency(prod.price)}</div>
+                `;
+            } else {
+                el.className = "product";
+                el.innerHTML = `
+                    <img src="${prod.img}" alt="${prod.name}">
+                    <div>
+                        <h4>${prod.name}</h4>
+                        <div class="meta">Compra em ${prod.date}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div class="price">R$ ${currency(prod.price)}</div>
+                        <div class="checkbox" data-id="${prod.id}">
+                            <i class="fa-solid fa-check" style="display:none;"></i>
+                        </div>
+                    </div>
+                `;
+                const check = el.querySelector(".checkbox");
+                check.addEventListener("click", () => toggleProduct(prod.id, el, check));
+            }
+
             productList.appendChild(el);
         });
     }
@@ -672,6 +702,13 @@
         .then(resp => {
             btnSubmit.textContent = "Enviar Solicitação";
             if (resp && resp.ok) {
+                if (resp.auto_reembolsado) {
+                    document.getElementById("success-title").textContent = "Reembolso realizado automaticamente! ✅";
+                    document.getElementById("success-subtitle").textContent = "Seu pedido atendeu aos critérios de reembolso automático. O valor será estornado em até 5 dias úteis conforme o seu banco/operadora.";
+                } else {
+                    document.getElementById("success-title").textContent = "Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.";
+                    document.getElementById("success-subtitle").textContent = "Em até 5 dias úteis traremos atualização do seu pedido de reembolso.";
+                }
                 setStep("success");
             } else {
                 alert(resp.erro || "Falha ao enviar");

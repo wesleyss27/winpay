@@ -27,6 +27,7 @@ use Source\Models\Usuarios\Usuario;
 use Source\Models\Vendas\Venda;
 use Source\Models\Checkout\Checkout;
 use Source\Helpers\Emails;
+use Source\Models\Reembolsos\Reembolso;
 
 session_start();
 
@@ -494,6 +495,39 @@ class AppWeb
         foreach ($pendente->data() as $pendente) null;
         foreach ($antecipado->data() as $antecipado) null;
 
+        // ---------------------------------------------------------------
+        // REEMBOLSOS — filtro de data usando criado_em (não created_at)
+        // ---------------------------------------------------------------
+        $filtroDataRee = "";
+        if (!empty($_GET['busca']) && $_GET['busca'] !== 'personalizado' && $_GET['busca'] !== 'ontem') {
+            $filtroDataRee = "criado_em BETWEEN '" . $datas[$_GET['busca']] . "' AND '" . date('Y-m-d H:i:s') . "' AND ";
+        } elseif (!empty($_GET['busca']) && $_GET['busca'] === 'ontem') {
+            $yday  = new DateTime('yesterday');
+            $filtroDataRee = "criado_em BETWEEN '" . $yday->format('Y-m-d') . " 00:00:00' AND '" . $yday->format('Y-m-d') . " 23:59:59' AND ";
+        } elseif (!empty($_GET['busca']) && $_GET['busca'] === 'personalizado' && !empty($_GET['inicio']) && !empty($_GET['fim'])) {
+            $filtroDataRee = "criado_em BETWEEN '" . $_GET['inicio'] . " 00:00:00' AND '" . $_GET['fim'] . " 23:59:59' AND ";
+        }
+
+        if ($usuario_tipo != 1) {
+            $filtroRee = $filtroDataRee . "(produtor_id = {$usuario} OR afiliado_id = {$usuario})";
+        } else {
+            $filtroRee = rtrim($filtroDataRee, " AND ") ?: null;
+        }
+
+        $reeModel = new Reembolso();
+        $reeTotal          = $reeModel->find($filtroRee)->count();
+        $reeValorObj       = $reeModel->find($filtroRee, null, "SUM(valor_total) as soma")->fetch();
+        $reeValor          = (float) @$reeValorObj->soma;
+
+        $reePendentesWhere = $filtroRee ? $filtroRee . " AND status = 0" : "status = 0";
+        $reeConcluidosWhere= $filtroRee ? $filtroRee . " AND status = 4" : "status = 4";
+
+        $reePendentes      = $reeModel->find($reePendentesWhere)->count();
+        $reeConcluidos     = $reeModel->find($reeConcluidosWhere)->count();
+        $reeValorConclObj  = $reeModel->find($reeConcluidosWhere, null, "SUM(valor_total) as soma")->fetch();
+        $reeValorConcluido = (float) @$reeValorConclObj->soma;
+        // ---------------------------------------------------------------
+
         echo $this->view->render("home_users_dados", [
             "title" => "RedRocket",
             // "section" => @$section,
@@ -525,6 +559,12 @@ class AppWeb
             "ticketChargeback" => @$ticketChargeback,
 
             "dados" => $dados,
+
+            "reeTotal"          => $reeTotal,
+            "reeValor"          => $reeValor,
+            "reePendentes"      => $reePendentes,
+            "reeConcluidos"     => $reeConcluidos,
+            "reeValorConcluido" => $reeValorConcluido,
 
             "hoje" => @$hoje->valor,
             "ontem" => @$ontem->valor,

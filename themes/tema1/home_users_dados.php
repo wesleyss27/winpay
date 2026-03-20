@@ -480,6 +480,64 @@
   </div>
 </div>
 
+<div class="row winpay-dashboard-row">
+  <div class="col-12 mb-4">
+    <div class="winpay-card h-100">
+      <div class="winpay-card-header">
+        <span class="icon-wrapper" style="background:rgba(239,68,68,0.12); color:#f87171; box-shadow:0 14px 26px rgba(239,68,68,0.18);">
+          <i class="fas fa-hand-holding-usd"></i>
+        </span>
+      </div>
+      <div class="winpay-card-content">
+        <span class="winpay-card-title">Reembolsos solicitados</span>
+        <h3 class="winpay-card-value">
+          R$ <?= number_format($reeValor ?? 0, 2, ",", ".") ?>
+        </h3>
+        <span class="winpay-card-meta">
+          <?= $reeTotal ?? 0 ?> solicitação(ões) no período
+        </span>
+      </div>
+      <hr class="winpay-card-divider">
+      <div class="winpay-card-footer">
+        <div class="winpay-metric" data-tone="calm">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">⏳ Pendentes</span>
+              <span class="winpay-metric-value"><?= $reePendentes ?? 0 ?></span>
+            </div>
+          </div>
+        </div>
+        <div class="winpay-metric" data-tone="bright">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">✅ Concluídos</span>
+              <span class="winpay-metric-value"><?= $reeConcluidos ?? 0 ?></span>
+            </div>
+          </div>
+        </div>
+        <div class="winpay-metric" data-tone="bright">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <span class="winpay-metric-label">Valor estornado</span>
+              <span class="winpay-metric-value">R$ <?= number_format($reeValorConcluido ?? 0, 2, ",", ".") ?></span>
+            </div>
+          </div>
+        </div>
+        <div class="winpay-metric" data-tone="calm" style="flex:0 0 auto;">
+          <div class="winpay-metric-content">
+            <div class="winpay-metric-body">
+              <a href="<?= url('reembolsos') ?>" style="color:inherit; text-decoration:none;">
+                <span class="winpay-metric-label">Ver todos</span>
+                <span class="winpay-metric-value" style="font-size:0.9rem;">→ Reembolsos</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- LINHA 3
 <div class="row winpay-dashboard-row">
   <div class="col-md-4 mb-4">

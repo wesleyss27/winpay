@@ -8,7 +8,9 @@ session_start();
 
 use League\Plates\Engine;
 use Source\App\Checkout1\PagarMe;
+use Source\App\Checkout1\Stripe;
 use Source\App\Checkout1\WinPay;
+use Source\Models\Configuracoes\ConfiguracaoGateway;
 use Source\Models\Comissao\Comissao;
 use Source\Models\Comissao\Banco;
 use Source\Models\Comissao\Saldo;
@@ -1841,6 +1843,46 @@ class AppComissao
             exit;
         }
 
+        // Cria conta Stripe Express se o gateway Stripe estiver ativo (dedicado ou balanceado)
+        $stripeAccountId    = null;
+        $stripeOnboardingUrl = null;
+        try {
+            $cfgGw = (new ConfiguracaoGateway())->findById(1);
+            $stripeAtivo = $cfgGw && (
+                $cfgGw->gateway_dedicado  === 'stripe' ||
+                $cfgGw->gateway_principal === 'stripe' ||
+                $cfgGw->modo              === 'balanceado'
+            );
+
+            if ($stripeAtivo) {
+                $stripe = new Stripe();
+                $contaStripe = $stripe->criarContaConectada([
+                    "nome"  => $data["titular"],
+                    "email" => $_SESSION["email"],
+                    "cpf"   => $data["cpf"] ?? $data["documento"] ?? "",
+                    "tipo"  => "express",
+                ]);
+
+                if (!empty($contaStripe->id)) {
+                    $stripeAccountId = $contaStripe->id;
+
+                    $linkStripe = $stripe->linkOnboarding(
+                        $stripeAccountId,
+                        url("banco?msg=Link+Stripe+expirado,+solicite+novo"),
+                        url("banco?msg=Cadastro+Stripe+concluído")
+                    );
+                    $stripeOnboardingUrl = $linkStripe->url ?? null;
+
+                    error_log("[Stripe] Conta criada: {$stripeAccountId} onboarding={$stripeOnboardingUrl}");
+                } else {
+                    error_log("[Stripe] Falha ao criar conta: " . json_encode($contaStripe));
+                }
+            }
+        } catch (\Throwable $e) {
+            // Não bloqueia o cadastro PagarMe se a Stripe falhar
+            error_log("[Stripe] Exceção ao criar conta: " . $e->getMessage());
+        }
+
         if ($banco->save()) {
             $winPay  = (new WinPay)->criarWallet($data);
 
@@ -1852,6 +1894,9 @@ class AppComissao
             $texto = date("d/m/Y H:i:s");
             $texto .= "Usuario: {$data["nome"]} | {$_SESSION["email"]}\n";
             $texto .= "Recebedor PagarMe: {$pagarMe->id}\n";
+            if ($stripeAccountId) {
+                $texto .= "Conta Stripe: {$stripeAccountId}\n";
+            }
             if (@$winPay->id) {
                 $texto .= "Recebedor WinPay: {$winPay->id}\n";
             }
@@ -1860,7 +1905,10 @@ class AppComissao
             fclose($arquivo);
 
             $banco->pagarme_conta = $pagarMe->id;
-
+            if ($stripeAccountId) {
+                $banco->stripe_account_id    = $stripeAccountId;
+                $banco->stripe_onboarding_url = $stripeOnboardingUrl;
+            }
             if (isset($winPay->id)) {
                 $banco->winpay_conta = $winPay->id;
             }
@@ -1870,7 +1918,9 @@ class AppComissao
             $usuario = (new Usuario)->findById($this->section->getId());
 
             $usuario->pagarme_conta = $pagarMe->id;
-
+            if ($stripeAccountId) {
+                $usuario->stripe_account_id = $stripeAccountId;
+            }
             if (isset($winPay->id)) {
                 $usuario->winpay_conta = $winPay->id;
             }

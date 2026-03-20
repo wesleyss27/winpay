@@ -91,6 +91,7 @@ class Stripe
         ]);
 
         $response = curl_exec($curl);
+        error_log("[GatewayManager][PIX]{$response}'"); 
         $http     = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $errNo    = curl_errno($curl);
         $err      = curl_error($curl);

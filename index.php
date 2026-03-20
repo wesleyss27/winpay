@@ -453,6 +453,13 @@ $router->post("/inativar", "AppAfiliados:inativarAfiliado", "afiliado.inativar")
 */
 $router->namespace("Source\App\Configuracoes");
 
+$router->group("gateway");
+$router->get("/", "AppConfiguracaoGateway:gateway", "gateway.config");
+$router->post("/salvar", "AppConfiguracaoGateway:salvar", "gateway.salvar");
+$router->get("/migracao-stripe", "AppConfiguracaoGateway:migracaoStripe", "gateway.migracao");
+$router->post("/criar-conta-stripe", "AppConfiguracaoGateway:criarContaStripe", "gateway.criarConta");
+$router->post("/reenviar-onboarding", "AppConfiguracaoGateway:reenviarOnboarding", "gateway.reenviarOnboarding");
+
 $router->group("taxas");
 $router->get("/", "AppTaxas:taxas", "taxa.taxas");
 $router->get("/antecipar", "AppTaxas:antecipar", "taxa.antecipacao");

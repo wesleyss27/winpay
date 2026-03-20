@@ -34,6 +34,7 @@ use Source\App\Checkout1\Bradesco;
 use Source\App\Checkout1\Cielo;
 use Source\App\Checkout1\Sitef;
 use Source\App\Checkout1\Validacao;
+use Source\App\Checkout1\GatewayManager;
 
 use Source\App\Usuarios\AppUsuarios;
 
@@ -405,17 +406,20 @@ class AppCheckout
 
         $usRed = (new Usuario)->findById(1);
 
-        $data["comissoes_pagamento"]["redrocket"]["usuario"] = "$usRed->pagarme_conta";
-        $data["comissoes_pagamento"]["redrocket"]["comissao"] = $data["valor_redrocket"] + @$data["valor_juros"];
+        $data["comissoes_pagamento"]["redrocket"]["usuario"]           = "$usRed->pagarme_conta";
+        $data["comissoes_pagamento"]["redrocket"]["comissao"]          = $data["valor_redrocket"] + @$data["valor_juros"];
+        $data["comissoes_pagamento"]["redrocket"]["efibank_payee_code"] = $usRed->efibank_payee_code ?? "";
 
         $walletProdutor = (new Usuario)->findById($data["produtor"]);
-        $data["comissoes_pagamento"]["produtor"]["usuario"] = $walletProdutor->pagarme_conta;
-        $data["comissoes_pagamento"]["produtor"]["comissao"] = (float) $data["comissao_produtor"] + ((float) @$data["tx_frete"]);
+        $data["comissoes_pagamento"]["produtor"]["usuario"]           = $walletProdutor->pagarme_conta;
+        $data["comissoes_pagamento"]["produtor"]["comissao"]          = (float) $data["comissao_produtor"] + ((float) @$data["tx_frete"]);
+        $data["comissoes_pagamento"]["produtor"]["efibank_payee_code"] = $walletProdutor->efibank_payee_code ?? "";
 
         if (@$data["comissao_afiliado"]) {
             $walletAfiliado = (new Usuario)->findById($data["afiliado"]);
-            $data["comissoes_pagamento"]["afiliado"]["usuario"] = $walletAfiliado->pagarme_conta;
-            $data["comissoes_pagamento"]["afiliado"]["comissao"] = $data["comissao_afiliado"];
+            $data["comissoes_pagamento"]["afiliado"]["usuario"]           = $walletAfiliado->pagarme_conta;
+            $data["comissoes_pagamento"]["afiliado"]["comissao"]          = $data["comissao_afiliado"];
+            $data["comissoes_pagamento"]["afiliado"]["efibank_payee_code"] = $walletAfiliado->efibank_payee_code ?? "";
         }
 
 
@@ -427,8 +431,9 @@ class AppCheckout
             foreach ($cop as $cop) {
                 if ($cop) {
                     $walletCoProdutor = (new Usuario)->findById($cop);
-                    $data["comissoes_pagamento"][$cop]["usuario"] = $walletCoProdutor->pagarme_conta;
-                    $data["comissoes_pagamento"][$cop]["comissao"] = $com[$i];
+                    $data["comissoes_pagamento"][$cop]["usuario"]           = $walletCoProdutor->pagarme_conta;
+                    $data["comissoes_pagamento"][$cop]["comissao"]          = $com[$i];
+                    $data["comissoes_pagamento"][$cop]["efibank_payee_code"] = $walletCoProdutor->efibank_payee_code ?? "";
                 }
                 $i++;
             }
@@ -878,64 +883,20 @@ class AppCheckout
         $cobrancaAsaas = new AsaasCobrancas();
 
         if ($data["forma_pagamento"] == 1) {
-            $pagarme = new PagarMe;
-            //$pagarme = new Stripe;
-            $transacao = $pagarme->compraCartao($data);
-            
-            // $stripe = new Stripe;
-            // $transacao = $stripe->compraCartao($data);
+            $gwResult = (new GatewayManager)->compraCartao($data);
+            error_log("[GatewayManager] Cartão: gateway={$gwResult->gateway_usado} status={$gwResult->status_transacao}");
 
-            var_dump($transacao);
-            error_log("resposta pagarme cartão". json_encode($transacao));
-            $data["transacao"] = @$transacao->id;
-            $data["status_transacao"] = @$status_transacaoP[@$transacao->status];
-            // $data["status_transacao"] = @$status_stripe[@$transacao->status];
-            // $data["meio_pagamento"] = "Stripe";
-            $data["meio_pagamento"] = "PagarMe";
-
-            // if ($data["status_transacao"] == 5) {
-            //     $data["descricao"] = $transacao->Payment->ReturnMessage;
-            // }
-
-            // $cielo = new Cielo();
-            // $transacao = $cielo->compraCartao($data);
-
-            // // var_dump($transacao);
-            // $data["transacao"] = @$transacao->Payment->Tid;
-            // $data["nit_pix"] = @$transacao->Payment->PaymentId;
-            // $data["status_transacao"] = @$status_transacaoC[@$transacao->Payment->Status];
-            // $data["meio_pagamento"] = "Cielo";
-
-            // if ($data["status_transacao"] == 5) {
-            //     $data["descricao"] = $transacao->Payment->ReturnMessage;
-            // }
-            // if ($data["status_transacao"] == 5) {
-            //     $transacao = $cobrancaAsaas->cobrancaCartaoCredito($data);
-
-            //     $data["transacao"] = @$transacao->id;
-            //     $data["nit_pix"] = @$transacao->installment;
-
-            //     if (!@$data["transacao"]) {
-            //         $data["status_transacao"] = 5;
-            //         $data["descricao"] = "Verifique os dados do cartão e se possui limites";
-            //     } else {
-            //         $data["status_transacao"] = @$status_transacao[@$transacao->status];
-            //     }
-            //     $data["meio_pagamento"] = "Asaas";
-            // }
+            $data["transacao"]        = $gwResult->transacao_id;
+            $data["status_transacao"] = $gwResult->status_transacao;
+            $data["meio_pagamento"]   = $gwResult->meio_pagamento;
+            $data["gateway_usado"]    = $gwResult->gateway_usado;
 
             if ($data["status_transacao"] == 4) {
                 $data["data_finalizada"] = date("Y-m-d H:i:s");
             }
 
-            //ANTIGO
-            // if ($data["status_transacao"] == 4) {
-            //     $data["data_finalizada"] = date("Y-m-d H:i:s");
-            // }
-
-            if($data["status_transacao"] == 5 || $transacao->status == "rejected"){
-                $data["descricao"] = "O pagamento foi rejeitado";
-                //$data["descricao"] = $transacao->charges[0]->last_transaction->acquirer_message;
+            if ($gwResult->erro || $data["status_transacao"] == 5) {
+                $data["descricao"] = $gwResult->mensagem_erro ?? "O pagamento foi rejeitado";
             }
 
             // ANTIGO
@@ -1643,27 +1604,23 @@ class AppCheckout
         // $data["customer_id"] = $cliente->id;
         // $transacao = $cobrancaAsaas->cobrancaPix($data);
 
-        $transacao = (new PagarMe)->compraPix($data);
-        //$transacao = (new BsPay)->compraPix($data);
-        error_log(json_encode($transacao));
-        //var_dump($transacao);
-        //exit;
+        $gwResult = (new GatewayManager)->compraPix($data);
+        error_log("[GatewayManager] PIX: gateway={$gwResult->gateway_usado} qr=" . (!empty($gwResult->qr_code) ? 'ok' : 'vazio'));
 
-        // $qrCode = $cobrancaAsaas->qrCodePix($transacao->id);
-        //$dados["qr_code"] = @$transacao->qrcode;
-        $dados["qr_code"] = @$transacao->charges[0]->last_transaction->qr_code;
-        $dados["meio_pagamento"] = "PagarMe";
+        $dados["qr_code"]       = $gwResult->qr_code;
+        $dados["qr_code_image"] = $gwResult->qr_code_image; // URL PNG (Stripe) ou null (PagarMe)
+        $dados["meio_pagamento"] = $gwResult->meio_pagamento;
 
         $venda1 = @(new Venda())->findById(@$venda["venda"]);
-        $venda1->qr_code = @$dados["qr_code"];
+        $venda1->qr_code = $gwResult->qr_code;
 
         error_log(json_encode($venda1->data(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
-        //$venda1->transacao = @$transacao->transactionId;
-        $venda1->transacao = @$transacao->id;
+        $venda1->transacao = $gwResult->transacao_id;
 
         $venda1->status_transacao = 1;
         $venda1->meio_pagamento = @$dados["meio_pagamento"];
+        $venda1->gateway_usado  = $gwResult->gateway_usado;
         
         if ($venda1->save()) {
 

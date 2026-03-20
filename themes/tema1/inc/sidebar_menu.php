@@ -535,7 +535,8 @@
                 $url_atual == url('funcionarios') ||
                 $url_atual == url('produtor') ||
                 $url_atual == url('afiliados') ||
-                $url_atual == url('taxas')
+                $url_atual == url('taxas') ||
+                $url_atual == url('gateway')
               ) {
                 echo "<li class='nav-item menu-open' title='Configuraçoes de funcionários, produtores, afiliados e as taxas da plataforma'>";
                 echo "<a href='#' class='nav-link active'>";
@@ -579,6 +580,15 @@
                     <p>Taxas</p>
                   </a>
                 </li>
+
+                <?php if ($_SESSION["tipo"] == 1) : ?>
+                <li class="nav-item sub-item" title="Configuração do gateway de pagamento">
+                  <a href="<?= url("gateway") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                    <span class="material-symbols-rounded nav-icon">payment</span>
+                    <p>Gateway</p>
+                  </a>
+                </li>
+                <?php endif; ?>
 
               </ul>
               </li>

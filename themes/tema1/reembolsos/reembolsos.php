@@ -45,6 +45,8 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
   .reb-chip.pending { background:#fff3d4; color:#b57700; }
   .reb-chip.success { background:#e6f7ef; color:#0f8b4c; }
   .reb-chip.neutral { background:#eef2f7; color:#445; }
+  .reb-chip.auto-badge  { background:#d1fae5; color:#065f46; font-size:11px; padding:2px 8px; vertical-align:middle; }
+  .reb-chip.error-badge { background:#fee2e2; color:#991b1b; font-size:11px; padding:2px 8px; vertical-align:middle; }
 </style>
 <?php $v->end(); ?>
 <div class="content-wrapper">
@@ -125,6 +127,11 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
                     $chipClass = $r->status == 0 ? 'pending' : ($r->status == 4 ? 'success' : 'neutral');
                   ?>
                   <span class="reb-chip <?= $chipClass ?> status-pill"><?= $status[$r->status] ?? 'N/D' ?></span>
+                  <?php if (!empty($r->auto_reembolsado)): ?>
+                    <span class="reb-chip auto-badge" title="Reembolso realizado automaticamente">⚡ Auto</span>
+                  <?php elseif (!empty($r->auto_reembolso_erro)): ?>
+                    <span class="reb-chip error-badge" title="Tentativa de reembolso automático falhou — revisar manualmente">⚠️ Erro Auto</span>
+                  <?php endif; ?>
                 </td>
                 <td><?= $r->produtor_nome ?? $r->produtor_id ?></td>
                 <td><?= $r->afiliado_nome ?? $r->afiliado_id ?></td>
@@ -141,7 +148,7 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
                       <?php endforeach; ?>
                     </select>
                     <button class="btn btn-xs btn-primary btn-status-save">Salvar</button>
-                    <button class="btn btn-xs btn-danger btn-estornar" <?= $r->status == 4 ? 'disabled' : '' ?>>Solicitar reembolso</button>
+                    <button class="btn btn-xs btn-danger btn-estornar" <?= ($r->status == 4 || $r->status == 2) ? 'disabled' : '' ?>>Solicitar reembolso</button>
                   </td>
                 <?php endif; ?>
               </tr>
@@ -224,7 +231,9 @@ document.querySelectorAll(".btn-status-save").forEach(btn => {
         const pill = tr.querySelector(".status-pill");
         pill.textContent = map[val] || "N/D";
         pill.className = "reb-chip " + (val == 0 ? "pending" : (val == 4 ? "success" : "neutral")) + " status-pill";
-        // força update na dropdown para refletir
+        // desabilita botão estornar se recusado (2) ou concluído (4)
+        const estornarBtn = tr.querySelector(".btn-estornar");
+        if (estornarBtn) estornarBtn.disabled = (val == 2 || val == 4);
         select.value = val;
         if (resp.status_db !== undefined && resp.status_db != val) {
           alert("Aviso: API retornou status salvo como " + resp.status_db + ". Atualize a página para conferir.");
