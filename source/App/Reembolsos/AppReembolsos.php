@@ -789,6 +789,7 @@ class AppReembolsos
         }
 
         $ok = $this->estornoSucedeu($gateway, $resp);
+        error_log("[Reembolso][estornar] id={$reembolso->id} gateway={$gateway} ok=" . ($ok ? 'true' : 'false') . " resp=" . json_encode($resp));
 
         if ($ok) {
             $pdo = Connect::getInstance();
