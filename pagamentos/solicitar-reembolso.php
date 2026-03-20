@@ -469,7 +469,7 @@
                 <div class="success">
                     <div class="icon"><i class="fa-solid fa-check"></i></div>
                     <h2 id="success-title">Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.</h2>
-                    <p class="subtitle" id="success-subtitle" style="margin-top:8px;">Em até 5 dias úteis traremos atualização do seu pedido de reembolso.</p>
+                    <p class="subtitle" id="success-subtitle" style="margin-top:8px;">Em até 24h traremos atualização do seu pedido de reembolso.</p>
                     <div class="actions" style="justify-content:center;">
                         <button class="btn" onclick="location.href='/pagamentos/status-reembolso'">Acompanhar status</button>
                         <button class="btn secondary" onclick="location.href='/'">Voltar ao Início</button>
@@ -704,10 +704,10 @@
             if (resp && resp.ok) {
                 if (resp.auto_reembolsado) {
                     document.getElementById("success-title").textContent = "Reembolso realizado automaticamente! ✅";
-                    document.getElementById("success-subtitle").textContent = "Seu pedido atendeu aos critérios de reembolso automático. O valor será estornado em até 5 dias úteis conforme o seu banco/operadora.";
+                    document.getElementById("success-subtitle").textContent = "Seu pedido atendeu aos critérios de reembolso automático. O valor será estornado em até 24h conforme o seu banco/operadora.";
                 } else {
                     document.getElementById("success-title").textContent = "Seu reembolso foi solicitado com sucesso e está sendo analisado junto com o vendedor.";
-                    document.getElementById("success-subtitle").textContent = "Em até 5 dias úteis traremos atualização do seu pedido de reembolso.";
+                    document.getElementById("success-subtitle").textContent = "Em até 24h traremos atualização do seu pedido de reembolso.";
                 }
                 setStep("success");
             } else {
