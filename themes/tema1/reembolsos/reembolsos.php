@@ -140,15 +140,16 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
                 <td><?= date("d/m/Y H:i", strtotime($r->criado_em)) ?></td>
                 <td><button class="btn btn-xs btn-info btn-detalhes">Ver</button></td>
                 <?php if ($canChange): ?>
+                  <?php $concluido = ($r->status == 4); $selectVal = $concluido ? 1 : $r->status; ?>
                   <td style="min-width:180px;">
-                    <select class="form-control form-control-sm status-select" style="width:130px; display:inline-block;">
+                    <select class="form-control form-control-sm status-select" style="width:130px; display:inline-block;" <?= $concluido ? 'disabled' : '' ?>>
                       <?php foreach ($status as $k => $txt): ?>
-                        <?php if ($k == 4) continue; // concluído só via botão ?>
-                        <option value="<?= $k ?>" <?= $k == $r->status ? 'selected' : '' ?>><?= $txt ?></option>
+                        <?php if ($k == 4) continue; ?>
+                        <option value="<?= $k ?>" <?= $k == $selectVal ? 'selected' : '' ?>><?= $txt ?></option>
                       <?php endforeach; ?>
                     </select>
-                    <button class="btn btn-xs btn-primary btn-status-save">Salvar</button>
-                    <button class="btn btn-xs btn-danger btn-estornar" <?= ($r->status == 4 || $r->status == 2) ? 'disabled' : '' ?>>Solicitar reembolso</button>
+                    <button class="btn btn-xs btn-primary btn-status-save" <?= $concluido ? 'disabled' : '' ?>>Salvar</button>
+                    <button class="btn btn-xs btn-danger btn-estornar" <?= ($concluido || $r->status == 2) ? 'disabled' : '' ?>>Solicitar reembolso</button>
                   </td>
                 <?php endif; ?>
               </tr>
