@@ -879,14 +879,14 @@ class AppReembolsos
     private function detectarGateway(string $transacao, ?string $gatewayOuMeio): string
     {
         // Detecção pelo prefixo do ID de transação (mais confiável)
-        if (str_starts_with($transacao, 'pi_'))                              return 'stripe';
-        if (str_starts_with($transacao, 'or_') || str_starts_with($transacao, 'ch_')) return 'pagarme';
-        if (is_numeric($transacao))                                          return 'efibank';
+        if (strpos($transacao, 'pi_') === 0)                                           return 'stripe';
+        if (strpos($transacao, 'or_') === 0 || strpos($transacao, 'ch_') === 0)       return 'pagarme';
+        if (is_numeric($transacao))                                                    return 'efibank';
 
         // Fallback pelo campo salvo na venda
         $mp = strtolower((string)$gatewayOuMeio);
-        if (str_contains($mp, 'stripe'))  return 'stripe';
-        if (str_contains($mp, 'efi'))     return 'efibank';
+        if (strpos($mp, 'stripe') !== false)  return 'stripe';
+        if (strpos($mp, 'efi') !== false)     return 'efibank';
 
         return 'pagarme';
     }
@@ -894,12 +894,12 @@ class AppReembolsos
     /**
      * Chama o método de estorno do gateway correto.
      */
-    private function executarEstorno(string $gateway, string $transacao, int $amountCentavos): mixed
+    private function executarEstorno(string $gateway, string $transacao, int $amountCentavos)
     {
         switch ($gateway) {
 
             case 'stripe':
-                $stripeData = str_starts_with($transacao, 'pi_')
+                $stripeData = strpos($transacao, 'pi_') === 0
                     ? ["payment_intent" => $transacao, "valor" => $amountCentavos]
                     : ["transacao"      => $transacao, "valor" => $amountCentavos];
                 return (new Stripe())->estornoCartao($stripeData);
@@ -917,7 +917,7 @@ class AppReembolsos
             default:
                 $pagarme  = new PagarMe();
                 $chargeId = $transacao;
-                if (str_starts_with($transacao, 'or_')) {
+                if (strpos($transacao, 'or_') === 0) {
                     $list = $pagarme->cobrancaPorPedido(["transacao" => $transacao]);
                     if (@$list->data && @$list->data[0]->id) {
                         $chargeId = $list->data[0]->id;
