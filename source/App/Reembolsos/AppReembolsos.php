@@ -840,15 +840,15 @@ class AppReembolsos
                 if ($ok) {
                     $algumOk = true;
                     $this->atualizarVendaDevolvida($vid);
-                    $resultados[] = ["venda_id" => $vid, "ok" => true, "gateway" => $gateway];
+                    $resultados[] = ["venda_id" => $vid, "ok" => true, "gateway" => $gateway, "resp_gateway" => $resp];
                 } else {
                     $algumErro = true;
-                    $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => "Gateway retornou falha", "gateway" => $gateway];
+                    $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => "Gateway retornou falha", "gateway" => $gateway, "resp_gateway" => $resp];
                 }
             } catch (\Throwable $e) {
                 $algumErro = true;
                 error_log("[Reembolso][estornar] id={$reembolso->id} venda={$vid} gateway={$gateway}: " . $e->getMessage());
-                $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => $e->getMessage(), "gateway" => $gateway];
+                $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => $e->getMessage(), "gateway" => $gateway, "resp_gateway" => null];
             }
         }
 
