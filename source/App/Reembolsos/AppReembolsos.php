@@ -407,40 +407,64 @@ class AppReembolsos
 
         if ($reembolso->save()) {
             // ---------------------------------------------------------------
-            // Reembolso automático: valor <= R$70 e venda criada há até 7 dias
+            // Reembolso automático: total <= R$70 e TODAS as vendas criadas há até 7 dias
+            // Cada venda é enviada individualmente ao gateway.
             // ---------------------------------------------------------------
             $autoOk   = false;
             $autoErro = false;
 
-            if ($vendaId && $valorTotal <= 70.00) {
-                $vendaRef = (new Venda())->findById($vendaId);
-                if ($vendaRef && $vendaRef->created_at) {
-                    $diasDesdeVenda = (time() - strtotime($vendaRef->created_at)) / 86400;
-                    if ($diasDesdeVenda <= 7) {
-                        $transacao      = $vendaRef->transacao;
-                        $amountCentavos = (int) round($valorTotal * 100);
-                        $gwRef          = @$vendaRef->gateway_usado ?: @$vendaRef->meio_pagamento;
-                        $gateway        = $this->detectarGateway($transacao, $gwRef);
+            if ($valorTotal <= 70.00 && !empty($produtos)) {
+                // 1. Verifica se TODAS as vendas estão dentro do prazo de 7 dias
+                $todasNoPrazo = true;
+                foreach ($produtos as $p) {
+                    $vid = (int) @$p["venda_id"];
+                    if (!$vid) { $todasNoPrazo = false; break; }
+                    $vRef = (new Venda())->findById($vid);
+                    if (!$vRef || !$vRef->created_at || (time() - strtotime($vRef->created_at)) / 86400 > 7) {
+                        $todasNoPrazo = false;
+                        break;
+                    }
+                }
+
+                if ($todasNoPrazo) {
+                    // 2. Processa cada venda individualmente
+                    $resultadosAuto = [];
+                    $algumErroAuto  = false;
+
+                    foreach ($produtos as $p) {
+                        $vid            = (int) @$p["venda_id"];
+                        $vRef           = (new Venda())->findById($vid);
+                        $transacaoAuto  = $vRef->transacao;
+                        $amountAuto     = (int) round((float)@$p["valor"] * 100);
+                        $gwRef          = @$vRef->gateway_usado ?: @$vRef->meio_pagamento;
+                        $gatewayAuto    = $this->detectarGateway($transacaoAuto, $gwRef);
                         try {
-                            $respGw = $this->executarEstorno($gateway, $transacao, $amountCentavos);
-                            if ($this->estornoSucedeu($gateway, $respGw)) {
-                                $autoOk = true;
-                                $pdo = Connect::getInstance();
-                                $pdo->prepare("UPDATE reembolsos SET status = 4, auto_reembolsado = 1, atualizado_em = NOW() WHERE id = :id")
-                                    ->execute([":id" => $reembolso->id]);
-                                $this->atualizarVendaDevolvida($vendaId);
-                                $this->bloquearAcessoMembrosCurso($reembolso);
-                                $this->notificarReembolsoConcluido($reembolso, true);
+                            $respGw = $this->executarEstorno($gatewayAuto, $transacaoAuto, $amountAuto);
+                            if ($this->estornoSucedeu($gatewayAuto, $respGw)) {
+                                $this->atualizarVendaDevolvida($vid);
+                                $resultadosAuto[] = ["venda_id" => $vid, "ok" => true];
                             } else {
-                                throw new \Exception("Gateway retornou falha no estorno automático");
+                                throw new \Exception("Gateway retornou falha");
                             }
                         } catch (\Throwable $e) {
-                            $autoErro = true;
-                            error_log("[Reembolso Auto] id={$reembolso->id} gateway={$gateway}: " . $e->getMessage());
-                            Connect::getInstance()
-                                ->prepare("UPDATE reembolsos SET auto_reembolso_erro = 1, atualizado_em = NOW() WHERE id = :id")
-                                ->execute([":id" => $reembolso->id]);
+                            $algumErroAuto = true;
+                            $resultadosAuto[] = ["venda_id" => $vid, "ok" => false, "erro" => $e->getMessage()];
+                            error_log("[Reembolso Auto] id={$reembolso->id} venda={$vid} gateway={$gatewayAuto}: " . $e->getMessage());
                         }
+                    }
+
+                    $pdo = Connect::getInstance();
+                    if (!$algumErroAuto) {
+                        $autoOk = true;
+                        $pdo->prepare("UPDATE reembolsos SET status = 4, auto_reembolsado = 1, atualizado_em = NOW() WHERE id = :id")
+                            ->execute([":id" => $reembolso->id]);
+                        $this->bloquearAcessoMembrosCurso($reembolso);
+                        $this->notificarReembolsoConcluido($reembolso, true);
+                    } else {
+                        $autoErro = true;
+                        error_log("[Reembolso Auto] id={$reembolso->id} resultado parcial: " . json_encode($resultadosAuto));
+                        $pdo->prepare("UPDATE reembolsos SET auto_reembolso_erro = 1, atualizado_em = NOW() WHERE id = :id")
+                            ->execute([":id" => $reembolso->id]);
                     }
                 }
             }
@@ -767,41 +791,85 @@ class AppReembolsos
             return;
         }
 
-        $venda = $reembolso->venda_id ? (new Venda())->findById($reembolso->venda_id) : null;
-        $transacao = @$data["transacao"] ?: ($venda ? $venda->transacao : null);
+        // Lê itens do pedido (multi-venda)
+        $itens = json_decode($reembolso->itens ?? "[]", true) ?: [];
 
-        if (!$transacao) {
+        // Fallback: se não há itens mas há venda_id legado, constrói item único
+        if (empty($itens) && $reembolso->venda_id) {
+            $itens = [[
+                "venda_id" => $reembolso->venda_id,
+                "valor"    => $reembolso->valor_total,
+            ]];
+        }
+
+        if (empty($itens)) {
             http_response_code(400);
-            echo json_encode(["erro" => "Transação não encontrada para estorno"]);
+            echo json_encode(["erro" => "Nenhum item encontrado para estorno"]);
             return;
         }
 
-        $amount  = (int) round($reembolso->valor_total * 100);
-        $gateway = $this->detectarGateway($transacao, $venda ? ($venda->gateway_usado ?? $venda->meio_pagamento) : null);
+        $resultados  = [];
+        $algumErro   = false;
+        $algumOk     = false;
 
-        try {
-            $resp = $this->executarEstorno($gateway, $transacao, $amount);
-        } catch (\Throwable $e) {
-            error_log("[Reembolso] Estorno falhou gateway={$gateway}: " . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(["erro" => $e->getMessage()]);
-            return;
+        foreach ($itens as $item) {
+            $vid = (int) @$item["venda_id"];
+            $vRef = $vid ? (new Venda())->findById($vid) : null;
+
+            if (!$vRef) {
+                $algumErro = true;
+                $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => "Venda não encontrada"];
+                continue;
+            }
+
+            $transacao = $vRef->transacao;
+            if (!$transacao) {
+                $algumErro = true;
+                $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => "Transação não encontrada na venda"];
+                continue;
+            }
+
+            $amount  = (int) round((float)@$item["valor"] * 100);
+            $gateway = $this->detectarGateway($transacao, $vRef->gateway_usado ?? $vRef->meio_pagamento);
+
+            try {
+                $resp = $this->executarEstorno($gateway, $transacao, $amount);
+                $ok   = $this->estornoSucedeu($gateway, $resp);
+                error_log("[Reembolso][estornar] id={$reembolso->id} venda={$vid} gateway={$gateway} ok=" . ($ok ? 'true' : 'false') . " resp=" . json_encode($resp));
+
+                if ($ok) {
+                    $algumOk = true;
+                    $this->atualizarVendaDevolvida($vid);
+                    $resultados[] = ["venda_id" => $vid, "ok" => true, "gateway" => $gateway];
+                } else {
+                    $algumErro = true;
+                    $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => "Gateway retornou falha", "gateway" => $gateway];
+                }
+            } catch (\Throwable $e) {
+                $algumErro = true;
+                error_log("[Reembolso][estornar] id={$reembolso->id} venda={$vid} gateway={$gateway}: " . $e->getMessage());
+                $resultados[] = ["venda_id" => $vid, "ok" => false, "erro" => $e->getMessage(), "gateway" => $gateway];
+            }
         }
 
-        $ok = $this->estornoSucedeu($gateway, $resp);
-        error_log("[Reembolso][estornar] id={$reembolso->id} gateway={$gateway} ok=" . ($ok ? 'true' : 'false') . " resp=" . json_encode($resp));
+        $pdo = Connect::getInstance();
 
-        if ($ok) {
-            $pdo = Connect::getInstance();
+        if ($algumOk && !$algumErro) {
+            // Tudo certo: concluído
             $pdo->prepare("UPDATE reembolsos SET status = 4, atualizado_em = NOW() WHERE id = :id")
                 ->execute([":id" => $reembolso->id]);
-            $this->atualizarVendaDevolvida($reembolso->venda_id);
             $this->bloquearAcessoMembrosCurso($reembolso);
             $this->notificarReembolsoConcluido($reembolso, false);
-            echo json_encode(["ok" => true, "status" => 4, "gateway" => $gateway, "resp" => $resp]);
+            echo json_encode(["ok" => true, "status" => 4, "resultados" => $resultados]);
+        } elseif ($algumOk && $algumErro) {
+            // Parcial: pelo menos uma venda ok, outra falhou — deixa em processando para revisão
+            $pdo->prepare("UPDATE reembolsos SET status = 3, atualizado_em = NOW() WHERE id = :id")
+                ->execute([":id" => $reembolso->id]);
+            echo json_encode(["ok" => false, "parcial" => true, "resultados" => $resultados]);
         } else {
+            // Todas falharam
             http_response_code(400);
-            echo json_encode(["erro" => "Falha ao estornar no gateway {$gateway}", "gateway" => $gateway, "resp" => $resp]);
+            echo json_encode(["ok" => false, "erro" => "Falha ao estornar no gateway", "resultados" => $resultados]);
         }
     }
 

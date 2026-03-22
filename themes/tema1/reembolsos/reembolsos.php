@@ -266,7 +266,7 @@ document.querySelectorAll(".btn-detalhes").forEach(btn => {
   });
 });
 
-// Estornar PagarMe
+// Estornar
 document.querySelectorAll(".btn-estornar").forEach(btn => {
   btn.addEventListener("click", () => {
     const tr = btn.closest("tr");
@@ -282,7 +282,7 @@ document.querySelectorAll(".btn-estornar").forEach(btn => {
     .then(r => r.json())
     .then(resp => {
       if (resp && resp.ok) {
-        // status concluído
+        // Todas as vendas estornadas com sucesso
         const pill = tr.querySelector(".status-pill");
         pill.textContent = "Concluído";
         pill.className = "reb-chip success status-pill";
@@ -291,9 +291,30 @@ document.querySelectorAll(".btn-estornar").forEach(btn => {
         if (select) select.disabled = true;
         const saveBtn = tr.querySelector(".btn-status-save");
         if (saveBtn) saveBtn.disabled = true;
+        // Feedback por venda
+        if (resp.resultados && resp.resultados.length > 1) {
+          const linhas = resp.resultados.map(r => `Venda #${r.venda_id}: ✅ OK (${r.gateway || ''})`).join("\n");
+          alert("Estorno concluído!\n\n" + linhas);
+        }
         location.reload();
+      } else if (resp && resp.parcial) {
+        // Resultado parcial: atualiza pill para Processando e exibe detalhes
+        const pill = tr.querySelector(".status-pill");
+        pill.textContent = "Processando";
+        pill.className = "reb-chip neutral status-pill";
+        const linhas = (resp.resultados || []).map(r =>
+          r.ok ? `Venda #${r.venda_id}: ✅ OK (${r.gateway || ''})` : `Venda #${r.venda_id}: ❌ ${r.erro || 'Falha'}`
+        ).join("\n");
+        alert("Estorno parcial — revise manualmente:\n\n" + linhas);
+        btn.disabled = false;
+        btn.textContent = "Solicitar reembolso";
       } else {
-        alert(resp?.erro || "Erro ao estornar");
+        // Todas falharam
+        const linhas = (resp?.resultados || []).map(r =>
+          `Venda #${r.venda_id}: ❌ ${r.erro || 'Falha'}`
+        ).join("\n");
+        const msg = linhas ? `Erro ao estornar:\n\n${linhas}` : (resp?.erro || "Erro ao estornar");
+        alert(msg);
         btn.disabled = false;
         btn.textContent = "Solicitar reembolso";
       }
