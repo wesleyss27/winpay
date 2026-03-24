@@ -327,6 +327,14 @@ $router->post("/enviar", "AppDenuncia:cadastroDenuncia", "denuncias.cadastrar");
 
 
 /*
+* NAMESPACE Source\App\Financeiro
+*/
+$router->namespace("Source\App\Financeiro");
+
+$router->group("financeiro");
+$router->get("/", "AppFinanceiro:dashboard", "financeiro.dashboard");
+
+/*
 * NAMESPACE Source\App\Comissao
 */
 $router->namespace("Source\App\Comissao");
