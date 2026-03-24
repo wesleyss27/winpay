@@ -466,7 +466,8 @@
                 $url_atual == url("comissao/redrocket") ||
                 $url_atual == url("banco") ||
                 $url_atual == url("saques") ||
-                $url_atual == url('antecipacao')
+                $url_atual == url('antecipacao') ||
+                $url_atual == url('financeiro')
               ) {
                 echo "<li class='nav-item menu-open' title='Veja suas comissões, saques e antecipações'>";
                 echo "<a href='#' class='nav-link active'>";
@@ -525,6 +526,12 @@
                     </a>
                   </li>
                 <?php endif ?>
+                <li class="nav-item sub-item" title="Dashboard financeiro consolidado: comissões vs saques">
+                  <a href="<?= url('financeiro') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                    <span class="material-symbols-rounded nav-icon">account_balance</span>
+                    <p>Financeiro</p>
+                  </a>
+                </li>
               </ul>
               </li>
             <?php endif ?>
