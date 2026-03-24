@@ -168,13 +168,16 @@ class AppFinanceiro
     {
         if (!$recipientId) return [];
 
-        $resp = (new PagarMe())->executa(
-            "https://api.pagar.me/core/v5/recipients/$recipientId/transfers?size=50",
-            "GET"
-        );
+        $pagarme = new PagarMe();
 
-        if (isset($resp->data) && is_array($resp->data)) {
-            return $resp->data;
+        $urls = [
+            "https://api.pagar.me/core/v5/transfers?recipient_id=$recipientId&count=50",
+            "https://api.pagar.me/core/v5/transfers?count=5",  // sem filtro, só pra ver se token tem acesso
+        ];
+
+        foreach ($urls as $url) {
+            $resp = $pagarme->executa($url, "GET");
+            echo "<!-- TRANSFER_DEBUG url=$url resp=" . substr(json_encode($resp), 0, 500) . " -->";
         }
 
         return [];
