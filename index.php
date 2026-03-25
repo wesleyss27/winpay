@@ -866,6 +866,14 @@ $router->group("api");
 $router->post("/pixel-lead", "AppPixelLead:store", "pixellead.store");
 
 /*
+* NAMESPACE Source\App\ConsultaVendas
+* Página pública para vendedores consultarem vendas por CPF, e-mail, nome ou telefone
+*/
+$router->namespace("Source\App\ConsultaVendas");
+$router->group(null);
+$router->get("/consultar-venda", "AppConsultaVendas:consultar", "consultavendas.consultar");
+
+/*
 * Processos
 */
 $router->dispatch();
