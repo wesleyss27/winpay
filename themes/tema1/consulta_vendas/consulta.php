@@ -303,7 +303,7 @@ $rebStatusMap = [
     class="hero-logo"
     onerror="this.style.display='none'"
   >
-  <p class="hero-subtitle">Consulta rápida de vendas para vendedores</p>
+  <p class="hero-subtitle">Consulta rápida de vendas</p>
   <div class="search-wrap">
     <form method="get" action="<?= url("consultar-venda") ?>" autocomplete="off">
       <div class="search-box">
