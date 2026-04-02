@@ -42,10 +42,19 @@ class AppPixelLead
             return;
         }
 
-        $fbclid = trim($body['fbclid'] ?? '');
-        $ip     = trim($body['ip'] ?? '');
-        $ua     = trim($body['ua'] ?? '');
-        $ts     = $body['ts'] ?? null; // timestamp em milissegundos (enviado pelo roundbr)
+        $fbclid       = trim($body['fbclid']       ?? '');
+        $ip           = trim($body['ip']           ?? '');
+        $ua           = trim($body['ua']           ?? '');
+        $ts           = $body['ts']                ?? null;
+        $utm_source   = trim($body['utm_source']   ?? '');
+        $utm_campaign = trim($body['utm_campaign'] ?? '');
+        $utm_medium   = trim($body['utm_medium']   ?? '');
+        $utm_content  = trim($body['utm_content']  ?? '');
+        $utm_term     = trim($body['utm_term']     ?? '');
+        $src          = trim($body['src']          ?? '');
+        $sck          = trim($body['sck']          ?? '');
+        $round_id     = trim($body['round_id']     ?? '');
+        $round_number = trim($body['round_number'] ?? '');
 
         if (!$ip) {
             http_response_code(400);
@@ -60,11 +69,20 @@ class AppPixelLead
             $fbc  = "fb.1.{$tsMs}.{$fbclid}";
         }
 
-        $lead         = new PixelLead();
-        $lead->fbclid = $fbclid ?: null;
-        $lead->fbc    = $fbc;
-        $lead->ip     = $ip;
-        $lead->ua     = $ua ?: null;
+        $lead               = new PixelLead();
+        $lead->fbclid       = $fbclid       ?: null;
+        $lead->fbc          = $fbc;
+        $lead->ip           = $ip;
+        $lead->ua           = $ua           ?: null;
+        $lead->utm_source   = $utm_source   ?: null;
+        $lead->utm_campaign = $utm_campaign ?: null;
+        $lead->utm_medium   = $utm_medium   ?: null;
+        $lead->utm_content  = $utm_content  ?: null;
+        $lead->utm_term     = $utm_term     ?: null;
+        $lead->src          = $src          ?: null;
+        $lead->sck          = $sck          ?: null;
+        $lead->round_id     = $round_id     ?: null;
+        $lead->round_number = $round_number ?: null;
         $lead->save();
 
         if ($lead->fail()) {

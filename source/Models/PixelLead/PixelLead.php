@@ -43,11 +43,20 @@ class PixelLead extends DataLayer
 
 /** PROPRIEDADES
  *
- *  id         int(11)
- *  fbclid     varchar(255)
- *  fbc        varchar(255)
- *  ip         varchar(45)  NOT NULL
- *  ua         text
- *  created_at timestamp
- *  updated_at timestamp
+ *  id           int(11)
+ *  fbclid       varchar(255)
+ *  fbc          varchar(255)
+ *  ip           varchar(45)  NOT NULL
+ *  ua           text
+ *  utm_source   varchar(200)
+ *  utm_campaign varchar(200)
+ *  utm_medium   varchar(200)
+ *  utm_content  varchar(200)
+ *  utm_term     varchar(200)
+ *  src          varchar(200)
+ *  sck          varchar(200)
+ *  round_id     varchar(100)
+ *  round_number varchar(100)
+ *  created_at   timestamp
+ *  updated_at   timestamp
  */
