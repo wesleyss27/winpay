@@ -225,6 +225,19 @@ $eventos = array(
               </div>
             </div>
           </div>
+
+          <!-- Utmify -->
+          <div class="col-sm-3 card-body text-center zoom">
+            <div class="m-potlet m-portlet--rounded">
+              <div class="m-portlet__body m-portlet__body--no-padding">
+                <div class="m-widget1 text-center">
+                  <a class="btn" data-toggle="modal" data-target="#modalUtmify" style="font-family:inter"><img src="<?= url("themes/imgs/utmify.png") ?>" width='100%' class="box-imgs"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Fim Utmify card -->
+
         </div>
 
 
@@ -2069,5 +2082,68 @@ $eventos = array(
       carregaFunil(token, cod_maquina);
     }
   }
+  // Utmify
+  $("#salvarUtmify").click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: "<?= $router->route("integracoes.utmifySalvar") ?>",
+      type: "POST",
+      data: { api_key: $("#utmify_api_key").val() },
+      success: function(res) {
+        var r = JSON.parse(res);
+        alert(r.msg);
+        location.reload();
+      }
+    });
+  });
+
+  $("#excluirUtmify").click(function(e) {
+    e.preventDefault();
+    if (!confirm("Remover integração Utmify?")) return;
+    $.ajax({
+      url: "<?= $router->route("integracoes.utmifyExcluir") ?>",
+      type: "POST",
+      success: function(res) {
+        var r = JSON.parse(res);
+        alert(r.msg);
+        location.reload();
+      }
+    });
+  });
 </script>
+
+<!-- Modal Utmify -->
+<div id="modalUtmify" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Integração com Utmify</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formUtmify">
+          <div class="form-group">
+            <label>API Key <small>(Utmify > Integrações > Credenciais de API)</small></label>
+            <input type="text" name="api_key" id="utmify_api_key" class="form-control"
+              placeholder="KVRxalfMiBfm8Rm1nP5YxfwYzArNsA0VLeWC"
+              value="<?= @$utmify->api_key ?>">
+          </div>
+          <p class="text-muted" style="font-size:0.85rem;">
+            Ao salvar, as vendas serão enviadas automaticamente para sua conta Utmify
+            com UTMs rastreados, incluindo compradores vindos pelo WhatsApp.
+          </p>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <?php if (@$utmify) : ?>
+          <button class="btn btn-danger" id="excluirUtmify">Remover</button>
+        <?php endif; ?>
+        <button class="btn btn-primary" id="salvarUtmify">Salvar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fim Modal Utmify -->
+
 <?php $v->end() ?>

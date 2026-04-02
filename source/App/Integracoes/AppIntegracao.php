@@ -27,6 +27,7 @@ use Source\Models\Notazz\IntegracaoNotazz;
 use Source\Models\Shopify\Shopify;
 use Source\Models\Whatsapp\NotificacoesInteligentes;
 use Source\Models\Mex\Mex;
+use Source\Models\Utmify\Utmify;
 use Source\Models\Permissao\PermissaoModulo;
 use Source\Models\Permissao\Section;
 
@@ -60,6 +61,7 @@ class AppIntegracao
         $usuario = (new Usuario())->findById($this->section->getId());
         $produtos = (new Produto())->find("usuario = " . $this->section->getId())->fetch(true);
         $shopify = (new Shopify())->find("usuario = " . $this->section->getId())->fetch();
+        $utmify = (new Utmify())->find("usuario = " . $this->section->getId())->fetch();
 
         echo $this->view->render("integracoes/disponiveis", [
             "title" => "Integrações Disponíveis",
@@ -68,6 +70,7 @@ class AppIntegracao
             "usuario" => $usuario,
             "produtos" => $produtos,
             "shopify" => $shopify,
+            "utmify" => $utmify,
         ]);
     }
 
@@ -124,6 +127,9 @@ class AppIntegracao
         $shopifyCount = (new Shopify())->find("usuario = " . $this->section->getId())->count();
         $shopify = (new Shopify())->find("usuario = " . $this->section->getId())->fetch();
 
+        $utmifyCount = (new Utmify())->find("usuario = " . $this->section->getId())->count();
+        $utmify = (new Utmify())->find("usuario = " . $this->section->getId())->fetch();
+
         echo $this->view->render("integracoes/ativas", [
             "title" => "Integrações Ativas",
             "section" => @$section,
@@ -158,6 +164,46 @@ class AppIntegracao
             "postbacks" => $postbacks,
             "shopifyCount" => $shopifyCount,
             "shopify" => $shopify,
+            "utmifyCount" => $utmifyCount,
+            "utmify" => $utmify,
         ]);
+    }
+
+    public function salvarUtmify($data)
+    {
+        (new Section())->permissaoModulo("integracoes");
+
+        $apiKey = trim(@$_POST["api_key"]);
+        if (!$apiKey) {
+            echo json_encode(["msg" => "Informe a API Key da Utmify"]);
+            return;
+        }
+
+        $utmify = (new Utmify())->find("usuario = " . $this->section->getId())->fetch();
+        if (!$utmify) {
+            $utmify = new Utmify();
+            $utmify->usuario = $this->section->getId();
+        }
+        $utmify->api_key = $apiKey;
+        $utmify->save();
+
+        if ($utmify->fail()) {
+            echo json_encode(["msg" => "Erro ao salvar: " . $utmify->fail()->getMessage()]);
+            return;
+        }
+
+        echo json_encode(["msg" => "Integração Utmify salva com sucesso"]);
+    }
+
+    public function excluirUtmify($data)
+    {
+        (new Section())->permissaoModulo("integracoes");
+
+        $utmify = (new Utmify())->find("usuario = " . $this->section->getId())->fetch();
+        if ($utmify) {
+            $utmify->destroy();
+        }
+
+        echo json_encode(["msg" => "Integração Utmify removida"]);
     }
 }

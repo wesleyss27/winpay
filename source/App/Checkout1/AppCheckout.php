@@ -41,6 +41,7 @@ use Source\App\Usuarios\AppUsuarios;
 use Source\App\Postback\AppPostback;
 use Source\App\Processos\AppProcessos;
 use Source\App\Assinaturas\AppAssinaturas;
+use Source\App\Integracoes\UtmifyService;
 
 use Moip\Moip;
 use Moip\Auth\BasicAuth;
@@ -2273,6 +2274,7 @@ class AppCheckout
             $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
             $data["postback"] = $postback;
             $this->notificacao($data);
+            UtmifyService::enviar($venda);
         } else {
             $data["msg"] =  $venda->fail()->getMessage();
         }

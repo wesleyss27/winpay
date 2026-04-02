@@ -484,6 +484,8 @@ $router->namespace("Source\App\Integracoes");
 $router->group("integracoes");
 $router->get("/", "AppIntegracao:integracoes", "integracoes.disponiveis");
 $router->get("/ativas", "AppIntegracao:ativas", "integracoes.ativas");
+$router->post("/utmify/salvar", "AppIntegracao:salvarUtmify", "integracoes.utmifySalvar");
+$router->post("/utmify/excluir", "AppIntegracao:excluirUtmify", "integracoes.utmifyExcluir");
 
 
 /*
