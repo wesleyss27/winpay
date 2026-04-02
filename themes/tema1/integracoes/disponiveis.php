@@ -2111,6 +2111,7 @@ $eventos = array(
     });
   });
 </script>
+<?php $v->end() ?>
 
 <!-- Modal Utmify -->
 <div id="modalUtmify" class="modal fade" role="dialog">
@@ -2145,5 +2146,3 @@ $eventos = array(
   </div>
 </div>
 <!-- Fim Modal Utmify -->
-
-<?php $v->end() ?>
