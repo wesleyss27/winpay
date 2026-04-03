@@ -144,18 +144,23 @@ class UtmifyService
 
         if (!$semUtms) {
             self::log([
-                'venda'   => $venda->transacao,
-                'ip'      => $venda->ip,
-                'match'   => 'url',
+                'venda'        => $venda->transacao,
+                'ip'           => $venda->ip,
+                'match'        => 'url',
                 'utm_source'   => $tracking['utm_source'],
                 'utm_campaign' => $tracking['utm_campaign'],
             ]);
             return $tracking;
         }
 
+        // Resolve IP real (mesmo padrão do pixel Facebook)
+        $clientIp = isset($_SERVER['HTTP_X_FORWARDED_FOR'])
+            ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0])
+            : ($venda->ip ?: $_SERVER['REMOTE_ADDR']);
+
         // Sem UTMs na URL — tenta match por IP em pixel_leads
-        if ($venda->ip) {
-            $lead = (new PixelLead())->findByIp($venda->ip);
+        if ($clientIp) {
+            $lead = (new PixelLead())->findByIp($clientIp);
             if ($lead) {
                 $tracking['src']          = $lead->src          ?: $tracking['src'];
                 $tracking['sck']          = $lead->sck          ?: null;
@@ -166,17 +171,17 @@ class UtmifyService
                 $tracking['utm_term']     = $lead->utm_term     ?: null;
 
                 self::log([
-                    'venda'        => $venda->transacao,
-                    'ip'           => $venda->ip,
-                    'match'        => 'ip_ok',
+                    'venda'         => $venda->transacao,
+                    'ip'            => $clientIp,
+                    'match'         => 'ip_ok',
                     'pixel_lead_id' => $lead->id,
-                    'utm_source'   => $tracking['utm_source'],
-                    'utm_campaign' => $tracking['utm_campaign'],
+                    'utm_source'    => $tracking['utm_source'],
+                    'utm_campaign'  => $tracking['utm_campaign'],
                 ]);
             } else {
                 self::log([
                     'venda' => $venda->transacao,
-                    'ip'    => $venda->ip,
+                    'ip'    => $clientIp,
                     'match' => 'ip_nao_encontrado',
                 ]);
             }
