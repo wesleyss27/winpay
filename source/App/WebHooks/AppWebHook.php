@@ -15,6 +15,7 @@ use Source\App\Bling\AppBling;
 use Source\App\Checkout1\MercadoPago;
 use Source\App\Comissao\AppComissao;
 use Source\App\Postback\AppPostback;
+use Source\App\Integracoes\UtmifyService;
 use Source\Models\CartaoCheckoutTransparente\Adquirente;
 use Source\Models\Assinaturas\AssinaturaCadastro;
 use Source\Models\Produtos\Produto;
@@ -332,6 +333,7 @@ class AppWebHook
             echo "venda $venda->id, usuario $venda->produtor, produto $venda->produto <br>";
             $bling = (new AppBling(null))->criarPedido(["venda" => $venda->id, "usuario" => $venda->produtor, "produto" => $venda->produto]);
             $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
+            UtmifyService::enviar($venda);
         } else {
             echo "Não tem venda";
         }
