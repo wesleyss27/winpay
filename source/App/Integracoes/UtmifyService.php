@@ -46,6 +46,7 @@ class UtmifyService
     {
         $config = (new Utmify())->find("usuario = :u", "u={$venda->produtor}")->fetch();
         if (!$config || !$config->api_key) {
+            self::log(['evento' => 'sem_config', 'produtor' => $venda->produtor, 'venda_id' => $venda->id]);
             return null;
         }
 
