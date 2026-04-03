@@ -181,8 +181,15 @@ class AppWebHook
         header('Content-Type: application/json');
         $json = file_get_contents('php://input');
         $response = json_decode($json);
-        // loga o payload bruto para depuração
-        
+
+        // Log do payload bruto recebido
+        $logFile = fopen(DIRETORIO . "logs/webhook-pagarme-debug.txt", 'a+');
+        if ($logFile) {
+            fwrite($logFile, "=== " . date('Y-m-d H:i:s') . " ===" . PHP_EOL);
+            fwrite($logFile, "PAYLOAD: " . $json . PHP_EOL);
+            fclose($logFile);
+        }
+
 
         $status = null;
         $payID = null;
@@ -258,11 +265,20 @@ class AppWebHook
             return;
         }
 
+        $wlog = function(string $msg) {
+            $f = fopen(DIRETORIO . "logs/webhook-pagarme-debug.txt", 'a+');
+            if ($f) { fwrite($f, date('Y-m-d H:i:s') . " " . $msg . PHP_EOL); fclose($f); }
+        };
+
+        $wlog("payID={$payID} status={$status} finalizada={$finalizada}");
+
         $venda = (new Venda())->find("transacao = '$payID'")->fetch();
         if ($venda) {
 
             $statusAnterior = $venda->status_transacao;
             $dispararProcessos = $statusAnterior != $status;
+
+            $wlog("venda_id={$venda->id} produtor={$venda->produtor} status_anterior={$statusAnterior} dispararProcessos=" . ($dispararProcessos ? 'sim' : 'nao'));
 
             echo @$finalizada . "<br>";
             $venda->status_transacao = $status;
@@ -274,12 +290,14 @@ class AppWebHook
 
             if ($venda->save()) {
                 $msg = "Salvo";
+                $wlog("venda salva ok");
 
                 if ($venda->status_transacao == 6)
                     // (new AppComissao(null))->cadastrarEstorno(["venda" => $venda->id]);
                     echo "test";
             } else {
                 $msg = "{$venda->fail()->getMessage()}";
+                $wlog("ERRO ao salvar venda: {$msg}");
             }
 
 
@@ -322,8 +340,10 @@ class AppWebHook
             $dados["venda"] = (int) $venda->id;
             if ($dispararProcessos && $dados["venda"]) {
                 $processos = (new AppProcessos())->processos($dados);
+                $wlog("processos disparados");
             } else {
                 error_log("postbackPagarMe: venda sem id para transacao {$payID}");
+                $wlog("processos NAO disparados (dispararProcessos={$dispararProcessos}, venda_id={$dados['venda']})");
             }
 
             $arquivo = fopen('postback-pagarme.txt', 'a+');
@@ -333,9 +353,14 @@ class AppWebHook
             echo "venda $venda->id, usuario $venda->produtor, produto $venda->produto <br>";
             $bling = (new AppBling(null))->criarPedido(["venda" => $venda->id, "usuario" => $venda->produtor, "produto" => $venda->produto]);
             $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
+
+            $wlog("chamando UtmifyService::enviar venda_id={$venda->id} status={$venda->status_transacao}");
             UtmifyService::enviar($venda);
+            $wlog("UtmifyService::enviar concluido");
+
         } else {
             echo "Não tem venda";
+            $wlog("VENDA NAO ENCONTRADA para transacao={$payID}");
         }
     }
 
