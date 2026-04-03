@@ -61,6 +61,14 @@ class UtmifyService
         $produto   = $venda->dataProduto();
         $plano     = $venda->plano ? $venda->dataPlano() : null;
 
+        // IP real do cliente (X-Forwarded-For tem prioridade sobre REMOTE_ADDR do Docker)
+        $clientIp = isset($_SERVER['HTTP_X_FORWARDED_FOR'])
+            ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0])
+            : ($venda->ip ?: null);
+
+        // orderId: usa transacao se preenchida, senão usa o id da venda
+        $orderId = !empty($venda->transacao) ? (string) $venda->transacao : (string) $venda->id;
+
         $status        = self::STATUS_MAP[(int)$venda->status_transacao] ?? 'waiting_payment';
         $paymentMethod = self::PAYMENT_MAP[(int)$venda->forma_pagamento] ?? 'pix';
 
@@ -91,7 +99,7 @@ class UtmifyService
         }
 
         return [
-            'orderId'       => (string) $venda->transacao,
+            'orderId'       => $orderId,
             'platform'      => self::PLATFORM,
             'paymentMethod' => $paymentMethod,
             'status'        => $status,
@@ -104,7 +112,7 @@ class UtmifyService
                 'phone'    => preg_replace('/\D/', '', $comprador->telefone ?? '') ?: null,
                 'document' => preg_replace('/\D/', '', $comprador->cpf_cnpj ?? '') ?: null,
                 'country'  => 'BR',
-                'ip'       => $venda->ip ?: null,
+                'ip'       => $clientIp,
             ],
             'products' => [[
                 'id'        => (string) $venda->produto,
