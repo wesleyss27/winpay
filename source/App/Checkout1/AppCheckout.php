@@ -2274,7 +2274,6 @@ class AppCheckout
             $postback = (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
             $data["postback"] = $postback;
             $this->notificacao($data);
-            UtmifyService::enviar($venda);
         } else {
             $data["msg"] =  $venda->fail()->getMessage();
         }
