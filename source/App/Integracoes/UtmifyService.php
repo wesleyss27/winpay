@@ -208,10 +208,12 @@ class UtmifyService
 
     private static function post(string $apiKey, array $payload): array
     {
+        $jsonPayload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
         $ch = curl_init(self::ENDPOINT);
         curl_setopt_array($ch, [
             CURLOPT_POST           => true,
-            CURLOPT_POSTFIELDS     => json_encode($payload),
+            CURLOPT_POSTFIELDS     => $jsonPayload,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 10,
             CURLOPT_HTTPHEADER     => [
@@ -221,7 +223,16 @@ class UtmifyService
         ]);
         $body = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $erro = curl_error($ch);
         curl_close($ch);
+
+        self::log([
+            'evento'      => 'request',
+            'http_code'   => $code,
+            'curl_error'  => $erro ?: null,
+            'payload'     => $payload,
+            'response'    => $body,
+        ]);
 
         return ['http_code' => $code, 'body' => $body];
     }
