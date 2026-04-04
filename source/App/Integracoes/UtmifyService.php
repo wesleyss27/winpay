@@ -162,10 +162,8 @@ class UtmifyService
             return $tracking;
         }
 
-        // Resolve IP real (mesmo padrão do pixel Facebook)
-        $clientIp = isset($_SERVER['HTTP_X_FORWARDED_FOR'])
-            ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0])
-            : ($venda->ip ?: $_SERVER['REMOTE_ADDR']);
+        // Usa o IP do cliente salvo na venda (capturado no checkout, não o IP do webhook)
+        $clientIp = $venda->ip ?: null;
 
         // Sem UTMs na URL — tenta match por IP em pixel_leads
         if ($clientIp) {
