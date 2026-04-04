@@ -165,7 +165,7 @@ class UtmifyService
         // Usa o IP do cliente salvo na venda (capturado no checkout, não o IP do webhook)
         $clientIp = $venda->ip ?: null;
 
-        // Sem UTMs na URL — tenta match por IP em pixel_leads
+        // Sem UTMs na URL — tenta match por IP em pixel_leads (IP salvo na venda no checkout)
         if ($clientIp) {
             $lead = (new PixelLead())->findByIp($clientIp);
             if ($lead) {
@@ -179,24 +179,25 @@ class UtmifyService
 
                 self::log([
                     'venda'         => $venda->transacao,
-                    'ip'            => $clientIp,
+                    'ip_venda'      => $clientIp,
                     'match'         => 'ip_ok',
                     'pixel_lead_id' => $lead->id,
                     'utm_source'    => $tracking['utm_source'],
                     'utm_campaign'  => $tracking['utm_campaign'],
+                    'utm_medium'    => $tracking['utm_medium'],
+                    'src'           => $tracking['src'],
                 ]);
             } else {
                 self::log([
-                    'venda' => $venda->transacao,
-                    'ip'    => $clientIp,
-                    'match' => 'ip_nao_encontrado',
+                    'venda'    => $venda->transacao,
+                    'ip_venda' => $clientIp,
+                    'match'    => 'ip_nao_encontrado',
                 ]);
             }
         } else {
             self::log([
                 'venda' => $venda->transacao,
-                'ip'    => null,
-                'match' => 'sem_ip',
+                'match' => 'sem_ip_na_venda',
             ]);
         }
 

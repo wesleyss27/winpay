@@ -91,7 +91,30 @@ class AppPixelLead
             return;
         }
 
+        self::log([
+            'evento'       => 'pixel_lead_salvo',
+            'id'           => $lead->id,
+            'ip'           => $ip,
+            'fbclid'       => $fbclid ?: null,
+            'utm_source'   => $utm_source   ?: null,
+            'utm_campaign' => $utm_campaign ?: null,
+            'utm_medium'   => $utm_medium   ?: null,
+            'src'          => $src          ?: null,
+            'sck'          => $sck          ?: null,
+            'round_id'     => $round_id     ?: null,
+        ]);
+
         http_response_code(201);
         echo json_encode(['ok' => true, 'id' => $lead->id]);
+    }
+
+    private static function log(array $data): void
+    {
+        $linha = date('Y-m-d H:i:s') . ' ' . json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        $arquivo = fopen(DIRETORIO . "logs/pixel-lead.txt", 'a+');
+        if ($arquivo) {
+            fwrite($arquivo, $linha);
+            fclose($arquivo);
+        }
     }
 }
