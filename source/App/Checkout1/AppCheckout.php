@@ -183,7 +183,7 @@ class AppCheckout
 
         // echo $taxa_transacao;
 
-        $ip = (string) $_SERVER['REMOTE_ADDR'];
+        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : (string) $_SERVER['REMOTE_ADDR'];
         if (@$_COOKIE[$produto->id]) {
             parse_str($_COOKIE[$produto->id], $output);
             echo "<!-- {$output["codigo"]} -->";
@@ -676,7 +676,7 @@ class AppCheckout
         // Fim Código e preço Order Bump
 
         // 
-        $ip = (string) $_SERVER['REMOTE_ADDR'];
+        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : (string) $_SERVER['REMOTE_ADDR'];
         if ($data["pagamento"] == "credit_card") {
 
             $data["forma_pagamento"] = 1;
@@ -1263,7 +1263,7 @@ class AppCheckout
         $data["status_transacao"] = 1;
         $data["forma_pagamento"] = 3;
 
-        $ip = (string) $_SERVER['REMOTE_ADDR'];
+        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : (string) $_SERVER['REMOTE_ADDR'];
 
         // SPLIT DE PAGAMENTOS
         if (@$data["valor_frete"]) {
@@ -1530,7 +1530,7 @@ class AppCheckout
         $data["status_transacao"] = 1;
         $data["forma_pagamento"] = 3;
 
-        $ip = (string) $_SERVER['REMOTE_ADDR'];
+        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : (string) $_SERVER['REMOTE_ADDR'];
 
         // SPLIT DE PAGAMENTOS
         if (@$data["valor_frete"]) {
@@ -2095,7 +2095,7 @@ class AppCheckout
         }
         // echo $somaCoprodutor;
 
-        $ip = (string) $_SERVER['REMOTE_ADDR'];
+        $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : (string) $_SERVER['REMOTE_ADDR'];
 
         if( $cookieId ) {
             $cookies = (new Cookies())->find("id = $cookieId")->fetch();
@@ -2226,7 +2226,7 @@ class AppCheckout
         $venda->utm_medium              = @$data["utm_medium"];
         $venda->utm_content             = @$data["utm_content"];
         $venda->st4rt                   = @$data["st4rt"];
-        $venda->ip                      = @$_SERVER['REMOTE_ADDR'];
+        $venda->ip                      = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : @$_SERVER['REMOTE_ADDR'];
         $venda->cookie                  = ! empty( @$data["cookie"] ) ? @$data["cookie"] : 0;
         $venda->endereco                = @$data["endereco"];
         $venda->ecommerce               = @$data["ecommerce"];
@@ -2320,7 +2320,7 @@ class AppCheckout
         $venda->data_pedido             = date("Y-m-d");
         $venda->data_finalizada         = @$data["data_finalizada"];
         $venda->data_ultimo_evento      = @$data["data_ultimo_evento"];
-        $venda->ip                      = @$_SERVER['REMOTE_ADDR'];
+        $venda->ip                      = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]) : @$_SERVER['REMOTE_ADDR'];
         $venda->endereco                = @$data["endereco"];
 
         //var_dump($venda);
