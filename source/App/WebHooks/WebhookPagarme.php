@@ -464,31 +464,43 @@ class AppWebHook
 
         $status_transacao = @$response->data->last_transaction->status;
 
-        // exit;
+        // Inicializa variáveis para evitar undefined variable em eventos não mapeados
+        $status        = null;
+        $finalizada    = null;
+        $ultimo_evento = date("Y-m-d H:i:s");
+        $motivo        = null;
+
         if (@$status_transacao == "paid") {
             $status = 4;
             $finalizada = date("Y-m-d H:i:s");
             $ultimo_evento = $finalizada;
-        } else if (@$status_transacao == "canceled") {
+        } else if (@$status_transacao == "canceled" || @$status_transacao == "failed") {
             $status = 5;
             $motivo = @$response->data->charges[0]->last_transaction->gateway_response->errors[0]->message;
-            $ultimo_evento = date("Y-m-d H:i:s");
-            // $finalizada = date("Y-m-d H:i:s");
-            $finalizada = NULL;
         } else if (@$status_transacao == "refunded") {
             $status = 6;
-            $ultimo_evento = date("Y-m-d H:i:s");
-            // $finalizada = date("Y-m-d H:i:s");
-            $finalizada = NULL;
+        } else {
+            // Evento não reconhecido (processing, authorized, etc.) — apenas loga e sai
+            error_log("[WebhookPagarMe] Evento ignorado: type={$response->type} status={$status_transacao}");
+            echo json_encode(["status" => "ignored", "reason" => "unhandled_status"]);
+            return;
         }
+
         $payID = @$response->data->id;
 
         $venda = (new Venda())->find("transacao = '$payID'")->fetch();
         if ($venda) {
 
+            // Guard contra processamento duplicado: se o status já é o mesmo, não reprocessa
+            if ((int)$venda->status_transacao === $status) {
+                error_log("[WebhookPagarMe] Duplicata ignorada: venda={$venda->id} status={$status}");
+                echo json_encode(["status" => "ignored", "reason" => "already_processed"]);
+                return;
+            }
+
             echo @$finalizada . "<br>";
             $venda->status_transacao = $status;
-            $venda->data_finalizada = @$finalizada != "" ? $finalizada : NULL;
+            $venda->data_finalizada = $finalizada ?: null;
             $venda->data_ultimo_evento = $ultimo_evento;
 
             if (@$motivo)

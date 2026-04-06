@@ -27,9 +27,18 @@ class PagarMe
     }
   }
 
-  public function executa($url, $metodo, $json = null)
+  public function executa($url, $metodo, $json = null, $idempotencyKey = null)
   {
     $autorization = base64_encode( $this->token . ":" );
+
+    $headers = [
+      "Authorization: Basic $autorization",
+      'Content-Type: application/json',
+    ];
+
+    if ($idempotencyKey) {
+      $headers[] = "Idempotency-Key: $idempotencyKey";
+    }
 
     $curl = curl_init();
 
@@ -38,15 +47,13 @@ class PagarMe
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_CONNECTTIMEOUT => 10,
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => "$metodo",
       CURLOPT_POSTFIELDS => $json,
-      CURLOPT_HTTPHEADER => array(
-        "Authorization: Basic $autorization",
-        'Content-Type: application/json'
-      ),
+      CURLOPT_HTTPHEADER => $headers,
     ));
 
     $response = curl_exec($curl);
@@ -102,27 +109,15 @@ class PagarMe
   {
     if (@$data["comissoes_pagamento"]) {
 
-      $split1 = '"split": [';
-
+      $items = [];
       $i = 0;
       foreach ($data["comissoes_pagamento"] as $comissoes) {
-        $amount = number_format($comissoes["comissao"] * 100, 0, "", "");
-        // $amount = $data["preco"];
+        $amount = (int) round($comissoes["comissao"] * 100);
 
-        if ($i > 0) {
-          $reminder_fee = "false";
-        } else {
-          $reminder_fee = "true";
-        }
+        $charge_processing_fee = ($i === 0) ? 'true' : 'false';
+        $reminder_fee          = ($i === 0) ? 'true' : 'false';
 
-        $charge_processing_fee = 'false';
-        
-        if ( 0 == $i ) {
-          $charge_processing_fee = 'true';
-        }
-
-        $split1 .= '
-        {
+        $items[] = '{
           "amount": ' . $amount . ',
           "recipient_id": "' . $comissoes["usuario"] . '",
           "type": "flat",
@@ -131,13 +126,13 @@ class PagarMe
             "charge_remainder_fee": ' . $reminder_fee . ',
             "liable": true
           }
-        },';
+        }';
 
         $i++;
       }
 
-      $split1 .= "],";
-      return $split1;
+      // sem trailing comma no array nem após o campo
+      return '"split": [' . implode(',', $items) . '],';
     }
   }
 
@@ -162,7 +157,10 @@ class PagarMe
     $split = $this->split($data);
 
     $dados["url"] = $this->endpoint . "orders";
-    $ano_val = substr(@$data["ano-val"], -2);
+    // PagarMe v5 exige ano com 4 dígitos
+    $ano_val = strlen((string)@$data["ano-val"]) === 2
+        ? '20' . $data["ano-val"]
+        : (string)@$data["ano-val"];
     $dados["json"] = '
     {
       "customer": {
@@ -236,11 +234,13 @@ class PagarMe
       ]
     }';
 
+    $idempotencyKey = 'cartao-' . ($data['protocolo'] ?? uniqid('', true));
+
     // echo $dados["json"];
     // exit;
     // return $dados;
     error_log("dados para request cartão pagarme".json_encode($dados));
-    return $this->executa($dados["url"], "POST", $dados["json"]);
+    return $this->executa($dados["url"], "POST", $dados["json"], $idempotencyKey);
   }
 
   public function compraBoleto($data)
@@ -290,10 +290,12 @@ class PagarMe
           ]
       }';
 
+    $idempotencyKey = 'boleto-' . ($data['protocolo'] ?? uniqid('', true));
+
     // echo $dados["json"];
     // exit;
     // return $dados;
-    return $this->executa($dados["url"], "POST", $dados["json"]);
+    return $this->executa($dados["url"], "POST", $dados["json"], $idempotencyKey);
   }
 
   public function compraPix($data)
@@ -340,10 +342,12 @@ class PagarMe
       ]
   }';
 
+    $idempotencyKey = 'pix-' . ($data['protocolo'] ?? uniqid('', true));
+
     // echo $dados["json"];
     // exit;
     // return $dados;
-    return $this->executa($dados["url"], "POST", $dados["json"]);
+    return $this->executa($dados["url"], "POST", $dados["json"], $idempotencyKey);
   }
 
   public function criarRecebedor($data)

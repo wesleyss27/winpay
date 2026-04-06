@@ -688,18 +688,17 @@ class AppCheckout
             else
                 $valProd = (float) $data["preco"] + (float) @$data["frete"] + (float) @$total_ord_bump;
 
-            $data["parcela"] = @$data["parcela"] ? $data["parcela"] : 1;
-            $preco = number_format($this->validacao->juros($data["parcela"], $data["taxa_juros"], $valProd), 2, ".", "");
+            $data["parcela"] = @$data["parcela"] ? (int)$data["parcela"] : 1;
+            $precoParcela = $this->validacao->juros($data["parcela"], $data["taxa_juros"], $valProd);
 
-            $preco = $preco * $data["parcela"];
-            $preco = (string) $preco * 100;
+            // Converter para centavos com round para evitar erros de ponto flutuante
+            $preco = (int) round($precoParcela * $data["parcela"] * 100);
 
             if (@$data["plano"]) $plano = (new Plano())->findById($data["plano"]);
             if (@$plano->assumir_juros) {
                 $juros = $preco;
 
-                $preco = number_format($valProd, 2, ".", "");
-                $preco = (string) $preco * 100;
+                $preco = (int) round($valProd * 100);
             } else {
                 $juros = $preco;
             }
