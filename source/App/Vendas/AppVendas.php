@@ -118,23 +118,18 @@ class AppVendas
 
         //echo "id u ".$_SESSION["idU"];var_dump($busca);
 
-        $vendasCount = (new Venda())->find($busca)->count();
-
-        if ($busca) {
-            $vendasBoleto = (new Venda())->find($busca . " AND forma_pagamento = 2")->count();
-            $vendasCartao = (new Venda())->find($busca . " AND forma_pagamento = 1")->count();
-            $vendasPix = (new Venda())->find($busca . " AND forma_pagamento = 3")->count();
-        } else {
-            $vendasBoleto = (new Venda())->find("forma_pagamento = 2")->count();
-            $vendasCartao = (new Venda())->find("forma_pagamento = 1")->count();
-            $vendasPix = (new Venda())->find("forma_pagamento = 3")->count();
-        }
+        $statsColumns = "COUNT(*) as total, SUM(forma_pagamento = 2) as boleto, SUM(forma_pagamento = 1) as cartao, SUM(forma_pagamento = 3) as pix";
+        $stats = (new Venda())->find($busca ?: null, null, $statsColumns)->fetch();
+        $vendasCount = $stats ? (int)$stats->total : 0;
+        $vendasBoleto = $stats ? (int)$stats->boleto : 0;
+        $vendasCartao = $stats ? (int)$stats->cartao : 0;
+        $vendasPix    = $stats ? (int)$stats->pix : 0;
 
         $_SESSION["busca"] = $busca;
         $_SESSION["coprodutor"] = $pag_coprodutor;
 
         $paginas = ceil($vendasCount / 30);
-        $vendas = (new Venda())->find($busca)->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("$order DESC")->fetch(true);
+        $vendas = (new Venda())->find($busca ?: null)->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("$order DESC")->fetch(true);
         $produtos = new Produto();
         $afiliacao = new Afiliacao();
         $afiliados = (new Afiliacao())->find("produtor = {$this->section->getId()} GROUP BY afiliado")->fetch(true);
@@ -201,32 +196,19 @@ class AppVendas
         $usuario = $this->section->getId();
         $busca = $filtros . "coprodutores LIKE '%/$usuario/%'";
 
-        $vendasCount = (new Venda())->find($busca)->count();
-
-        if ($busca) {
-            $vendasBoleto = (new Venda())->find($busca . " AND forma_pagamento = 2")->count();
-            $vendasCartao = (new Venda())->find($busca . " AND forma_pagamento = 1")->count();
-            $vendasPix = (new Venda())->find($busca . " AND forma_pagamento = 3")->count();
-        } else {
-            $vendasBoleto = (new Venda())->find("forma_pagamento = 2")->count();
-            $vendasCartao = (new Venda())->find("forma_pagamento = 1")->count();
-            $vendasPix = (new Venda())->find("forma_pagamento = 3")->count();
-        }
+        $statsColumns = "COUNT(*) as total, SUM(forma_pagamento = 2) as boleto, SUM(forma_pagamento = 1) as cartao, SUM(forma_pagamento = 3) as pix";
+        $stats = (new Venda())->find($busca ?: null, null, $statsColumns)->fetch();
+        $vendasCount = $stats ? (int)$stats->total : 0;
+        $vendasBoleto = $stats ? (int)$stats->boleto : 0;
+        $vendasCartao = $stats ? (int)$stats->cartao : 0;
+        $vendasPix    = $stats ? (int)$stats->pix : 0;
 
         $paginas = ceil($vendasCount / 30);
-        $vendas = (new Venda())->find($busca)->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("data_ultimo_evento DESC")->fetch(true);
-        // $somaVendas = (new Venda())->find($busca, null, "SUM(valor_liquido) as soma")->fetch();
+        $vendas = (new Venda())->find($busca ?: null)->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("data_ultimo_evento DESC")->fetch(true);
 
-        $vendasConta = (new Venda())->find($busca)->order("data_ultimo_evento DESC")->fetch(true);
         $coprodutor = new CoProdutor();
         $comissoes = new Comissao();
-
-        if (@$vendasConta) {
-            $somaVendas = new Venda();
-            $somaVendas = 0;
-            foreach ($vendasConta as $valor) {
-            }
-        }
+        $somaVendas = 0;
 
         //var_dump($vendasCount);
 
