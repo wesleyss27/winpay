@@ -1536,7 +1536,23 @@ class AppCheckout
             $data["tx_frete"] = (float) @$data["valor_frete"] - ((float) @$data["valor_frete"] * (float) $data["taxa_redrocket"] / 100);
         }
         $data = $this->splitPagamento($data);
-        
+
+        // Chama o gateway ANTES de salvar a venda para evitar estado inconsistente:
+        // se o PIX falhar, a venda não fica presa em status=1 sem transação vinculada.
+        $gwResult = (new GatewayManager)->compraPix($data);
+        error_log("[GatewayManager] PIX: gateway={$gwResult->gateway_usado} qr=" . (!empty($gwResult->qr_code) ? 'ok' : 'vazio'));
+
+        if ($gwResult->erro) {
+            $data["status_transacao"] = 5;
+            $data["transacao"]        = null;
+            $data["descricao"]        = $gwResult->mensagem_erro ?? "Falha ao gerar PIX";
+        } else {
+            $data["status_transacao"] = 1;
+            $data["transacao"]        = $gwResult->transacao_id;
+            $data["meio_pagamento"]   = $gwResult->meio_pagamento;
+            $data["gateway_usado"]    = $gwResult->gateway_usado;
+        }
+
         if (@$data["venda"]) {
             $venda = $this->atualizaVenda($data);
         } else {
@@ -1547,82 +1563,20 @@ class AppCheckout
         $dados["venda"] = @$venda["venda"];
         $dados["postback"] = @$venda["postback"];
         $_SESSION["pagamento"] = $data;
-        // echo $venda;
 
-        /**
-         * TENTAR FAZER A TRANSAÇÃO PELO BRADESCO
-         * VERIFICA SE TEVE ERRO
-         * CASO DÊ ERRO, TENTAR FAZER PELO SITEF E CONTINUA O PROCESSO
-         * CASO DÊ CERTO, CONTINUA O PROCESSO
-         */
-
-        // PIX BRADESCO
-        // $pedido = rand(10000, 99999) * rand(100, 9999);
-        // $data["pedido"] = $pedido;
-        // $bradesco = (new Bradesco())->pix($data);
-        // if ($bradesco->status->codigo == "0") {
-        //     $dados["qr_code"] = @$bradesco->pix->textoQrCode;
-        //     $dados["meio_pagamento"] = "BradescoPix";
-        //     // FIM PIX BRADESCO
-        // } else {
-        //     $data["mensagem"]       = $bradesco->status->codigo . "<br>";
-        //     $data["mensagem"]      .= $bradesco->status->mensagem . "<br>";
-        //     $data["mensagem"]      .= @$bradesco->status->detalhes . "<br><br>";
-        //     $this->logs($data, "erro-bradesco");
-
-        // TRANSAÇÃO PIX SITEF
-        // $sitef = new Sitef();
-        // $dadosPix = $sitef->dadosPix($data);
-        // $efetivacao = $sitef->efetivacaoTransacao($dadosPix->payment->nit);
-        // $dados["qr_code"] = @$efetivacao->payment->qr_code;
-        // $dados["nit_pix"] = @$dadosPix->payment->nit;
-        // $dados["meio_pagamento"] = "Pix";
-        // FIM PIX SITEF
-        // }
-
-        // if (@$data["vencimento"] == "") {
-        //     if (date("D") != "Sun" || date("D") != "Mon" || date("D") != "Tue") {
-        //         $data["vencimento"] = date("Y-m-d", strtotime("+5 days"));
-        //     } else if (date("D") == "Sat") {
-        //         $data["vencimento"] = date("Y-m-d", strtotime("+4 days"));
-        //     } else {
-        //         $data["vencimento"] = date("Y-m-d", strtotime("+3 days"));
-        //     }
-        // } else {
-        //     if (date("D", strtotime($data["vencimento"])) == "Sat") {
-        //         $data["vencimento"] = date("Y-m-d", strtotime("+2 days", strtotime($data["vencimento"])));
-        //     } else if (date("D", strtotime($data["vencimento"])) == "Sun") {
-        //         $data["vencimento"] = date("Y-m-d", strtotime("+1 day", strtotime($data["vencimento"])));
-        //     } else {
-        //         $data["vencimento"] = $data["vencimento"];
-        //     }
-        // }
-
-        // $cobrancaAsaas = new AsaasCobrancas();
-        // $clienteAsaas = new AsaasClientes();
-        // $cliente = $clienteAsaas->novoCliente($data);
-        // $data["customer_id"] = $cliente->id;
-        // $transacao = $cobrancaAsaas->cobrancaPix($data);
-
-        $gwResult = (new GatewayManager)->compraPix($data);
-        error_log("[GatewayManager] PIX: gateway={$gwResult->gateway_usado} qr=" . (!empty($gwResult->qr_code) ? 'ok' : 'vazio'));
-
-        $dados["qr_code"]       = $gwResult->qr_code;
-        $dados["qr_code_image"] = $gwResult->qr_code_image; // URL PNG (Stripe) ou null (PagarMe)
+        $dados["qr_code"]        = $gwResult->qr_code;
+        $dados["qr_code_image"]  = $gwResult->qr_code_image;
         $dados["meio_pagamento"] = $gwResult->meio_pagamento;
 
+        // Salva o qr_code na venda (campo não coberto por atualizaVenda/cadastroVenda)
         $venda1 = @(new Venda())->findById(@$venda["venda"]);
-        $venda1->qr_code = $gwResult->qr_code;
 
-        error_log(json_encode($venda1->data(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        if ($venda1 && !$gwResult->erro) {
+            $venda1->qr_code = $gwResult->qr_code;
+            $venda1->save();
+        }
 
-        $venda1->transacao = $gwResult->transacao_id;
-
-        $venda1->status_transacao = 1;
-        $venda1->meio_pagamento = @$dados["meio_pagamento"];
-        $venda1->gateway_usado  = $gwResult->gateway_usado;
-        
-        if ($venda1->save()) {
+        if (!$gwResult->erro) {
 
             // VERIFICA SE A VENDA SERÁ ENVIADA PARA O TELEVENDAS
             $venda_prod = (new Venda())->findById(@$data["venda"]);
@@ -1647,7 +1601,7 @@ class AppCheckout
                 }
             }
         } else {
-            $dados["msg_pix"] = $venda1->fail()->getMessage();
+            $dados["msg_pix"] = $gwResult->mensagem_erro ?? "Falha ao gerar PIX";
         }
         // $data["transacao"] = $transacao1->id;
 

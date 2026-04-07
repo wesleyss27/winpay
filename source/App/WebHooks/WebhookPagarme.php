@@ -474,9 +474,10 @@ class AppWebHook
             $status = 4;
             $finalizada = date("Y-m-d H:i:s");
             $ultimo_evento = $finalizada;
-        } else if (@$status_transacao == "canceled" || @$status_transacao == "failed") {
+        } else if (in_array($status_transacao, ["canceled", "failed", "not_authorized", "voided", "error"])) {
             $status = 5;
-            $motivo = @$response->data->charges[0]->last_transaction->gateway_response->errors[0]->message;
+            $motivo = @$response->data->charges[0]->last_transaction->acquirer_message
+                   ?: @$response->data->charges[0]->last_transaction->gateway_response->errors[0]->message;
         } else if (@$status_transacao == "refunded") {
             $status = 6;
         } else {
