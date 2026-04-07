@@ -1090,7 +1090,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                         </div>
 
                         <div>
-                            <label for="email"> E-MAIL </label> <small>(Opcional)</small><br />
+                            <label for="email"> E-MAIL </label><br />
                             <?php $email = @$venda ? $venda->dataEndereco()->email : "" ?>
                            <input type="email" id="email" name="email" placeholder="E-mail" value="<?= @$email ?>" class="form-control newform required" required>
                             <span id="msg-email"></span>
