@@ -1,5 +1,15 @@
 <?php
 
+// ── CORS para o app mobile (deve vir antes de qualquer output ou roteamento) ──
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+    http_response_code(200);
+    exit();
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Endpoint especial para salvar token de push notification
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === '/salvar-token') {
     header('Content-Type: application/json');
@@ -874,6 +884,22 @@ $router->post("/pixel-lead", "AppPixelLead:store", "pixellead.store");
 $router->namespace("Source\App\ConsultaVendas");
 $router->group(null);
 $router->get("/consultar-venda", "AppConsultaVendas:consultar", "consultavendas.consultar");
+
+/*
+* NAMESPACE Source\App\MobileApi
+* API JSON para o app mobile Winpay
+*/
+$router->namespace("Source\App\MobileApi");
+$router->group("mobile");
+$router->post("/login",            "AppMobileApi:login",            "mobile.login");
+$router->get("/dashboard",         "AppMobileApi:dashboard",        "mobile.dashboard");
+$router->get("/vendas",            "AppMobileApi:vendas",           "mobile.vendas");
+$router->post("/registrar-token",  "AppMobileApi:registrarToken",   "mobile.token");
+$router->get("/preferencias",      "AppMobileApi:getPreferencias",  "mobile.prefs.get");
+$router->post("/preferencias",     "AppMobileApi:savePreferencias", "mobile.prefs.save");
+$router->get("/resumo-diario",     "AppMobileApi:resumoDiario",     "mobile.resumo");
+$router->post("/esqueci-senha",    "AppMobileApi:esqueciSenha",     "mobile.forgot");
+$router->post("/redefinir-senha",  "AppMobileApi:redefinirSenha",   "mobile.reset");
 
 /*
 * Processos
