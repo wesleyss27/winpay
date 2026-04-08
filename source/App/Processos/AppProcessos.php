@@ -502,6 +502,11 @@ class AppProcessos
         $comissaoFmt = @$data["comissao"] ? "R$ " . number_format((float)$data["comissao"], 2, ",", ".") : null;
         $browserPush = new CheckoutAppProcessos(null);
 
+        // Pix gerado — somente app mobile
+        if ((int)$pagamento === 3 && (int)$status === 1) {
+            PushMobile::enviar($producerId, "⚡ Pix gerado!", "Um Pix de {$valorFmt} está aguardando pagamento.", "pix", ["venda" => (int)($data["venda"] ?? 0)]);
+        }
+
         // Pix pago
         if ((int)$pagamento === 3 && (int)$status === 4) {
             $titulo = "Pagamento PIX confirmado!";

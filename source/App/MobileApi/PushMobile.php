@@ -27,15 +27,18 @@ class PushMobile
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $pdo->exec("CREATE TABLE IF NOT EXISTS mobile_push (
-            user_id     TEXT    PRIMARY KEY,
-            expo_token  TEXT,
-            pref_pix    INTEGER DEFAULT 1,
-            pref_sale   INTEGER DEFAULT 1,
-            pref_cb     INTEGER DEFAULT 0,
-            pref_payout INTEGER DEFAULT 1,
-            pref_recap  INTEGER DEFAULT 0,
-            updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+            user_id      TEXT    PRIMARY KEY,
+            expo_token   TEXT,
+            pref_pix     INTEGER DEFAULT 1,
+            pref_pix_gen INTEGER DEFAULT 0,
+            pref_sale    INTEGER DEFAULT 1,
+            pref_cb      INTEGER DEFAULT 0,
+            pref_payout  INTEGER DEFAULT 1,
+            pref_recap   INTEGER DEFAULT 0,
+            updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
         )");
+        // migração: adiciona coluna se ainda não existe
+        try { $pdo->exec("ALTER TABLE mobile_push ADD COLUMN pref_pix_gen INTEGER DEFAULT 0"); } catch (\Throwable $e) {}
 
         return $pdo;
     }
@@ -60,18 +63,19 @@ class PushMobile
     public static function buscarPreferencias(int $userId): array
     {
         $pdo  = self::pdo();
-        $stmt = $pdo->prepare("SELECT pref_pix, pref_sale, pref_cb, pref_payout, pref_recap FROM mobile_push WHERE user_id = :uid");
+        $stmt = $pdo->prepare("SELECT pref_pix, pref_pix_gen, pref_sale, pref_cb, pref_payout, pref_recap FROM mobile_push WHERE user_id = :uid");
         $stmt->execute([":uid" => $userId]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         return $row ? [
-            "pix"    => (bool) $row["pref_pix"],
-            "sale"   => (bool) $row["pref_sale"],
-            "cb"     => (bool) $row["pref_cb"],
-            "payout" => (bool) $row["pref_payout"],
-            "recap"  => (bool) $row["pref_recap"],
+            "pix"     => (bool) $row["pref_pix"],
+            "pix_gen" => (bool) $row["pref_pix_gen"],
+            "sale"    => (bool) $row["pref_sale"],
+            "cb"      => (bool) $row["pref_cb"],
+            "payout"  => (bool) $row["pref_payout"],
+            "recap"   => (bool) $row["pref_recap"],
         ] : [
-            "pix" => true, "sale" => true, "cb" => false, "payout" => true, "recap" => false,
+            "pix" => true, "pix_gen" => false, "sale" => true, "cb" => false, "payout" => true, "recap" => false,
         ];
     }
 
@@ -79,23 +83,25 @@ class PushMobile
     {
         $pdo  = self::pdo();
         $stmt = $pdo->prepare("
-            INSERT INTO mobile_push (user_id, pref_pix, pref_sale, pref_cb, pref_payout, pref_recap, updated_at)
-            VALUES (:uid, :pix, :sale, :cb, :payout, :recap, CURRENT_TIMESTAMP)
+            INSERT INTO mobile_push (user_id, pref_pix, pref_pix_gen, pref_sale, pref_cb, pref_payout, pref_recap, updated_at)
+            VALUES (:uid, :pix, :pix_gen, :sale, :cb, :payout, :recap, CURRENT_TIMESTAMP)
             ON CONFLICT(user_id) DO UPDATE SET
-                pref_pix    = excluded.pref_pix,
-                pref_sale   = excluded.pref_sale,
-                pref_cb     = excluded.pref_cb,
-                pref_payout = excluded.pref_payout,
-                pref_recap  = excluded.pref_recap,
-                updated_at  = CURRENT_TIMESTAMP
+                pref_pix     = excluded.pref_pix,
+                pref_pix_gen = excluded.pref_pix_gen,
+                pref_sale    = excluded.pref_sale,
+                pref_cb      = excluded.pref_cb,
+                pref_payout  = excluded.pref_payout,
+                pref_recap   = excluded.pref_recap,
+                updated_at   = CURRENT_TIMESTAMP
         ");
         $stmt->execute([
-            ":uid"    => $userId,
-            ":pix"    => (int) ($prefs["pix"]    ?? true),
-            ":sale"   => (int) ($prefs["sale"]   ?? true),
-            ":cb"     => (int) ($prefs["cb"]      ?? false),
-            ":payout" => (int) ($prefs["payout"] ?? true),
-            ":recap"  => (int) ($prefs["recap"]   ?? false),
+            ":uid"     => $userId,
+            ":pix"     => (int) ($prefs["pix"]     ?? true),
+            ":pix_gen" => (int) ($prefs["pix_gen"] ?? false),
+            ":sale"    => (int) ($prefs["sale"]    ?? true),
+            ":cb"      => (int) ($prefs["cb"]      ?? false),
+            ":payout"  => (int) ($prefs["payout"]  ?? true),
+            ":recap"   => (int) ($prefs["recap"]   ?? false),
         ]);
     }
 
@@ -114,7 +120,7 @@ class PushMobile
     {
         try {
             $pdo  = self::pdo();
-            $stmt = $pdo->prepare("SELECT expo_token, pref_pix, pref_sale, pref_cb, pref_payout, pref_recap FROM mobile_push WHERE user_id = :uid");
+            $stmt = $pdo->prepare("SELECT expo_token, pref_pix, pref_pix_gen, pref_sale, pref_cb, pref_payout, pref_recap FROM mobile_push WHERE user_id = :uid");
             $stmt->execute([":uid" => $userId]);
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -123,7 +129,7 @@ class PushMobile
             }
 
             // Verifica preferência
-            $prefMap = ["pix" => "pref_pix", "sale" => "pref_sale", "cb" => "pref_cb", "payout" => "pref_payout", "recap" => "pref_recap"];
+            $prefMap = ["pix" => "pref_pix", "pix_gen" => "pref_pix_gen", "sale" => "pref_sale", "cb" => "pref_cb", "payout" => "pref_payout", "recap" => "pref_recap"];
             $prefCol = $prefMap[$tipo] ?? null;
 
             if ($prefCol && isset($row[$prefCol]) && !(int) $row[$prefCol]) {
@@ -152,47 +158,59 @@ class PushMobile
                 return;
             }
 
-            // Expo aceita até 100 tokens por chamada
-            foreach (array_chunk($tokens, 100) as $chunk) {
-                $messages = array_map(fn($t) => self::buildMessage($t, $titulo, $corpo, $extra), $chunk);
-                self::sendExpoBatch($messages);
+            foreach ($tokens as $token) {
+                self::sendExpo($token, $titulo, $corpo, array_merge(["type" => $tipo], $extra));
             }
         } catch (\Throwable $e) {
             error_log("[PushMobile] Erro ao enviar push broadcast: " . $e->getMessage());
         }
     }
 
-    // ── Expo Push API ────────────────────────────────────────────────────────
+    // ── FCM (Firebase Cloud Messaging) ──────────────────────────────────────
+    // Usa o mesmo token FCM nativo obtido via getDevicePushTokenAsync() no app.
+    // A chave do servidor FCM fica em configuracao_checkout id=4 -> chave_producao.
 
-    private static function buildMessage(string $token, string $titulo, string $corpo, array $data = []): array
+    private static function fcmServerKey(): string
     {
-        return [
-            "to"    => $token,
-            "sound" => "default",
-            "title" => $titulo,
-            "body"  => $corpo,
-            "data"  => $data,
-        ];
+        try {
+            // Mesmo campo usado pelo pushGoogle() existente no sistema
+            require_once __DIR__ . "/../../../vendor/autoload.php";
+            $config = (new \Source\Models\Configuracoes\ConfiguracaoCheckout())->findById(4);
+            return $config->chave_producao ?? "";
+        } catch (\Throwable $e) {
+            error_log("[PushMobile] Erro ao buscar chave FCM: " . $e->getMessage());
+            return "";
+        }
     }
 
     private static function sendExpo(string $token, string $titulo, string $corpo, array $data = []): void
     {
-        self::sendExpoBatch([self::buildMessage($token, $titulo, $corpo, $data)]);
-    }
+        $serverKey = self::fcmServerKey();
+        if (!$serverKey) {
+            error_log("[PushMobile] Chave FCM não configurada (configuracao_checkout id=4)");
+            return;
+        }
 
-    private static function sendExpoBatch(array $messages): void
-    {
+        $payload = json_encode([
+            "to"           => $token,
+            "notification" => [
+                "title" => $titulo,
+                "body"  => $corpo,
+                "sound" => "default",
+            ],
+            "data"         => $data,
+            "priority"     => "high",
+        ]);
+
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL            => "https://exp.host/--/api/v2/push/send",
+            CURLOPT_URL            => "https://fcm.googleapis.com/fcm/send",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 10,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST  => "POST",
-            CURLOPT_POSTFIELDS     => json_encode($messages),
+            CURLOPT_POSTFIELDS     => $payload,
             CURLOPT_HTTPHEADER     => [
-                "Accept: application/json",
-                "Accept-Encoding: gzip, deflate",
+                "Authorization: key={$serverKey}",
                 "Content-Type: application/json",
             ],
         ]);
@@ -202,9 +220,9 @@ class PushMobile
         curl_close($curl);
 
         if ($errno) {
-            error_log("[PushMobile] cURL error {$errno} ao chamar Expo Push API");
+            error_log("[PushMobile] cURL error {$errno} FCM");
         } else {
-            error_log("[PushMobile] Expo response: " . $response);
+            error_log("[PushMobile] FCM response: " . $response);
         }
     }
 }
