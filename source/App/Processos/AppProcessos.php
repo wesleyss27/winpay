@@ -496,49 +496,50 @@ class AppProcessos
             ),
         );
 
-        // ── Push notifications mobile (Expo) ─────────────────────────────
-        $producerId = (int) ($data["produtor"] ?? 0);
-        $valorFmt   = "R$ " . number_format((float)($data["valor_produto"] ?? $data["valor_bruto"] ?? 0), 2, ",", ".");
+        // ── Push notifications: navegador (Web Push) + app mobile (Expo) ──
+        $producerId  = (int) ($data["produtor"] ?? 0);
+        $valorFmt    = "R$ " . number_format((float)($data["valor_produto"] ?? $data["valor_bruto"] ?? 0), 2, ",", ".");
         $comissaoFmt = @$data["comissao"] ? "R$ " . number_format((float)$data["comissao"], 2, ",", ".") : null;
+        $browserPush = new CheckoutAppProcessos(null);
 
         // Pix pago
         if ((int)$pagamento === 3 && (int)$status === 4) {
-            PushMobile::enviar($producerId,
-                "⚡ Pix confirmado!",
-                "Pagamento de {$valorFmt} recebido.",
-                "pix",
-                ["venda" => (int)($data["venda"] ?? 0)]
-            );
+            $titulo = "Pagamento PIX confirmado!";
+            $corpo  = "O pedido foi pago via PIX. Valor: {$valorFmt}";
+            // Navegador (sistema original)
+            $browserPush->enviarNotificacaoUsuarioEspecifico($producerId, $titulo, $corpo);
+            // App mobile
+            PushMobile::enviar($producerId, "⚡ Pix confirmado!", "Pagamento de {$valorFmt} recebido.", "pix", ["venda" => (int)($data["venda"] ?? 0)]);
         }
 
         // Cartão pago
         if ((int)$pagamento === 1 && (int)$status === 4) {
-            PushMobile::enviar($producerId,
-                "💳 Venda realizada!",
-                $comissaoFmt ? "Comissão: {$comissaoFmt}." : "Pagamento de {$valorFmt} confirmado.",
-                "sale",
-                ["venda" => (int)($data["venda"] ?? 0)]
-            );
+            $titulo = "Parabéns! Venda realizada";
+            $corpo  = $comissaoFmt ? "Sua comissão: {$comissaoFmt}." : "O pedido foi pago. Valor: {$valorFmt}";
+            // Navegador (sistema original)
+            $browserPush->enviarNotificacaoUsuarioEspecifico($producerId, $titulo, $corpo);
+            // App mobile
+            PushMobile::enviar($producerId, "💳 Venda realizada!", $comissaoFmt ? "Comissão: {$comissaoFmt}." : "Pagamento de {$valorFmt} confirmado.", "sale", ["venda" => (int)($data["venda"] ?? 0)]);
         }
 
         // Boleto pago
         if ((int)$pagamento === 2 && (int)$status === 4) {
-            PushMobile::enviar($producerId,
-                "📄 Boleto compensado!",
-                "Pagamento de {$valorFmt} confirmado.",
-                "sale",
-                ["venda" => (int)($data["venda"] ?? 0)]
-            );
+            $titulo = "Boleto compensado!";
+            $corpo  = "O pedido foi pago via boleto. Valor: {$valorFmt}";
+            // Navegador (sistema original)
+            $browserPush->enviarNotificacaoUsuarioEspecifico($producerId, $titulo, $corpo);
+            // App mobile
+            PushMobile::enviar($producerId, "📄 Boleto compensado!", "Pagamento de {$valorFmt} confirmado.", "sale", ["venda" => (int)($data["venda"] ?? 0)]);
         }
 
         // Chargeback
         if ((int)$status === 7) {
-            PushMobile::enviar($producerId,
-                "⚠️ Chargeback recebido",
-                "Uma contestação de {$valorFmt} foi aberta. Responda em até 7 dias.",
-                "cb",
-                ["venda" => (int)($data["venda"] ?? 0)]
-            );
+            $titulo = "Chargeback recebido";
+            $corpo  = "Uma contestação de {$valorFmt} foi aberta. Responda em até 7 dias.";
+            // Navegador (sistema original)
+            $browserPush->enviarNotificacaoUsuarioEspecifico($producerId, $titulo, $corpo);
+            // App mobile
+            PushMobile::enviar($producerId, "⚠️ Chargeback recebido", $corpo, "cb", ["venda" => (int)($data["venda"] ?? 0)]);
         }
         // ─────────────────────────────────────────────────────────────────
 
