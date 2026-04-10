@@ -23,7 +23,6 @@ class PushMobile
     private const SA_PATH          = __DIR__ . "/firebase-service-account.json";
     private const FCM_PROJECT_ID   = "winpay-app";
     private const FCM_V1_URL       = "https://fcm.googleapis.com/v1/projects/" . self::FCM_PROJECT_ID . "/messages:send";
-    private const TOKEN_CACHE_PATH = __DIR__ . "/../../../storage/fcm_token_cache.json";
 
     // ── Banco ───────────────────────────────────────────────────────────────
 
@@ -212,20 +211,21 @@ class PushMobile
         }
     }
 
+    private static function tokenCachePath(): string
+    {
+        return sys_get_temp_dir() . "/winpay_fcm_token.json";
+    }
+
     /**
      * Gera (ou lê do cache) um OAuth2 access token para a FCM v1 API
      * usando o Service Account JSON.
      */
     private static function getAccessToken(): string
     {
-        // Tenta usar cache (token válido por ~50 min para evitar requisições extras)
-        $cacheDir = dirname(self::TOKEN_CACHE_PATH);
-        if (!is_dir($cacheDir)) {
-            @mkdir($cacheDir, 0755, true);
-        }
+        $cachePath = self::tokenCachePath();
 
-        if (file_exists(self::TOKEN_CACHE_PATH)) {
-            $cache = json_decode(file_get_contents(self::TOKEN_CACHE_PATH), true);
+        if (file_exists($cachePath)) {
+            $cache = json_decode(file_get_contents($cachePath), true);
             if (!empty($cache["token"]) && !empty($cache["expires"]) && time() < $cache["expires"]) {
                 return $cache["token"];
             }
@@ -285,9 +285,9 @@ class PushMobile
         $token  = $result["access_token"] ?? "";
 
         if ($token) {
-            file_put_contents(self::TOKEN_CACHE_PATH, json_encode([
+            @file_put_contents(self::tokenCachePath(), json_encode([
                 "token"   => $token,
-                "expires" => $now + 3000, // cache por 50 min
+                "expires" => $now + 3000,
             ]));
         } else {
             error_log("[PushMobile] Falha ao obter access token: " . $response);
