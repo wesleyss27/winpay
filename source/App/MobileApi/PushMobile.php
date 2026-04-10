@@ -3,21 +3,27 @@
 namespace Source\App\MobileApi;
 
 /**
- * PushMobile — Gerencia tokens Expo e envio de push notifications para o app mobile.
+ * PushMobile — Gerencia tokens FCM e envio de push notifications para o app mobile.
+ * Usa FCM HTTP v1 API com autenticação OAuth2 via Service Account.
  *
  * Tabela SQLite `mobile_push`:
- *   user_id    TEXT PRIMARY KEY
- *   expo_token TEXT
- *   pref_pix   INTEGER DEFAULT 1
- *   pref_sale  INTEGER DEFAULT 1
- *   pref_cb    INTEGER DEFAULT 0
- *   pref_payout INTEGER DEFAULT 1
- *   pref_recap  INTEGER DEFAULT 0
- *   updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+ *   user_id      TEXT PRIMARY KEY
+ *   expo_token   TEXT
+ *   pref_pix     INTEGER DEFAULT 1
+ *   pref_pix_gen INTEGER DEFAULT 0
+ *   pref_sale    INTEGER DEFAULT 1
+ *   pref_cb      INTEGER DEFAULT 0
+ *   pref_payout  INTEGER DEFAULT 1
+ *   pref_recap   INTEGER DEFAULT 0
+ *   updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
  */
 class PushMobile
 {
-    private const DB_PATH = __DIR__ . "/../../../db.sqlite";
+    private const DB_PATH          = __DIR__ . "/../../../db.sqlite";
+    private const SA_PATH          = __DIR__ . "/firebase-service-account.json";
+    private const FCM_PROJECT_ID   = "winpay-app";
+    private const FCM_V1_URL       = "https://fcm.googleapis.com/v1/projects/" . self::FCM_PROJECT_ID . "/messages:send";
+    private const TOKEN_CACHE_PATH = __DIR__ . "/../../../storage/fcm_token_cache.json";
 
     // ── Banco ───────────────────────────────────────────────────────────────
 
@@ -37,7 +43,6 @@ class PushMobile
             pref_recap   INTEGER DEFAULT 0,
             updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
         )");
-        // migração: adiciona coluna se ainda não existe
         try { $pdo->exec("ALTER TABLE mobile_push ADD COLUMN pref_pix_gen INTEGER DEFAULT 0"); } catch (\Throwable $e) {}
 
         return $pdo;
@@ -107,15 +112,6 @@ class PushMobile
 
     // ── Envio ────────────────────────────────────────────────────────────────
 
-    /**
-     * Envia push para um usuário se ele tiver o token registrado e a preferência habilitada.
-     *
-     * @param int    $userId  ID do usuário (produtor/afiliado)
-     * @param string $titulo  Título da notificação
-     * @param string $corpo   Corpo da notificação
-     * @param string $tipo    Chave da preferência: pix | sale | cb | payout | recap
-     * @param array  $extra   Dados extras enviados no payload (opcional)
-     */
     public static function enviar(int $userId, string $titulo, string $corpo, string $tipo, array $extra = []): void
     {
         try {
@@ -125,92 +121,82 @@ class PushMobile
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             if (!$row || empty($row["expo_token"])) {
-                return; // usuário sem token registrado
+                return;
             }
 
-            // Verifica preferência
             $prefMap = ["pix" => "pref_pix", "pix_gen" => "pref_pix_gen", "sale" => "pref_sale", "cb" => "pref_cb", "payout" => "pref_payout", "recap" => "pref_recap"];
             $prefCol = $prefMap[$tipo] ?? null;
 
             if ($prefCol && isset($row[$prefCol]) && !(int) $row[$prefCol]) {
-                return; // usuário desativou este tipo
+                return;
             }
 
-            self::sendExpo($row["expo_token"], $titulo, $corpo, array_merge(["type" => $tipo], $extra));
+            self::sendFcmV1($row["expo_token"], $titulo, $corpo, array_merge(["type" => $tipo], $extra));
         } catch (\Throwable $e) {
             error_log("[PushMobile] Erro ao enviar push para user {$userId}: " . $e->getMessage());
         }
     }
 
-    /**
-     * Envia push para múltiplos usuários (ex.: resumo diário).
-     */
     public static function enviarParaTodos(string $titulo, string $corpo, string $tipo, array $extra = []): void
     {
         try {
-            $pdo  = self::pdo();
-            $prefCol = ["pix" => "pref_pix", "sale" => "pref_sale", "cb" => "pref_cb", "payout" => "pref_payout", "recap" => "pref_recap"][$tipo] ?? "pref_sale";
+            $pdo     = self::pdo();
+            $prefCol = ["pix" => "pref_pix", "pix_gen" => "pref_pix_gen", "sale" => "pref_sale", "cb" => "pref_cb", "payout" => "pref_payout", "recap" => "pref_recap"][$tipo] ?? "pref_sale";
 
-            $stmt = $pdo->query("SELECT expo_token FROM mobile_push WHERE expo_token IS NOT NULL AND {$prefCol} = 1");
+            $stmt   = $pdo->query("SELECT expo_token FROM mobile_push WHERE expo_token IS NOT NULL AND {$prefCol} = 1");
             $tokens = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
-            if (!$tokens) {
-                return;
-            }
-
             foreach ($tokens as $token) {
-                self::sendExpo($token, $titulo, $corpo, array_merge(["type" => $tipo], $extra));
+                self::sendFcmV1($token, $titulo, $corpo, array_merge(["type" => $tipo], $extra));
             }
         } catch (\Throwable $e) {
             error_log("[PushMobile] Erro ao enviar push broadcast: " . $e->getMessage());
         }
     }
 
-    // ── FCM (Firebase Cloud Messaging) ──────────────────────────────────────
-    // Usa o mesmo token FCM nativo obtido via getDevicePushTokenAsync() no app.
-    // A chave do servidor FCM fica em configuracao_checkout id=4 -> chave_producao.
+    // ── FCM HTTP v1 API ──────────────────────────────────────────────────────
 
-    private static function fcmServerKey(): string
+    private static function sendFcmV1(string $token, string $titulo, string $corpo, array $data = []): void
     {
-        try {
-            // Mesmo campo usado pelo pushGoogle() existente no sistema
-            require_once __DIR__ . "/../../../vendor/autoload.php";
-            $config = (new \Source\Models\Configuracoes\ConfiguracaoCheckout())->findById(4);
-            return $config->chave_producao ?? "";
-        } catch (\Throwable $e) {
-            error_log("[PushMobile] Erro ao buscar chave FCM: " . $e->getMessage());
-            return "";
-        }
-    }
-
-    private static function sendExpo(string $token, string $titulo, string $corpo, array $data = []): void
-    {
-        $serverKey = self::fcmServerKey();
-        if (!$serverKey) {
-            error_log("[PushMobile] Chave FCM não configurada (configuracao_checkout id=4)");
+        $accessToken = self::getAccessToken();
+        if (!$accessToken) {
+            error_log("[PushMobile] Não foi possível obter access token FCM");
             return;
         }
 
+        // Converte data para strings (FCM v1 exige string nos data fields)
+        $dataStr = [];
+        foreach ($data as $k => $v) {
+            $dataStr[(string)$k] = (string)$v;
+        }
+
         $payload = json_encode([
-            "to"           => $token,
-            "notification" => [
-                "title" => $titulo,
-                "body"  => $corpo,
-                "sound" => "default",
+            "message" => [
+                "token"        => $token,
+                "notification" => [
+                    "title" => $titulo,
+                    "body"  => $corpo,
+                ],
+                "data"    => $dataStr,
+                "android" => [
+                    "priority"     => "high",
+                    "notification" => [
+                        "sound"        => "default",
+                        "channel_id"   => "default",
+                    ],
+                ],
             ],
-            "data"         => $data,
-            "priority"     => "high",
         ]);
 
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL            => "https://fcm.googleapis.com/fcm/send",
+            CURLOPT_URL            => self::FCM_V1_URL,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 10,
             CURLOPT_CUSTOMREQUEST  => "POST",
             CURLOPT_POSTFIELDS     => $payload,
             CURLOPT_HTTPHEADER     => [
-                "Authorization: key={$serverKey}",
+                "Authorization: Bearer {$accessToken}",
                 "Content-Type: application/json",
             ],
         ]);
@@ -220,9 +206,98 @@ class PushMobile
         curl_close($curl);
 
         if ($errno) {
-            error_log("[PushMobile] cURL error {$errno} FCM");
+            error_log("[PushMobile] cURL error {$errno} ao enviar FCM v1");
         } else {
-            error_log("[PushMobile] FCM response: " . $response);
+            error_log("[PushMobile] FCM v1 response: " . $response);
         }
+    }
+
+    /**
+     * Gera (ou lê do cache) um OAuth2 access token para a FCM v1 API
+     * usando o Service Account JSON.
+     */
+    private static function getAccessToken(): string
+    {
+        // Tenta usar cache (token válido por ~50 min para evitar requisições extras)
+        $cacheDir = dirname(self::TOKEN_CACHE_PATH);
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0755, true);
+        }
+
+        if (file_exists(self::TOKEN_CACHE_PATH)) {
+            $cache = json_decode(file_get_contents(self::TOKEN_CACHE_PATH), true);
+            if (!empty($cache["token"]) && !empty($cache["expires"]) && time() < $cache["expires"]) {
+                return $cache["token"];
+            }
+        }
+
+        // Lê service account
+        if (!file_exists(self::SA_PATH)) {
+            error_log("[PushMobile] Service account JSON não encontrado: " . self::SA_PATH);
+            return "";
+        }
+
+        $sa = json_decode(file_get_contents(self::SA_PATH), true);
+        if (empty($sa["private_key"]) || empty($sa["client_email"])) {
+            error_log("[PushMobile] Service account JSON inválido");
+            return "";
+        }
+
+        // Monta JWT
+        $now    = time();
+        $header  = self::base64url(json_encode(["alg" => "RS256", "typ" => "JWT"]));
+        $payload = self::base64url(json_encode([
+            "iss"   => $sa["client_email"],
+            "scope" => "https://www.googleapis.com/auth/firebase.messaging",
+            "aud"   => "https://oauth2.googleapis.com/token",
+            "iat"   => $now,
+            "exp"   => $now + 3600,
+        ]));
+
+        $sigInput = "{$header}.{$payload}";
+        $privKey  = openssl_pkey_get_private($sa["private_key"]);
+        if (!$privKey) {
+            error_log("[PushMobile] Não foi possível carregar chave privada do service account");
+            return "";
+        }
+
+        openssl_sign($sigInput, $signature, $privKey, OPENSSL_ALGO_SHA256);
+        $jwt = "{$sigInput}." . self::base64url($signature);
+
+        // Troca JWT por access token
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL            => "https://oauth2.googleapis.com/token",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 10,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => http_build_query([
+                "grant_type" => "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                "assertion"  => $jwt,
+            ]),
+            CURLOPT_HTTPHEADER => ["Content-Type: application/x-www-form-urlencoded"],
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $result = json_decode($response, true);
+        $token  = $result["access_token"] ?? "";
+
+        if ($token) {
+            file_put_contents(self::TOKEN_CACHE_PATH, json_encode([
+                "token"   => $token,
+                "expires" => $now + 3000, // cache por 50 min
+            ]));
+        } else {
+            error_log("[PushMobile] Falha ao obter access token: " . $response);
+        }
+
+        return $token;
+    }
+
+    private static function base64url(string $data): string
+    {
+        return rtrim(strtr(base64_encode($data), "+/", "-_"), "=");
     }
 }
