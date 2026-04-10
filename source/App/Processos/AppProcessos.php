@@ -504,7 +504,7 @@ class AppProcessos
 
         // Pix gerado — somente app mobile
         if ((int)$pagamento === 3 && (int)$status === 1) {
-            PushMobile::enviar($producerId, "⚡ Pix gerado!", "Um Pix de {$valorFmt} está aguardando pagamento.", "pix", ["venda" => (int)($data["venda"] ?? 0)]);
+            PushMobile::enviar($producerId, "⚡ Pix gerado!", "Um Pix de {$valorFmt} está aguardando pagamento.", "pix_gen", ["venda" => (int)($data["venda"] ?? 0)]);
         }
 
         // Pix pago
