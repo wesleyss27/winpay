@@ -900,6 +900,7 @@ $router->post("/preferencias",     "AppMobileApi:savePreferencias", "mobile.pref
 $router->get("/resumo-diario",     "AppMobileApi:resumoDiario",     "mobile.resumo");
 $router->post("/esqueci-senha",    "AppMobileApi:esqueciSenha",     "mobile.forgot");
 $router->post("/redefinir-senha",  "AppMobileApi:redefinirSenha",   "mobile.reset");
+$router->get("/versao",            "AppMobileApi:versao",           "mobile.versao");
 
 /*
 * Processos

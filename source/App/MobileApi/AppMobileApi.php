@@ -378,6 +378,24 @@ class AppMobileApi
     }
 
     /**
+     * GET /mobile/versao
+     * Retorna a versão mínima exigida do app.
+     * Altere MIN_VERSION para forçar atualização em versões antigas.
+     */
+    public function versao($data): void
+    {
+        $this->cors();
+
+        define('MIN_VERSION', '1.0.0');          // ← altere aqui para forçar update
+        define('STORE_URL',   'https://play.google.com/store/apps/details?id=com.winpaymobile');
+
+        $this->json([
+            "min_version" => MIN_VERSION,
+            "store_url"   => STORE_URL,
+        ]);
+    }
+
+    /**
      * POST /mobile/redefinir-senha
      * Body: { "usuario_id": 1, "codigo": "ABCD", "codigo_recuperacao": "XXXXXYYY", "nova_senha": "..." }
      */

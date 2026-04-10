@@ -163,26 +163,23 @@ class PushMobile
             return;
         }
 
+        // Mensagem data-only: expo-notifications processa e usa large icon configurado
         // Converte data para strings (FCM v1 exige string nos data fields)
-        $dataStr = [];
+        $dataStr = [
+            "title"   => $titulo,
+            "message" => $corpo,
+            "sound"   => "default",
+        ];
         foreach ($data as $k => $v) {
             $dataStr[(string)$k] = (string)$v;
         }
 
         $payload = json_encode([
             "message" => [
-                "token"        => $token,
-                "notification" => [
-                    "title" => $titulo,
-                    "body"  => $corpo,
-                ],
+                "token"   => $token,
                 "data"    => $dataStr,
                 "android" => [
-                    "priority"     => "high",
-                    "notification" => [
-                        "sound"        => "default",
-                        "channel_id"   => "default",
-                    ],
+                    "priority" => "high",
                 ],
             ],
         ]);
