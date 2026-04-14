@@ -407,13 +407,13 @@ class AppReembolsos
 
         if ($reembolso->save()) {
             // ---------------------------------------------------------------
-            // Reembolso automático: total <= R$70 e TODAS as vendas criadas há até 7 dias
+            // Reembolso automático: total <= R$50 e TODAS as vendas criadas há até 7 dias
             // Cada venda é enviada individualmente ao gateway.
             // ---------------------------------------------------------------
             $autoOk   = false;
             $autoErro = false;
 
-            if ($valorTotal <= 70.00 && !empty($produtos)) {
+            if ($valorTotal <= 50.00 && !empty($produtos)) {
                 // 1. Verifica se TODAS as vendas estão dentro do prazo de 7 dias
                 $todasNoPrazo = true;
                 foreach ($produtos as $p) {
@@ -459,7 +459,7 @@ class AppReembolsos
                         $pdo->prepare("UPDATE reembolsos SET status = 4, auto_reembolsado = 1, atualizado_em = NOW() WHERE id = :id")
                             ->execute([":id" => $reembolso->id]);
                         $this->bloquearAcessoMembrosCurso($reembolso);
-                        $this->notificarReembolsoConcluido($reembolso, true);
+                        // $this->notificarReembolsoConcluido($reembolso, true);
                     } else {
                         $autoErro = true;
                         error_log("[Reembolso Auto] id={$reembolso->id} resultado parcial: " . json_encode($resultadosAuto));
@@ -470,7 +470,7 @@ class AppReembolsos
             }
             // ---------------------------------------------------------------
 
-            $this->notificar($reembolso);
+            // $this->notificar($reembolso);
             echo json_encode(["ok" => true, "id" => $reembolso->id, "auto_reembolsado" => $autoOk, "auto_erro" => $autoErro]);
         } else {
             http_response_code(500);
