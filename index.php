@@ -106,6 +106,7 @@ $router->get("/termos-compra", "AppTermos:termosCompra", "apptermos.termosCompra
 $router->get("/politica-privacidade", "AppTermos:politicaPrivacidade", "apptermos.politicaPrivacidade");
 $router->get("/politica-disputa", "AppTermos:politicaDisputa", "apptermos.politicaDisputa");
 $router->get("/ajuda-usuarios", "AppTermos:ajudaUsuarios", "apptermos.ajudaUsuarios");
+$router->get("/passo-a-passo", "AppTermos:central", "apptermos.central");
 
 /*
 * EERROS
