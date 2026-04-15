@@ -64,4 +64,11 @@ class AppTermos
             "title" => "POLÍTICA DE RESOLUÇÃO DE DISPUTA"
         ]);
     }
+
+    public function central($data)
+    {
+        echo $this->view->render("central/index", [
+            "title" => "Central WinPay"
+        ]);
+    }
 }
