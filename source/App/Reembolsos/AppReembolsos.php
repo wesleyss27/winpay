@@ -48,7 +48,7 @@ class AppReembolsos
         if ($isAdmin) {
             if (!empty($q["produtor"]))  $filtros[] = "produtor_id = " . (int)$q["produtor"];
             if (!empty($q["afiliado"]))  $filtros[] = "afiliado_id = " . (int)$q["afiliado"];
-            if (!empty($q["comprador"])) $filtros[] = "comprador_id = " . (int)$q["comprador"];
+            if (!empty($q["comprador"])) $filtros[] = $this->filtroComprador($q["comprador"]);
             if (!empty($q["produto"]))   $filtros[] = "produto_id = " . (int)$q["produto"];
             if (isset($q["status"]) && $q["status"] !== "") $filtros[] = "status = " . (int)$q["status"];
         } else {
@@ -511,6 +511,31 @@ class AppReembolsos
         }
     }
 
+    private function filtroComprador(string $termo): string
+    {
+        $termoE = addslashes(trim($termo));
+        $cpfE   = addslashes(preg_replace('/\D/', '', $termo));
+
+        $ids = [];
+
+        // Busca por nome ou e-mail
+        $usersNome = (new Usuario())->find(
+            "nome LIKE '%{$termoE}%' OR email LIKE '%{$termoE}%'"
+        )->fetch(true);
+        foreach (($usersNome ?: []) as $u) $ids[] = (int)$u->id;
+
+        // Busca por CPF/CNPJ (apenas dígitos)
+        if (!empty($cpfE)) {
+            $usersCpf = (new UsuarioDados())->find("cpf_cnpj LIKE '%{$cpfE}%'")->fetch(true);
+            foreach (($usersCpf ?: []) as $d) $ids[] = (int)$d->usuario;
+        }
+
+        $ids = array_unique(array_filter($ids));
+        return $ids
+            ? "comprador_id IN (" . implode(',', $ids) . ")"
+            : "comprador_id = 0";
+    }
+
     private function buscaNomeUsuario($id)
     {
         if (!$id) return null;
@@ -724,7 +749,7 @@ class AppReembolsos
         if ($isAdmin) {
             if (!empty($q["produtor"]))  $filtros[] = "produtor_id = " . (int)$q["produtor"];
             if (!empty($q["afiliado"]))  $filtros[] = "afiliado_id = " . (int)$q["afiliado"];
-            if (!empty($q["comprador"])) $filtros[] = "comprador_id = " . (int)$q["comprador"];
+            if (!empty($q["comprador"])) $filtros[] = $this->filtroComprador($q["comprador"]);
             if (!empty($q["produto"]))   $filtros[] = "produto_id = " . (int)$q["produto"];
             if (isset($q["status"]) && $q["status"] !== "") $filtros[] = "status = " . (int)$q["status"];
         } else {

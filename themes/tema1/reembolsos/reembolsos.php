@@ -79,7 +79,9 @@ $canChange = in_array(@$_SESSION["tipo"], [1, 2, 4, 5]);
           </div>
           <div class="form-group mr-2">
             <label class="mr-1">Comprador</label>
-            <input type="number" name="comprador" class="form-control form-control-sm" value="<?= @$query['comprador'] ?>">
+            <input type="text" name="comprador" class="form-control form-control-sm"
+                   placeholder="nome, e-mail ou CPF"
+                   value="<?= htmlspecialchars(@$query['comprador']) ?>">
           </div>
           <div class="form-group mr-2">
             <label class="mr-1">Produto</label>
