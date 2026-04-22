@@ -378,7 +378,7 @@ class PagarMe
         ' . @$digito_agencia . '
         "account_number": "' . @$data["conta"] . '",
         "account_check_digit": "' . @$data["digito_conta"] . '",
-        "type": "savings"
+        "type": "' . ((@$data["tipo"] === 'corrente') ? 'checking' : 'savings') . '"
       },
       "transfer_settings": {
         "transfer_enabled": false,
@@ -529,13 +529,23 @@ class PagarMe
 
   public function saque($recipient_id, $amount)
   {
-
     $url = "https://api.pagar.me/core/v5/recipients/$recipient_id/withdrawals";
-    $json = "{
-      'amount': $amount
-    }";
-
+    $json = "{'amount': $amount}";
     return $this->executa($url, "POST", $json);
+  }
+
+  public function historicoSaques($recipient_id, $data_ini = null, $data_fim = null, $count = 100)
+  {
+    $params = ["count" => $count, "page" => 1];
+    if ($data_ini) $params["created_since"] = $data_ini . "T00:00:00Z";
+    if ($data_fim) $params["created_until"] = $data_fim . "T23:59:59Z";
+
+    $url = "https://api.pagar.me/core/v5/recipients/$recipient_id/withdrawals?" . http_build_query($params);
+    $resp = $this->executa($url, "GET");
+
+    if (isset($resp->data) && is_array($resp->data)) return $resp->data;
+    if (is_array($resp)) return $resp;
+    return [];
   }
 
   /**
