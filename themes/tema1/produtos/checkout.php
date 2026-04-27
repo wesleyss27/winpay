@@ -358,6 +358,8 @@ $modelo_checkout = array(
                                             <input type="hidden" name="banner_atual" value="<?= $checkout->banner ?>">
                                             <input type="hidden" name="banner_lateral" value="<?= $checkout->banner_lateral ?>">
                                             <input type="hidden" name="aviso_atual" value="<?= $checkout->aviso ?>">
+                                            <input type="hidden" name="video_prova_social" value="<?= htmlspecialchars($checkout->video_prova_social ?? '') ?>">
+                                            <input type="hidden" name="video_posicao" value="<?= $checkout->video_posicao ?? 'botao' ?>">
                                             <input type="hidden" name="usar_contador" value="<?= $checkout->usar_contador ?>">
                                             <input type="hidden" name="texto_contador" value="<?= $checkout->texto_contador ?>">
                                             <input type="hidden" name="acao_contador" value="<?= $checkout->acao_contador ?>">
@@ -508,6 +510,8 @@ $modelo_checkout = array(
                                             banner: "<?= $checkout->banner ?>",
                                             banner_lateral: "<?= $checkout->banner_lateral ?>",
                                             aviso: "<?= $checkout->aviso ?>",
+                                            video_prova_social: "<?= base64_encode($checkout->video_prova_social ?? '') ?>",
+                                            video_posicao: "<?= $checkout->video_posicao ?? 'botao' ?>",
                                             cupom: "<?= $checkout->cupom ?>",
                                             valor_cupom: "<?= $checkout->valor_cupom ?>",
                                             so_cartao: "<?= $checkout->so_cartao ?>",
@@ -698,6 +702,25 @@ $modelo_checkout = array(
                                         <button id="excluir-banner-lateral" class="close text-danger" title="Remover imagem atual">&times;</button>
                                         <img src="" alt="" id="imagem_banner_lateral" width="100%">
                                     </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label><i class="fas fa-play-circle"></i> Vídeo de Prova Social (VTurb)</label>
+                                    <small class="d-block mb-1">Cole aqui o código embed gerado pelo VTurb</small>
+                                    <textarea class="form-control" id="video_prova_social" name="video_prova_social" rows="5" placeholder="<vturb-smartplayer ...></vturb-smartplayer> <script ...></script>"></textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label>Posição do vídeo:</label>
+                                    <select class="form-control" id="video_posicao" name="video_posicao">
+                                        <option value="botao">Abaixo do botão de compra</option>
+                                        <option value="banner">Como banner no topo</option>
+                                        <option value="ambos">Ambas as posições</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -1937,9 +1960,15 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#endereco_obrigatorio option[value=" + endereco_obrigatorio + "]").prop("selected", true);
         // $("#televendas option[value=" + televendas + "]").prop("selected", true);
 
+        var video_prova_social = dados[i]["video_prova_social"];
+        var video_posicao = dados[i]["video_posicao"];
+
         var img_banner = "<?= url("uploads/checkout/") ?>" + banner;
         var img_banner_lateral = "<?= url("uploads/checkout/") ?>" + banner_lateral;
         var img_aviso = "<?= url("uploads/checkout/") ?>" + aviso;
+
+        $("#video_prova_social").val(video_prova_social ? atob(video_prova_social) : "");
+        $("#video_posicao option[value='" + video_posicao + "']").prop("selected", true);
 
         $("#banner_atual").attr("value", banner);
 
@@ -2164,6 +2193,8 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#prazo_entrega").attr("value", "");
         $("#frete_gratis option").prop("selected", false);
         $("#prazo_entrega_gratis").attr("value", "");
+        $("#video_prova_social").val("");
+        $("#video_posicao option[value='botao']").prop("selected", true);
     }
 
     function duplicar(id) {

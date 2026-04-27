@@ -905,7 +905,9 @@ class AppProdutos
     {
         // var_dump(@$data);
         // exit;
+        $video_prova_social_raw = $data["video_prova_social"] ?? '';
         $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+        $data["video_prova_social"] = $video_prova_social_raw;
 
         $numero_de_bytes = 4;
         $resultado_bytes = random_bytes($numero_de_bytes);
@@ -964,6 +966,8 @@ class AppProdutos
         else
             $checkout->banner_lateral = $files->upload($_FILES["baner_lateral"], PASTA . "checkout/");
 
+        $checkout->video_prova_social = @$data["video_prova_social"];
+        $checkout->video_posicao      = @$data["video_posicao"] ?: 'botao';
 
         if (@$data["vencimento_boletos"])
             $checkout->vencimento_boletos = $data["vencimento_boletos"];
@@ -1068,7 +1072,9 @@ class AppProdutos
 
     public function checkoutEditar($data)
     {
+        $video_prova_social_raw = $data["video_prova_social"] ?? '';
         $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+        $data["video_prova_social"] = $video_prova_social_raw;
 
         $files = new File();
         $checkout = (new Checkout())->findById($data["id"]);
@@ -1145,6 +1151,9 @@ class AppProdutos
             $checkout->aviso = $files->upload($_FILES["aviso"], PASTA . "checkout/");
             if (@$data["aviso_atual"]) @unlink(PASTA . "checkout/" . @$data["aviso_atual"]);
         }
+
+        $checkout->video_prova_social = @$data["video_prova_social"];
+        $checkout->video_posicao      = @$data["video_posicao"] ?: 'botao';
 
         if (@$data["usar_order_bump"] == 0 || @$data["usar_order_bump"] == 1) {
             $checkout->usar_order_bump       = $data["usar_order_bump"];

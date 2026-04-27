@@ -53,6 +53,11 @@ $idProduto      = $produto->id;
 
 $banner             = $checkout->banner;
 $aviso              = $checkout->aviso;
+$video_prova_social = $checkout->video_prova_social;
+$video_posicao      = $checkout->video_posicao ?: 'botao';
+
+$video_body_code = $video_prova_social;
+
 $email_suporte      = $produto->email_suporte;
 $taxa_juros         = $taxa->parcelamento;
 $url_checkout       = $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"];
@@ -770,6 +775,14 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
 </style>
 
+<?php if ($video_body_code) : ?>
+    <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+    <link rel="dns-prefetch" href="https://cdn.converteai.net">
+    <link rel="dns-prefetch" href="https://scripts.converteai.net">
+    <link rel="dns-prefetch" href="https://images.converteai.net">
+    <link rel="dns-prefetch" href="https://api.vturb.com.br">
+<?php endif; ?>
+
 </head>
 <!-- FIM DO HEAD -->
 
@@ -961,7 +974,13 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 <div class="header">
                     <?php if (@$banner != "") : ?>
                         <img class="banner-checkout" src="<?= url("uploads/checkout/" . @$banner); ?>" alt="Banner Checkout">
-                    
+
+                    <?php endif; ?>
+
+                    <?php if ($video_body_code != "" && in_array($video_posicao, ['banner', 'ambos'])) : ?>
+                        <div class="video-prova-social-banner" style="width:100%;margin-bottom:10px;">
+                            <?= $video_body_code ?>
+                        </div>
                     <?php endif; ?>
 
                     <?php if (@$aviso != "") : ?>
@@ -1791,6 +1810,13 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                     </div>
                 </div>
                 <!-- FIM FORMAS PAGAMENTO -->
+
+                <?php if ($video_body_code != "" && in_array($video_posicao, ['botao', 'ambos'])) : ?>
+                    <div class="video-prova-social-botao" style="margin-top:16px;">
+                        <?= $video_body_code ?>
+                    </div>
+                <?php endif; ?>
+
             </div>
             <!-- FIM LADO DIREITO -->
         </div>
@@ -1837,7 +1863,7 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 
-<<script>
+<script>
     function iniciarContador(segundos) {
         const el = document.getElementById("contador_pix");
         let restante = segundos;
