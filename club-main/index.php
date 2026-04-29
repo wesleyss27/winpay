@@ -136,6 +136,15 @@ $router->get("/comentarios/{curso}/{page}", "AppComentarios:comentarios", "comen
 $router->post("/ordem", "AppCursos:ordemAulas", "cursos.ordemAulas");
 $router->post("/aula-nome", "AppCursos:atualizaNomeAula", "aulas.atualizaNome");
 
+$router->group("ofertas");
+$router->get("/{courseid}", "AppOfertas:ofertas", "ofertas.lista");
+$router->post("/cadastro", "AppOfertas:cadastro", "ofertas.cadastro");
+$router->post("/editar", "AppOfertas:editar", "ofertas.editar");
+$router->post("/status", "AppOfertas:toggleStatus", "ofertas.status");
+$router->post("/excluir", "AppOfertas:excluir", "ofertas.excluir");
+$router->post("/planos", "AppOfertas:planosPorProduto", "ofertas.planos");
+$router->post("/checkouts", "AppOfertas:checkoutsPorPlano", "ofertas.checkouts");
+
 
 $router->group("certificados");
 $router->get("/{curso}", "AppCertificados:certificado");
@@ -172,6 +181,19 @@ $router->group("aulas");
 $router->post("/comentar", "AppMinhascompras:comentar", "aulas.comentar");
 $router->post("/concluir", "AppMinhascompras:aulaConcluida", "aulas.concluir");
 $router->post("/avaliacao", "AppMinhascompras:avaliacao", "aulas.avaliar");
+
+/*
+* NAMESPACE Source\App\Videos
+*/
+$router->namespace("Source\App\Videos");
+$router->group("videos");
+$router->get("/",                  "AppVideos:biblioteca",      "videos.biblioteca");
+$router->post("/upload",           "AppVideos:upload",          "videos.upload");
+$router->post("/excluir",          "AppVideos:excluir",         "videos.excluir");
+$router->get("/stream/{id}",       "AppVideos:stream",          "videos.stream");
+$router->post("/progresso",        "AppVideos:salvarProgresso", "videos.progresso");
+$router->get("/progresso/{aula_id}", "AppVideos:getProgresso",  "videos.getProgresso");
+$router->get("/listar",            "AppVideos:listar",          "videos.listar");
 
 
 /*

@@ -471,28 +471,452 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
           <div class="win-simple-card lesson-player-card">
             <div class="lesson-video">
-              <?php
-              $url = $aula->link_video;
+              <?php if (!empty($aula->video_id)) : ?>
+                <!-- ── PLAYER HOSPEDADO ── -->
+                <?php
+                $streamUrl = $router->route("videos.stream", ["id" => $aula->video_id]);
+                $progressoUrl = $router->route("videos.getProgresso", ["aula_id" => $aula->id]);
+                $salvarUrl    = $router->route("videos.progresso");
+                ?>
+                <div id="win-player-wrap" style="position:relative;background:#000;border-radius:var(--wh-radius-md);overflow:hidden;">
+                  <video id="win-video"
+                    src="<?= htmlspecialchars($streamUrl, ENT_QUOTES, 'UTF-8') ?>"
+                    preload="metadata"
+                    playsinline
+                    style="width:100%;display:block;min-height:clamp(240px,42vw,460px);">
+                  </video>
 
-              if (strpos($url, 'youtube') !== false || strpos($url, 'youtu.be') !== false) {
-                  $youtube_url = 'https://www.youtube.com/embed/';
-                  preg_match('%(?:youtube(?:-nocookie)?\\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\\.be/)([^"&?/ ]{11})%i', $url, $matches);
-                  $videoId = $matches[1] ?? null;
-                  $new_url = $videoId
-                      ? '<iframe src="' . $youtube_url . $videoId . '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>'
-                      : '<iframe src="' . $url . '" frameborder="0" allowfullscreen loading="lazy"></iframe>';
-              } elseif (strpos($url, 'vimeo') !== false) {
-                  $vimeo_url = 'https://player.vimeo.com/video/';
-                  $videoId = substr(strrchr($url, '/'), 1);
-                  $new_url = '<iframe src="' . $vimeo_url . $videoId . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
-              } elseif (!empty($aula->script_player)) {
-                  $new_url = base64_decode($aula->script_player);
-              } else {
-                  $new_url = '<iframe src="' . $aula->link_video . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
-              }
+                  <!-- overlay de loading -->
+                  <div id="win-loader" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);pointer-events:none;">
+                    <i class="fas fa-circle-notch fa-spin" style="font-size:2rem;color:var(--wh-accent);"></i>
+                  </div>
 
-              echo $new_url;
-              ?>
+                  <!-- overlay de oferta -->
+                  <div id="win-oferta-overlay" style="display:none;position:absolute;inset:0;z-index:10;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);padding:1.2rem;">
+                    <div style="background:rgba(11,15,28,0.97);border:1px solid rgba(244,208,63,0.35);border-radius:var(--wh-radius-md);padding:1.4rem 1.6rem;max-width:380px;width:100%;position:relative;display:flex;flex-direction:column;gap:0.8rem;box-shadow:0 8px 32px rgba(0,0,0,0.55);">
+                      <button id="win-oferta-fechar" type="button" style="position:absolute;top:0.6rem;right:0.8rem;background:none;border:none;color:rgba(255,255,255,0.55);font-size:1.1rem;cursor:pointer;line-height:1;" title="Fechar">
+                        <i class="fas fa-times"></i>
+                      </button>
+                      <p style="margin:0;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(244,208,63,0.75);">Oferta especial</p>
+                      <img id="win-oferta-img" src="" alt="" style="display:none;width:100%;max-height:140px;object-fit:cover;border-radius:var(--wh-radius-sm);">
+                      <strong id="win-oferta-nome" style="font-size:1rem;line-height:1.3;color:#fff;"></strong>
+                      <p id="win-oferta-desc" style="display:none;margin:0;font-size:0.83rem;color:rgba(255,255,255,0.65);line-height:1.5;"></p>
+                      <span id="win-oferta-valor" style="display:none;font-size:1.25rem;font-weight:700;color:var(--wh-accent);"></span>
+                      <a id="win-oferta-cta" href="#" target="_blank" rel="noopener"
+                         style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.7rem 1.2rem;background:var(--wh-accent);color:#000;font-weight:700;font-size:0.88rem;border-radius:var(--wh-radius-sm);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;margin-top:0.2rem;">
+                        Comprar agora <i class="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- controles -->
+                  <div id="win-controls" style="position:absolute;bottom:0;left:0;right:0;padding:0.5rem 0.9rem 0.7rem;background:linear-gradient(transparent,rgba(0,0,0,0.82));display:flex;flex-direction:column;gap:0.45rem;opacity:0;transition:opacity 0.25s;">
+
+                    <!-- barra de progresso -->
+                    <div id="win-seek-wrap" style="position:relative;height:5px;background:rgba(255,255,255,0.18);border-radius:99px;cursor:pointer;">
+                      <div id="win-buffered-bar" style="position:absolute;left:0;top:0;height:100%;border-radius:99px;background:rgba(255,255,255,0.22);width:0%;pointer-events:none;"></div>
+                      <div id="win-progress-bar" style="position:absolute;left:0;top:0;height:100%;border-radius:99px;background:var(--wh-accent);width:0%;pointer-events:none;"></div>
+                      <div id="win-seek-thumb" style="position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:var(--wh-accent);transform:translate(-50%,-50%);left:0%;pointer-events:none;box-shadow:0 0 0 3px rgba(244,208,63,0.25);"></div>
+                    </div>
+
+                    <!-- linha de botões -->
+                    <div style="display:flex;align-items:center;gap:0.6rem;">
+                      <button id="win-play-btn" type="button" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;padding:0.2rem 0.3rem;line-height:1;">
+                        <i class="fas fa-play" id="win-play-icon"></i>
+                      </button>
+
+                      <button type="button" id="win-skip-back" style="background:none;border:none;color:#fff;font-size:0.9rem;cursor:pointer;padding:0.2rem;line-height:1;" title="Voltar 10s">
+                        <i class="fas fa-rotate-left"></i><small style="font-size:0.65rem;vertical-align:middle;">10</small>
+                      </button>
+
+                      <div style="font-size:0.78rem;color:rgba(255,255,255,0.8);margin-left:0.1rem;white-space:nowrap;">
+                        <span id="win-cur-time">0:00</span> / <span id="win-duration">0:00</span>
+                      </div>
+
+                      <div style="margin-left:auto;display:flex;align-items:center;gap:0.5rem;">
+                        <!-- velocidade -->
+                        <select id="win-speed" style="background:rgba(0,0,0,0.5);border:none;color:#fff;font-size:0.75rem;border-radius:4px;padding:0.1rem 0.25rem;cursor:pointer;">
+                          <option value="0.5">0.5×</option>
+                          <option value="0.75">0.75×</option>
+                          <option value="1" selected>1×</option>
+                          <option value="1.25">1.25×</option>
+                          <option value="1.5">1.5×</option>
+                          <option value="2">2×</option>
+                        </select>
+
+                        <!-- volume -->
+                        <button id="win-mute-btn" type="button" style="background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:0.2rem;" title="Mudo">
+                          <i class="fas fa-volume-high" id="win-vol-icon"></i>
+                        </button>
+                        <input id="win-vol" type="range" min="0" max="1" step="0.05" value="1" style="width:60px;accent-color:var(--wh-accent);">
+
+                        <!-- fullscreen -->
+                        <button id="win-fs-btn" type="button" style="background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:0.2rem;" title="Tela cheia">
+                          <i class="fas fa-expand"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- barra de progresso assistido (fora do player) -->
+                <div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.7rem;">
+                  <div style="flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                    <div id="win-watched-pct-bar" style="height:100%;background:var(--wh-accent);width:0%;transition:width 0.5s;"></div>
+                  </div>
+                  <span id="win-watched-pct-txt" style="font-size:0.72rem;color:var(--wh-text-soft);white-space:nowrap;">0% assistido</span>
+                </div>
+
+                <script>
+                (function () {
+                  const VIDEO_ID      = <?= (int)$aula->video_id ?>;
+                  const AULA_ID       = <?= (int)$aula->id ?>;
+                  const STREAM_URL    = <?= json_encode($streamUrl) ?>;
+                  const ROUTE_GET     = <?= json_encode($progressoUrl) ?>;
+                  const ROUTE_POST    = <?= json_encode($salvarUrl) ?>;
+                  const OFERTAS_PLAYER = <?= json_encode($ofertasPlayer ?? []) ?>;
+
+                  const video    = document.getElementById('win-video');
+                  const wrap     = document.getElementById('win-player-wrap');
+                  const loader   = document.getElementById('win-loader');
+                  const controls = document.getElementById('win-controls');
+                  const playBtn  = document.getElementById('win-play-btn');
+                  const playIcon = document.getElementById('win-play-icon');
+                  const seekWrap = document.getElementById('win-seek-wrap');
+                  const progBar  = document.getElementById('win-progress-bar');
+                  const bufBar   = document.getElementById('win-buffered-bar');
+                  const thumb    = document.getElementById('win-seek-thumb');
+                  const curTxt   = document.getElementById('win-cur-time');
+                  const durTxt   = document.getElementById('win-duration');
+                  const volSlider = document.getElementById('win-vol');
+                  const volIcon  = document.getElementById('win-vol-icon');
+                  const muteBtn  = document.getElementById('win-mute-btn');
+                  const fsBtn    = document.getElementById('win-fs-btn');
+                  const speedSel = document.getElementById('win-speed');
+                  const pctBar   = document.getElementById('win-watched-pct-bar');
+                  const pctTxt   = document.getElementById('win-watched-pct-txt');
+
+                  // controle anti-skip: máximo segundo já assistido
+                  let maxWatched   = 0;
+                  let savedTime    = 0;     // tempo salvo no servidor (carregado ao iniciar)
+                  let metaReady    = false; // loadedmetadata já disparou?
+                  let watchStart   = null;  // timestamp quando começou a assistir
+                  let totalWatched = 0;     // segundos acumulados nesta sessão
+                  let hideTimer    = null;
+                  let isSeeking    = false;
+
+                  function fmtTime(s) {
+                    s = Math.floor(s || 0);
+                    const m = Math.floor(s / 60);
+                    return m + ':' + String(s % 60).padStart(2, '0');
+                  }
+
+                  // ─── Aplica ponto salvo (só quando metadata E fetch estiverem prontos) ───
+                  function applySavedTime() {
+                    if (metaReady && savedTime > 2) {
+                      video.currentTime = savedTime;
+                      maxWatched = savedTime;
+                    }
+                  }
+
+                  // ─── Carrega progresso salvo ───
+                  fetch(ROUTE_GET)
+                    .then(r => r.json())
+                    .then(data => {
+                      savedTime = data.current_time || 0;
+                      updatePctUI(data.percent || 0);
+                      applySavedTime();
+                    })
+                    .catch(() => {});
+
+                  // ─── Eventos do vídeo ───
+                  video.addEventListener('loadedmetadata', () => {
+                    loader.style.display = 'none';
+                    durTxt.textContent = fmtTime(video.duration);
+                    metaReady = true;
+                    applySavedTime();
+                  });
+
+                  video.addEventListener('waiting', () => { loader.style.display = 'flex'; });
+                  video.addEventListener('canplay',  () => { loader.style.display = 'none'; });
+
+                  video.addEventListener('play', () => {
+                    playIcon.className = 'fas fa-pause';
+                    watchStart = Date.now();
+                  });
+
+                  video.addEventListener('pause', () => {
+                    playIcon.className = 'fas fa-play';
+                    accumulateWatch();
+                    saveProgress();
+                  });
+
+                  video.addEventListener('ended', () => {
+                    playIcon.className = 'fas fa-play';
+                    accumulateWatch();
+                    saveProgress(true);
+                  });
+
+                  // ─── Overlay de oferta ───
+                  const ofertaOverlay = document.getElementById('win-oferta-overlay');
+                  const ofertaFechar  = document.getElementById('win-oferta-fechar');
+                  const shownOfertas  = new Set(); // evita repetir na sessão
+
+                  ofertaFechar.addEventListener('click', () => {
+                    ofertaOverlay.style.display = 'none';
+                    video.play();
+                  });
+
+                  function mostrarOferta(o) {
+                    const img   = document.getElementById('win-oferta-img');
+                    const nome  = document.getElementById('win-oferta-nome');
+                    const desc  = document.getElementById('win-oferta-desc');
+                    const valor = document.getElementById('win-oferta-valor');
+                    const cta   = document.getElementById('win-oferta-cta');
+
+                    nome.textContent = o.nome;
+
+                    if (o.imagem) {
+                      img.src = <?= json_encode(url('uploads/cursos/')) ?> + o.imagem;
+                      img.style.display = 'block';
+                    } else {
+                      img.style.display = 'none';
+                    }
+
+                    if (o.descricao) {
+                      desc.textContent = o.descricao;
+                      desc.style.display = 'block';
+                    } else {
+                      desc.style.display = 'none';
+                    }
+
+                    if (o.valor) {
+                      valor.textContent = 'R$ ' + parseFloat(o.valor).toFixed(2).replace('.', ',');
+                      valor.style.display = 'inline';
+                    } else {
+                      valor.style.display = 'none';
+                    }
+
+                    cta.href = o.checkout_url;
+                    ofertaOverlay.style.display = 'flex';
+                    video.pause();
+                  }
+
+                  video.addEventListener('timeupdate', () => {
+                    const cur = video.currentTime;
+                    const dur = video.duration || 1;
+                    const pct = cur / dur;
+
+                    // atualiza barra de progresso
+                    progBar.style.width  = (pct * 100) + '%';
+                    thumb.style.left     = (pct * 100) + '%';
+                    curTxt.textContent   = fmtTime(cur);
+
+                    // buffered
+                    if (video.buffered.length > 0) {
+                      bufBar.style.width = (video.buffered.end(video.buffered.length - 1) / dur * 100) + '%';
+                    }
+
+                    // anti-skip: não deixa avançar além de maxWatched + 30s
+                    if (!isSeeking && cur > maxWatched + 30) {
+                      video.currentTime = maxWatched;
+                    } else if (cur > maxWatched) {
+                      maxWatched = cur;
+                    }
+
+                    // dispara overlay de oferta no segundo configurado
+                    if (OFERTAS_PLAYER.length) {
+                      OFERTAS_PLAYER.forEach((o, idx) => {
+                        if (!shownOfertas.has(idx) && cur >= o.exibir_em && cur < o.exibir_em + 2) {
+                          shownOfertas.add(idx);
+                          mostrarOferta(o);
+                        }
+                      });
+                    }
+                  });
+
+                  // ─── Auto-save a cada 10s enquanto estiver tocando ───
+                  setInterval(() => {
+                    if (!video.paused && !video.ended) saveProgress();
+                  }, 10000);
+
+                  // ─── Play / Pause ───
+                  playBtn.addEventListener('click', togglePlay);
+                  video.addEventListener('click',  togglePlay);
+
+                  function togglePlay() {
+                    if (video.paused) video.play(); else video.pause();
+                  }
+
+                  // ─── Skip back 10s ───
+                  document.getElementById('win-skip-back').addEventListener('click', () => {
+                    video.currentTime = Math.max(0, video.currentTime - 10);
+                  });
+
+                  // ─── Seek na barra ───
+                  seekWrap.addEventListener('mousedown', startSeek);
+                  seekWrap.addEventListener('touchstart', startSeek, { passive: true });
+
+                  function startSeek(e) {
+                    isSeeking = true;
+                    seek(e);
+                    document.addEventListener('mousemove', seek);
+                    document.addEventListener('touchmove', seek, { passive: true });
+                    document.addEventListener('mouseup',   endSeek);
+                    document.addEventListener('touchend',  endSeek);
+                  }
+
+                  function seek(e) {
+                    const rect  = seekWrap.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const ratio   = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                    const target  = ratio * (video.duration || 0);
+
+                    // anti-skip
+                    const clamped = Math.min(target, maxWatched + 30);
+                    progBar.style.width = (clamped / (video.duration || 1) * 100) + '%';
+                    thumb.style.left    = (clamped / (video.duration || 1) * 100) + '%';
+                    curTxt.textContent  = fmtTime(clamped);
+                  }
+
+                  function endSeek(e) {
+                    document.removeEventListener('mousemove', seek);
+                    document.removeEventListener('touchmove', seek);
+                    document.removeEventListener('mouseup',   endSeek);
+                    document.removeEventListener('touchend',  endSeek);
+
+                    const rect    = seekWrap.getBoundingClientRect();
+                    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                    const ratio   = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                    const target  = ratio * (video.duration || 0);
+                    video.currentTime = Math.min(target, maxWatched + 30);
+                    isSeeking = false;
+                  }
+
+                  // ─── Volume ───
+                  volSlider.addEventListener('input', () => {
+                    video.volume = volSlider.value;
+                    video.muted  = video.volume === 0;
+                    updateVolIcon();
+                  });
+
+                  muteBtn.addEventListener('click', () => {
+                    video.muted = !video.muted;
+                    updateVolIcon();
+                  });
+
+                  function updateVolIcon() {
+                    if (video.muted || video.volume === 0) {
+                      volIcon.className = 'fas fa-volume-xmark';
+                    } else if (video.volume < 0.5) {
+                      volIcon.className = 'fas fa-volume-low';
+                    } else {
+                      volIcon.className = 'fas fa-volume-high';
+                    }
+                  }
+
+                  // ─── Velocidade ───
+                  speedSel.addEventListener('change', () => {
+                    video.playbackRate = parseFloat(speedSel.value);
+                  });
+
+                  // ─── Fullscreen ───
+                  fsBtn.addEventListener('click', () => {
+                    if (!document.fullscreenElement) {
+                      wrap.requestFullscreen().catch(() => {});
+                    } else {
+                      document.exitFullscreen().catch(() => {});
+                    }
+                  });
+
+                  document.addEventListener('fullscreenchange', () => {
+                    fsBtn.querySelector('i').className = document.fullscreenElement
+                      ? 'fas fa-compress' : 'fas fa-expand';
+                  });
+
+                  // ─── Mostrar/esconder controles ───
+                  wrap.addEventListener('mousemove', showControls);
+                  wrap.addEventListener('touchstart', showControls, { passive: true });
+
+                  function showControls() {
+                    controls.style.opacity = '1';
+                    clearTimeout(hideTimer);
+                    hideTimer = setTimeout(() => {
+                      if (!video.paused) controls.style.opacity = '0';
+                    }, 2800);
+                  }
+
+                  // ─── Acumula tempo assistido ───
+                  function accumulateWatch() {
+                    if (watchStart !== null) {
+                      totalWatched += Math.round((Date.now() - watchStart) / 1000);
+                      watchStart = null;
+                    }
+                  }
+
+                  // ─── Salva progresso no servidor ───
+                  function saveProgress(forceComplete) {
+                    accumulateWatch();
+                    const body = new URLSearchParams({
+                      aula_id:      AULA_ID,
+                      video_id:     VIDEO_ID,
+                      current_time: video.currentTime,
+                      duration:     video.duration || 0,
+                      watch_seconds: totalWatched,
+                    });
+                    totalWatched = 0; // zera para não somar duplo
+
+                    fetch(ROUTE_POST, { method: 'POST', body })
+                      .then(r => r.json())
+                      .then(data => updatePctUI(data.percent))
+                      .catch(() => {});
+                  }
+
+                  function updatePctUI(pct) {
+                    pctBar.style.width  = Math.min(100, pct) + '%';
+                    pctTxt.textContent  = Math.round(pct) + '% assistido';
+                  }
+
+                  // salva ao sair da página via sendBeacon (confiável no unload)
+                  window.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') saveProgress();
+                  });
+                  window.addEventListener('beforeunload', () => {
+                    accumulateWatch();
+                    const body = new URLSearchParams({
+                      aula_id: AULA_ID, video_id: VIDEO_ID,
+                      current_time: video.currentTime, duration: video.duration || 0,
+                      watch_seconds: totalWatched,
+                    });
+                    navigator.sendBeacon(ROUTE_POST, body);
+                  });
+                })();
+                </script>
+              <?php else : ?>
+                <!-- ── EMBED EXISTENTE (inalterado) ── -->
+                <?php
+                $url = $aula->link_video;
+
+                if (strpos($url, 'youtube') !== false || strpos($url, 'youtu.be') !== false) {
+                    $youtube_url = 'https://www.youtube.com/embed/';
+                    preg_match('%(?:youtube(?:-nocookie)?\\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\\.be/)([^"&?/ ]{11})%i', $url, $matches);
+                    $videoId = $matches[1] ?? null;
+                    $new_url = $videoId
+                        ? '<iframe src="' . $youtube_url . $videoId . '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>'
+                        : '<iframe src="' . $url . '" frameborder="0" allowfullscreen loading="lazy"></iframe>';
+                } elseif (strpos($url, 'vimeo') !== false) {
+                    $vimeo_url = 'https://player.vimeo.com/video/';
+                    $videoId = substr(strrchr($url, '/'), 1);
+                    $new_url = '<iframe src="' . $vimeo_url . $videoId . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
+                } elseif (!empty($aula->script_player)) {
+                    $new_url = base64_decode($aula->script_player);
+                } else {
+                    $new_url = '<iframe src="' . $aula->link_video . '" frameborder="0" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>';
+                }
+
+                echo $new_url;
+                ?>
+              <?php endif; ?>
             </div>
 
             <div class="lesson-meta">
@@ -707,6 +1131,43 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
         </div>
 
         <aside class="lesson-sidebar">
+
+          <?php if (!empty($ofertaExibir)) :
+            $ofertaImg = $ofertaExibir->imagem ? url("uploads/cursos/" . $ofertaExibir->imagem) : null;
+          ?>
+          <div class="win-simple-card" style="padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem;">
+            <p style="margin:0; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--wh-text-soft);">Oferta especial</p>
+
+            <?php if ($ofertaImg) : ?>
+              <img src="<?= htmlspecialchars($ofertaImg, ENT_QUOTES, 'UTF-8'); ?>" alt=""
+                   style="width:100%; border-radius: var(--wh-radius-sm); object-fit: cover; max-height: 140px;">
+            <?php endif; ?>
+
+            <strong style="font-size: 1rem; line-height: 1.3;">
+              <?= htmlspecialchars($ofertaExibir->nome, ENT_QUOTES, 'UTF-8'); ?>
+            </strong>
+
+            <?php if ($ofertaExibir->descricao) : ?>
+              <p style="margin:0; font-size: 0.85rem; color: var(--wh-text-soft); line-height: 1.5;">
+                <?= nl2br(htmlspecialchars($ofertaExibir->descricao, ENT_QUOTES, 'UTF-8')); ?>
+              </p>
+            <?php endif; ?>
+
+            <?php if ($ofertaExibir->valor) : ?>
+              <span style="font-size: 1.3rem; font-weight: 700; color: var(--wh-primary);">
+                R$ <?= number_format((float)$ofertaExibir->valor, 2, ',', '.'); ?>
+              </span>
+            <?php endif; ?>
+
+            <a href="<?= htmlspecialchars($ofertaExibir->checkout_url, ENT_QUOTES, 'UTF-8'); ?>"
+               target="_blank" rel="noopener"
+               class="btn-win" style="text-align: center;">
+              Comprar agora
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+          <?php endif; ?>
+
           <div class="win-simple-card lesson-playlist-card">
             <div>
               <h3 style="margin: 0; font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase;">Playlist do módulo</h3>

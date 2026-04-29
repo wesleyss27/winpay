@@ -56,15 +56,50 @@ $anexo3 = $aula->arquivo_anexo3 ?? '';
                             <small class="win-form-hint" style="display:block;margin-top:0.35rem;color:var(--wh-text-soft);">Número de dias após o cadastro do aluno para liberar esta aula. Deixe vazio para liberar imediatamente.</small>
                         </div>
 
-                        <div class="form-group">
+                        <!-- Fonte do vídeo: embed OU biblioteca -->
+                        <div class="form-group" style="grid-column:1/-1;">
+                            <label>Fonte do vídeo</label>
+                            <div style="display:flex;gap:1rem;margin-top:0.4rem;">
+                                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+                                    <input type="radio" name="video_fonte" value="embed" id="fonte-embed"
+                                        <?= empty($aula->video_id) ? 'checked' : '' ?>>
+                                    URL / Embed (YouTube, Vimeo, etc.)
+                                </label>
+                                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+                                    <input type="radio" name="video_fonte" value="biblioteca" id="fonte-biblioteca"
+                                        <?= !empty($aula->video_id) ? 'checked' : '' ?>>
+                                    Vídeo da minha biblioteca
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- bloco embed -->
+                        <div id="bloco-embed" class="form-group" <?= !empty($aula->video_id) ? 'style="display:none"' : '' ?>>
                             <label for="link_video">Link do vídeo</label>
                             <input type="url" class="form-control" id="link_video" name="link_video" value="<?= $aula->link_video ?? '' ?>">
                         </div>
 
-                        <div class="form-group">
+                        <div id="bloco-script" class="form-group" <?= !empty($aula->video_id) ? 'style="display:none"' : '' ?>>
                             <label for="script_player">Script do player (opcional)</label>
                             <textarea class="form-control" id="script_player" name="script_player" rows="5"><?= $aula && $aula->script_player ? base64_decode($aula->script_player) : '' ?></textarea>
                         </div>
+
+                        <!-- bloco biblioteca -->
+                        <div id="bloco-biblioteca" class="form-group" <?= empty($aula->video_id) ? 'style="display:none"' : '' ?>>
+                            <label for="video_id">Vídeo da biblioteca</label>
+                            <div style="display:flex;gap:0.6rem;align-items:flex-start;">
+                                <select id="video_id" name="video_id" class="form-control" style="flex:1;">
+                                    <option value="">Carregando vídeos…</option>
+                                </select>
+                                <a href="<?= url('videos') ?>" target="_blank" class="btn-win btn-win-ghost" style="white-space:nowrap;flex-shrink:0;">
+                                    <i class="fas fa-upload"></i> Enviar vídeos
+                                </a>
+                            </div>
+                            <small class="win-form-hint" style="display:block;margin-top:0.35rem;color:var(--wh-text-soft);">
+                                O player com métricas e retomada será usado automaticamente.
+                            </small>
+                        </div>
+                        <input type="hidden" name="video_id_clear" id="video_id_clear" value="0">
                     </div>
 
                     <div class="win-divider"></div>
@@ -124,7 +159,7 @@ $anexo3 = $aula->arquivo_anexo3 ?? '';
                     </div>
 
                     <?php if (!empty($aulass)) : ?>
-                        <input type="hidden" name="aulas_id" value="<?= $aula->id; ?>">
+                        <input type="hidden" name="aulas_id"    value="<?= $aula->id; ?>">
                         <input type="hidden" name="anexo1_img1" value="<?= $anexo1; ?>">
                         <input type="hidden" name="anexo2_img2" value="<?= $anexo2; ?>">
                         <input type="hidden" name="anexo3_img3" value="<?= $anexo3; ?>">
@@ -148,6 +183,50 @@ $anexo3 = $aula->arquivo_anexo3 ?? '';
 
 <?= $v->start("scripts") ?>
 <script>
+    const ROUTE_LISTAR_VIDEOS = "<?= $router->route('videos.listar') ?>";
+    const VIDEO_ID_ATUAL      = <?= (int)($aula->video_id ?? 0) ?>;
+
+    $(function() {
+        // ─── Troca de fonte ───
+        function aplicarFonte(fonte) {
+            if (fonte === 'biblioteca') {
+                $('#bloco-embed, #bloco-script').hide();
+                $('#bloco-biblioteca').show();
+                $('#video_id_clear').val('0');
+                carregarVideos();
+            } else {
+                $('#bloco-biblioteca').hide();
+                $('#bloco-embed, #bloco-script').show();
+                $('#video_id').val('');
+                $('#video_id_clear').val('1'); // sinaliza para limpar video_id no backend
+            }
+        }
+
+        $('input[name="video_fonte"]').on('change', function () {
+            aplicarFonte($(this).val());
+        });
+
+        // aplica estado inicial
+        aplicarFonte($('input[name="video_fonte"]:checked').val());
+
+        // ─── Carrega lista de vídeos ───
+        function carregarVideos() {
+            const sel = $('#video_id');
+            sel.html('<option value="">Carregando…</option>').prop('disabled', true);
+            $.getJSON(ROUTE_LISTAR_VIDEOS, function (videos) {
+                let opts = '<option value="">Selecione um vídeo…</option>';
+                videos.forEach(v => {
+                    const sel = v.id == VIDEO_ID_ATUAL ? ' selected' : '';
+                    opts += `<option value="${v.id}"${sel}>${v.titulo}</option>`;
+                });
+                sel.html(opts).prop('disabled', false);
+                if (!videos.length) {
+                    sel.html('<option value="">Nenhum vídeo enviado ainda</option>');
+                }
+            });
+        }
+    });
+
     $(function() {
         function updateFileLabel($input, $label, fallbackText) {
             const fileName = $input.val().split('\\').pop();

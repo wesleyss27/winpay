@@ -24,7 +24,9 @@ class File
             @$extensao != "rar" &&
             @$extensao != "webm" &&
             @$extensao != "mp4" &&
-            @$extensao != "mpg"
+            @$extensao != "mpg" &&
+            @$extensao != "webp" &&
+            @$extensao != "gif"
         ) {
             return false;
             exit;

@@ -368,6 +368,13 @@
             </a>
           </li>
 
+          <li class="nav-item" title="Biblioteca de vídeos hospedados">
+            <a href="<?= url('videos') ?>" class="nav-link txt-azul-dark">
+              <i class="fas fa-film nav-icon"></i>
+              <span class="menu-label" data-label="Meus Vídeos">Meus Vídeos</span>
+            </a>
+          </li>
+
           <li class="nav-item" title="Veja suas compras">
             <a href="<?= url('minhas-compras/') ?>" class="nav-link txt-azul-dark">
               <i class="fa-solid fa-basket-shopping nav-icon"></i>

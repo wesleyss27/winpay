@@ -17,6 +17,8 @@ use Source\Helpers\Paginador;
 use Source\Models\AulasConcluidas\AulaConcluida;
 use Source\Models\Avaliacao\Avaliacao;
 use Source\Models\Usuarios\Usuario;
+use Source\Models\Ofertas\Oferta;
+use CoffeeCode\DataLayer\Connect;
 
 class AppMinhascompras
 {
@@ -127,6 +129,46 @@ class AppMinhascompras
         // var_dump($aulas);
         $curso = (new Cursos())->findById($aula->curso);
 
+        // Ofertas ativas para o curso
+        $ofertaExibir  = null;
+        $ofertasPlayer = [];
+        $todasOfertas  = (new Oferta())
+            ->find("curso = :c AND status = 1", "c={$aula->curso}")
+            ->fetch(true);
+
+        if ($todasOfertas) {
+            $pdo    = Connect::getInstance();
+            $sidebar = [];
+
+            foreach ($todasOfertas as $o) {
+                $stmtCo = $pdo->prepare("SELECT codigo FROM checkout WHERE id = :id LIMIT 1");
+                $stmtCo->execute([':id' => $o->checkout_id]);
+                $codigo = $stmtCo->fetchColumn();
+                if (!$codigo) continue;
+
+                $o->checkout_url = URL_BASE_WINPAY . "/checkout/" . $codigo;
+
+                // Overlay no player: vinculada a esta aula com tempo configurado
+                if ($o->aula_id == $aula->id && $o->exibir_em !== null) {
+                    $ofertasPlayer[] = [
+                        "exibir_em"   => (int) $o->exibir_em,
+                        "nome"        => $o->nome,
+                        "descricao"   => $o->descricao,
+                        "valor"       => $o->valor,
+                        "imagem"      => $o->imagem,
+                        "checkout_url"=> $o->checkout_url,
+                    ];
+                } else {
+                    $sidebar[] = $o;
+                }
+            }
+
+            // Sidebar: oferta aleatória entre as sem overlay
+            if ($sidebar) {
+                $ofertaExibir = $sidebar[array_rand($sidebar)];
+            }
+        }
+
         $comentarios = (new Comentario())->find("resposta IS NULL AND aula = " . $data["codigo"])->fetch(true);
         $resposta = new Comentario();
         $aulaConcluida = (new AulaConcluida())->find("aula = $aula->id AND aluno = " . $_SESSION["id"])->fetch();
@@ -142,9 +184,11 @@ class AppMinhascompras
             "all_aulas" => $all_aulas,
             "comentarios" => $comentarios,
             "resposta" => $resposta,
-            "aulaConcluida" => $aulaConcluida,
-            "usuario" => $usuario,
-            "avaliacao" => $avaliacao,
+            "aulaConcluida"  => $aulaConcluida,
+            "usuario"        => $usuario,
+            "avaliacao"      => $avaliacao,
+            "ofertaExibir"   => $ofertaExibir,
+            "ofertasPlayer"  => $ofertasPlayer,
         ]);
     }
 

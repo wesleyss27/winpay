@@ -327,23 +327,84 @@ class Emails
 
     public function pix($data)
     {
-        $data["assunto"]   = "Recebemos seu pedido do " . $data["produto"];
+        $data["assunto"] = "Recebemos seu pedido do " . $data["produto"];
+
+        $btnStyle        = "display:inline-block;padding:12px 28px;background-color:#2ECC71;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:15px;margin:8px 0;";
+        $btnWppStyle     = "display:inline-block;padding:12px 28px;background-color:#25D366;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:15px;margin:8px 0;";
+        $btnRefundStyle  = "display:inline-block;padding:12px 28px;background-color:#e74c3c;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:15px;margin:8px 0;";
 
         $data["mensagem"] = "
-            <h2>Recebemos seu pedido do " . $data["produto"] . "</h2>
-            <p>Email automático. Não responder! <br><br> Ol&aacute; <strong>" . $data["nome"] . "</strong>, tudo bem?</p><br>
-            <p>N&oacute;s somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.</p>
-            <p>Seu pedido n&uacute;mero <strong>" . $data["transacao"] . "</strong> foi realizado com sucesso.</p>
-            <br><p>Produto: " . $data["produto"] . "</p>
-            <p>Valor do produto: R$ " . number_format($data["valor_bruto"], 2, ",", ".") . "</p>
-            <p>Para saber os detalhes do seu pedido, clique no botão abaixo e digite seu email e senha. 
-            <br> Se for seu primeiro acesso, sua senha é 123456</p>
-            <br><br><p><a href='" . url() . "' class='btn'>Visualizar Detalhes Do Pedido</a></p><br><br>
-            <p>Caso j&aacute; tenha pago, desconsidere este e-mail. </p>
-            <br><p>Se você ainda tem dúvidas sobre o produto, fique à vontade para entrar em contato 
-            no e-mail " . @$data["email_suporte"] . ".</p>
-            <br><br><p><a href='mailto:" .  @$data["email_suporte"] . "' class='btn'>Entrar em contato</a></p><br><br>
+        <div style='background-color:#f4f6f8;padding:30px 0;font-family:Arial,sans-serif;'>
+          <div style='max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);'>
+
+            <!-- Cabeçalho -->
+            <div style='background-color:#1a1a2e;padding:28px 32px;text-align:center;'>
+              <h1 style='color:#2ECC71;margin:0;font-size:22px;letter-spacing:1px;'>WINPAY</h1>
+              <p style='color:#aaaaaa;margin:6px 0 0;font-size:13px;'>Email automático. Não responder.</p>
+            </div>
+
+            <!-- Corpo -->
+            <div style='padding:32px;'>
+              <h2 style='color:#1a1a2e;margin:0 0 8px;font-size:20px;'>Recebemos seu pedido! 🎉</h2>
+              <p style='color:#555;font-size:15px;margin:0 0 24px;'>Olá, <strong>" . $data["nome"] . "</strong>! Tudo bem?</p>
+
+              <p style='color:#555;font-size:15px;margin:0 0 20px;'>
+                Nós somos a Winpay, empresa que gerencia os pagamentos do produto <strong>" . $data["produto"] . "</strong>.
+              </p>
+
+              <!-- Caixa do pedido -->
+              <div style='background:#f8f9fa;border-left:4px solid #2ECC71;border-radius:6px;padding:20px 24px;margin:0 0 24px;'>
+                <p style='margin:0 0 8px;color:#333;font-size:15px;'><strong>Produto:</strong> " . $data["produto"] . "</p>
+                <p style='margin:0 0 8px;color:#333;font-size:15px;'><strong>Pedido nº:</strong> " . $data["transacao"] . "</p>
+                <p style='margin:0;color:#333;font-size:15px;'><strong>Valor:</strong> R$ " . number_format($data["valor_bruto"], 2, ",", ".") . "</p>
+              </div>
+
+              <p style='color:#555;font-size:15px;margin:0 0 6px;'>
+                Para saber os detalhes do seu pedido, clique no botão abaixo e acesse com seu e-mail e senha.
+              </p>
+              <p style='color:#888;font-size:13px;margin:0 0 20px;'>Se for seu primeiro acesso, sua senha é <strong>123456</strong>.</p>
+
+              <div style='text-align:center;margin:0 0 28px;'>
+                <a href='" . url() . "' style='" . $btnStyle . "'>Visualizar Detalhes do Pedido</a>
+              </div>
+
+              <hr style='border:none;border-top:1px solid #eeeeee;margin:0 0 24px;'>
+
+              <p style='color:#888;font-size:14px;margin:0 0 20px;'>
+                Caso já tenha pago, desconsidere este e-mail.
+              </p>
+
+              <p style='color:#555;font-size:15px;margin:0 0 8px;'>
+                Se você ainda tem dúvidas sobre o produto, fique à vontade para entrar em contato no e-mail
+                <a href='mailto:" . @$data["email_suporte"] . "' style='color:#2ECC71;'>" . @$data["email_suporte"] . "</a>.
+              </p>
         ";
+
+        if (!empty($data["link_suporte_whatsapp"])) {
+            $data["mensagem"] .= "
+              <p style='color:#555;font-size:15px;margin:20px 0 8px;'>Em caso de dúvida, entre no canal de suporte:</p>
+              <div style='text-align:center;margin:0 0 20px;'>
+                <a href='" . $data["link_suporte_whatsapp"] . "' style='" . $btnWppStyle . "'>💬 WhatsApp</a>
+              </div>
+            ";
+        }
+
+        $data["mensagem"] .= "
+              <p style='color:#555;font-size:15px;margin:20px 0 8px;'>Caso precise solicitar reembolso:</p>
+              <div style='text-align:center;margin:0 0 8px;'>
+                <a href='https://app.winpay.digital/pagamentos/solicitar-reembolso' style='" . $btnRefundStyle . "'>Solicitar Reembolso</a>
+              </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div style='background-color:#f4f6f8;padding:20px 32px;text-align:center;border-top:1px solid #eeeeee;'>
+              <p style='color:#aaaaaa;font-size:12px;margin:0;'>© Winpay · Plataforma de pagamentos digitais</p>
+            </div>
+
+          </div>
+        </div>
+        ";
+
         return $data;
     }
 

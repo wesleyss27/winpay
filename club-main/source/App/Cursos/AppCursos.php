@@ -645,10 +645,17 @@ class AppCursos
         $aula->usuario = $_SESSION["id"];
         $aula->modulo = $data["modulo_sel"];
         $aula->curso = $data["course_id"];
-        $aula->link_video = @$data["link_video"];
+        $aula->link_video    = @$data["link_video"];
         $aula->script_player = $script_player;
-        $aula->descricao = $data["aulas_descricao"];
+        $aula->descricao     = $data["aulas_descricao"];
         $aula->dias_liberacao = isset($data["dias_liberacao"]) && $data["dias_liberacao"] !== "" ? (int)$data["dias_liberacao"] : null;
+
+        // Vídeo hospedado: se fonte=biblioteca usa video_id, caso contrário limpa
+        if (!empty($data["video_id"])) {
+            $aula->video_id = (int) $data["video_id"];
+        } elseif (!empty($data["video_id_clear"]) && $data["video_id_clear"] == "1") {
+            $aula->video_id = null;
+        }
 
         if (!empty($data['course_id'])) {
             if (empty(@$_FILES["imagem"]["name"])) {

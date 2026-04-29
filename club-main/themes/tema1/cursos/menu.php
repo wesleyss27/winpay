@@ -18,5 +18,8 @@
         <a href="<?= url("certificados/$curso->id") ?>">
             <i class="fas fa-graduation-cap" aria-hidden="true"></i> Certificado
         </a>
+        <a href="<?= url("ofertas/$curso->id") ?>">
+            <i class="fas fa-tag"></i> Ofertas
+        </a>
     </nav>
 </div>

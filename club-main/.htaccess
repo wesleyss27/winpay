@@ -11,6 +11,13 @@ RewriteRule ^ - [L]
 #    Require valid-user
 #</FilesMatch>
 
+# Upload limits
+php_value upload_max_filesize 160M
+php_value post_max_size 165M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_value memory_limit 256M
+
 # ROUTER URL Rewrite
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d
