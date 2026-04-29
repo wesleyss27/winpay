@@ -431,6 +431,45 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
     max-height: none;
   }
 }
+
+@media (max-width: 540px) {
+  #win-vol,
+  #win-mute-btn {
+    display: none !important;
+  }
+
+  #win-controls {
+    padding: 0.4rem 0.6rem 0.55rem;
+    gap: 0.3rem;
+  }
+
+  #win-controls > div:last-child {
+    gap: 0.35rem;
+  }
+
+  #win-speed {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.15rem;
+  }
+
+  /* oferta: esconde card, mostra banner compacto */
+  #win-oferta-overlay {
+    background: transparent !important;
+    pointer-events: none;
+  }
+  .win-oferta-card-desktop {
+    display: none !important;
+  }
+  #win-oferta-banner-mobile {
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 541px) {
+  #win-oferta-banner-mobile {
+    display: none !important;
+  }
+}
 </style>
 
 <div class="content-wrapper win-page">
@@ -493,7 +532,8 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
                   <!-- overlay de oferta -->
                   <div id="win-oferta-overlay" style="display:none;position:absolute;inset:0;z-index:10;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);padding:1.2rem;">
-                    <div style="background:rgba(11,15,28,0.97);border:1px solid rgba(244,208,63,0.35);border-radius:var(--wh-radius-md);padding:1.4rem 1.6rem;max-width:380px;width:100%;position:relative;display:flex;flex-direction:column;gap:0.8rem;box-shadow:0 8px 32px rgba(0,0,0,0.55);">
+                    <!-- card desktop -->
+                    <div class="win-oferta-card-desktop" style="background:rgba(11,15,28,0.97);border:1px solid rgba(244,208,63,0.35);border-radius:var(--wh-radius-md);padding:1.4rem 1.6rem;max-width:380px;width:100%;position:relative;display:flex;flex-direction:column;gap:0.8rem;box-shadow:0 8px 32px rgba(0,0,0,0.55);">
                       <button id="win-oferta-fechar" type="button" style="position:absolute;top:0.6rem;right:0.8rem;background:none;border:none;color:rgba(255,255,255,0.55);font-size:1.1rem;cursor:pointer;line-height:1;" title="Fechar">
                         <i class="fas fa-times"></i>
                       </button>
@@ -509,11 +549,29 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
                     </div>
                   </div>
 
+                  <!-- banner mobile de oferta (substituído por CSS em telas pequenas) -->
+                  <div id="win-oferta-banner-mobile" style="display:none;position:absolute;bottom:52px;left:0;right:0;z-index:10;padding:0 0.5rem;">
+                    <div style="background:rgba(11,15,28,0.95);border:1px solid rgba(244,208,63,0.3);border-radius:var(--wh-radius-sm);padding:0.55rem 0.75rem;display:flex;align-items:center;gap:0.65rem;">
+                      <div style="flex:1;min-width:0;">
+                        <p style="margin:0;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(244,208,63,0.7);">Oferta especial</p>
+                        <strong id="win-oferta-nome-m" style="font-size:0.82rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;"></strong>
+                        <span id="win-oferta-valor-m" style="display:none;font-size:0.8rem;font-weight:700;color:var(--wh-accent);"></span>
+                      </div>
+                      <a id="win-oferta-cta-m" href="#" target="_blank" rel="noopener"
+                         style="flex-shrink:0;padding:0.4rem 0.75rem;background:var(--wh-accent);color:#000;font-weight:700;font-size:0.72rem;border-radius:var(--wh-radius-sm);text-decoration:none;white-space:nowrap;">
+                        Ver oferta
+                      </a>
+                      <button id="win-oferta-fechar-m" type="button" style="flex-shrink:0;background:none;border:none;color:rgba(255,255,255,0.5);font-size:0.9rem;cursor:pointer;padding:0.1rem;line-height:1;">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+
                   <!-- controles -->
                   <div id="win-controls" style="position:absolute;bottom:0;left:0;right:0;padding:0.5rem 0.9rem 0.7rem;background:linear-gradient(transparent,rgba(0,0,0,0.82));display:flex;flex-direction:column;gap:0.45rem;opacity:0;transition:opacity 0.25s;">
 
                     <!-- barra de progresso -->
-                    <div id="win-seek-wrap" style="position:relative;height:5px;background:rgba(255,255,255,0.18);border-radius:99px;cursor:pointer;">
+                    <div id="win-seek-wrap" style="position:relative;height:5px;background:rgba(255,255,255,0.18);border-radius:99px;cursor:pointer;touch-action:none;padding:6px 0;margin:-6px 0;box-sizing:content-box;">
                       <div id="win-buffered-bar" style="position:absolute;left:0;top:0;height:100%;border-radius:99px;background:rgba(255,255,255,0.22);width:0%;pointer-events:none;"></div>
                       <div id="win-progress-bar" style="position:absolute;left:0;top:0;height:100%;border-radius:99px;background:var(--wh-accent);width:0%;pointer-events:none;"></div>
                       <div id="win-seek-thumb" style="position:absolute;top:50%;width:13px;height:13px;border-radius:50%;background:var(--wh-accent);transform:translate(-50%,-50%);left:0%;pointer-events:none;box-shadow:0 0 0 3px rgba(244,208,63,0.25);"></div>
@@ -667,39 +725,60 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
                     video.play();
                   });
 
+                  const bannerMobile  = document.getElementById('win-oferta-banner-mobile');
+                  const ofertaFecharM = document.getElementById('win-oferta-fechar-m');
+                  ofertaFecharM.addEventListener('click', () => { bannerMobile.style.display = 'none'; video.play(); });
+
                   function mostrarOferta(o) {
-                    const img   = document.getElementById('win-oferta-img');
-                    const nome  = document.getElementById('win-oferta-nome');
-                    const desc  = document.getElementById('win-oferta-desc');
-                    const valor = document.getElementById('win-oferta-valor');
-                    const cta   = document.getElementById('win-oferta-cta');
+                    const isMobile = window.innerWidth <= 540;
 
-                    nome.textContent = o.nome;
-
-                    if (o.imagem) {
-                      img.src = <?= json_encode(url('uploads/cursos/')) ?> + o.imagem;
-                      img.style.display = 'block';
+                    if (isMobile) {
+                      // banner compacto
+                      document.getElementById('win-oferta-nome-m').textContent = o.nome;
+                      const valorM = document.getElementById('win-oferta-valor-m');
+                      if (o.valor) {
+                        valorM.textContent = 'R$ ' + parseFloat(o.valor).toFixed(2).replace('.', ',');
+                        valorM.style.display = 'inline';
+                      } else {
+                        valorM.style.display = 'none';
+                      }
+                      document.getElementById('win-oferta-cta-m').href = o.checkout_url;
+                      bannerMobile.style.display = 'block';
                     } else {
-                      img.style.display = 'none';
-                    }
+                      // card desktop
+                      const img   = document.getElementById('win-oferta-img');
+                      const nome  = document.getElementById('win-oferta-nome');
+                      const desc  = document.getElementById('win-oferta-desc');
+                      const valor = document.getElementById('win-oferta-valor');
+                      const cta   = document.getElementById('win-oferta-cta');
 
-                    if (o.descricao) {
-                      desc.textContent = o.descricao;
-                      desc.style.display = 'block';
-                    } else {
-                      desc.style.display = 'none';
-                    }
+                      nome.textContent = o.nome;
 
-                    if (o.valor) {
-                      valor.textContent = 'R$ ' + parseFloat(o.valor).toFixed(2).replace('.', ',');
-                      valor.style.display = 'inline';
-                    } else {
-                      valor.style.display = 'none';
-                    }
+                      if (o.imagem) {
+                        img.src = <?= json_encode(url('uploads/cursos/')) ?> + o.imagem;
+                        img.style.display = 'block';
+                      } else {
+                        img.style.display = 'none';
+                      }
 
-                    cta.href = o.checkout_url;
-                    ofertaOverlay.style.display = 'flex';
-                    video.pause();
+                      if (o.descricao) {
+                        desc.textContent = o.descricao;
+                        desc.style.display = 'block';
+                      } else {
+                        desc.style.display = 'none';
+                      }
+
+                      if (o.valor) {
+                        valor.textContent = 'R$ ' + parseFloat(o.valor).toFixed(2).replace('.', ',');
+                        valor.style.display = 'inline';
+                      } else {
+                        valor.style.display = 'none';
+                      }
+
+                      cta.href = o.checkout_url;
+                      ofertaOverlay.style.display = 'flex';
+                      video.pause();
+                    }
                   }
 
                   video.addEventListener('timeupdate', () => {
