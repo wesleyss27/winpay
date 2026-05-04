@@ -574,6 +574,18 @@ $eventos = array(
             </div>
           </div>
 
+          <br>
+
+          <div class="row">
+            <div class="col-md-12">
+              <b>Enviar nota fiscal para o cliente por e-mail?</b>
+              <select name="enviar_email_cliente" id="enviar_email_cliente_notazz" class="form-control">
+                <option value="1">Sim — enviar por e-mail ao cliente</option>
+                <option value="0">Não — apenas emitir a nota</option>
+              </select>
+            </div>
+          </div>
+
           <small>
             Campos opcionais: <br><br>
 
