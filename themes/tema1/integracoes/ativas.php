@@ -792,6 +792,7 @@ $json = array(
                                         produto: "<?= $nota->produto ?>",
                                         codigo_cnae: "<?= $nota->codigo_cnae ?>",
                                         codigo_lc116: "<?= $nota->codigo_lc116 ?>",
+                                        enviar_email_cliente: "<?= $nota->enviar_email_cliente ?? 1 ?>",
                                     }
                                 </script>
 
@@ -889,6 +890,18 @@ $json = array(
                         <div class="col-md-6">
                             <b>Código LC116</b> (<small>opcional</small>)
                             <input type="text" name="codigo_lc116" id="codigo_lc116" class="form-control">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>Enviar nota fiscal para o cliente por e-mail?</b>
+                            <select name="enviar_email_cliente" id="enviar_email_cliente_editar" class="form-control">
+                                <option value="1">Sim — enviar por e-mail ao cliente</option>
+                                <option value="0">Não — apenas emitir a nota</option>
+                            </select>
                         </div>
                     </div>
 
@@ -3245,6 +3258,7 @@ $json = array(
         var produto = dadosnotazz[i]["produto"];
         var codigo_cnae = dadosnotazz[i]["codigo_cnae"];
         var codigo_lc116 = dadosnotazz[i]["codigo_lc116"];
+        var enviar_email_cliente = dadosnotazz[i]["enviar_email_cliente"];
 
         $(".modal-title").html("Editar API");
         $("#salvar").css("display", "none");
@@ -3257,6 +3271,7 @@ $json = array(
         $("#produto option[value=" + produto + "]").prop("selected", true);
         $("#codigo_cnae").attr("value", codigo_cnae);
         $("#codigo_lc116").attr("value", codigo_lc116);
+        $("#enviar_email_cliente_editar option[value=" + enviar_email_cliente + "]").prop("selected", true);
     }
 
     function cancelarnotazz() {

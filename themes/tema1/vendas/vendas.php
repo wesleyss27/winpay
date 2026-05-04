@@ -1171,13 +1171,13 @@ function dadosEndereco($venda)
                   <input type="hidden" name="telefone" id="telefone<?= $index ?>" value="<?= $telefone ?>">
                   <?php
                   $c = $venda->dataComprador();
-                  $notazz_rua    = $c->rua_entrega    ?: $c->rua;
-                  $notazz_numero = $c->numero_entrega ?: $c->numero;
+                  $notazz_rua    = $c->rua_entrega    ?: ($c->rua    ?: 'Não Informado');
+                  $notazz_numero = $c->numero_entrega ?: ($c->numero ?: 'S/N');
                   $notazz_comp   = $c->complemento_entrega ?: $c->complemento;
-                  $notazz_bairro = $c->bairro_entrega ?: $c->bairro;
-                  $notazz_cidade = $c->cidade_entrega ?: $c->cidade;
-                  $notazz_estado = $c->estado_entrega ?: $c->estado;
-                  $notazz_cep    = $c->cep_entrega    ?: $c->cep;
+                  $notazz_bairro = $c->bairro_entrega ?: ($c->bairro ?: 'Não Informado');
+                  $notazz_cidade = $c->cidade_entrega ?: ($c->cidade ?: 'Não Informado');
+                  $notazz_estado = $c->estado_entrega ?: ($c->estado ?: 'Não Informado');
+                  $notazz_cep    = $c->cep_entrega    ?: ($c->cep    ?: '00000000');
                   ?>
                   <input type="hidden" name="rua" id="rua<?= $index ?>" value="<?= $notazz_rua ?>">
                   <input type="hidden" name="numero" id="numero<?= $index ?>" value="<?= $notazz_numero ?>">
@@ -1331,7 +1331,6 @@ function dadosEndereco($venda)
 
   function notaFiscal(i) {
     load("open", 3000);
-    //alert('clicou ' + i);
     var form = $("#form" + i);
 
     $.ajax({
@@ -1610,4 +1609,5 @@ function dadosEndereco($venda)
     }
   }
 </script>
+
 <?= $v->end(); ?>

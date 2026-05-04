@@ -173,12 +173,16 @@
                         <b>Código LC116</b> (<small>opcional</small>)
                         <input type="text" name="codigo_lc116" id="codigo_lc116" class="form-control">
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <b>Enviar nota para o cliente?</b>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <b>Enviar nota fiscal para o cliente por e-mail?</b>
                         <select name="enviar_email_cliente" id="enviar_email_cliente" class="form-control">
                             <option value="1">Sim — enviar por e-mail ao cliente</option>
-                            <option value="0">Não — apenas emitir</option>
+                            <option value="0">Não — apenas emitir a nota</option>
                         </select>
                     </div>
                 </div>
