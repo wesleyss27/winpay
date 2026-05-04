@@ -81,6 +81,7 @@
                                 produto : "<?= $nota->produto ?>",
                                 codigo_cnae : "<?= $nota->codigo_cnae ?>",
                                 codigo_lc116 : "<?= $nota->codigo_lc116 ?>",
+                                enviar_email_cliente : "<?= $nota->enviar_email_cliente ?? 1 ?>",
                             }
                         </script>
 
@@ -172,6 +173,14 @@
                         <b>Código LC116</b> (<small>opcional</small>)
                         <input type="text" name="codigo_lc116" id="codigo_lc116" class="form-control">
                     </div>
+
+                    <div class="col-md-6">
+                        <b>Enviar nota para o cliente?</b>
+                        <select name="enviar_email_cliente" id="enviar_email_cliente" class="form-control">
+                            <option value="1">Sim — enviar por e-mail ao cliente</option>
+                            <option value="0">Não — apenas emitir</option>
+                        </select>
+                    </div>
                 </div>
 
                 <small>
@@ -249,6 +258,7 @@
             var produto = dados[i]["produto"];
             var codigo_cnae = dados[i]["codigo_cnae"];
             var codigo_lc116 = dados[i]["codigo_lc116"];
+            var enviar_email_cliente = dados[i]["enviar_email_cliente"];
 
             $(".modal-title").html("Editar API");
             $("#salvar").css("display", "none");
@@ -259,6 +269,7 @@
             $("#produto option[value=" + produto + "]").prop("selected", true);
             $("#codigo_cnae").attr("value", codigo_cnae);
             $("#codigo_lc116").attr("value", codigo_lc116);
+            $("#enviar_email_cliente option[value=" + enviar_email_cliente + "]").prop("selected", true);
         }
 
         function cancelar() {

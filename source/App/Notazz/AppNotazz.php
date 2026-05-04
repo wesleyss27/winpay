@@ -154,12 +154,13 @@ class AppNotazz
     {
         $integracao = new IntegracaoNotazz();
 
-        $integracao->usuario            = $this->section->getId();
-        $integracao->api_notazz         = $data["api_notazz"];
-        $integracao->data_nota          = $data["data_nota"];
-        $integracao->produto            = $data["produtonotazz"];
-        $integracao->codigo_cnae        = $data["codigo_cnae"];
-        $integracao->codigo_lc116       = $data["codigo_lc116"];
+        $integracao->usuario             = $this->section->getId();
+        $integracao->api_notazz          = $data["api_notazz"];
+        $integracao->data_nota           = $data["data_nota"];
+        $integracao->produto             = $data["produtonotazz"];
+        $integracao->codigo_cnae         = $data["codigo_cnae"];
+        $integracao->codigo_lc116        = $data["codigo_lc116"];
+        $integracao->enviar_email_cliente = isset($data["enviar_email_cliente"]) ? (int)$data["enviar_email_cliente"] : 1;
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
@@ -172,11 +173,12 @@ class AppNotazz
     {
         $integracao = (new IntegracaoNotazz())->findById($data["id"]);
 
-        $integracao->api_notazz         = $data["api_notazz"];
-        $integracao->data_nota          = $data["data_nota"];
-        $integracao->produto            = $data["produto"];
-        $integracao->codigo_cnae        = $data["codigo_cnae"];
-        $integracao->codigo_lc116       = $data["codigo_lc116"];
+        $integracao->api_notazz           = $data["api_notazz"];
+        $integracao->data_nota            = $data["data_nota"];
+        $integracao->produto              = $data["produto"];
+        $integracao->codigo_cnae          = $data["codigo_cnae"];
+        $integracao->codigo_lc116         = $data["codigo_lc116"];
+        $integracao->enviar_email_cliente = isset($data["enviar_email_cliente"]) ? (int)$data["enviar_email_cliente"] : 1;
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
@@ -241,9 +243,10 @@ class AppNotazz
         if ($notazz) {
             foreach ($notazz as $notazz) {
                 if (!$notazz->produto || $notazz->produto == $data["produto"]) {
-                    $data["api_key"] = $notazz->api_notazz;
-                    $data["codigo_cnae"] = @$notazz->codigo_cnae;
-                    $data["codigo_lc116"] = @$notazz->codigo_lc116;
+                    $data["api_key"]              = $notazz->api_notazz;
+                    $data["codigo_cnae"]          = @$notazz->codigo_cnae;
+                    $data["codigo_lc116"]         = @$notazz->codigo_lc116;
+                    $data["enviar_email_cliente"] = isset($notazz->enviar_email_cliente) ? (int)$notazz->enviar_email_cliente : 1;
 
                     if ($produto->tipo_produto == 8) {
                         $data["metodo"] = "create_nfe_55";
@@ -483,7 +486,7 @@ class AppNotazz
             "DESTINATION_ZIPCODE" => $data["cep"],
             "DESTINATION_PHONE" => $data["ddd"] . $data["telefone"],
             "DESTINATION_EMAIL" => $data["email"],
-            "DESTINATION_EMAIL_SEND" => $data["email"],
+            "DESTINATION_EMAIL_SEND" => (@$data["enviar_email_cliente"] == 1) ? $data["email"] : "",
             "DOCUMENT_BASEVALUE" => $data["valor_venda"],
             "DOCUMENT_DESCRIPTION" => $data["nomekit"],
             "DOCUMENT_COMPETENCE" => date("Y-m-d"),
@@ -523,7 +526,7 @@ class AppNotazz
             "DESTINATION_ZIPCODE" => $data["cep"],
             "DESTINATION_PHONE" => $data["ddd"] . $data["telefone"],
             "DESTINATION_EMAIL" => $data["email"],
-            "DESTINATION_EMAIL_SEND" => $data["email"],
+            "DESTINATION_EMAIL_SEND" => (@$data["enviar_email_cliente"] == 1) ? $data["email"] : "",
             "DOCUMENT_BASEVALUE" => $data["valor_total"],
             "DOCUMENT_DESCRIPTION" => $data["nomekit"],
             "DOCUMENT_COMPETENCE" => date("Y-m-d"),

@@ -1169,14 +1169,24 @@ function dadosEndereco($venda)
                   <input type="hidden" name="nasc" id="nasc<?= $index ?>" value="<?= $nascimento ?>">
                   <input type="hidden" name="ddd" id="ddd<?= $index ?>" value="<?= $ddd ?>">
                   <input type="hidden" name="telefone" id="telefone<?= $index ?>" value="<?= $telefone ?>">
-                  <input type="hidden" name="rua" id="rua<?= $index ?>" value="<?= $venda->dataComprador()->rua_entrega ?>">
-                  <input type="hidden" name="numero" id="numero<?= $index ?>" value="<?= $venda->dataComprador()->numero_entrega ?>">
-                  <input type="hidden" name="complemento" id="complemento<?= $index ?>" value="<?= $venda->dataComprador()->complemento_entrega ?>">
-                  <input type="hidden" name="bairro" id="bairro<?= $index ?>" value="<?= $venda->dataComprador()->bairro_entrega ?>">
-                  <input type="hidden" name="cidade" id="cidade<?= $index ?>" value="<?= $venda->dataComprador()->cidade_entrega ?>">
-                  <input type="hidden" name="estado" id="estado<?= $index ?>" value="<?= $venda->dataComprador()->estado_entrega ?>">
-                  <input type="hidden" name="pais" id="pais<?= $index ?>" value="<?= $venda->dataComprador()->pais_entrega ?>">
-                  <input type="hidden" name="cep" id="cep<?= $index ?>" value="<?= $venda->dataComprador()->cep_entrega ?>">
+                  <?php
+                  $c = $venda->dataComprador();
+                  $notazz_rua    = $c->rua_entrega    ?: $c->rua;
+                  $notazz_numero = $c->numero_entrega ?: $c->numero;
+                  $notazz_comp   = $c->complemento_entrega ?: $c->complemento;
+                  $notazz_bairro = $c->bairro_entrega ?: $c->bairro;
+                  $notazz_cidade = $c->cidade_entrega ?: $c->cidade;
+                  $notazz_estado = $c->estado_entrega ?: $c->estado;
+                  $notazz_cep    = $c->cep_entrega    ?: $c->cep;
+                  ?>
+                  <input type="hidden" name="rua" id="rua<?= $index ?>" value="<?= $notazz_rua ?>">
+                  <input type="hidden" name="numero" id="numero<?= $index ?>" value="<?= $notazz_numero ?>">
+                  <input type="hidden" name="complemento" id="complemento<?= $index ?>" value="<?= $notazz_comp ?>">
+                  <input type="hidden" name="bairro" id="bairro<?= $index ?>" value="<?= $notazz_bairro ?>">
+                  <input type="hidden" name="cidade" id="cidade<?= $index ?>" value="<?= $notazz_cidade ?>">
+                  <input type="hidden" name="estado" id="estado<?= $index ?>" value="<?= $notazz_estado ?>">
+                  <input type="hidden" name="pais" id="pais<?= $index ?>" value="<?= $c->pais_entrega ?>">
+                  <input type="hidden" name="cep" id="cep<?= $index ?>" value="<?= $notazz_cep ?>">
 
                   <?php if ($venda->plano) : ?>
                     <input type="hidden" name="nomekit" id="nomekit<?= $index ?>" value="<?= $venda->dataPlano()->nome ?>">
