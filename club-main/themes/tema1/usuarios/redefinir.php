@@ -12,7 +12,7 @@
     <title><?= $title; ?></title>
     <meta name="robots" content="noindex, nofollow">
 
-    <link rel="icon" href="<?= url("themes/tema1/assets/imgs/OCTA.png"); ?>">
+    <link rel="icon" href="<?= url("themes/tema1/assets/imgs/winpay-icon.png"); ?>">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
             <!-- Lado esquerdo - Decorativo -->
             <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image">
                 <div class="logo-decorativo">
-                    <img src="<?= url("themes/tema1/assets/imgs/OCTAPAY_H-14.png"); ?>" alt="Logo" class="img-fluid">
+                    <img src="<?= url("themes/tema1/assets/imgs/winpay-logo.png"); ?>" alt="Logo" class="img-fluid">
                     <div class="texto-decorativo">
                         <h2>Redefinir Senha</h2>
                         <p>Digite o código de recuperação enviado para seu email e defina uma nova senha segura para sua conta.</p>
@@ -41,7 +41,7 @@
             <!-- Lado direito - Formulário -->
             <div class="col-md-8 col-lg-6">
                 <div class="login">
-                    <img class="logo" src="<?= url("themes/tema1/assets/imgs/OCTAPAY_H-14.png"); ?>" alt="Logo">
+                    <img class="logo" src="<?= url("themes/tema1/assets/imgs/winpay-logo.png"); ?>" alt="Logo">
                     <h3 class="login-heading"><?= $title ?></h3>
 
                     <form id="formRedefinirSenha" action="<?= $router->route("appusuarios.atualizaSenha"); ?>" method="post">
