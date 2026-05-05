@@ -869,9 +869,7 @@ function dadosEndereco($venda)
               <tr>
                 <th scope="col">Venda</th>
                 <th scope="col">Comprador</th>
-                <?php if ($section->getTipo() == 6) : ?>
-                  <th scope="col">Vendedor</th>
-                <?php elseif ($section->getTipo() == 1 || $section->getTipo() == 2 || $section->getTipo() == 3) : ?>
+                <?php if ($section->getTipo() == 1 || $section->getTipo() == 2 || $section->getTipo() == 3) : ?>
                   <th scope="col">Produtor</th>
                 <?php endif; ?>
                 <th scope="col">Produto</th>
@@ -1068,7 +1066,7 @@ function dadosEndereco($venda)
                     <td style="color: rgb(198, 200, 204) font-style: italic;">Dados ocultado pelo produtor</td>
                   <?php endif; ?>
 
-                  <?php if ($section->getTipo() == 1 || $section->getTipo() == 2 || $section->getTipo() == 3 || $section->getTipo() == 6) : ?>
+                  <?php if ($section->getTipo() == 1 || $section->getTipo() == 2 || $section->getTipo() == 3) : ?>
                     <td>
                       <div style="font-weight: 600; margin-bottom: 4px;"><?= $venda->dataProdutor()->nome ?></div>
                       <div style="font-size: 12px; color: rgb(198, 200, 204)"><?= $venda->dataProdutor()->email ?></div>
