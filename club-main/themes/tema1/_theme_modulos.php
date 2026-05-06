@@ -364,6 +364,21 @@ button { border: none; background: none; cursor: pointer; font-family: inherit; 
   }
   .vm-sidebar-overlay.show { display: block; }
 }
+
+@media (max-width: 768px) {
+  .vm-banner-wrap {
+    height: auto !important;
+    min-height: unset !important;
+  }
+  .vm-banner-img {
+    position: relative !important;
+    inset: unset !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: unset !important;
+    display: block !important;
+  }
+}
 </style>
 
 <div class="vm-wrapper">
