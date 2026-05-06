@@ -543,6 +543,62 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
     display: none !important;
   }
 }
+
+/* ─── Mobile: vídeo em primeiro ─── */
+@media (max-width: 767px) {
+  .lesson-breadcrumb,
+  .lesson-top-nav,
+  .lesson-hero,
+  .lesson-meta { display: none !important; }
+
+  .content-wrapper,
+  .content-wrapper.win-page {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: unset !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+  section.content  { padding: 0 !important; }
+  .container-fluid { padding: 0 !important; max-width: 100% !important; }
+
+  .lesson-layout {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem;
+  }
+
+  .lesson-main-stack { gap: 0.6rem; }
+
+  /* Player card: sem decoração — vídeo edge-to-edge */
+  .lesson-player-card {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .lesson-video {
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+  }
+
+  /* Descrição com padding próprio */
+  .lesson-description { padding: .75rem 1rem 1rem; }
+
+  /* Barra de progresso assistido */
+  .lesson-player-card > div[style*="margin-top:0.5rem"] { padding: 0 1rem; }
+
+  /* Card de anexos com margem lateral */
+  .lesson-extra { border-radius: 14px; margin: 0 .75rem; }
+
+  /* Barra de navegação mobile */
+  .lesson-mobile-nav { display: block !important; }
+
 </style>
 
 <!-- Toast container -->
@@ -1105,6 +1161,35 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
               <?php endif; ?>
             </div>
 
+            <!-- Mobile: título + navegação (visível só via CSS mobile) -->
+            <div class="lesson-mobile-nav" style="display:none;">
+              <div style="padding:.6rem 1rem .3rem;">
+                <p style="margin:0;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,208,63,.65);"><?= $moduleName ?></p>
+                <p style="margin:.15rem 0 0;font-size:.92rem;font-weight:600;color:#f9fafb;line-height:1.3;"><?= $lessonName ?></p>
+              </div>
+              <div style="display:flex;align-items:center;gap:.5rem;padding:.55rem 1rem .7rem;border-bottom:1px solid rgba(244,208,63,.1);">
+                <?php if ($prevUrlAttr) : ?>
+                  <a href="<?= $prevUrlAttr ?>" class="btn-win btn-win-ghost" style="flex:1;justify-content:center;font-size:.82rem;padding:.45rem .5rem;">
+                    <i class="far fa-arrow-alt-circle-left"></i> Anterior
+                  </a>
+                <?php endif; ?>
+                <?php if ($nextUrlAttr) : ?>
+                  <a href="<?= $nextUrlAttr ?>" class="btn-win" style="flex:1;justify-content:center;font-size:.82rem;padding:.45rem .5rem;">
+                    Próxima <i class="far fa-arrow-alt-circle-right"></i>
+                  </a>
+                <?php endif; ?>
+                <?php if (!$aulaConcluida) : ?>
+                  <button type="button" id="btn-concluido-mobile" class="btn-win btn-win-ghost" style="flex:1;justify-content:center;font-size:.82rem;padding:.45rem .5rem;" title="Marcar como concluída">
+                    <i class="far fa-check-circle"></i> Concluída
+                  </button>
+                <?php else : ?>
+                  <span style="flex:1;display:flex;align-items:center;justify-content:center;gap:.35rem;font-size:.82rem;color:#4ade80;">
+                    <i class="fas fa-check-circle"></i> Concluída
+                  </span>
+                <?php endif; ?>
+              </div>
+            </div>
+
             <div class="lesson-meta">
               <div class="lesson-meta-item">
                 <i class="far fa-play-circle"></i>
@@ -1192,7 +1277,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
             </div>
           </div>
 
-          <div class="win-simple-card">
+          <div class="win-simple-card lesson-comments-card">
             <div class="d-flex flex-wrap align-items-center justify-content-between" style="gap: 0.8rem;">
               <div>
                 <h3 style="margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; text-transform: uppercase;">Comentários</h3>
@@ -1410,6 +1495,16 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
 <?= $v->start("scripts") ?>
 <script>
+  // ─── Mobile: move avaliação e comentários para depois da playlist ───
+  (function () {
+    if (window.innerWidth > 767) return;
+    var layout   = document.querySelector('.lesson-layout');
+    var feedback = document.querySelector('.lesson-feedback');
+    var comments = document.querySelector('.lesson-comments-card');
+    if (layout && feedback) layout.appendChild(feedback);
+    if (layout && comments) layout.appendChild(comments);
+  })();
+
   // ─── Toast ───
   function showToast(msg, type) {
     type = type || 'info';
