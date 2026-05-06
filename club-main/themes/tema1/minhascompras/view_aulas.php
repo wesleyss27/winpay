@@ -66,6 +66,34 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 ?>
 
 <style>
+/* ─── Paleta neutra — sem branding de produtor ─── */
+:root {
+  --wh-accent:        #e2e8f0;
+  --wh-accent-rgb:    226, 232, 240;
+  --wh-accent-strong: #b0bac9;
+  --wh-accent-soft:   rgba(226, 232, 240, 0.08);
+  --wh-border:        rgba(255, 255, 255, 0.1);
+  --wh-border-strong: rgba(255, 255, 255, 0.22);
+  --wh-gradient:      transparent;
+  --wh-gloss:         none;
+}
+.content-wrapper::before { display: none !important; }
+
+/* ─── Botões neutros (sobrescreve hardcoded do modern-dashboard.css) ─── */
+.btn-win {
+  background: rgba(255,255,255,.07) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  color: #f9fafb !important;
+}
+.btn-win:hover {
+  background: rgba(255,255,255,.13) !important;
+  border-color: rgba(255,255,255,.35) !important;
+}
+
+/* ─── Links neutros ─── */
+a { color: rgba(226,232,240,.8); }
+a:hover { color: #fff; text-decoration: underline; }
+
 /* ─── Toast ─── */
 #win-toast-container {
   position: fixed;
@@ -101,7 +129,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 .win-toast i { font-size: 1rem; flex-shrink: 0; }
 .win-toast.success i { color: #4ade80; }
 .win-toast.error   i { color: #f87171; }
-.win-toast.info    i { color: #f4d03f; }
+.win-toast.info    i { color: var(--wh-accent); }
 
 /* ─── Breadcrumb ─── */
 .lesson-breadcrumb {
@@ -119,7 +147,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   text-decoration: none;
   transition: color .2s ease;
 }
-.lesson-breadcrumb a:hover { color: #f4d03f; }
+.lesson-breadcrumb a:hover { color: var(--wh-accent); }
 .lesson-breadcrumb .sep { font-size: .6rem; opacity: .4; }
 
 /* ─── Top nav ─── */
@@ -143,7 +171,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-size: 0.68rem;
-  color: rgba(244, 208, 63, 0.72);
+  color: rgba(var(--wh-accent-rgb), 0.72);
   display: inline-block;
   margin-bottom: 0.35rem;
 }
@@ -161,8 +189,8 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   gap: 0.45rem;
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
-  background: rgba(244, 208, 63, 0.18);
-  border: 1px solid rgba(244, 208, 63, 0.28);
+  background: rgba(var(--wh-accent-rgb), 0.18);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.28);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -197,8 +225,8 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   position: relative;
   overflow: hidden;
   border-radius: var(--wh-radius-md);
-  border: 1px solid rgba(244, 208, 63, 0.18);
-  background: radial-gradient(circle at 10% 10%, rgba(244, 208, 63, 0.18), transparent 65%);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.18);
+  background: radial-gradient(circle at 10% 10%, rgba(var(--wh-accent-rgb), 0.18), transparent 65%);
   box-shadow: var(--wh-shadow-soft);
 }
 
@@ -247,7 +275,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   gap: 0.65rem;
   padding: 0.75rem 0.95rem;
   border-radius: var(--wh-radius-sm);
-  border: 1px dashed rgba(244, 208, 63, 0.28);
+  border: 1px dashed rgba(var(--wh-accent-rgb), 0.28);
   color: var(--wh-text);
   background: rgba(8, 12, 20, 0.82);
   text-decoration: none;
@@ -255,7 +283,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 }
 
 .lesson-attachments a:hover {
-  border-color: rgba(244, 208, 63, 0.42);
+  border-color: rgba(var(--wh-accent-rgb), 0.42);
   background: rgba(8, 12, 20, 0.95);
 }
 
@@ -304,14 +332,14 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   padding: 1.1rem 1.2rem;
   background: rgba(8, 12, 20, 0.68);
   border-radius: var(--wh-radius-sm);
-  border: 1px solid rgba(244, 208, 63, 0.16);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.16);
 }
 
 .lesson-comment .avatar img {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  border: 2px solid rgba(244, 208, 63, 0.32);
+  border: 2px solid rgba(var(--wh-accent-rgb), 0.32);
   object-fit: cover;
 }
 
@@ -356,14 +384,14 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: 1px solid rgba(244, 208, 63, 0.28);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.28);
   background: transparent;
-  color: rgba(244, 208, 63, 0.85);
+  color: rgba(var(--wh-accent-rgb), 0.85);
   transition: all 0.2s ease;
 }
 
 .btn-responder:hover {
-  background: rgba(244, 208, 63, 0.12);
+  background: rgba(var(--wh-accent-rgb), 0.12);
 }
 
 .lesson-reply-form {
@@ -371,14 +399,14 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   padding: 1rem;
   border-radius: var(--wh-radius-sm);
   background: rgba(8, 12, 20, 0.6);
-  border: 1px solid rgba(244, 208, 63, 0.12);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.12);
 }
 
 .lesson-reply-form textarea,
 .lesson-reply-form input[type="text"] {
   width: 100%;
   border-radius: var(--wh-radius-sm);
-  border: 1px solid rgba(244, 208, 63, 0.24);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.24);
   background: rgba(15, 17, 24, 0.75);
   color: var(--wh-text);
   padding: 0.65rem 0.8rem;
@@ -390,7 +418,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   flex-direction: column;
   gap: 0.75rem;
   margin-top: 0.8rem;
-  border-left: 2px solid rgba(244, 208, 63, 0.22);
+  border-left: 2px solid rgba(var(--wh-accent-rgb), 0.22);
   padding-left: 1rem;
 }
 
@@ -428,7 +456,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   gap: 0.8rem;
   padding: 0.75rem 0.85rem;
   border-radius: var(--wh-radius-sm);
-  border: 1px solid rgba(244, 208, 63, 0.12);
+  border: 1px solid rgba(var(--wh-accent-rgb), 0.12);
   background: rgba(8, 12, 20, 0.62);
   text-decoration: none;
   color: var(--wh-text);
@@ -437,12 +465,12 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
 .lesson-playlist-item:hover {
   transform: translateX(6px);
-  border-color: rgba(244, 208, 63, 0.36);
+  border-color: rgba(var(--wh-accent-rgb), 0.36);
 }
 
 .lesson-playlist-item.is-active {
-  border-color: rgba(244, 208, 63, 0.55);
-  background: rgba(244, 208, 63, 0.18);
+  border-color: rgba(var(--wh-accent-rgb), 0.55);
+  background: rgba(var(--wh-accent-rgb), 0.18);
 }
 
 .lesson-playlist-index {
@@ -450,7 +478,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(244, 208, 63, 0.85);
+  color: rgba(var(--wh-accent-rgb), 0.85);
 }
 
 .lesson-playlist-thumb {
@@ -458,7 +486,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   height: 46px;
   border-radius: var(--wh-radius-sm);
   overflow: hidden;
-  background: rgba(244, 208, 63, 0.12);
+  background: rgba(var(--wh-accent-rgb), 0.12);
 }
 
 .lesson-playlist-thumb img {
@@ -1227,7 +1255,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
           <?php if ($attachments) : ?>
             <div class="win-simple-card lesson-extra">
               <div>
-                <h3 class="mb-2" style="letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.82rem; color: rgba(244, 208, 63, 0.85);">Material extra</h3>
+                <h3 class="mb-2" style="letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.82rem; color: rgba(var(--wh-accent-rgb), 0.85);">Material extra</h3>
                 <p class="mb-0" style="color: var(--wh-text-muted);">Complete a aula com os materiais complementares abaixo.</p>
               </div>
               <div class="lesson-attachments">
@@ -1528,14 +1556,14 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   function normal(num, id) {
     var current = parseInt($('#nota').val() || '0', 10);
     for (var i = 1; i <= 5; i++) {
-      $('#star' + i).css('color', i <= current ? '#f4d03f' : 'rgba(148,163,184,.35)');
+      $('#star' + i).css('color', i <= current ? 'var(--wh-accent)' : 'rgba(148,163,184,.35)');
     }
     $('#star-label').text(current > 0 ? starLabels[current] : '');
   }
 
   function marcada(num, id) {
     for (var i = 1; i <= 5; i++) {
-      $('#star' + i).css('color', i <= num ? '#f4d03f' : 'rgba(148,163,184,.35)');
+      $('#star' + i).css('color', i <= num ? 'var(--wh-accent)' : 'rgba(148,163,184,.35)');
     }
     $('#star-label').text(starLabels[num] || '');
   }
@@ -1548,7 +1576,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
   function avaliar(num) {
     for (var i = 1; i <= 5; i++) {
-      $('#star' + i).css('color', i <= num ? '#f4d03f' : 'rgba(148,163,184,.35)');
+      $('#star' + i).css('color', i <= num ? 'var(--wh-accent)' : 'rgba(148,163,184,.35)');
     }
     $('#star-label').text(starLabels[num] || '');
     $('#avaliacao').val(num);

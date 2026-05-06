@@ -19,11 +19,14 @@ $popupItem = $continuarAssistindo[0] ?? null;
 <style>
 /* ─── VARIÁVEIS ─── */
 :root {
-  --mc-accent:     #f4d03f;
-  --mc-accent-rgb: 244, 208, 63;
+  --mc-accent:     #e2e8f0;
+  --mc-accent-rgb: 226, 232, 240;
   --mc-radius:     20px;
   --mc-card-w:     clamp(200px, 22vw, 280px);
 }
+
+/* remove o radial-gradient amarelo global desta página */
+.mc-page.content-wrapper::before { display: none !important; }
 
 .mc-page .content {
   padding: 0 0 clamp(2rem, 4vw, 3rem);
@@ -317,10 +320,10 @@ $popupItem = $continuarAssistindo[0] ?? null;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--mc-accent-rgb),.22) transparent;
+  scrollbar-color: rgba(255,255,255,.15) transparent;
 }
-.mc-courses-slider::-webkit-scrollbar { height: 4px; }
-.mc-courses-slider::-webkit-scrollbar-thumb { background:rgba(var(--mc-accent-rgb),.25); border-radius:99px; }
+.mc-courses-slider::-webkit-scrollbar { height: 3px; }
+.mc-courses-slider::-webkit-scrollbar-thumb { background:rgba(255,255,255,.18); border-radius:99px; }
 
 /* card portrait — mesmo tamanho dos módulos (9/16, 4 por linha) */
 .mc-card-course {
@@ -340,7 +343,7 @@ $popupItem = $continuarAssistindo[0] ?? null;
 .mc-card-course:hover {
   transform: translateY(-8px) scale(1.025);
   box-shadow: 0 24px 60px rgba(0,0,0,.7),
-              0 0 0 2px rgba(var(--mc-accent-rgb), .65);
+              0 0 0 2px rgba(255,255,255,.18);
 }
 
 /* thumb */
@@ -371,16 +374,8 @@ $popupItem = $continuarAssistindo[0] ?? null;
   pointer-events: none;
 }
 
-/* barra accent no rodapé no hover */
-.mc-card-course::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 4px; z-index: 5;
-  background: var(--mc-accent);
-  opacity: 0;
-  transition: opacity .3s ease;
-}
-.mc-card-course:hover::after { opacity: 1; }
+/* sem accent amarelo no hover */
+.mc-card-course::after { display: none; }
 
 .mc-card-course__play {
   position: absolute; inset: 0; z-index: 1;
@@ -410,8 +405,26 @@ $popupItem = $continuarAssistindo[0] ?? null;
   background: rgba(255,255,255,.1);
 }
 .mc-card-course__pbar-fill {
-  height: 100%; background: var(--mc-accent); border-radius: 99px;
+  height: 100%; background: rgba(255,255,255,.55); border-radius: 99px;
   transition: width .4s ease;
+}
+
+/* botão acessar curso */
+.mc-card-course__btn {
+  display: block;
+  padding: .6rem 1rem;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #f9fafb;
+  background: #000000;
+  border-top: 1px solid rgba(255,255,255,.06);
+  transition: background .2s ease;
+}
+.mc-card-course:hover .mc-card-course__btn {
+  background: #0d0d0d;
 }
 
 /* badge concluído */
@@ -673,6 +686,9 @@ $popupItem = $continuarAssistindo[0] ?? null;
               <?php if ($done) : ?>
                 <div class="mc-card-done-badge"><i class="fas fa-check"></i></div>
               <?php endif; ?>
+            </div>
+            <div class="mc-card-course__btn">
+              <i class="fas fa-play" style="font-size:.65rem;margin-right:.35rem;"></i> Acessar curso
             </div>
           </a>
         <?php endforeach; ?>

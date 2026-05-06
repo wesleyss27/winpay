@@ -115,7 +115,6 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
 .vm-mod-card {
   flex-shrink: 0;
   width: calc((100% - 3 * 1.2rem) / 4);   /* 4 visíveis */
-  aspect-ratio: 9/16;
   border-radius: 18px;
   overflow: hidden;
   scroll-snap-align: start;
@@ -124,9 +123,16 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
   color: var(--vm-text);
   position: relative;
   transition: transform .3s ease, box-shadow .3s ease;
-  /* borda accent visível no hover */
   outline: 2px solid transparent;
   outline-offset: 0px;
+  background: #07080f;
+}
+
+/* capa 9:16 — agora é wrapper interno */
+.vm-mod-cover {
+  aspect-ratio: 9/16;
+  overflow: hidden;
+  position: relative;
 }
 .vm-mod-card:hover {
   transform: translateY(-8px) scale(1.025);
@@ -175,6 +181,22 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
   transition: opacity .3s ease;
 }
 .vm-mod-card:hover::after { opacity: 1; }
+
+/* botão acessar módulo */
+.vm-mod-card__btn {
+  display: block;
+  padding: .6rem 1rem;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #f9fafb;
+  background: #0a0a0f;
+  border-top: 1px solid rgba(255,255,255,.06);
+  transition: background .2s ease;
+}
+.vm-mod-card:hover .vm-mod-card__btn { background: #111118; }
 
 /* Banner "CONTEÚDO FECHADO" no topo */
 .vm-mod-locked-banner {
@@ -338,26 +360,31 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
             : url("minhas-compras/viewcursos/" . $curso->id);
         ?>
         <a href="<?= $href ?>" class="vm-mod-card">
-          <img src="<?= $imgMod($mod) ?>" alt="" class="vm-mod-img" loading="lazy">
-          <div class="vm-mod-gradient"></div>
+          <div class="vm-mod-cover">
+            <img src="<?= $imgMod($mod) ?>" alt="" class="vm-mod-img" loading="lazy">
+            <div class="vm-mod-gradient"></div>
 
-          <?php if (!$liberado): ?>
-            <div class="vm-mod-locked-banner">
-              <div class="vm-mod-locked-label">Conteúdo Fechado</div>
-              <div class="vm-mod-locked-sublabel">Liberado após 7 dias de compra</div>
-            </div>
-            <div class="vm-mod-lock-icon"><i class="fas fa-lock"></i></div>
-          <?php endif; ?>
+            <?php if (!$liberado): ?>
+              <div class="vm-mod-locked-banner">
+                <div class="vm-mod-locked-label">Conteúdo Fechado</div>
+                <div class="vm-mod-locked-sublabel">Liberado após 7 dias de compra</div>
+              </div>
+              <div class="vm-mod-lock-icon"><i class="fas fa-lock"></i></div>
+            <?php endif; ?>
 
-          <?php if ($mostrarTituloMod): ?>
-          <div class="vm-mod-name"><?= htmlspecialchars($mod->nome) ?></div>
-          <?php endif; ?>
+            <?php if ($mostrarTituloMod): ?>
+            <div class="vm-mod-name"><?= htmlspecialchars($mod->nome) ?></div>
+            <?php endif; ?>
 
-          <?php if ($liberado && $total > 0): ?>
-            <div class="vm-mod-progress">
-              <div class="vm-mod-progress-fill" style="width:<?= $progresso ?>%"></div>
-            </div>
-          <?php endif; ?>
+            <?php if ($liberado && $total > 0): ?>
+              <div class="vm-mod-progress">
+                <div class="vm-mod-progress-fill" style="width:<?= $progresso ?>%"></div>
+              </div>
+            <?php endif; ?>
+          </div>
+          <div class="vm-mod-card__btn">
+            <i class="fas fa-play" style="font-size:.65rem;margin-right:.35rem;"></i> Acessar módulo
+          </div>
         </a>
         <?php endforeach; ?>
       </div>

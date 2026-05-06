@@ -11,7 +11,7 @@
 </head>
 <?php
 /* ── Tema injetado via variáveis CSS ── */
-$vmAccent = !empty($curso->tema_cor_primaria) ? $curso->tema_cor_primaria : '#f4d03f';
+$vmAccent = !empty($curso->tema_cor_primaria) ? $curso->tema_cor_primaria : '#e2e8f0';
 $vmBg     = !empty($curso->tema_cor_fundo)    ? $curso->tema_cor_fundo    : '#0d0f14';
 $vmText   = !empty($curso->tema_cor_texto)     ? $curso->tema_cor_texto    : '#f0f0f0';
 
