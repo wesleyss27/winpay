@@ -157,7 +157,7 @@ class AppNotazz
         $integracao->usuario             = $this->section->getId();
         $integracao->api_notazz          = $data["api_notazz"];
         $integracao->data_nota           = $data["data_nota"];
-        $integracao->produto             = $data["produtonotazz"];
+        $integracao->produto             = @$data["produtonotazz"] !== '' ? (int)$data["produtonotazz"] : NULL;
         $integracao->codigo_cnae         = $data["codigo_cnae"];
         $integracao->codigo_lc116        = $data["codigo_lc116"];
         $integracao->enviar_email_cliente = isset($data["enviar_email_cliente"]) ? (int)$data["enviar_email_cliente"] : 1;
@@ -175,7 +175,7 @@ class AppNotazz
 
         $integracao->api_notazz           = $data["api_notazz"];
         $integracao->data_nota            = $data["data_nota"];
-        $integracao->produto              = $data["produto"];
+        $integracao->produto              = @$data["produto"] !== '' ? (int)$data["produto"] : NULL;
         $integracao->codigo_cnae          = $data["codigo_cnae"];
         $integracao->codigo_lc116         = $data["codigo_lc116"];
         $integracao->enviar_email_cliente = isset($data["enviar_email_cliente"]) ? (int)$data["enviar_email_cliente"] : 1;
