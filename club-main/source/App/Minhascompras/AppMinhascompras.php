@@ -40,43 +40,178 @@ class AppMinhascompras
 
     public function minhascompras($data)
     {
-
-        $aluno = @$_SESSION["id"];
-        $offset = 15;
+        $aluno     = (int) $_SESSION["id"];
+        $offset    = 15;
         $paginador = new Paginador();
-        $pagina = @$data["page"];
+        $pagina    = @$data["page"];
 
-        $turmaaluno = (new Turmaaluno())->find("aluno = :idc", "idc={$aluno}")->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("id DESC")->fetch(true);
+        $turmaaluno = (new Turmaaluno())
+            ->find("aluno = :idc", "idc={$aluno}")
+            ->limit($offset)
+            ->offset($paginador->paginador($pagina, $offset))
+            ->order("id DESC")
+            ->fetch(true);
 
-        // $turmass=[];
-        // if($turmaalunoo){
-        //     foreach($turmaalunoo as $turmaalun)
-        //     {
-        //         $turma = new Turma();
-        //         $turmass[] = $turma->find("id = :idc", "idc={$turmaalun->turma}")->order("id DESC")->fetch(true);
-        //     }
-        // }
+        // Progresso e "Continuar assistindo" por curso
+        $progressoCursos     = [];
+        $continuarAssistindo = [];
 
-        // $cursoss=[];
-        // if ($turmass) {
-        //     foreach($turmass as $truma_key=>$turmass_val){
-        //         $cursos = new Cursos();
-        //         $curso
-        //         ss[] = $cursos->find("id = :idc", "idc={$turmass_val[0]->curso}")->order("id DESC")->fetch(true);
-        //     } 
-        // }
+        if ($turmaaluno) {
+            $pdo     = Connect::getInstance();
+            $aulaObj = new Aulas();
+            $aulaCl  = new AulaConcluida();
 
-        // $cursosCount = count($cursoss);
-        // $paginas = ceil($cursosCount / $offset);
+            foreach ($turmaaluno as $entrada) {
+                $curso = $entrada->dataCurso();
+                if (!$curso) continue;
+
+                // % progresso
+                $total = (int) $aulaObj->find("curso = {$curso->id}")->count();
+                $concluidas = 0;
+                if ($total > 0) {
+                    $regs = $aulaCl->find("aluno = {$aluno} AND curso = {$curso->id}")->fetch(true);
+                    $concluidas = $regs ? count($regs) : 0;
+                }
+                $progressoCursos[$curso->id] = $total > 0 ? round(($concluidas / $total) * 100) : 0;
+
+                // última aula assistida via video_progresso (não concluída ainda)
+                $stmt = $pdo->prepare("
+                    SELECT vp.aula_id, vp.current_time, vp.percent_watched, vp.last_watched_at,
+                           a.nome AS aula_nome, a.imagem AS aula_imagem
+                    FROM video_progresso vp
+                    JOIN aulas a ON a.id = vp.aula_id
+                    WHERE vp.usuario = :u AND a.curso = :c AND vp.percent_watched < 95
+                    ORDER BY vp.last_watched_at DESC
+                    LIMIT 1
+                ");
+                $stmt->execute([':u' => $aluno, ':c' => $curso->id]);
+                $ultima = $stmt->fetch(\PDO::FETCH_OBJ);
+                if ($ultima) {
+                    $ultima->curso_id     = $curso->id;
+                    $ultima->curso_nome   = $curso->nome;
+                    $ultima->curso_imagem = $curso->imagem;
+                    $ultima->curso_banner = $curso->banner ?? null;
+                    $continuarAssistindo[] = $ultima;
+                }
+            }
+
+            usort($continuarAssistindo, fn($a, $b) => strtotime($b->last_watched_at) - strtotime($a->last_watched_at));
+        }
+
+        // Banners para o hero slideshow (cursos com banner cadastrado)
+        $heroBanners = [];
+        if ($turmaaluno) {
+            foreach ($turmaaluno as $entrada) {
+                $curso = $entrada->dataCurso();
+                if (!$curso || empty($curso->banner)) continue;
+                $heroBanners[] = [
+                    'banner'           => $curso->banner,
+                    'imagem'           => $curso->imagem,
+                    'nome'             => $curso->nome,
+                    'boas_vindas'      => $curso->boas_vindas ?? null,
+                    'curso_id'         => $curso->id,
+                    'mostrar_titulo'   => (int)($curso->mostrar_titulo_aulas ?? 1),
+                ];
+            }
+        }
 
         echo $this->view->render("minhascompras/minhascompras", [
-            "title" => "Minhascompras",
-            "turmaaluno" => @$turmaaluno,
-            "turmas" => @$turmass,
-            "cursoss" => @$cursoss,
-            "paginador" => @$paginador,
-            "total" => @$paginas,
-            "pagina" => @$data["page"] ? $data["page"] : 1,
+            "title"               => "Minhas compras",
+            "turmaaluno"          => $turmaaluno,
+            "paginador"           => $paginador,
+            "total"               => $paginas ?? 0,
+            "pagina"              => $data["page"] ?? 1,
+            "progressoCursos"     => $progressoCursos,
+            "continuarAssistindo" => $continuarAssistindo,
+            "heroBanners"         => $heroBanners,
+        ]);
+    }
+
+    public function viewmodulos($data)
+    {
+        $aluno  = (int) $_SESSION["id"];
+        $cursoId = (int) $data["codigo"];
+
+        $curso  = (new Cursos())->findById($cursoId);
+        $turma  = (new Turmaaluno())->find("curso = {$cursoId} AND aluno = {$aluno}")->fetch();
+
+        if (!$turma) {
+            header("Location: " . url("minhas-compras"));
+            exit;
+        }
+
+        $diasDesde = $turma ? (int) floor((time() - strtotime($turma->created_at)) / 86400) : 0;
+
+        // Módulos com progresso
+        $modulosRaw = (new Modulos())->find("curso = :c", "c={$cursoId}")->order("id ASC")->fetch(true);
+
+        $aulaCl  = new AulaConcluida();
+        $aulaObj = new Aulas();
+        $pdo     = Connect::getInstance();
+
+        $concluidas = [];
+        $regs = $aulaCl->find("aluno = {$aluno} AND curso = {$cursoId}")->fetch(true);
+        if ($regs) foreach ($regs as $r) $concluidas[] = (int) $r->aula;
+
+        $modulosData = [];
+        if ($modulosRaw) {
+            foreach ($modulosRaw as $mod) {
+                $liberado = (
+                    $curso->liberacao == 1 ||
+                    ($curso->liberacao == 3 && $diasDesde >= 7) ||
+                    $mod === $modulosRaw[0]
+                );
+
+                $aulasModulo = $aulaObj->find("modulo = {$mod->id}")->order("ordem ASC, id ASC")->fetch(true);
+                $total       = $aulasModulo ? count($aulasModulo) : 0;
+                $done        = 0;
+                $primeiraAula = null;
+
+                if ($aulasModulo) {
+                    foreach ($aulasModulo as $a) {
+                        if (in_array((int)$a->id, $concluidas)) $done++;
+                        if (!$primeiraAula) {
+                            $aulLibre = ($a->dias_liberacao === null || $a->dias_liberacao === '') || $diasDesde >= (int)$a->dias_liberacao;
+                            if ($aulLibre) $primeiraAula = $a;
+                        }
+                    }
+                }
+
+                $progresso = $total > 0 ? round(($done / $total) * 100) : 0;
+
+                $modulosData[] = [
+                    'mod'          => $mod,
+                    'liberado'     => $liberado,
+                    'total'        => $total,
+                    'concluidas'   => $done,
+                    'progresso'    => $progresso,
+                    'primeiraAula' => $primeiraAula,
+                ];
+            }
+        }
+
+        // Aulas em progresso (parcialmente assistidas < 95%)
+        $emProgresso = [];
+        $stmt = $pdo->prepare("
+            SELECT vp.aula_id, vp.current_time, vp.percent_watched,
+                   a.nome AS aula_nome, a.imagem AS aula_imagem, a.modulo AS aula_modulo,
+                   m.nome AS modulo_nome
+            FROM video_progresso vp
+            JOIN aulas a ON a.id = vp.aula_id
+            JOIN modulos m ON m.id = a.modulo
+            WHERE vp.usuario = :u AND a.curso = :c AND vp.percent_watched < 95
+            ORDER BY vp.last_watched_at DESC
+            LIMIT 10
+        ");
+        $stmt->execute([':u' => $aluno, ':c' => $cursoId]);
+        $emProgresso = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+        echo $this->view->render("minhascompras/view_modulos", [
+            "title"        => $curso->tema_titulo_exibicao ?? $curso->nome,
+            "curso"        => $curso,
+            "turma"        => $turma,
+            "modulosData"  => $modulosData,
+            "emProgresso"  => $emProgresso,
         ]);
     }
 

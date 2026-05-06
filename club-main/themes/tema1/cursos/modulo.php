@@ -45,6 +45,19 @@ if ($_SESSION["tipo"] == 6) {
               <label for="module_descricao">Descrição do módulo</label>
               <textarea class="form-control" id="module_descricao" name="module_descricao" rows="5" placeholder="Descreva o objetivo do módulo" required></textarea>
             </div>
+
+            <div class="form-group">
+              <label for="modImgInput">Imagem do módulo</label>
+              <small class="win-form-hint" style="display:block;margin-top:.35rem;color:var(--wh-text-soft);">Aparece como capa do card na página de módulos. Recomendado: 600×900px (portrait).</small>
+              <div class="attachment">
+                <label class="filelabel mod-img-label" for="modImgInput" data-default="Escolher imagem">
+                  <i class="fa fa-image"></i>
+                  <span class="mod-img-label-text">Escolher imagem</span>
+                </label>
+                <input type="file" accept="image/*" id="modImgInput" class="FileUpload1" name="modulo_imagem">
+                <img src="" alt="" class="mod-img-preview" style="display:none;border-radius:8px;width:100px;height:150px;object-fit:cover;margin-top:.5rem;">
+              </div>
+            </div>
           </div>
 
           <input type="hidden" name="course_id" value="<?= $course_id; ?>">

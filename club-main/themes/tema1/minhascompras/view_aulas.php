@@ -66,6 +66,79 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 ?>
 
 <style>
+/* ─── Toast ─── */
+#win-toast-container {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.2rem;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  pointer-events: none;
+}
+.win-toast {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1.1rem;
+  border-radius: 14px;
+  font-size: .88rem;
+  font-weight: 500;
+  color: #f9fafb;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+  transform: translateX(120%);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+  opacity: 0;
+  pointer-events: auto;
+  max-width: 320px;
+}
+.win-toast.show { transform: translateX(0); opacity: 1; }
+.win-toast.success { background: rgba(20,40,25,.96); border: 1px solid rgba(74,222,128,.35); }
+.win-toast.error   { background: rgba(40,15,15,.96); border: 1px solid rgba(248,113,113,.35); }
+.win-toast.info    { background: rgba(14,16,23,.96);  border: 1px solid rgba(244,208,63,.3); }
+.win-toast i { font-size: 1rem; flex-shrink: 0; }
+.win-toast.success i { color: #4ade80; }
+.win-toast.error   i { color: #f87171; }
+.win-toast.info    i { color: #f4d03f; }
+
+/* ─── Breadcrumb ─── */
+.lesson-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(148,163,184,.5);
+  margin-bottom: 1.2rem;
+}
+.lesson-breadcrumb a {
+  color: rgba(148,163,184,.5);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.lesson-breadcrumb a:hover { color: #f4d03f; }
+.lesson-breadcrumb .sep { font-size: .6rem; opacity: .4; }
+
+/* ─── Top nav ─── */
+.lesson-top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+.lesson-top-nav-title {
+  font-size: clamp(.9rem,1.8vw,1.15rem);
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: #f9fafb;
+}
+.lesson-top-nav-actions { display: flex; gap: .6rem; }
+
 .lesson-hero small {
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -472,9 +545,43 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 }
 </style>
 
+<!-- Toast container -->
+<div id="win-toast-container"></div>
+
 <div class="content-wrapper win-page">
   <section class="content">
     <div class="container-fluid">
+
+      <!-- Breadcrumb -->
+      <nav class="lesson-breadcrumb">
+        <a href="<?= url("minhas-compras") ?>"><i class="fas fa-graduation-cap"></i> Meus Cursos</a>
+        <i class="fas fa-chevron-right sep"></i>
+        <a href="<?= url("minhas-compras/viewcursos/" . $curso->id) ?>"><?= $courseName ?></a>
+        <i class="fas fa-chevron-right sep"></i>
+        <span style="color:rgba(249,250,251,.65)"><?= $lessonName ?></span>
+      </nav>
+
+      <!-- Top navigation -->
+      <div class="lesson-top-nav">
+        <span class="lesson-top-nav-title">
+          <span style="color:rgba(244,208,63,.7);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;display:block;margin-bottom:.25rem;"><?= $moduleName ?></span>
+          <?= $lessonName ?>
+        </span>
+        <div class="lesson-top-nav-actions">
+          <?php if ($prevUrlAttr) : ?>
+            <a href="<?= $prevUrlAttr ?>" class="btn-win btn-win-ghost" title="Aula anterior">
+              <i class="far fa-arrow-alt-circle-left"></i>
+              <span class="d-none d-sm-inline">Anterior</span>
+            </a>
+          <?php endif; ?>
+          <?php if ($nextUrlAttr) : ?>
+            <a href="<?= $nextUrlAttr ?>" class="btn-win" title="Próxima aula">
+              <span class="d-none d-sm-inline">Próxima</span>
+              <i class="far fa-arrow-alt-circle-right"></i>
+            </a>
+          <?php endif; ?>
+        </div>
+      </div>
 
       <section class="win-hero lesson-hero" style="background: linear-gradient(135deg, rgba(11, 15, 28, 0.9), rgba(5, 5, 8, 0.92)), url('<?= $courseCoverAttr; ?>') center/cover no-repeat;">
         <div class="win-page-title">
@@ -1054,36 +1161,34 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
           <?php endif; ?>
 
           <div class="win-simple-card lesson-feedback">
-            <div>
-              <h3 style="margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wh-text);">Avaliação</h3>
-              <p style="margin: 0.4rem 0 0; color: var(--wh-text-soft);">Como você avalia esta aula? Sua nota ajuda a melhorar a experiência.</p>
-            </div>
-
-            <div class="lesson-feedback-actions">
-              <div class="lesson-stars d-none d-lg-flex">
-                <i class="fa-solid fa-star estrela" id="star1" onmouseover="marcada(1, 'star')" onmouseout="normal(1, 'star')" onclick="avaliar(1)"></i>
-                <i class="fa-solid fa-star estrela" id="star2" onmouseover="marcada(2, 'star')" onmouseout="normal(2, 'star')" onclick="avaliar(2)"></i>
-                <i class="fa-solid fa-star estrela" id="star3" onmouseover="marcada(3, 'star')" onmouseout="normal(3, 'star')" onclick="avaliar(3)"></i>
-                <i class="fa-solid fa-star estrela" id="star4" onmouseover="marcada(4, 'star')" onmouseout="normal(4, 'star')" onclick="avaliar(4)"></i>
-                <i class="fa-solid fa-star estrela" id="star5" onmouseover="marcada(5, 'star')" onmouseout="normal(5, 'star')" onclick="avaliar(5)"></i>
+            <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;">
+              <div>
+                <h3 style="margin:0;font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--wh-text);">Avaliação da aula</h3>
+                <p style="margin:.3rem 0 0;font-size:.82rem;color:var(--wh-text-soft);">Sua nota ajuda a melhorar a experiência.</p>
               </div>
-
-              <div class="lesson-stars d-lg-none">
-                <i class="fa-solid fa-star estrela" id="starm1" onmouseover="marcada(1, 'starm')" onmouseout="normal(1, 'starm')" onclick="avaliar(1)"></i>
-                <i class="fa-solid fa-star estrela" id="starm2" onmouseover="marcada(2, 'starm')" onmouseout="normal(2, 'starm')" onclick="avaliar(2)"></i>
-                <i class="fa-solid fa-star estrela" id="starm3" onmouseover="marcada(3, 'starm')" onmouseout="normal(3, 'starm')" onclick="avaliar(3)"></i>
-                <i class="fa-solid fa-star estrela" id="starm4" onmouseover="marcada(4, 'starm')" onmouseout="normal(4, 'starm')" onclick="avaliar(4)"></i>
-                <i class="fa-solid fa-star estrela" id="starm5" onmouseover="marcada(5, 'starm')" onmouseout="normal(5, 'starm')" onclick="avaliar(5)"></i>
-              </div>
-
               <?php if (!$aulaConcluida) : ?>
-                <button type="button" id="btn-concluido-desk" class="btn btn-win">
+                <button type="button" id="btn-concluido-desk" class="btn-win" style="border-radius:999px;">
                   <i class="far fa-check-circle"></i>
                   Marcar como concluída
                 </button>
               <?php else : ?>
-                <span class="lesson-hero-pill" style="background: rgba(244, 208, 63, 0.22); border-color: rgba(244, 208, 63, 0.42);"><i class="far fa-check-circle"></i> Aula concluída</span>
+                <span class="lesson-hero-pill" style="background:rgba(74,222,128,.14);border-color:rgba(74,222,128,.32);color:#4ade80;">
+                  <i class="fas fa-check-circle"></i> Concluída
+                </span>
               <?php endif; ?>
+            </div>
+
+            <div class="lesson-stars" style="gap:.4rem;">
+              <?php for ($s = 1; $s <= 5; $s++) : ?>
+                <i class="fa-solid fa-star estrela" id="star<?= $s ?>"
+                   onmouseover="marcada(<?= $s ?>, 'star')"
+                   onmouseout="normal(<?= $s ?>, 'star')"
+                   onclick="avaliar(<?= $s ?>)"
+                   style="font-size:1.7rem;cursor:pointer;transition:transform .15s ease;"
+                   onmouseenter="this.style.transform='scale(1.2)'"
+                   onmouseleave="this.style.transform='scale(1)'"></i>
+              <?php endfor; ?>
+              <span id="star-label" style="font-size:.78rem;letter-spacing:.1em;color:rgba(148,163,184,.55);margin-left:.4rem;align-self:center;"></span>
             </div>
           </div>
 
@@ -1117,7 +1222,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
                 <div style="flex: 1;">
                   <textarea name="comentario" id="comentario" class="form-control" placeholder="Escreva aqui seu comentário"></textarea>
                   <div class="d-flex justify-content-end" style="margin-top: 0.75rem;">
-                    <button type="button" class="btn btn-win" id="btn_comentar">
+                    <button type="button" class="btn-win" id="btn_comentar">
                       <i class="far fa-paper-plane"></i>
                       Enviar comentário
                     </button>
@@ -1164,8 +1269,8 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
                           <input type="hidden" name="resposta" value="<?= $comentario->id ?>">
                           <textarea id="comentario_resposta<?= $comentario->id ?>" name="comentario" rows="2" placeholder="Responder a <?= $comentarioNome; ?>"></textarea>
                           <div class="d-flex justify-content-end" style="gap: 0.6rem;">
-                            <button type="button" class="btn btn-win-ghost" onclick="cancelar(<?= $comentario->id ?>)">Cancelar</button>
-                            <button type="button" class="btn btn-win" onclick="btnResponder(<?= $comentario->id ?>)">Comentar</button>
+                            <button type="button" class="btn-win btn-win-ghost" onclick="cancelar(<?= $comentario->id ?>)">Cancelar</button>
+                            <button type="button" class="btn-win" onclick="btnResponder(<?= $comentario->id ?>)">Comentar</button>
                           </div>
                         </form>
                       </div>
@@ -1233,7 +1338,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
             <?php endif; ?>
 
             <?php if ($ofertaExibir->valor) : ?>
-              <span style="font-size: 1.3rem; font-weight: 700; color: var(--wh-primary);">
+              <span style="font-size: 1.3rem; font-weight: 700; color: var(--wh-accent);">
                 R$ <?= number_format((float)$ofertaExibir->valor, 2, ',', '.'); ?>
               </span>
             <?php endif; ?>
@@ -1284,13 +1389,13 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
             <div class="d-flex flex-column flex-sm-row" style="gap: 0.6rem;">
               <?php if ($prevUrlAttr) : ?>
-                <a href="<?= $prevUrlAttr; ?>" class="btn btn-win-ghost" style="flex: 1; text-align: center;">
+                <a href="<?= $prevUrlAttr; ?>" class="btn-win btn-win-ghost" style="flex: 1; justify-content: center;">
                   <i class="far fa-arrow-alt-circle-left"></i>
                   Aula anterior
                 </a>
               <?php endif; ?>
               <?php if ($nextUrlAttr) : ?>
-                <a href="<?= $nextUrlAttr; ?>" class="btn btn-win" style="flex: 1; text-align: center;">
+                <a href="<?= $nextUrlAttr; ?>" class="btn-win" style="flex: 1; justify-content: center;">
                   Próxima aula
                   <i class="far fa-arrow-alt-circle-right"></i>
                 </a>
@@ -1305,46 +1410,62 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
 
 <?= $v->start("scripts") ?>
 <script>
-  function normal(num, id = 'star') {
-    if (!num) {
-      return;
-    }
-
-    for (let i = 5; i > num; i--) {
-      $('#' + id + i).css('color', '#bbb');
-    }
+  // ─── Toast ───
+  function showToast(msg, type) {
+    type = type || 'info';
+    var icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+    var container = document.getElementById('win-toast-container');
+    var t = document.createElement('div');
+    t.className = 'win-toast ' + type;
+    t.innerHTML = '<i class="fas ' + icons[type] + '"></i><span>' + msg + '</span>';
+    container.appendChild(t);
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { t.classList.add('show'); });
+    });
+    setTimeout(function() {
+      t.classList.remove('show');
+      setTimeout(function() { t.parentNode && t.parentNode.removeChild(t); }, 350);
+    }, 3200);
   }
 
-  function marcada(num, id = 'star') {
-    if (!num) {
-      return;
-    }
+  var starLabels = ['', 'Ruim', 'Regular', 'Bom', 'Muito bom', 'Excelente'];
 
-    for (let i = 1; i <= num; i++) {
-      $('#' + id + i).css('color', '#ff0');
+  function normal(num, id) {
+    var current = parseInt($('#nota').val() || '0', 10);
+    for (var i = 1; i <= 5; i++) {
+      $('#star' + i).css('color', i <= current ? '#f4d03f' : 'rgba(148,163,184,.35)');
     }
+    $('#star-label').text(current > 0 ? starLabels[current] : '');
   }
 
-  const avaliacaoAtual = parseInt($('#nota').val() || '0', 10);
-  marcada(avaliacaoAtual);
-  marcada(avaliacaoAtual, 'starm');
-
-  function avaliar(num, id = 'star') {
-    for (let i = 1; i <= 5; i++) {
-      $('#' + id + i).css('color', i <= num ? '#ff0' : '#bbb');
+  function marcada(num, id) {
+    for (var i = 1; i <= 5; i++) {
+      $('#star' + i).css('color', i <= num ? '#f4d03f' : 'rgba(148,163,184,.35)');
     }
+    $('#star-label').text(starLabels[num] || '');
+  }
 
+  var avaliacaoAtual = parseInt($('#nota').val() || '0', 10);
+  if (avaliacaoAtual > 0) marcada(avaliacaoAtual);
+  else {
+    for (var i = 1; i <= 5; i++) $('#star' + i).css('color', 'rgba(148,163,184,.35)');
+  }
+
+  function avaliar(num) {
+    for (var i = 1; i <= 5; i++) {
+      $('#star' + i).css('color', i <= num ? '#f4d03f' : 'rgba(148,163,184,.35)');
+    }
+    $('#star-label').text(starLabels[num] || '');
     $('#avaliacao').val(num);
     $('#nota').val(num);
-    const form = $('form[name=comentar]');
-
+    var form = $('form[name=comentar]');
     $.ajax({
       url: "<?= $router->route("aulas.avaliar") ?>",
       type: 'POST',
       data: form.serialize(),
       success: function(callback) {
-        alert(callback);
-        location.reload();
+        showToast(callback, 'success');
+        setTimeout(function() { location.reload(); }, 1200);
       }
     });
   }
@@ -1356,13 +1477,19 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
   });
 
   function concluido(form) {
+    var $btn = $('#btn-concluido-desk, #btn-concluido-mobile');
+    $btn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i> Salvando…');
     $.ajax({
       url: "<?= $router->route("aulas.concluir") ?>",
       type: 'POST',
       data: form.serialize(),
       success: function(callback) {
-        alert(callback);
-        location.reload();
+        showToast(callback, 'success');
+        setTimeout(function() { location.reload(); }, 1200);
+      },
+      error: function() {
+        showToast('Erro ao salvar. Tente novamente.', 'error');
+        $btn.prop('disabled', false).html('<i class="far fa-check-circle"></i> Marcar como concluída');
       }
     });
   }
@@ -1374,18 +1501,24 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
     if (comentario) {
       salvar(form);
     } else {
-      alert('Digite um comentário antes de enviar.');
+      showToast('Digite um comentário antes de enviar.', 'error');
     }
   });
 
   function salvar(form) {
+    var $btn = $('#btn_comentar');
+    $btn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i>');
     $.ajax({
       url: "<?= $router->route("aulas.comentar") ?>",
       type: 'POST',
       data: form.serialize(),
       success: function(callback) {
-        alert(callback);
-        location.reload();
+        showToast(callback, 'success');
+        setTimeout(function() { location.reload(); }, 1200);
+      },
+      error: function() {
+        showToast('Erro ao enviar. Tente novamente.', 'error');
+        $btn.prop('disabled', false).html('<i class="far fa-paper-plane"></i> Enviar comentário');
       }
     });
   }
@@ -1407,7 +1540,7 @@ $nextUrlAttr = $nextUrl ? htmlspecialchars($nextUrl, ENT_QUOTES, 'UTF-8') : null
     if (comentario) {
       salvar(form);
     } else {
-      alert('Digite um comentário antes de enviar.');
+      showToast('Digite um comentário antes de enviar.', 'error');
     }
   }
 </script>

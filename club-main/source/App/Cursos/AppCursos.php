@@ -281,13 +281,25 @@ class AppCursos
             exit;
         }
 
-        $cursos->produto = $data["produto"];
-        $cursos->nome = $data["nome"];
-        $cursos->assunto = $data["assunto"];
-        $cursos->formato = $data["formato"];
-        $cursos->descricao = $data["descricao"];
-        $cursos->liberacao = $data["liberacao"];
-        $cursos->status = 0;
+        $cursos->produto     = $data["produto"];
+        $cursos->nome        = $data["nome"];
+        $cursos->assunto     = $data["assunto"];
+        $cursos->formato     = $data["formato"];
+        $cursos->descricao   = $data["descricao"];
+        $cursos->liberacao   = $data["liberacao"];
+        $cursos->boas_vindas          = $data["boas_vindas"] ?? null;
+        $cursos->banner_titulo        = !empty($data["banner_titulo"]) ? $data["banner_titulo"] : null;
+        $cursos->banner_posicao       = !empty($data["banner_posicao"]) ? $data["banner_posicao"] : 'center center';
+        $cursos->mostrar_titulo_aulas = isset($data["mostrar_titulo_aulas"]) ? 1 : 0;
+
+        // Tema visual da página de módulos
+        $cursos->tema_cor_primaria    = !empty($data["tema_cor_primaria_hex"]) ? $data["tema_cor_primaria_hex"] : ($data["tema_cor_primaria"] ?? '#f4d03f');
+        $cursos->tema_cor_fundo       = !empty($data["tema_cor_fundo_hex"])    ? $data["tema_cor_fundo_hex"]    : ($data["tema_cor_fundo"]    ?? '#0f1118');
+        $cursos->tema_cor_texto       = !empty($data["tema_cor_texto_hex"])    ? $data["tema_cor_texto_hex"]    : ($data["tema_cor_texto"]    ?? '#ffffff');
+        $cursos->tema_exibir_titulo   = isset($data["tema_exibir_titulo"]) ? 1 : 0;
+        $cursos->tema_titulo_exibicao = !empty($data["tema_titulo_exibicao"]) ? $data["tema_titulo_exibicao"] : null;
+
+        $cursos->status               = 0;
 
         if (!empty($data['course_id'])) {
             if (empty(@$_FILES["imagem"]["name"])) {
@@ -295,11 +307,25 @@ class AppCursos
             } else {
                 $cursos->imagem = $files->upload($_FILES["imagem"], $this->pastaCursos);
             }
+            if (empty(@$_FILES["banner"]["name"])) {
+                $cursos->banner = $data["banner_atual"] ?? $cursos->banner;
+            } else {
+                $cursos->banner = $files->upload($_FILES["banner"], $this->pastaCursos);
+            }
+            if (empty(@$_FILES["tema_logo"]["name"])) {
+                $cursos->tema_logo = !empty($data["tema_logo_atual"]) ? $data["tema_logo_atual"] : ($cursos->tema_logo ?? null);
+            } else {
+                $cursos->tema_logo = $files->upload($_FILES["tema_logo"], $this->pastaCursos);
+            }
         } else {
             $cursos->imagem = $files->upload($_FILES["imagem"], $this->pastaCursos);
+            if (!empty($_FILES["banner"]["name"])) {
+                $cursos->banner = $files->upload($_FILES["banner"], $this->pastaCursos);
+            }
+            if (!empty($_FILES["tema_logo"]["name"])) {
+                $cursos->tema_logo = $files->upload($_FILES["tema_logo"], $this->pastaCursos);
+            }
         }
-
-        //echo $data["liberacao"];
 
         if ($cursos->save()) {
             $msg = "Salvo com sucesso";
@@ -358,6 +384,16 @@ class AppCursos
         $modulos->nome =  $data["module_nome"];
         $modulos->descricao = $data["module_descricao"];
         $modulos->curso = $data['course_id'];
+
+        if (!empty($data['module_id'])) {
+            if (!empty($_FILES["modulo_imagem"]["name"])) {
+                $modulos->imagem = $files->upload($_FILES["modulo_imagem"], $this->pastaCursos);
+            } else {
+                $modulos->imagem = !empty($data["modulo_imagem_atual"]) ? $data["modulo_imagem_atual"] : ($modulos->imagem ?? null);
+            }
+        } elseif (!empty($_FILES["modulo_imagem"]["name"])) {
+            $modulos->imagem = $files->upload($_FILES["modulo_imagem"], $this->pastaCursos);
+        }
 
 
         if ($_SESSION["tipo"] == 5) {
@@ -428,6 +464,15 @@ class AppCursos
         $modulos->descricao = $data["module_descricao"];
         $modulos->curso = $data['course_id'];
 
+        if (!empty($data['module_id'])) {
+            if (!empty($_FILES["modulo_imagem"]["name"])) {
+                $modulos->imagem = $files->upload($_FILES["modulo_imagem"], $this->pastaCursos);
+            } else {
+                $modulos->imagem = !empty($data["modulo_imagem_atual"]) ? $data["modulo_imagem_atual"] : ($modulos->imagem ?? null);
+            }
+        } elseif (!empty($_FILES["modulo_imagem"]["name"])) {
+            $modulos->imagem = $files->upload($_FILES["modulo_imagem"], $this->pastaCursos);
+        }
 
         if ($_SESSION["tipo"] == 5) {
             $usuario = (new Usuario())->findById($_SESSION["id"]);

@@ -174,6 +174,7 @@ $router->post("/excluir-aluno", "AppTurmas:excluirAlunoTurma", "excluir.aluno");
 $router->namespace("Source\App\Minhascompras");
 $router->group("minhas-compras");
 $router->get("/", "AppMinhascompras:minhascompras", "appMinhascompras.home");
+$router->get("/viewmodulos/{codigo}", "AppMinhascompras:viewmodulos", "appMinhascompras.viewmodulos");
 $router->get("/viewcursos/{codigo}", "AppMinhascompras:viewcursos", "appMinhascompras.viewcursos");
 $router->get("/viewaulas/{codigo}", "AppMinhascompras:viewaulas", "appMinhascompras.viewaulas");
 

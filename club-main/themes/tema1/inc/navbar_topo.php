@@ -79,6 +79,49 @@
       background: rgba(244, 208, 63, 0.14);
       color: #f4d03f !important;
     }
+
+    .winpay-search {
+      position: relative;
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .winpay-search {
+        display: block;
+      }
+    }
+
+    .winpay-search input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: #f9fafb;
+      padding: 0.35rem 0.9rem 0.35rem 2.2rem;
+      font-size: 0.82rem;
+      width: 200px;
+      outline: none;
+      transition: border-color 0.2s ease, background 0.2s ease, width 0.3s ease;
+    }
+
+    .winpay-search input::placeholder {
+      color: rgba(148, 163, 184, 0.4);
+    }
+
+    .winpay-search input:focus {
+      border-color: rgba(244, 208, 63, 0.35);
+      background: rgba(255, 255, 255, 0.08);
+      width: 260px;
+    }
+
+    .winpay-search-icon {
+      position: absolute;
+      left: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(148, 163, 184, 0.4);
+      font-size: 0.75rem;
+      pointer-events: none;
+    }
   </style>
 
   <nav class="main-header navbar navbar-expand navbar-dark winpay-navbar">
@@ -91,16 +134,10 @@
       </li>
     </ul>
 
-    <!--<form class="form-inline ml-3">
-      <div class="input-group input-group-sm">
-        <input class="form-control form-control-navbar" type="search" placeholder="Buscar..." aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </form>-->
+    <div class="winpay-search ml-3">
+      <i class="fas fa-search winpay-search-icon"></i>
+      <input type="search" placeholder="Buscar..." aria-label="Buscar" autocomplete="off" id="winpay-search-input">
+    </div>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">

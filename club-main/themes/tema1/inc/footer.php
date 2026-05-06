@@ -1,12 +1,13 @@
 <style>
 /* Footer */
 .main-footer {
-  background: linear-gradient(90deg, rgba(5, 5, 8, 0.96) 0%, rgba(9, 12, 18, 0.96) 60%, rgba(15, 18, 28, 0.96) 100%);
-  color: #f9fafb;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 1rem 1.5rem;
+  background: linear-gradient(90deg, rgba(5, 5, 8, 0.97) 0%, rgba(9, 12, 18, 0.97) 60%, rgba(15, 18, 28, 0.97) 100%);
+  color: rgba(148, 163, 184, 0.55);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 0.55rem 1.5rem;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
   backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
@@ -17,10 +18,11 @@
   left: 0;
   right: 0;
   z-index: 1020;
+  height: 36px;
 }
 
 .content-wrapper {
-  padding-bottom: 60px;
+  padding-bottom: 50px;
 }
 
 .main-footer a {
@@ -139,5 +141,15 @@ span.oculta {
 
     $(document).on('collapsed.lte.pushmenu shown.lte.pushmenu', updateIcon);
     updateIcon();
+
+    // Back to top (global + per-page instances)
+    var $btt = $('#back-to-top-global, #back-to-top');
+    $(window).on('scroll.btt', function () {
+      $btt.toggleClass('visible', $(this).scrollTop() > 300);
+    });
+    $btt.on('click', function (e) {
+      e.preventDefault();
+      $('html, body').animate({ scrollTop: 0 }, 400);
+    });
   });
 </script>

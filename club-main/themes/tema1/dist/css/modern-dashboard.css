@@ -810,10 +810,17 @@
   transition: all 0.2s ease;
 }
 
-.win-tabs a.active,
 .win-tabs a:hover {
-  background: rgba(244, 208, 63, 0.18);
+  background: rgba(244, 208, 63, 0.1);
   color: var(--wh-text);
+  text-decoration: none;
+}
+
+.win-tabs a.active {
+  background: linear-gradient(135deg, rgba(244, 208, 63, 0.22), rgba(244, 208, 63, 0.12));
+  color: var(--wh-accent);
+  border: 1px solid rgba(244, 208, 63, 0.28);
+  box-shadow: 0 4px 14px rgba(244, 208, 63, 0.14);
 }
 
 .win-steps {
@@ -1182,4 +1189,195 @@
   .win-slider-card {
     min-width: 75vw;
   }
+}
+
+/* ─── Page entrance animation ─── */
+@keyframes wh-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.win-page {
+  animation: wh-fade-up 0.4s ease both;
+}
+
+/* ─── Stat card link ─── */
+.win-stat-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wh-text-soft);
+  text-decoration: none;
+  margin-top: auto;
+  transition: color 0.2s ease;
+}
+
+.win-stat-link:hover {
+  color: var(--wh-accent);
+  text-decoration: none;
+}
+
+/* ─── Back to top ─── */
+.back-to-top {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 4.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: rgba(244, 208, 63, 0.14);
+  border: 1px solid rgba(244, 208, 63, 0.28);
+  color: var(--wh-accent) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+  z-index: 1050;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.back-to-top:hover {
+  background: rgba(244, 208, 63, 0.25);
+  transform: translateY(-3px);
+}
+
+/* ─── Chart card dark override ─── */
+.win-section canvas {
+  display: block;
+}
+
+/* ─── Stats grid custom column min ─── */
+.win-stats-grid[style*="--wh-grid-min"] {
+  grid-template-columns: repeat(auto-fit, minmax(var(--wh-grid-min, 200px), 1fr));
+}
+
+/* ─── Select dark override (outside .win-form context) ─── */
+select.form-control {
+  background-color: rgba(8, 12, 20, 0.82);
+  border: 1px solid rgba(244, 208, 63, 0.12);
+  color: #f9fafb;
+  border-radius: 12px;
+}
+
+select.form-control:focus {
+  border-color: rgba(244, 208, 63, 0.5);
+  box-shadow: 0 0 0 0.12rem rgba(244, 208, 63, 0.2);
+  background-color: rgba(8, 12, 20, 0.92);
+}
+
+select.form-control option {
+  background: #0f1118;
+  color: #f9fafb;
+}
+
+/* ─── Input dark override (outside .win-form context) ─── */
+input.form-control,
+textarea.form-control {
+  background-color: rgba(8, 12, 20, 0.82);
+  border: 1px solid rgba(244, 208, 63, 0.12);
+  color: #f9fafb;
+  border-radius: 12px;
+}
+
+input.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: rgba(148, 163, 184, 0.45);
+}
+
+input.form-control:focus,
+textarea.form-control:focus {
+  background-color: rgba(8, 12, 20, 0.92);
+  border-color: rgba(244, 208, 63, 0.45);
+  box-shadow: 0 0 0 0.12rem rgba(244, 208, 63, 0.2);
+  color: #f9fafb;
+}
+
+/* ─── Label dark override ─── */
+label {
+  color: rgba(148, 163, 184, 0.72);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ─── Table dark override ─── */
+.table:not(.win-table) {
+  color: #f9fafb;
+}
+
+.table:not(.win-table) thead th {
+  border-bottom: 1px solid rgba(244, 208, 63, 0.14);
+  background: rgba(244, 208, 63, 0.06);
+  color: rgba(148, 163, 184, 0.65);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.table:not(.win-table) tbody td {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(249, 250, 251, 0.8);
+  vertical-align: middle;
+}
+
+.table:not(.win-table) tbody tr:hover {
+  background: rgba(244, 208, 63, 0.04);
+}
+
+/* ─── Card dark override ─── */
+.card:not(.win-card):not(.win-section):not(.win-simple-card) {
+  background: rgba(14, 16, 23, 0.88);
+  border: 1px solid rgba(244, 208, 63, 0.12);
+  border-radius: 18px;
+  color: #f9fafb;
+  box-shadow: 0 18px 36px rgba(5, 7, 12, 0.45);
+}
+
+.card-header:not(.win-card .card-header) {
+  background: rgba(244, 208, 63, 0.06);
+  border-bottom: 1px solid rgba(244, 208, 63, 0.1);
+  color: rgba(148, 163, 184, 0.78);
+}
+
+.card-body:not(.win-card .card-body) {
+  background: transparent;
+  color: rgba(249, 250, 251, 0.8);
+}
+
+/* ─── Alert dark override ─── */
+.alert {
+  border-radius: 14px;
+  border: 1px solid rgba(244, 208, 63, 0.2);
+  background: rgba(244, 208, 63, 0.08);
+  color: #f9fafb;
+}
+
+.alert-success {
+  border-color: rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.alert-danger {
+  border-color: rgba(248, 113, 113, 0.25);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.alert-warning {
+  border-color: rgba(251, 146, 60, 0.25);
+  background: rgba(251, 146, 60, 0.08);
+}
+
+.alert-info {
+  border-color: rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.08);
 }

@@ -16,7 +16,11 @@
 
 <?= $v->insert("inc/sidebar_menu");?>
 
-<?= $v->section("content"); ?> 
+<?= $v->section("content"); ?>
+
+<a id="back-to-top-global" href="#" class="back-to-top" role="button" aria-label="Voltar ao topo" title="Voltar ao topo">
+  <i class="fas fa-chevron-up"></i>
+</a>
 
 <?= $v->insert("inc/footer") ;?>
 

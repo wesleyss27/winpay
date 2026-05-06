@@ -385,17 +385,17 @@
         <?php endif ?>
 
         <?php if ($_SESSION["tipo"] == 6) : ?>
-          <li class="nav-item" title="Veja suas compras">
-            <a href="<?= url('minhas-compras/') ?>" class="nav-link txt-azul-dark">
-              <i class="nav-icon fas fa-check"></i>
-              <p> Minhas Compras </p>
+          <li class="nav-item">
+            <a href="<?= url('minhas-compras/') ?>" class="nav-link <?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'minhas-compras') !== false) ? 'active' : ''; ?>" data-label="Meus Cursos">
+              <i class="fas fa-graduation-cap nav-icon"></i>
+              <span class="menu-label">Meus Cursos</span>
             </a>
           </li>
 
-          <li class="nav-item" title="Veja e edite seus dados pessoais">
-            <a href="<?= url('usuarios/perfil/' . $_SESSION["id"]) ?>" class="nav-link txt-azul-dark">
-              <i class="nav-icon fas fa-user"></i>
-              <p> Meus dados </p>
+          <li class="nav-item">
+            <a href="<?= url('usuarios/perfil/' . $_SESSION["id"]) ?>" class="nav-link <?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'perfil') !== false) ? 'active' : ''; ?>" data-label="Meu Perfil">
+              <i class="fas fa-user-circle nav-icon"></i>
+              <span class="menu-label">Meu Perfil</span>
             </a>
           </li>
         <?php endif ?>
