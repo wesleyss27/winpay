@@ -411,20 +411,39 @@ $popupItem = $continuarAssistindo[0] ?? null;
 
 /* botão acessar curso */
 .mc-card-course__btn {
-  display: block;
-  padding: .6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  margin: .85rem .9rem .9rem;
+  padding: .58rem 1rem;
+  border-radius: 10px;
   text-align: center;
   font-size: .72rem;
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: #f9fafb;
-  background: #000000;
-  border-top: 1px solid rgba(255,255,255,.06);
-  transition: background .2s ease;
+  background: linear-gradient(160deg, #1a1a1f 0%, #0d0d10 100%);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 2px 0 rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.07);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.mc-card-course__btn::before {
+  content: "▶";
+  font-size: .6rem;
+  opacity: .7;
 }
 .mc-card-course:hover .mc-card-course__btn {
-  background: #0d0d0d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 rgba(0,0,0,.55), 0 8px 20px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1);
+  background: linear-gradient(160deg, #22222a 0%, #141418 100%);
+}
+.mc-card-course__btn:active,
+.mc-card-course:active .mc-card-course__btn {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(0,0,0,.7), 0 2px 6px rgba(0,0,0,.3), inset 0 2px 4px rgba(0,0,0,.4);
 }
 
 /* badge concluído */
@@ -687,9 +706,7 @@ $popupItem = $continuarAssistindo[0] ?? null;
                 <div class="mc-card-done-badge"><i class="fas fa-check"></i></div>
               <?php endif; ?>
             </div>
-            <div class="mc-card-course__btn">
-              <i class="fas fa-play" style="font-size:.65rem;margin-right:.35rem;"></i> Acessar curso
-            </div>
+            <div class="mc-card-course__btn">Acessar curso</div>
           </a>
         <?php endforeach; ?>
       </div>
