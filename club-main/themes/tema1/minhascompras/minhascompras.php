@@ -553,23 +553,31 @@ $popupItem = $continuarAssistindo[0] ?? null;
 
 /* ─── MOBILE ─── */
 @media (max-width: 768px) {
+  /* Hero: proporção natural da imagem no mobile */
   .mc-hero {
-    height: clamp(200px, 52vw, 320px);
+    height: 25vw !important; /* proporção 4:1 (banner 1920×480) */
+    min-height: 140px;
+    max-height: 220px;
+    background: #050508;
+    overflow: hidden;
+  }
+  .mc-hero-slide img {
+    object-fit: contain;
+    object-position: center center;
+    background: #050508;
   }
   .mc-hero-content {
-    padding: 1rem 1rem;
+    position: relative;
+    padding: .75rem 1rem;
+    background: rgba(5,5,8,.7);
   }
-  .mc-hero-title {
-    font-size: clamp(.95rem, 4.5vw, 1.3rem);
-  }
+  .mc-hero-title { font-size: clamp(.9rem, 4.5vw, 1.2rem); }
   .mc-hero-msg { display: none; }
-  .mc-hero-dots {
-    bottom: .5rem;
-    right: 1rem;
-  }
+  .mc-hero-dots { display: none; }
+
   .mc-continue-wrap {
     padding: 0 .75rem;
-    margin-top: -2rem;
+    margin-top: 0;
   }
   .mc-continue-inner {
     padding: 1rem 1rem 1.1rem;
