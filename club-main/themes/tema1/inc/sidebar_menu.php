@@ -5,8 +5,8 @@
     --sidebar-border: rgba(255, 255, 255, 0.06);
     --sidebar-text: #f9fafb;
     --sidebar-muted: #9ca3af;
-    --sidebar-accent: #f4d03f;
-    --sidebar-accent-soft: rgba(244, 208, 63, 0.16);
+    --sidebar-accent: #e2e8f0;
+    --sidebar-accent-soft: rgba(226, 232, 240, 0.16);
     --sidebar-width: 250px;
     --sidebar-width-collapsed: 5.2rem;
   }
@@ -25,14 +25,7 @@
     transition: width 0.3s ease, margin-left 0.3s ease;
   }
 
-  #aside::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 20% 15%, rgba(244, 208, 63, 0.25), transparent 60%);
-    opacity: 0.7;
-    pointer-events: none;
-  }
+  #aside::before { display: none; }
 
   #aside .brand-logo-sidebar {
     position: relative;
@@ -81,7 +74,7 @@
     font-size: 0.7rem;
     letter-spacing: 0.34em;
     text-transform: uppercase;
-    color: rgba(244, 208, 63, 0.75);
+    color: rgba(226, 232, 240, 0.75);
   }
 
   #aside .sidebar {
@@ -120,7 +113,7 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(90deg, rgba(244, 208, 63, 0.22), transparent);
+    background: linear-gradient(90deg, rgba(226, 232, 240, 0.22), transparent);
     opacity: 0;
     transition: opacity 0.2s ease;
     pointer-events: none;
@@ -135,7 +128,7 @@
 
   #aside .nav-link:hover {
     color: var(--sidebar-text) !important;
-    border-color: rgba(244, 208, 63, 0.18);
+    border-color: rgba(226, 232, 240, 0.18);
     background: rgba(12, 13, 20, 0.72);
   }
 
@@ -144,10 +137,10 @@
   }
 
   #aside .nav-link.active {
-    color: #050507 !important;
-    background: linear-gradient(95deg, rgba(244, 208, 63, 0.95), rgba(244, 208, 63, 0.78)) !important;
-    border: none;
-    box-shadow: 0 14px 28px rgba(244, 208, 63, 0.22);
+    color: #f9fafb !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: none;
   }
 
   #aside .nav-link.active .nav-icon {
@@ -160,7 +153,7 @@
 
   #aside .nav-link .badge {
     margin-left: auto;
-    background: rgba(244, 208, 63, 0.15);
+    background: rgba(226, 232, 240, 0.15);
     color: var(--sidebar-accent);
     border-radius: 999px;
     padding: 0.1rem 0.5rem;
@@ -171,7 +164,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.14em;
-    color: rgba(244, 208, 63, 0.6);
+    color: rgba(226, 232, 240, 0.6);
     text-transform: uppercase;
     margin: 1.6rem 0 0.8rem 0.75rem;
     transition: opacity 0.2s ease;
@@ -243,7 +236,7 @@
     top: 50%;
     transform: translateY(-50%);
     background: rgba(12, 13, 20, 0.92);
-    border: 1px solid rgba(244, 208, 63, 0.18);
+    border: 1px solid rgba(226, 232, 240, 0.18);
     border-radius: 12px;
     padding: 0.45rem 0.8rem;
     font-size: 0.85rem;

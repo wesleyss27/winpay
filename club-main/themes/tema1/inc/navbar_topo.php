@@ -13,7 +13,7 @@
     }
 
     .winpay-navbar .nav-link:hover {
-      color: #f4d03f;
+      color: #e2e8f0;
     }
 
     .winpay-toggle-icon {
@@ -21,10 +21,10 @@
       width: 36px;
       height: 36px;
       border-radius: 12px;
-      background: rgba(244, 208, 63, 0.1);
+      background: rgba(226, 232, 240, 0.1);
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 0 0 1px rgba(244, 208, 63, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.12);
     }
 
     .winpay-profile-link {
@@ -33,14 +33,14 @@
       gap: 0.65rem;
       padding: 0.35rem 0.65rem;
       border-radius: 14px;
-      background: rgba(244, 208, 63, 0.08);
+      background: rgba(226, 232, 240, 0.08);
       color: #f9fafb !important;
       transition: background 0.2s ease;
     }
 
     .winpay-profile-link:hover {
-      background: rgba(244, 208, 63, 0.14);
-      color: #f4d03f !important;
+      background: rgba(226, 232, 240, 0.14);
+      color: #e2e8f0 !important;
     }
 
     .winpay-avatar {
@@ -55,8 +55,8 @@
       border-radius: 12px;
       display: grid;
       place-items: center;
-      background: rgba(244, 208, 63, 0.18);
-      color: rgba(244, 208, 63, 0.9);
+      background: rgba(226, 232, 240, 0.18);
+      color: rgba(226, 232, 240, 0.9);
       font-size: 1.1rem;
     }
 
@@ -71,13 +71,13 @@
       gap: 0.45rem;
       padding: 0.35rem 0.75rem;
       border-radius: 14px;
-      background: rgba(244, 208, 63, 0.08);
+      background: rgba(226, 232, 240, 0.08);
       color: #f9fafb !important;
     }
 
     .winpay-logout:hover {
-      background: rgba(244, 208, 63, 0.14);
-      color: #f4d03f !important;
+      background: rgba(226, 232, 240, 0.14);
+      color: #e2e8f0 !important;
     }
 
     .winpay-search {
@@ -108,7 +108,7 @@
     }
 
     .winpay-search input:focus {
-      border-color: rgba(244, 208, 63, 0.35);
+      border-color: rgba(226, 232, 240, 0.35);
       background: rgba(255, 255, 255, 0.08);
       width: 260px;
     }
