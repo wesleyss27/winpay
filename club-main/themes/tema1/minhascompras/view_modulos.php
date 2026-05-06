@@ -184,19 +184,40 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
 
 /* botão acessar módulo */
 .vm-mod-card__btn {
-  display: block;
-  padding: .6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  margin: .85rem .9rem .9rem;
+  padding: .58rem 1rem;
+  border-radius: 10px;
   text-align: center;
   font-size: .72rem;
   font-weight: 700;
-  letter-spacing: .14em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: #f9fafb;
-  background: #0a0a0f;
-  border-top: 1px solid rgba(255,255,255,.06);
-  transition: background .2s ease;
+  background: linear-gradient(160deg, #1a1a1f 0%, #0d0d10 100%);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 2px 0 rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.07);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
 }
-.vm-mod-card:hover .vm-mod-card__btn { background: #111118; }
+.vm-mod-card__btn::before {
+  content: "▶";
+  font-size: .6rem;
+  opacity: .7;
+}
+.vm-mod-card:hover .vm-mod-card__btn {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 rgba(0,0,0,.55), 0 8px 20px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1);
+  background: linear-gradient(160deg, #22222a 0%, #141418 100%);
+}
+.vm-mod-card__btn:active,
+.vm-mod-card:active .vm-mod-card__btn {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(0,0,0,.7), 0 2px 6px rgba(0,0,0,.3), inset 0 2px 4px rgba(0,0,0,.4);
+}
 
 /* Banner "CONTEÚDO FECHADO" no topo */
 .vm-mod-locked-banner {
@@ -382,9 +403,7 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
               </div>
             <?php endif; ?>
           </div>
-          <div class="vm-mod-card__btn">
-            <i class="fas fa-play" style="font-size:.65rem;margin-right:.35rem;"></i> Acessar módulo
-          </div>
+          <div class="vm-mod-card__btn">Acessar módulo</div>
         </a>
         <?php endforeach; ?>
       </div>
