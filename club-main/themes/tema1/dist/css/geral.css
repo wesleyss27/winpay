@@ -45,7 +45,7 @@
 }
 
 .ativo {
-    color: #f4d03f;
+    color: var(--wh-accent);
     pointer-events: none;
     cursor: default;
     font-weight: 600;
@@ -66,15 +66,15 @@
     margin: 3px;
     padding: 6px 12px;
     background: rgba(14, 16, 23, 0.85);
-    border: 1px solid rgba(244, 208, 63, 0.16);
+    border: 1px solid rgba(var(--wh-accent-rgb), 0.16);
     color: rgba(148, 163, 184, 0.78);
     transition: border-color 0.2s ease, color 0.2s ease;
     text-decoration: none;
 }
 
 .paginas:hover {
-    border-color: rgba(244, 208, 63, 0.4);
-    color: #f4d03f;
+    border-color: rgba(var(--wh-accent-rgb), 0.4);
+    color: var(--wh-accent);
     text-decoration: none;
 }
 
@@ -413,7 +413,7 @@ footer {
 
 .filelabel:hover i,
 .filelabel:hover .title {
-    color: #f4d03f;
+    color: var(--wh-accent);
 }
 
 #FileInput {
@@ -473,7 +473,7 @@ footer {
 .attachment .filelabel1:hover,
 .attachment .filelabel2:hover,
 .attachment .filelabel3:hover {
-    border: 1px solid rgba(244, 208, 63, 0.5);
+    border: 1px solid rgba(var(--wh-accent-rgb), 0.5);
 }
 
 .attachment .filelabel1:hover i,
@@ -482,7 +482,7 @@ footer {
 .attachment .filelabel2:hover .title2,
 .attachment .filelabel3:hover i,
 .attachment .filelabel3:hover .title3 {
-    color: #f4d03f;
+    color: var(--wh-accent);
 }
 
 #FileInput1, #FileInput2, #FileInput3 {
