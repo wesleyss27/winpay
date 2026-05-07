@@ -29,8 +29,8 @@ if ($url_atual == "http://localhost") {
       --color-border: rgba(255, 255, 255, 0.08);
       --color-text: #f9fafb;
       --color-muted: #9ca3af;
-      --color-accent: #f4d03f;
-      --color-accent-soft: rgba(244, 208, 63, 0.16);
+      --color-accent: #e2e8f0;
+      --color-accent-soft: rgba(226, 232, 240, 0.12);
       --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.6);
     }
 
@@ -45,8 +45,8 @@ if ($url_atual == "http://localhost") {
       align-items: center;
       justify-content: center;
       background:
-        radial-gradient(circle at 12% 18%, rgba(244, 208, 63, 0.24), transparent 55%),
-        radial-gradient(circle at 86% 24%, rgba(244, 208, 63, 0.18), transparent 60%),
+        radial-gradient(circle at 12% 18%, rgba(226, 232, 240, 0.07), transparent 55%),
+        radial-gradient(circle at 86% 24%, rgba(226, 232, 240, 0.05), transparent 60%),
         var(--color-bg);
       position: relative;
       color: var(--color-text);
@@ -80,7 +80,7 @@ if ($url_atual == "http://localhost") {
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: radial-gradient(circle at 80% 0%, rgba(244, 208, 63, 0.22), transparent 60%);
+      background: radial-gradient(circle at 80% 0%, rgba(226, 232, 240, 0.06), transparent 60%);
       opacity: 0.65;
       pointer-events: none;
     }
@@ -105,16 +105,47 @@ if ($url_atual == "http://localhost") {
     }
 
     .auth-logo {
-      width: 84px;
-      height: 84px;
-      border-radius: 22px;
-      background: rgba(244, 208, 63, 0.12);
-      display: grid;
-      place-items: center;
-      margin: 0 auto 1rem;
-      color: var(--color-accent);
-      box-shadow: inset 0 0 0 1px rgba(244, 208, 63, 0.18);
-      font-size: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      margin-bottom: 1rem;
+    }
+
+    .auth-logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 8px 18px rgba(0,0,0,.35);
+    }
+
+    .auth-logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .auth-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    .auth-logo-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      color: #f9fafb;
+    }
+
+    .auth-logo-sub {
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 240, .55);
     }
 
     .auth-header h1 {
@@ -177,8 +208,8 @@ if ($url_atual == "http://localhost") {
     }
 
     .form-control:focus {
-      border-color: rgba(244, 208, 63, 0.45);
-      box-shadow: 0 0 0 4px rgba(244, 208, 63, 0.12);
+      border-color: rgba(226, 232, 240, 0.45);
+      box-shadow: 0 0 0 4px rgba(226, 232, 240, 0.12);
       background: rgba(12, 13, 20, 0.95);
       color: var(--color-text);
     }
@@ -199,7 +230,7 @@ if ($url_atual == "http://localhost") {
     }
 
     .toggle-password:hover {
-      background: rgba(244, 208, 63, 0.1);
+      background: rgba(226, 232, 240, 0.1);
       color: var(--color-accent);
     }
 
@@ -210,9 +241,9 @@ if ($url_atual == "http://localhost") {
       padding: 0.95rem;
       font-weight: 600;
       letter-spacing: 0.04em;
-      background: linear-gradient(95deg, rgba(244, 208, 63, 0.92), rgba(244, 208, 63, 0.75));
-      color: #050507;
-      box-shadow: 0 18px 32px rgba(244, 208, 63, 0.25);
+      background: linear-gradient(135deg, #e2e8f0 0%, #c8d4e0 100%);
+      color: #0a0b12;
+      box-shadow: 0 8px 24px rgba(226, 232, 240, 0.18);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -222,8 +253,8 @@ if ($url_atual == "http://localhost") {
 
     .btn-auth:hover {
       transform: translateY(-2px);
-      box-shadow: 0 24px 38px rgba(244, 208, 63, 0.32);
-      color: #050507;
+      box-shadow: 0 14px 32px rgba(226, 232, 240, 0.22);
+      color: #0a0b12;
     }
 
     .auth-links {
@@ -241,12 +272,12 @@ if ($url_atual == "http://localhost") {
     }
 
     .auth-links a:hover {
-      color: #d7b22c;
+      color: #b8c4d0;
     }
 
     .modal-content {
       border-radius: 20px;
-      border: 1px solid rgba(244, 208, 63, 0.18);
+      border: 1px solid rgba(226, 232, 240, 0.18);
       background: rgba(10, 12, 18, 0.95);
       color: var(--color-text);
       box-shadow: var(--shadow-lg);
@@ -277,7 +308,7 @@ if ($url_atual == "http://localhost") {
 
     .btn-primary {
       background: var(--color-accent);
-      color: #050507;
+      color: #0a0b12;
     }
 
     .btn-secondary:hover {
@@ -286,8 +317,8 @@ if ($url_atual == "http://localhost") {
     }
 
     .btn-primary:hover {
-      background: #d7b22c;
-      color: #050507;
+      background: #c8d4e0;
+      color: #0a0b12;
     }
   </style>
 </head>
@@ -296,7 +327,15 @@ if ($url_atual == "http://localhost") {
 
   <div class="auth-shell">
     <header class="auth-header">
-      <div class="auth-logo material-symbols-outlined">shield</div>
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <img src="<?= url('themes/imgs/logo-win.png') ?>" alt="Win Hub">
+        </div>
+        <div class="auth-logo-text">
+          <span class="auth-logo-name">WIN HUB</span>
+          <span class="auth-logo-sub">Learning</span>
+        </div>
+      </div>
       <h1>Acesse sua conta</h1>
       <p>Entre com seus dados para continuar gerindo seus resultados.</p>
     </header>
