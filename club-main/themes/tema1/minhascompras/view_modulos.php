@@ -403,7 +403,7 @@ $mostrarTituloMod = ($curso->mostrar_titulo_aulas ?? 1) == 1;
               </div>
             <?php endif; ?>
           </div>
-          <div class="vm-mod-card__btn">Acessar módulo</div>
+          <div class="vm-mod-card__btn">Assistir agora</div>
         </a>
         <?php endforeach; ?>
       </div>

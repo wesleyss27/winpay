@@ -379,9 +379,9 @@
 
         <?php if ($_SESSION["tipo"] == 6) : ?>
           <li class="nav-item">
-            <a href="<?= url('minhas-compras/') ?>" class="nav-link <?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'minhas-compras') !== false) ? 'active' : ''; ?>" data-label="Meus Cursos">
+            <a href="<?= url('minhas-compras/') ?>" class="nav-link <?= (strpos($_SERVER['REQUEST_URI'] ?? '', 'minhas-compras') !== false) ? 'active' : ''; ?>" data-label="Meus Produtos">
               <i class="fas fa-graduation-cap nav-icon"></i>
-              <span class="menu-label">Meus Cursos</span>
+              <span class="menu-label">Meus Produtos</span>
             </a>
           </li>
 

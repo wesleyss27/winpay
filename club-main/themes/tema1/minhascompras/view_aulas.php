@@ -638,7 +638,7 @@ a:hover { color: #fff; text-decoration: underline; }
 
       <!-- Breadcrumb -->
       <nav class="lesson-breadcrumb">
-        <a href="<?= url("minhas-compras") ?>"><i class="fas fa-graduation-cap"></i> Meus Cursos</a>
+        <a href="<?= url("minhas-compras") ?>"><i class="fas fa-graduation-cap"></i> Meus Produtos</a>
         <i class="fas fa-chevron-right sep"></i>
         <a href="<?= url("minhas-compras/viewcursos/" . $curso->id) ?>"><?= $courseName ?></a>
         <i class="fas fa-chevron-right sep"></i>

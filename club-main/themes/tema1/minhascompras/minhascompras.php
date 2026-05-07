@@ -468,7 +468,7 @@ $popupItem = $continuarAssistindo[0] ?? null;
   <div class="mc-continue-wrap">
     <div class="mc-continue-inner">
       <div class="mc-continue-head">
-        <h2 class="mc-continue-title"><i class="fas fa-graduation-cap" style="margin-right:.4rem;"></i>Meus cursos <span style="font-size:.65rem;opacity:.5;font-weight:500;letter-spacing:.1em;"><?= count($listaCursos) ?> <?= count($listaCursos) === 1 ? 'curso' : 'cursos' ?></span></h2>
+        <h2 class="mc-continue-title"><i class="fas fa-graduation-cap" style="margin-right:.4rem;"></i>Meus Produtos <span style="font-size:.65rem;opacity:.5;font-weight:500;letter-spacing:.1em;"><?= count($listaCursos) ?> <?= count($listaCursos) === 1 ? 'curso' : 'cursos' ?></span></h2>
       </div>
       <div class="mc-courses-slider">
         <?php foreach ($listaCursos as $entrada) :
@@ -495,7 +495,7 @@ $popupItem = $continuarAssistindo[0] ?? null;
                 <div class="mc-card-done-badge"><i class="fas fa-check"></i></div>
               <?php endif; ?>
             </div>
-            <div class="mc-card-course__btn">Acessar curso</div>
+            <div class="mc-card-course__btn">Acessar agora</div>
           </a>
         <?php endforeach; ?>
       </div>

@@ -351,7 +351,7 @@ if ($modulos) foreach ($modulos as $m) $nomeModulo[$m->id] = $m->nome;
 
 <!-- Breadcrumb -->
 <nav class="vc2-breadcrumb">
-  <a href="<?= url("minhas-compras") ?>"><i class="fas fa-graduation-cap"></i> Meus Cursos</a>
+  <a href="<?= url("minhas-compras") ?>"><i class="fas fa-graduation-cap"></i> Meus Produtos</a>
   <i class="fas fa-chevron-right" style="font-size:.55rem;opacity:.3;"></i>
   <a href="<?= url("minhas-compras/viewmodulos/" . $cursos->id) ?>"><?= htmlspecialchars($cursos->nome, ENT_QUOTES, 'UTF-8') ?></a>
   <i class="fas fa-chevron-right" style="font-size:.55rem;opacity:.3;"></i>
