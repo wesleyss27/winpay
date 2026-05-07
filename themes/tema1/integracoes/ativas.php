@@ -793,6 +793,9 @@ $json = array(
                                         codigo_cnae: "<?= $nota->codigo_cnae ?>",
                                         codigo_lc116: "<?= $nota->codigo_lc116 ?>",
                                         enviar_email_cliente: "<?= $nota->enviar_email_cliente ?? 1 ?>",
+                                        cidade_padrao: "<?= $nota->cidade_padrao ?>",
+                                        uf_padrao: "<?= $nota->uf_padrao ?>",
+                                        cep_padrao: "<?= $nota->cep_padrao ?>",
                                     }
                                 </script>
 
@@ -902,6 +905,29 @@ $json = array(
                                 <option value="1">Sim — enviar por e-mail ao cliente</option>
                                 <option value="0">Não — apenas emitir a nota</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>Endereço padrão (para clientes sem endereço)</b> (<small>recomendado para produtos digitais</small>)
+                            <small class="text-muted d-block mb-1">Use o endereço da sua empresa. Será aplicado automaticamente quando o cliente não tiver cidade/UF cadastrado.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <b>Cidade</b>
+                            <input type="text" name="cidade_padrao" id="cidade_padrao_editar" class="form-control" placeholder="Ex: São Paulo">
+                        </div>
+                        <div class="col-md-2">
+                            <b>UF</b>
+                            <input type="text" name="uf_padrao" id="uf_padrao_editar" class="form-control" placeholder="SP" maxlength="2" style="text-transform:uppercase">
+                        </div>
+                        <div class="col-md-5">
+                            <b>CEP</b>
+                            <input type="text" name="cep_padrao" id="cep_padrao_editar" class="form-control" placeholder="00000000">
                         </div>
                     </div>
 
@@ -3259,19 +3285,23 @@ $json = array(
         var codigo_cnae = dadosnotazz[i]["codigo_cnae"];
         var codigo_lc116 = dadosnotazz[i]["codigo_lc116"];
         var enviar_email_cliente = dadosnotazz[i]["enviar_email_cliente"];
+        var cidade_padrao = dadosnotazz[i]["cidade_padrao"];
+        var uf_padrao = dadosnotazz[i]["uf_padrao"];
+        var cep_padrao = dadosnotazz[i]["cep_padrao"];
 
         $(".modal-title").html("Editar API");
         $("#salvar").css("display", "none");
         $("#editar").css("display", "inline");
-        $("#idnotazz").attr({
-            "value": id
-        });
+        $("#idnotazz").attr({ "value": id });
         $("#api_notazz").attr("value", api_notazz);
         $("#data_nota option[value=" + data_nota + "]").prop("selected", true);
         $("#produto option[value=" + produto + "]").prop("selected", true);
         $("#codigo_cnae").attr("value", codigo_cnae);
         $("#codigo_lc116").attr("value", codigo_lc116);
         $("#enviar_email_cliente_editar option[value=" + enviar_email_cliente + "]").prop("selected", true);
+        $("#cidade_padrao_editar").val(cidade_padrao);
+        $("#uf_padrao_editar").val(uf_padrao);
+        $("#cep_padrao_editar").val(cep_padrao);
     }
 
     function cancelarnotazz() {
@@ -3279,14 +3309,15 @@ $json = array(
         $("#salvar").css("display", "inline");
         $("#editar").css("display", "none");
         $("#resultado").css("display", "none");
-        $("#idnotazz").attr({
-            "value": ""
-        });
+        $("#idnotazz").attr({ "value": "" });
         $("#api_notazz").attr("value", "");
         $("#data nota option").prop("selected", false);
         $("#produto option").prop("selected", false);
         $("#codigo_cnae").attr("value", "");
         $("#codigo_lc116").attr("value", "");
+        $("#cidade_padrao_editar").val("");
+        $("#uf_padrao_editar").val("");
+        $("#cep_padrao_editar").val("");
     }
 
     function excluirnotazz(id) {

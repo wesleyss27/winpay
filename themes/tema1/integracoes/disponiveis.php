@@ -586,6 +586,29 @@ $eventos = array(
             </div>
           </div>
 
+          <br>
+
+          <div class="row">
+            <div class="col-md-12">
+              <b>Endereço padrão (para clientes sem endereço)</b> (<small>recomendado para produtos digitais</small>)
+              <small class="text-muted d-block mb-1">Use o endereço da sua empresa. Será aplicado automaticamente quando o cliente não tiver cidade/UF cadastrado.</small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <b>Cidade</b>
+              <input type="text" name="cidade_padrao" id="cidade_padrao_notazz" class="form-control" placeholder="Ex: São Paulo">
+            </div>
+            <div class="col-md-2">
+              <b>UF</b>
+              <input type="text" name="uf_padrao" id="uf_padrao_notazz" class="form-control" placeholder="SP" maxlength="2" style="text-transform:uppercase">
+            </div>
+            <div class="col-md-5">
+              <b>CEP</b>
+              <input type="text" name="cep_padrao" id="cep_padrao_notazz" class="form-control" placeholder="00000000">
+            </div>
+          </div>
+
           <small>
             Campos opcionais: <br><br>
 

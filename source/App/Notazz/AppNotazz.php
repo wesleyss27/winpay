@@ -161,6 +161,9 @@ class AppNotazz
         $integracao->codigo_cnae         = $data["codigo_cnae"];
         $integracao->codigo_lc116        = $data["codigo_lc116"];
         $integracao->enviar_email_cliente = isset($data["enviar_email_cliente"]) ? (int)$data["enviar_email_cliente"] : 1;
+        $integracao->cidade_padrao       = $data["cidade_padrao"] ?? null;
+        $integracao->uf_padrao           = $data["uf_padrao"] ?? null;
+        $integracao->cep_padrao          = preg_replace('/\D/', '', $data["cep_padrao"] ?? '')  ?: null;
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
@@ -179,6 +182,9 @@ class AppNotazz
         $integracao->codigo_cnae          = $data["codigo_cnae"];
         $integracao->codigo_lc116         = $data["codigo_lc116"];
         $integracao->enviar_email_cliente = isset($data["enviar_email_cliente"]) ? (int)$data["enviar_email_cliente"] : 1;
+        $integracao->cidade_padrao        = $data["cidade_padrao"] ?? null;
+        $integracao->uf_padrao            = $data["uf_padrao"] ?? null;
+        $integracao->cep_padrao           = preg_replace('/\D/', '', $data["cep_padrao"] ?? '') ?: null;
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
@@ -247,6 +253,13 @@ class AppNotazz
                     $data["codigo_cnae"]          = @$notazz->codigo_cnae;
                     $data["codigo_lc116"]         = @$notazz->codigo_lc116;
                     $data["enviar_email_cliente"] = isset($notazz->enviar_email_cliente) ? (int)$notazz->enviar_email_cliente : 1;
+
+                    // Fallback para endereço genérico quando cliente não tem cidade/UF cadastrado
+                    $semCidade = empty($data["cidade"]) || $data["cidade"] === 'Não Informado';
+                    $semEstado = empty($data["estado"]) || $data["estado"] === 'Não Informado';
+                    if ($semCidade && !empty($notazz->cidade_padrao)) $data["cidade"] = $notazz->cidade_padrao;
+                    if ($semEstado && !empty($notazz->uf_padrao))     $data["estado"] = $notazz->uf_padrao;
+                    if ((empty($data["cep"]) || $data["cep"] === '00000000') && !empty($notazz->cep_padrao)) $data["cep"] = $notazz->cep_padrao;
 
                     if ($produto->tipo_produto == 8) {
                         $data["metodo"] = "create_nfe_55";

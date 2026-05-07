@@ -1330,7 +1330,6 @@ function dadosEndereco($venda)
   function notaFiscal(i) {
     load("open", 3000);
     var form = $("#form" + i);
-
     $.ajax({
       url: "<?= $router->route("notazz.gerar") ?>",
       method: "POST",
@@ -1343,9 +1342,8 @@ function dadosEndereco($venda)
         } else {
           alert("Erro ao gerar nota fiscal\n" + dados.motivo);
         }
-        //location.reload();
       }
-    })
+    });
   }
 
   function motivo(i) {
@@ -1607,5 +1605,42 @@ function dadosEndereco($venda)
     }
   }
 </script>
+
+<div class="modal fade" id="nf-modal-endereco" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cidade do destinatário — Nota Fiscal</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted" style="font-size:13px">O cliente não possui cidade/estado cadastrado. Informe o endereço a usar na nota (ex: endereço da sua empresa).</p>
+        <input type="hidden" id="nf-modal-index">
+        <div class="form-group">
+          <label>Cidade <span class="text-danger">*</span></label>
+          <input type="text" id="nf-modal-cidade" class="form-control" placeholder="Ex: São Paulo">
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>UF <span class="text-danger">*</span></label>
+              <input type="text" id="nf-modal-estado" class="form-control" placeholder="SP" maxlength="2" style="text-transform:uppercase">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label>CEP <span class="text-danger">*</span></label>
+              <input type="text" id="nf-modal-cep" class="form-control" placeholder="00000000">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="nf-modal-confirmar">Gerar Nota Fiscal</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?= $v->end(); ?>
