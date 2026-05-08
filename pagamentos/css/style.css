@@ -456,57 +456,168 @@ label {
 .ajax_load {
   display: none;
   position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(3, 3, 3, 0.78);
+  backdrop-filter: blur(6px);
   z-index: 99999999;
+  align-items: center;
+  justify-content: center;
 }
 
 .ajax_load_box {
   margin: auto;
   text-align: center;
-  color: #ffffff;
-  font-weight: bold;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  color: #f9f9fb;
+  background: rgba(10, 10, 10, 0.95);
+  padding: 36px 44px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.5);
+  min-width: 300px;
+  max-width: 360px;
+  width: 88vw;
 }
 
-.ajax_load_box_circle {
-  border: 16px solid #e3e3e3;
-  border-top: 16px solid #1dd1a1;
+/* Anel girando + ícone */
+.ajax_step_icon_wrap {
+  position: relative;
+  width: 88px; height: 88px;
+  margin: 0 auto 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ajax_step_icon_wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  margin: auto;
-  width: 80px;
-  height: 80px;
-  -webkit-animation: spin 1.2s linear infinite;
-  -o-animation: spin 1.2s linear infinite;
-  animation: spin 1.2s linear infinite;
+  background: conic-gradient(from 0deg, transparent 0%, #71c358 55%, #50b232 75%, transparent 100%);
+  animation: ajax-ring-spin 1.6s linear infinite;
 }
 
-.ajax_load_box_title {
-  margin-top: 15px;
-  font-weight: bold;
+.ajax_step_icon_wrap::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #141a14 0%, #0d0d0d 100%);
+  border: 1px solid rgba(113,195,88,0.12);
 }
 
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
+.ajax_step_glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(113,195,88,0.22) 0%, transparent 65%);
+  animation: ajax-glow-pulse 2.2s ease-in-out infinite;
+  z-index: 0;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
+.ajax_step_icon_inner {
+  font-size: 42px;
+  color: #71c358;
+  position: relative;
+  z-index: 3;
+  display: block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  text-shadow: 0 0 18px rgba(113,195,88,0.55);
+}
 
-  100% {
-    transform: rotate(360deg);
-  }
+@keyframes ajax-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ajax-glow-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.5; }
+  50%       { transform: scale(1.4); opacity: 1;   }
+}
+
+/* Barra de progresso */
+.ajax_progress_wrap { margin-bottom: 10px; }
+
+.ajax_progress_track {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.ajax_progress_fill {
+  height: 100%;
+  width: 5%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, #71c358, #50b232);
+  transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(113,195,88,0.8), 0 0 22px rgba(80,178,50,0.45);
+}
+
+.ajax_progress_fill::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: -70px;
+  width: 70px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: ajax-shimmer-bar 1.2s ease infinite;
+}
+
+@keyframes ajax-shimmer-bar {
+  0%   { left: -70px; }
+  100% { left: 110%; }
+}
+
+/* Percentual */
+.ajax_progress_pct {
+  text-align: right;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(113, 195, 88, 0.9);
+  letter-spacing: 0.05em;
+  margin-top: 5px;
+  min-height: 16px;
+}
+
+/* Mensagem principal */
+.ajax_step_msg {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  transition: opacity 0.3s ease;
+  min-height: 22px;
+}
+
+/* Sub-mensagem */
+.ajax_step_sub {
+  font-size: 11px;
+  color: rgba(255, 248, 200, 0.5);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+  min-height: 15px;
+}
+
+/* Partículas */
+.ajax_particle {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #71c358;
+  pointer-events: none;
+  z-index: 4;
+  animation: ajax-particle-float var(--dur, 1.4s) ease-out forwards;
+}
+
+@keyframes ajax-particle-float {
+  0%   { transform: translate(0,0) scale(1); opacity: 0.9; }
+  100% { transform: translate(var(--tx,0px), var(--ty,-55px)) scale(0); opacity: 0; }
 }
 
 /* ESTILO CONTADOR */

@@ -940,13 +940,111 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
     <!-- LOAD -->
     <script>
+        var _loadStepTimer      = null;
+        var _loadParticleTimer  = null;
+
+        var _pixSteps = [
+            { icon: 'fas fa-shield-alt', msg: 'Iniciando ambiente seguro...',    sub: 'Conectando ao sistema de pagamento',  progress: 18,  duration: 2000 },
+            { icon: 'fas fa-university', msg: 'Conectando ao banco emissor...',   sub: 'Validando transação Pix instantânea', progress: 42,  duration: 2000 },
+            { icon: 'fas fa-qrcode',     msg: 'Gerando QR Code exclusivo...',     sub: 'Criando pagamento protegido',         progress: 71,  duration: 2000, particles: true },
+            { icon: 'fas fa-check-circle', msg: 'Ativando proteção anti-fraude...', sub: 'Seu pagamento está seguro',         progress: 93,  duration: 2000 },
+            { icon: 'fas fa-bolt',       msg: 'Finalizando transação...',         sub: 'Seu QR Code está quase pronto',       progress: 100, duration: 99999 },
+        ];
+
         function load(action) {
             var load_div = $(".ajax_load");
             if (action === "open") {
                 load_div.fadeIn().css("display", "flex");
+                _startLoadSteps();
             } else {
+                _stopLoadSteps();
                 load_div.fadeOut();
             }
+        }
+
+        var _pctTimer = null;
+
+        function _applyStep(step) {
+            var iconEl = document.getElementById('ajax-icon-inner');
+            var msgEl  = document.getElementById('ajax-step-msg');
+            var subEl  = document.getElementById('ajax-step-sub');
+            var barEl  = document.getElementById('ajax-progress-fill');
+
+            if (iconEl) { iconEl.style.opacity = '0'; iconEl.style.transform = 'scale(0.6)'; }
+            if (msgEl)  msgEl.style.opacity = '0';
+            if (subEl)  subEl.style.opacity = '0';
+
+            setTimeout(function () {
+                if (iconEl) { iconEl.className = step.icon + ' ajax_step_icon_inner'; iconEl.style.opacity = '1'; iconEl.style.transform = 'scale(1)'; }
+                if (msgEl)  { msgEl.textContent  = step.msg;      msgEl.style.opacity = '1'; }
+                if (subEl)  { subEl.textContent  = step.sub || ''; subEl.style.opacity = step.sub ? '1' : '0'; }
+                if (barEl)  barEl.style.width = step.progress + '%';
+                _animatePct(step.progress);
+                if (step.particles) _startParticles(); else _stopParticles();
+            }, 300);
+        }
+
+        function _animatePct(target) {
+            if (_pctTimer) { clearInterval(_pctTimer); _pctTimer = null; }
+            var pctEl = document.getElementById('ajax-progress-pct');
+            if (!pctEl) return;
+            var current = parseInt(pctEl.textContent) || 0;
+            var step = target > current ? 1 : -1;
+            _pctTimer = setInterval(function () {
+                current += step;
+                pctEl.textContent = current + '%';
+                if (current === target) { clearInterval(_pctTimer); _pctTimer = null; }
+            }, 18);
+        }
+
+        function _startLoadSteps() {
+            _stopLoadSteps();
+
+            var barEl = document.getElementById('ajax-progress-fill');
+            if (barEl) { barEl.style.transition = 'none'; barEl.style.width = '0%'; }
+            setTimeout(function () { if (barEl) barEl.style.transition = ''; }, 50);
+
+            var idx = 0;
+            function advance() {
+                if (idx >= _pixSteps.length) return;
+                var step = _pixSteps[idx++];
+                _applyStep(step);
+                if (idx < _pixSteps.length) {
+                    _loadStepTimer = setTimeout(advance, step.duration);
+                }
+            }
+            advance();
+        }
+
+        function _stopLoadSteps() {
+            if (_loadStepTimer) { clearTimeout(_loadStepTimer); _loadStepTimer = null; }
+            _stopParticles();
+        }
+
+        function _startParticles() {
+            _stopParticles();
+            var wrap = document.getElementById('ajax-step-icon');
+            if (!wrap) return;
+            _loadParticleTimer = setInterval(function () {
+                for (var i = 0; i < 3; i++) {
+                    var p = document.createElement('span');
+                    p.className = 'ajax_particle';
+                    var tx = ((Math.random() - 0.5) * 80).toFixed(1);
+                    var ty = (-(38 + Math.random() * 38)).toFixed(1);
+                    var dur = (0.9 + Math.random() * 0.7).toFixed(2) + 's';
+                    p.style.cssText = '--tx:' + tx + 'px;--ty:' + ty + 'px;--dur:' + dur
+                        + ';left:' + (32 + Math.random() * 24).toFixed(0) + 'px'
+                        + ';top:'  + (32 + Math.random() * 24).toFixed(0) + 'px';
+                    wrap.appendChild(p);
+                    (function(el){ setTimeout(function(){ el.remove(); }, 1800); })(p);
+                }
+            }, 280);
+        }
+
+        function _stopParticles() {
+            if (_loadParticleTimer) { clearInterval(_loadParticleTimer); _loadParticleTimer = null; }
+            var wrap = document.getElementById('ajax-step-icon');
+            if (wrap) wrap.querySelectorAll('.ajax_particle').forEach(function(p){ p.remove(); });
         }
     </script>
 
@@ -960,8 +1058,18 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
     <div class="ajax_load">
         <div class="ajax_load_box">
-            <div class="ajax_load_box_circle"></div>
-            <div class="ajax_load_box_title">Aguarde, carregando!</div>
+            <div class="ajax_step_icon_wrap" id="ajax-step-icon">
+                <div class="ajax_step_glow"></div>
+                <i class="fas fa-shield-alt ajax_step_icon_inner" id="ajax-icon-inner"></i>
+            </div>
+            <div class="ajax_progress_wrap">
+                <div class="ajax_progress_track">
+                    <div class="ajax_progress_fill" id="ajax-progress-fill" style="width:5%"></div>
+                </div>
+                <div class="ajax_progress_pct" id="ajax-progress-pct">5%</div>
+            </div>
+            <div class="ajax_step_msg" id="ajax-step-msg">Inicializando...</div>
+            <div class="ajax_step_sub" id="ajax-step-sub"></div>
         </div>
     </div>
     <!-- FIM LOAD -->
