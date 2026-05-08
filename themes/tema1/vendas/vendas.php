@@ -1169,13 +1169,33 @@ function dadosEndereco($venda)
                   <input type="hidden" name="telefone" id="telefone<?= $index ?>" value="<?= $telefone ?>">
                   <?php
                   $c = $venda->dataComprador();
-                  $notazz_rua    = $c->rua_entrega    ?: ($c->rua    ?: 'Não Informado');
-                  $notazz_numero = $c->numero_entrega ?: ($c->numero ?: 'S/N');
+                  $notazz_rua    = $c->rua_entrega    ?: $c->rua;
+                  $notazz_numero = $c->numero_entrega ?: $c->numero;
                   $notazz_comp   = $c->complemento_entrega ?: $c->complemento;
-                  $notazz_bairro = $c->bairro_entrega ?: ($c->bairro ?: 'Não Informado');
-                  $notazz_cidade = $c->cidade_entrega ?: ($c->cidade ?: 'Não Informado');
-                  $notazz_estado = $c->estado_entrega ?: ($c->estado ?: 'Não Informado');
-                  $notazz_cep    = $c->cep_entrega    ?: ($c->cep    ?: '00000000');
+                  $notazz_bairro = $c->bairro_entrega ?: $c->bairro;
+                  $notazz_cidade = $c->cidade_entrega ?: $c->cidade;
+                  $notazz_estado = $c->estado_entrega ?: $c->estado;
+                  $notazz_cep    = $c->cep_entrega    ?: $c->cep;
+                  // Fallback: tabela enderecos (preenchida pelo checkout com endereco_obrigatorio)
+                  if (!$notazz_rua && $venda->endereco) {
+                      $e = $venda->dataEndereco();
+                      if ($e) {
+                          $notazz_rua    = $e->rua;
+                          $notazz_numero = $e->numero;
+                          $notazz_comp   = $e->complemento;
+                          $notazz_bairro = $e->bairro;
+                          $notazz_cidade = $e->cidade;
+                          $notazz_estado = $e->estado;
+                          $notazz_cep    = $e->cep;
+                      }
+                  }
+                  // Último recurso: genérico
+                  $notazz_rua    = $notazz_rua    ?: 'Não Informado';
+                  $notazz_numero = $notazz_numero ?: 'S/N';
+                  $notazz_bairro = $notazz_bairro ?: 'Não Informado';
+                  $notazz_cidade = $notazz_cidade ?: 'Não Informado';
+                  $notazz_estado = $notazz_estado ?: 'Não Informado';
+                  $notazz_cep    = $notazz_cep    ?: '00000000';
                   ?>
                   <input type="hidden" name="rua" id="rua<?= $index ?>" value="<?= $notazz_rua ?>">
                   <input type="hidden" name="numero" id="numero<?= $index ?>" value="<?= $notazz_numero ?>">

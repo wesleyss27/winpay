@@ -478,6 +478,7 @@ $router->post("/salvar", "AppConfiguracaoGateway:salvar", "gateway.salvar");
 $router->get("/migracao-stripe", "AppConfiguracaoGateway:migracaoStripe", "gateway.migracao");
 $router->post("/criar-conta-stripe", "AppConfiguracaoGateway:criarContaStripe", "gateway.criarConta");
 $router->post("/reenviar-onboarding", "AppConfiguracaoGateway:reenviarOnboarding", "gateway.reenviarOnboarding");
+$router->post("/criar-conta-winpay", "AppConfiguracaoGateway:criarContaWinPay", "gateway.criarContaWinPay");
 
 $router->group("taxas");
 $router->get("/", "AppTaxas:taxas", "taxa.taxas");
@@ -485,6 +486,23 @@ $router->get("/antecipar", "AppTaxas:antecipar", "taxa.antecipacao");
 $router->post("/editar", "AppTaxas:editarTaxa", "taxa.editar");
 $router->post("/antecipar", "AppTaxas:editarAntecipacao", "taxa.antecipar");
 //$router->get("/p/{plano}", "AppCheckout:produto", "checkout.produto");
+
+
+/*
+* NAMESPACE Source\App\MetaAds
+*/
+$router->namespace("Source\App\MetaAds");
+
+$router->group("meta-ads");
+$router->get("/",             "AppMetaAds:dashboard",   "metaads.dashboard");
+$router->get("/conectar",     "AppMetaAds:conectar",    "metaads.conectar");
+$router->get("/callback",     "AppMetaAds:callback",    "metaads.callback");
+$router->get("/desconectar",  "AppMetaAds:desconectar", "metaads.desconectar");
+$router->post("/conta",       "AppMetaAds:salvarConta", "metaads.conta");
+$router->get("/sincronizar",  "AppMetaAds:sincronizar", "metaads.sincronizar");
+$router->get("/dados",        "AppMetaAds:dados",       "metaads.dados");
+$router->get("/configurar",   "AppMetaAds:configurar",  "metaads.configurar");
+$router->post("/configurar",  "AppMetaAds:configurar",  "metaads.configurarPost");
 
 
 /*
@@ -560,6 +578,12 @@ $router->post("/consultar-cancelar", "AppNotazz:consultar", "notazz.consultarCan
 
 $router->post("/postback", "AppNotazz:postbackNotazz", "notazz.postback");
 
+/*
+ * API pública — atualização de endereço via serviço externo
+ */
+$router->namespace("Source\App\Api");
+$router->group("api");
+$router->post("/endereco", "AppEnderecoApi:atualizarEndereco", "api.endereco");
 
 /*
  * NAMESPACE Source\App\ChatGuru"
@@ -750,6 +774,7 @@ $router->post("/mercadopago", "AppWebHook:webhookMercadopago", "webhook.mercadoP
 $router->post("/bspay", "AppWebHook:webhookBspay", "webhook.bspay");
 $router->post("/stripe", "AppWebHook:webhookStripe", "webhook.stripe");
 $router->post("/pagseguro", "AppWebHook:webhookPagseguro", "webhook.pagseguro");
+$router->post("/sharkhub", "AppWebHook:webhookSharkHub", "webhook.sharkhub");
 
 
 /*
