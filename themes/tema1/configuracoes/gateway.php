@@ -7,9 +7,10 @@ if ($_SESSION["tipo"] != 1) {
 }
 
 $gws = [
-    'pagarme' => 'PagarMe',
-    'stripe'  => 'Stripe',
-    'efibank' => 'EfiBank (Efí Pay)',
+    'pagarme'  => 'PagarMe',
+    'stripe'   => 'Stripe',
+    'efibank'  => 'EfiBank (Efí Pay)',
+    'sharkhub' => 'SharkHub',
 ];
 
 function gwSelect(string $name, string $current, array $gws, string $style = ''): string {
@@ -136,8 +137,10 @@ $gwBoleto      = $config->gateway_boleto    ?? 'pagarme';
                 O secundário será acionado automaticamente caso o principal falhe.
               </p>
               <select name="gateway_principal" class="form-control" style="max-width:300px;font-family:inter">
-                <option value="pagarme" <?= $gwPrincipal === 'pagarme' ? 'selected' : '' ?>>PagarMe &nbsp;(secundário: Stripe)</option>
-                <option value="stripe"  <?= $gwPrincipal === 'stripe'  ? 'selected' : '' ?>>Stripe &nbsp;(secundário: PagarMe)</option>
+                <option value="pagarme"  <?= $gwPrincipal === 'pagarme'  ? 'selected' : '' ?>>PagarMe</option>
+                <option value="stripe"   <?= $gwPrincipal === 'stripe'   ? 'selected' : '' ?>>Stripe</option>
+                <option value="efibank"  <?= $gwPrincipal === 'efibank'  ? 'selected' : '' ?>>EfiBank (Efí Pay)</option>
+                <option value="sharkhub" <?= $gwPrincipal === 'sharkhub' ? 'selected' : '' ?>>SharkHub</option>
               </select>
             </div>
           </div>

@@ -234,12 +234,15 @@ class AppComissao2
 
         echo "<pre>";
         echo date("d/m/Y H:i:s") . "<br>";
+        // Gateways com split nativo não geram comissão local (já distribuído pelo próprio gateway)
+        $semSplitNativo = "AND (gateway_usado IS NULL OR gateway_usado NOT IN ('pagarme'))";
+
         if (@$data["venda"]) {
-            $vendas = (new Venda())->find("id = {$data["venda"]} AND comissionada = 0 AND status_transacao = 4 AND adquirente = 'redrocket'")->fetch(true);
+            $vendas = (new Venda())->find("id = {$data["venda"]} AND comissionada = 0 AND status_transacao = 4 AND adquirente = 'redrocket' $semSplitNativo")->fetch(true);
             echo "v1<br>";
         } else {
             echo "v2<br>";
-            $vendas = (new Venda())->find("vendas.id NOT IN (SELECT comissao.venda FROM comissao WHERE comissao.venda IS NOT NULL) AND status_transacao = 4 AND adquirente = 'redrocket'")->order("id ASC")->fetch(true);
+            $vendas = (new Venda())->find("vendas.id NOT IN (SELECT comissao.venda FROM comissao WHERE comissao.venda IS NOT NULL) AND status_transacao = 4 AND adquirente = 'redrocket' $semSplitNativo")->order("id ASC")->fetch(true);
         }
 
         if ($vendas) {

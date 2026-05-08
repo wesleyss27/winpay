@@ -19,6 +19,7 @@ use Source\Models\Permissao\Section;
 use Source\Models\Produtos\Plano;
 use Source\Models\Usuarios\Usuario;
 use Source\Models\Usuarios\UsuarioDados;
+use Source\Models\Notazz\NotaFiscal;
 
 class AppVendas
 {
@@ -145,6 +146,16 @@ class AppVendas
         $usuario = new Usuario();
         $usuarioDados = new UsuarioDados();
 
+        $nfRows = (new NotaFiscal())->find("usuario = {$this->section->getId()}")->order("id DESC")->fetch(true);
+        $notasFiscaisMap = [];
+        if ($nfRows) {
+            foreach ($nfRows as $nf) {
+                if (!isset($notasFiscaisMap[$nf->venda])) {
+                    $notasFiscaisMap[$nf->venda] = $nf;
+                }
+            }
+        }
+
         echo $this->view->render("vendas/vendas", [
             "title" => "Vendas",
             "section" => @$section,
@@ -170,6 +181,7 @@ class AppVendas
             "nivelUsuario" => $nivel_usuario,
             "usuario" => $usuario,
             "usuarioDados" => $usuarioDados,
+            "notasFiscaisMap" => $notasFiscaisMap,
         ]);
     }
 

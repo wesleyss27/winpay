@@ -205,21 +205,28 @@ public function criarWallet($data)
     ));
 
     $response = curl_exec($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if (curl_errno($curl)) {
-        error_log("Erro no cURL: " . curl_error($curl));
+        $curlErr = curl_error($curl);
+        curl_close($curl);
+        error_log("Erro cURL criarWallet: $curlErr");
+        return (object)["success" => false, "error" => $curlErr];
     }
 
     curl_close($curl);
 
-    error_log("Resposta criarWallet: " . json_encode(json_decode($response, true)));
-
     $resposta = json_decode($response, true);
+    error_log("criarWallet: HTTP $httpCode | resposta=" . json_encode($resposta));
+
+    $success = $httpCode >= 200 && $httpCode < 300;
 
     return (object)[
-        "success" => true,
+        "success" => $success,
+        "http_code" => $httpCode,
         "id" => $resposta["user_id"] ?? $userId,
-        "resposta" => $resposta
+        "resposta" => $resposta,
+        "error" => $success ? null : ($resposta["message"] ?? $resposta["error"] ?? "HTTP $httpCode"),
     ];
 }
 
@@ -229,9 +236,9 @@ public function criarWallet($data)
   public function saldo($user_id)
   {
       $url = "http://wallet:3030/api/wallet/$user_id";
-  
+
       $curl = curl_init();
-  
+
       curl_setopt_array($curl, array(
           CURLOPT_URL => $url,
           CURLOPT_RETURNTRANSFER => true,
@@ -241,11 +248,16 @@ public function criarWallet($data)
               "Content-Type: application/json"
           ),
       ));
-  
+
       $response = curl_exec($curl);
+      $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
       curl_close($curl);
-  
-      return json_decode($response);
+
+      $decoded = json_decode($response);
+      if ($decoded !== null) {
+          $decoded->_http_code = $httpCode;
+      }
+      return $decoded;
   }
   
   public function saque($user_id, $amount)

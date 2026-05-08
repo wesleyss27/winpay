@@ -304,39 +304,47 @@ function fmtDelta($v) {
             </div>
             <?php endif ?>
 
-            <!-- Saques para conta bancária (transfers) -->
+            <!-- Histórico de saques PagarMe -->
             <?php if (!empty($transferencias)): ?>
             <div class="fin-section">
-                <div class="fin-section-title">Saques para conta bancária — Pagar.me</div>
+                <div class="fin-section-title">
+                    <span class="material-symbols-rounded" style="font-size:16px;vertical-align:middle;margin-right:6px">receipt_long</span>
+                    Histórico de Saques PagarMe — período selecionado
+                </div>
+                <?php
+                $totalWithdrawals = array_sum(array_map(fn($t) => abs((float)($t->amount ?? 0)) / 100, $transferencias));
+                ?>
                 <div style="overflow-x:auto">
                     <table class="table fin-table" style="background:transparent">
                         <thead>
                             <tr>
                                 <th>Data</th>
                                 <th>Valor</th>
-                                <th>Tipo</th>
                                 <th>Status</th>
-                                <th>Prev. Crédito</th>
+                                <th>ID</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php foreach ($transferencias as $t):
                             $valor_abs = abs((float)($t->amount ?? 0)) / 100;
-                            $data_op   = $t->created_at ?? null;
-                            $tipo_op   = strtoupper($t->type ?? "transfer");
                             $status_op = $t->status ?? null;
-                            $prev_cred = $t->funding_estimated_date ?? null;
                             $st_cfg    = $statusTransfer[$status_op] ?? ["label" => ucfirst((string)$status_op ?: "—"), "class" => "secondary"];
                         ?>
                             <tr>
-                                <td><?= $data_op ? date("d/m/Y H:i", strtotime($data_op)) : "—" ?></td>
-                                <td style="color:#4ade80"><?= fmt($valor_abs) ?></td>
-                                <td style="color:#888;font-size:12px"><?= htmlspecialchars($tipo_op) ?></td>
+                                <td><?= !empty($t->created_at) ? date("d/m/Y H:i", strtotime($t->created_at)) : "—" ?></td>
+                                <td style="color:#4ade80;font-weight:600"><?= fmt($valor_abs) ?></td>
                                 <td><span class="badge badge-<?= $st_cfg["class"] ?> badge-status"><?= $st_cfg["label"] ?></span></td>
-                                <td style="color:#888;font-size:12px"><?= $prev_cred ? date("d/m/Y", strtotime($prev_cred)) : "—" ?></td>
+                                <td style="color:#444;font-size:11px;font-family:monospace"><?= htmlspecialchars($t->id ?? "—") ?></td>
                             </tr>
                         <?php endforeach ?>
                         </tbody>
+                        <tfoot>
+                            <tr style="border-top:2px solid #2a2a2a">
+                                <td style="color:#888">Total</td>
+                                <td style="color:#4ade80;font-weight:700"><?= fmt($totalWithdrawals) ?></td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

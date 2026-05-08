@@ -4,6 +4,7 @@ namespace Source\App\Checkout1;
 
 use Source\Models\Configuracoes\ConfiguracaoGateway;
 use Source\App\Checkout1\EfiBank;
+use Source\App\Checkout1\SharkHub;
 
 /**
  * GatewayManager – Roteador inteligente de gateways de pagamento
@@ -13,7 +14,7 @@ use Source\App\Checkout1\EfiBank;
  *   balanceado     → tenta o gateway principal; se falhar, tenta automaticamente o secundário
  *   personalizado  → admin escolhe um gateway específico por tipo de cobrança (pix, cartão, boleto)
  *
- * Gateways suportados: PagarMe, Stripe
+ * Gateways suportados: PagarMe, Stripe, EfiBank, SharkHub
  *
  * Resposta normalizada (objeto retornado pelos métodos públicos):
  *   transacao_id     string       ID da transação no gateway
@@ -45,6 +46,17 @@ class GatewayManager
         'failed'    => 5,
         'processing'=> 2,
         'authorized'=> 3,
+    ];
+
+    // Mapeamento status SharkHub → status interno
+    private const STATUS_SHARKHUB = [
+        'PENDING'     => 1,
+        'PROCESSING'  => 2,
+        'PAID'        => 4,
+        'REFUSED'     => 5,
+        'REFUNDED'    => 6,
+        'MED'         => 7,
+        'CHARGEDBACK' => 7,
     ];
 
     // Mapeamento status Stripe → status interno
@@ -184,8 +196,8 @@ class GatewayManager
             return [$this->gatewayParaTipo($tipo)];
         }
 
-        // balanceado: principal primeiro, depois os outros dois em sequência
-        $todos      = ['pagarme', 'stripe', 'efibank'];
+        // balanceado: principal primeiro, depois os outros em sequência
+        $todos      = ['pagarme', 'stripe', 'efibank', 'sharkhub'];
         $ordenados  = array_merge(
             [$this->gatewayPrincipal],
             array_values(array_filter($todos, fn($g) => $g !== $this->gatewayPrincipal))
@@ -218,9 +230,10 @@ class GatewayManager
     private function tentarPix(string $gw, array $data): object
     {
         switch ($gw) {
-            case 'pagarme': return (new PagarMe)->compraPix($data);
-            case 'stripe':  return (new Stripe)->compraPix($data);
-            case 'efibank': return (new EfiBank)->compraPix($data);
+            case 'pagarme':   return (new PagarMe)->compraPix($data);
+            case 'stripe':    return (new Stripe)->compraPix($data);
+            case 'efibank':   return (new EfiBank)->compraPix($data);
+            case 'sharkhub':  return (new SharkHub)->compraPix($data);
             default: throw new \Exception("Gateway '{$gw}' não suportado para Pix.");
         }
     }
@@ -228,9 +241,10 @@ class GatewayManager
     private function tentarCartao(string $gw, array $data): object
     {
         switch ($gw) {
-            case 'pagarme': return (new PagarMe)->compraCartao($data);
-            case 'stripe':  return (new Stripe)->compraCartao($data);
-            case 'efibank': return (new EfiBank)->compraCartao($data);
+            case 'pagarme':   return (new PagarMe)->compraCartao($data);
+            case 'stripe':    return (new Stripe)->compraCartao($data);
+            case 'efibank':   return (new EfiBank)->compraCartao($data);
+            case 'sharkhub':  return (new SharkHub)->compraCartao($data);
             default: throw new \Exception("Gateway '{$gw}' não suportado para cartão.");
         }
     }
@@ -241,8 +255,9 @@ class GatewayManager
             throw new \Exception("Stripe não suporta boleto bancário.");
         }
         switch ($gw) {
-            case 'pagarme': return (new PagarMe)->compraBoleto($data);
-            case 'efibank': return (new EfiBank)->compraBoleto($data);
+            case 'pagarme':   return (new PagarMe)->compraBoleto($data);
+            case 'efibank':   return (new EfiBank)->compraBoleto($data);
+            case 'sharkhub':  return (new SharkHub)->compraBoleto($data);
             default: throw new \Exception("Gateway '{$gw}' não suportado para boleto.");
         }
     }
@@ -293,6 +308,28 @@ class GatewayManager
                 'erro'            => $erro,
                 'mensagem_erro'   => $msg,
                 'raw'             => $raw,
+            ];
+        }
+
+        // SharkHub Pix
+        if ($gw === 'sharkhub') {
+            $qrCode = $raw->data->copypaste ?? null;
+            $payId  = $raw->id             ?? null;
+            $erro   = empty($payId) || empty($qrCode) || isset($raw->error) || isset($raw->message);
+            $msg    = $erro ? ($raw->message ?? ($raw->error->message ?? "Falha ao gerar Pix SharkHub")) : null;
+
+            return (object)[
+                'transacao_id'     => $payId,
+                'status_transacao' => 1,
+                'meio_pagamento'   => 'SharkHub',
+                'gateway_usado'    => 'sharkhub',
+                'qr_code'          => $qrCode,
+                'qr_code_image'    => null,
+                'link_boleto'      => null,
+                'linha_digitavel'  => null,
+                'erro'             => $erro,
+                'mensagem_erro'    => $msg,
+                'raw'              => $raw,
             ];
         }
 
@@ -374,6 +411,29 @@ class GatewayManager
             ];
         }
 
+        // SharkHub cartão
+        if ($gw === 'sharkhub') {
+            $shStatus = strtoupper((string)($raw->status ?? ''));
+            $status   = self::STATUS_SHARKHUB[$shStatus] ?? 5;
+            $payId    = $raw->id ?? null;
+            $erro     = empty($payId) || isset($raw->error) || isset($raw->message) || $status === 5;
+            $msg      = $erro ? ($raw->message ?? ($raw->error->message ?? "Pagamento recusado")) : null;
+
+            return (object)[
+                'transacao_id'     => $payId,
+                'status_transacao' => $status,
+                'meio_pagamento'   => 'SharkHub',
+                'gateway_usado'    => 'sharkhub',
+                'qr_code'          => null,
+                'qr_code_image'    => null,
+                'link_boleto'      => null,
+                'linha_digitavel'  => null,
+                'erro'             => $erro,
+                'mensagem_erro'    => $msg,
+                'raw'              => $raw,
+            ];
+        }
+
         // Stripe
         $stripeStatus = $raw->status ?? '';
         $status       = self::STATUS_STRIPE[$stripeStatus] ?? 5;
@@ -420,6 +480,28 @@ class GatewayManager
             ];
         }
 
+        // SharkHub boleto
+        if ($gw === 'sharkhub') {
+            $payId   = $raw->id             ?? null;
+            $barcode = $raw->data->barcode  ?? null;
+            $erro    = empty($payId) || isset($raw->error) || isset($raw->message);
+            $msg     = $erro ? ($raw->message ?? ($raw->error->message ?? "Falha ao gerar boleto SharkHub")) : null;
+
+            return (object)[
+                'transacao_id'     => $payId,
+                'status_transacao' => $erro ? 5 : 1,
+                'meio_pagamento'   => 'SharkHub',
+                'gateway_usado'    => 'sharkhub',
+                'qr_code'          => null,
+                'qr_code_image'    => null,
+                'link_boleto'      => null,
+                'linha_digitavel'  => $barcode,
+                'erro'             => $erro,
+                'mensagem_erro'    => $msg,
+                'raw'              => $raw,
+            ];
+        }
+
         $status = self::STATUS_PAGARME[$raw->status ?? ''] ?? 1;
         $erro   = !isset($raw->id) || !empty($raw->errors);
 
@@ -462,10 +544,16 @@ class GatewayManager
 
     private function respostaErro(string $gw, string $msg): object
     {
+        $nomes = [
+            'pagarme'  => 'PagarMe',
+            'stripe'   => 'Stripe',
+            'efibank'  => 'EfiBank',
+            'sharkhub' => 'SharkHub',
+        ];
         return (object)[
             'transacao_id'    => null,
             'status_transacao' => 5,
-            'meio_pagamento'  => $gw === 'pagarme' ? 'PagarMe' : 'Stripe',
+            'meio_pagamento'  => $nomes[$gw] ?? ucfirst($gw),
             'gateway_usado'   => $gw,
             'qr_code'         => null,
             'qr_code_image'   => null,

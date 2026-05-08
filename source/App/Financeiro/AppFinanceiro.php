@@ -168,19 +168,21 @@ class AppFinanceiro
     {
         if (!$recipientId) return [];
 
-        $pagarme = new PagarMe();
+        // Busca sem filtro de data para garantir retorno; filtra na view
+        $saques = (new PagarMe())->historicoSaques($recipientId, null, null, 100);
 
-        $urls = [
-            "https://api.pagar.me/core/v5/transfers?recipient_id=$recipientId&count=50",
-            "https://api.pagar.me/core/v5/transfers?count=5",  // sem filtro, só pra ver se token tem acesso
-        ];
+        error_log("[Financeiro] historicoSaques recipientId=$recipientId total=" . count($saques) . " raw=" . substr(json_encode($saques), 0, 300));
 
-        foreach ($urls as $url) {
-            $resp = $pagarme->executa($url, "GET");
-            echo "<!-- TRANSFER_DEBUG url=$url resp=" . substr(json_encode($resp), 0, 500) . " -->";
+        // Filtra pelo período selecionado se houver resultados
+        if (!empty($saques) && $data_ini && $data_fim) {
+            $saques = array_filter($saques, function ($s) use ($data_ini, $data_fim) {
+                if (empty($s->created_at)) return true;
+                $d = substr($s->created_at, 0, 10);
+                return $d >= $data_ini && $d <= $data_fim;
+            });
         }
 
-        return [];
+        return array_values($saques);
     }
 
     private function buscarSettlements($recipientId, $data_ini, $data_fim)

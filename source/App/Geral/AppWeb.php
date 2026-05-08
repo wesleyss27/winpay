@@ -489,7 +489,12 @@ class AppWeb
         $usuarioPagarme = (new Usuario)->findById($this->section->getId());
 
         $saldoPagarme = (new PagarMe)->saldo($usuarioPagarme->pagarme_conta);
-        // $saldoPagarme = (new Winpay)->saldo($usuarioPagarme->pagarme_conta);
+
+        try {
+            $saldoWinPay = (new WinPay())->saldo($usuarioPagarme->id);
+        } catch (\Throwable $e) {
+            $saldoWinPay = null;
+        }
 
         foreach ($mes->data() as $mes) null;
         foreach ($pendente->data() as $pendente) null;
@@ -589,7 +594,8 @@ class AppWeb
             "vendasTotalSoma" => $vendasTotalSoma,
             "asaasClientes" => $asaasClientes,
             "usuarioPagarme" => $usuarioPagarme,
-            "saldoPagarme" => $saldoPagarme
+            "saldoPagarme" => $saldoPagarme,
+            "saldoWinPay" => $saldoWinPay,
         ]);
     }
 

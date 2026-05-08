@@ -667,6 +667,9 @@
                                         <br><br>
 
                                         <button class="btn btn-success" id="nota-fiscal<?= $index ?>" onclick="notaFiscal(<?= $index ?>)">Gerar Nota Fiscal</button><br>
+                                        <?php if (!empty($notasFiscaisMap[$venda->id])): ?>
+                                            <small class="text-success"><i class="fas fa-check-circle"></i> Nota emitida em <?= formataDataHora($notasFiscaisMap[$venda->id]->created_at) ?></small><br>
+                                        <?php endif; ?>
                                         <small>Necessário integração com notazz</small><br>
                                         <small>Integração precisar estar na conta do produtor</small>
 

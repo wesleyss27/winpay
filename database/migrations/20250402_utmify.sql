@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `utmify` (
+  `id`         INT(11)      NOT NULL AUTO_INCREMENT,
+  `usuario`    INT(11)      NOT NULL,
+  `api_key`    VARCHAR(200) NOT NULL,
+  `created_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_usuario` (`usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

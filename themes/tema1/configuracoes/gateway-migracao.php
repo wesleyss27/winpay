@@ -56,6 +56,7 @@ if ($_SESSION["tipo"] != 1) {
                   <th>Titular</th>
                   <th>PagarMe Conta</th>
                   <th>Stripe Account</th>
+                  <th>Carteira WinPay</th>
                   <th>Ação</th>
                 </tr>
               </thead>
@@ -72,6 +73,13 @@ if ($_SESSION["tipo"] != 1) {
                         <span class="text-muted">—</span>
                       <?php endif; ?>
                     </td>
+                    <td id="wallet-status-<?= $banco->id ?>">
+                      <?php if (!empty($banco->tem_wallet)) : ?>
+                        <span class="badge badge-success">✓ Ativa</span>
+                      <?php else : ?>
+                        <span class="badge badge-secondary">Sem carteira</span>
+                      <?php endif; ?>
+                    </td>
                     <td>
                       <?php if (empty($banco->stripe_account_id)) : ?>
                         <button class="btn btn-sm btn-primary"
@@ -84,6 +92,13 @@ if ($_SESSION["tipo"] != 1) {
                           onclick="reenviarLink(<?= $banco->id ?>)"
                           id="btn-link-<?= $banco->id ?>">
                           Reenviar onboarding
+                        </button>
+                      <?php endif; ?>
+                      <?php if (empty($banco->tem_wallet)) : ?>
+                        <button class="btn btn-sm btn-warning ml-1"
+                          onclick="criarWinPay(<?= $banco->id ?>)"
+                          id="btn-winpay-<?= $banco->id ?>">
+                          Criar carteira WinPay
                         </button>
                       <?php endif; ?>
                       <span id="resultado-<?= $banco->id ?>" class="ml-2" style="font-size:12px"></span>
@@ -133,6 +148,36 @@ function criarConta(bancoId) {
     res.innerHTML = '<span class="text-danger">Erro de conexão</span>';
     btn.disabled = false;
     btn.textContent = 'Criar conta Stripe';
+  });
+}
+
+function criarWinPay(bancoId) {
+  var btn = document.getElementById('btn-winpay-' + bancoId);
+  var res = document.getElementById('resultado-' + bancoId);
+  btn.disabled = true;
+  btn.textContent = 'Criando...';
+
+  fetch('<?= url("gateway/criar-conta-winpay") ?>', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'banco_id=' + bancoId
+  })
+  .then(r => r.json())
+  .then(function(data) {
+    if (data.erro) {
+      res.innerHTML = '<span class="text-danger">' + data.msg + '</span>';
+      btn.disabled = false;
+      btn.textContent = 'Criar carteira WinPay';
+    } else {
+      document.getElementById('wallet-status-' + bancoId).innerHTML = '<span class="badge badge-success">✓ Ativa</span>';
+      btn.remove();
+      res.innerHTML = '<span class="text-success">Carteira criada!</span>';
+    }
+  })
+  .catch(function() {
+    res.innerHTML = '<span class="text-danger">Erro de conexão</span>';
+    btn.disabled = false;
+    btn.textContent = 'Criar carteira WinPay';
   });
 }
 

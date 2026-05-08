@@ -1134,6 +1134,145 @@ class AppWebHook
         }
     }
 
+    // =========================================================================
+    // WEBHOOK SHARKHUB
+    // =========================================================================
+
+    public function webhookSharkHub($data)
+    {
+        date_default_timezone_set("America/Recife");
+        header('Content-Type: application/json');
+
+        $json     = file_get_contents('php://input');
+        $response = json_decode($json);
+
+        // --- Log ---
+        $logFile = fopen(DIRETORIO . "logs/webhook-sharkhub-debug.txt", 'a+');
+        if ($logFile) {
+            fwrite($logFile, "=== " . date('Y-m-d H:i:s') . " ===" . PHP_EOL);
+            fwrite($logFile, "PAYLOAD: " . $json . PHP_EOL);
+            fclose($logFile);
+        }
+
+        if (!$response) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Payload inválido']);
+            return;
+        }
+
+        // --- Validação de assinatura (X-Signature) — opcional mas recomendada ---
+        $cfgShark = (new ConfiguracaoCheckout())->findById(11);
+        $webhookSecret = $cfgShark ? (string)($cfgShark->chave_sandbox ?? $cfgShark->chave_producao ?? '') : '';
+        if (!empty($webhookSecret)) {
+            $sigHeader = $_SERVER['HTTP_X_SIGNATURE'] ?? '';
+            if (!empty($sigHeader)) {
+                $expected = base64_encode(hash_hmac('sha256', $json, $webhookSecret, true));
+                if (!hash_equals($expected, $sigHeader)) {
+                    error_log("[SharkHub Webhook] Assinatura inválida.");
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Assinatura inválida']);
+                    return;
+                }
+            }
+        }
+
+        // --- Mapeamento de status ---
+        $statusMap = [
+            'PENDING'     => 1,
+            'PROCESSING'  => 2,
+            'PAID'        => 4,
+            'REFUSED'     => 5,
+            'REFUNDED'    => 6,
+            'MED'         => 7,
+            'CHARGEDBACK' => 7,
+        ];
+
+        $payID  = $response->id     ?? null;
+        $rawSt  = strtoupper((string)($response->status ?? ''));
+        $status = $statusMap[$rawSt] ?? null;
+
+        if (!$payID || $status === null) {
+            error_log("[SharkHub Webhook] id ou status ausentes. Raw: {$json}");
+            http_response_code(200);
+            echo json_encode(['ignored' => true, 'reason' => 'id ou status ausentes']);
+            return;
+        }
+
+        $motivo     = null;
+        $finalizada = null;
+        $ultimoEvento = date("Y-m-d H:i:s");
+
+        if ($status === 4) {
+            $paidAt     = $response->paidAt ?? null;
+            $finalizada = $paidAt ? date("Y-m-d H:i:s", strtotime($paidAt)) : $ultimoEvento;
+            $ultimoEvento = $finalizada;
+        } elseif (in_array($status, [5, 6, 7])) {
+            $motivo = "Pagamento não concluído (SharkHub status: {$rawSt})";
+        }
+
+        $vendas = $this->atualizarVendasManualPorTransacao($payID, $status, $motivo, $finalizada, $ultimoEvento);
+
+        if (!$vendas) {
+            error_log("[SharkHub Webhook] Venda não encontrada para transacao={$payID}");
+            http_response_code(200);
+            echo json_encode(['ok' => true, 'info' => 'venda não encontrada']);
+            return;
+        }
+
+        if (!$this->houveAtualizacaoVendas()) {
+            error_log("[SharkHub Webhook] Duplicado ignorado: transacao={$payID}, status={$status}");
+            http_response_code(200);
+            echo json_encode(['duplicate' => true]);
+            return;
+        }
+
+        foreach ($vendas as $venda) {
+            $dados = [];
+
+            $contato = $venda->dataEndereco() ?: $venda->dataComprador();
+            $dados["nome"]     = $contato ? ($contato->nome     ?? null) : null;
+            $dados["email"]    = $contato ? ($contato->email    ?? null) : null;
+            $dados["telefone"] = $contato ? ($contato->telefone ?? null) : null;
+
+            $dados["venda"]            = $venda->id;
+            $dados["status_transacao"] = $venda->status_transacao;
+            $dados["transacao"]        = $payID;
+            $dados["produtor"]         = $venda->produtor;
+
+            if ($venda->afiliado) {
+                $dados["afiliado"] = $venda->afiliado;
+            }
+
+            $dados["valor_bruto"]    = $venda->valor_bruto;
+            $dados["valor_produto"]  = $venda->valor_produto;
+            $dados["valor_desconto"] = $venda->valor_desconto;
+
+            if ($venda->plano) {
+                $dados["nomekit"] = $venda->dataPlano()->nome;
+                $dados["produto"] = $venda->dataPlano()->nome;
+            } else {
+                $dados["nomekit"] = $venda->dataProduto()->nome;
+                $dados["produto"] = $venda->dataProduto()->nome;
+            }
+
+            (new AppProcessos())->processos($dados);
+
+            $arq = fopen('webhook-sharkhub.txt', 'a+');
+            $txt = date("d/m/Y H:i:s") . "\n";
+            $txt .= "status: {$rawSt} → {$venda->status_transacao}\n";
+            $txt .= "venda: {$venda->id} | payID: {$payID}\n";
+            $txt .= "-------------------------------------------\n";
+            fwrite($arq, $txt);
+            fclose($arq);
+
+            (new AppBling(null))->criarPedido(["venda" => $venda->id, "usuario" => $venda->produtor, "produto" => $venda->produto]);
+            (new AppPostback(null))->enviarPostback(["venda" => $venda->id, "produto" => $venda->produto, "produtor" => $venda->produtor]);
+        }
+
+        http_response_code(200);
+        echo json_encode(['ok' => true]);
+    }
+
     private function atualizarVendasManualPorTransacao(string $transacao, int $status, ?string $motivo, ?string $dataFinalizada, ?string $dataEvento = null): array
     {
         $this->houveAtualizacaoVendas = false;

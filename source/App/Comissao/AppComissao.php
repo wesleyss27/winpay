@@ -115,11 +115,8 @@ class AppComissao
 
         $primeiroSaque = (new Comissao())->find("usuario = $usuario AND tipo = 2")->count();
 
-        $walletIdUsuario = $user->winpay_conta ?: $user->pagarme_conta;
-        $saldoPagarme = $walletIdUsuario ? (new Winpay)->saldo($walletIdUsuario) : null;
-        if (!$saldoPagarme) {
-            $saldoPagarme = (object)[];
-        }
+        $pagarmeId    = $user->pagarme_conta;
+        $saldoPagarme = $pagarmeId ? (new PagarMe())->saldo($pagarmeId) : (object)[];
 
         echo $this->view->render("comissao/comissao", [
             "title" => "Saldos e Extratos",
@@ -159,28 +156,28 @@ class AppComissao
             return;
         }
 
-        $usuario = (new Usuario())->findById($this->section->getId());
-        $walletId = $usuario->winpay_conta ?: $usuario->pagarme_conta;
+        $usuario   = (new Usuario())->findById($this->section->getId());
+        $pagarmeId = $usuario->pagarme_conta;
 
-        if (!$walletId) {
-            echo "Conta de wallet não encontrada para este usuário.";
+        if (!$pagarmeId) {
+            echo "Conta PagarMe não encontrada para este usuário.";
             return;
         }
 
-        $saldoWallet = (new Winpay)->saldo($walletId);
-        $saldoWallet = $saldoWallet ?: (object)['balance' => 0];
-        $available_amount = floatval($saldoWallet->balance ?? 0) - 367;
+        // Valida contra o saldo disponível real da PagarMe
+        $saldoApi        = (new PagarMe())->saldo($pagarmeId);
+        $available_cents = intval($saldoApi->available_amount ?? 0);
+        $available_brl   = $available_cents / 100;
 
-        if ( $withdraw_value > $available_amount ) {
-            echo "É necessário informar um valor inferior a " . number_format($available_amount, 2, ',', '.');
+        $MIN_SAQUE = 10000; // R$ 100,00 em centavos
+
+        if ($withdraw_value > $available_cents) {
+            echo "Valor superior ao disponível na PagarMe (R$ " . number_format($available_brl, 2, ',', '.') . ").";
             return;
         }
 
-        $taxa = (new Taxa())->findById(1);
-        $minimal_value = str_replace(array('.', ','), '', $taxa->vlr_min_saque );
-
-        if ( $withdraw_value <  $minimal_value ) {
-            echo "É necessário informar um valor para saquer que seja superior a " . $taxa->vlr_min_saque;
+        if ($withdraw_value < $MIN_SAQUE) {
+            echo "Valor mínimo para saque é R$ 100,00.";
             return;
         }
 

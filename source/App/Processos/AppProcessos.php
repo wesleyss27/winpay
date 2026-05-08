@@ -95,10 +95,16 @@ class AppProcessos
         $data["comissao_afiliado"] = $venda->comissao_afiliado;
         $data["afiliado"] = $venda->afiliado;
         $data["comissao_coprodutores"] = $venda->comissao_coprodutores;
+        $data["gateway_usado"] = $venda->gateway_usado;
+
+        // PagarMe distribui comissões via split nativo — não creditar a carteira interna
+        // Para os demais gateways (SharkHub, EfiBank, Stripe etc.) o split é responsabilidade da WinPay
+        $gatewaysComSplitNativo = ['pagarme'];
         $winpayWallet = new WinPay();
 
-
-        $response = $winpayWallet->processarSplitParaWallet($data);
+        if (!in_array($venda->gateway_usado, $gatewaysComSplitNativo)) {
+            $response = $winpayWallet->processarSplitParaWallet($data);
+        }
 
         $this->logs($data, "dados");
 

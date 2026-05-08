@@ -10,6 +10,8 @@ use Source\Models\Configuracoes\ConfiguracaoGateway;
 use Source\Models\Usuarios\Usuario;
 use Source\Models\Comissao\Banco;
 use Source\App\Checkout1\Stripe;
+use Source\App\Checkout1\WinPay;
+use Source\Models\Configuracoes\ConfiguracaoCheckout;
 
 class AppConfiguracaoGateway
 {
@@ -36,11 +38,16 @@ class AppConfiguracaoGateway
             exit;
         }
 
-        $config = (new ConfiguracaoGateway())->findById(1);
+        $config   = (new ConfiguracaoGateway())->findById(1);
+        $sharkhub = (new ConfiguracaoCheckout())->findById(11);
+        if (!$sharkhub) {
+            $sharkhub = (object)[];
+        }
 
         echo $this->view->render("configuracoes/gateway", [
-            "title"  => "Configuração de Gateway",
-            "config" => $config,
+            "title"    => "Configuração de Gateway",
+            "config"   => $config,
+            "sharkhub" => $sharkhub,
         ]);
     }
 
@@ -60,7 +67,7 @@ class AppConfiguracaoGateway
             $config = new ConfiguracaoGateway();
         }
 
-        $gws   = ["pagarme", "stripe", "efibank"];
+        $gws   = ["pagarme", "stripe", "efibank", "sharkhub"];
         $modos = ["balanceado", "dedicado", "personalizado"];
 
         $modo             = in_array($data["modo"] ?? "", $modos) ? $data["modo"] : "dedicado";
@@ -107,6 +114,17 @@ class AppConfiguracaoGateway
         $bancos = (new Banco())->find(
             "pagarme_conta IS NOT NULL AND pagarme_conta != '' AND (stripe_account_id IS NULL OR stripe_account_id = '')"
         )->fetch(true);
+
+        // Verifica se cada usuário já possui carteira WinPay (HTTP 200 = existe)
+        $winpay = new WinPay();
+        foreach (($bancos ?? []) as $banco) {
+            try {
+                $wallet = $winpay->saldo($banco->usuario);
+                $banco->tem_wallet = isset($wallet->_http_code) && $wallet->_http_code === 200;
+            } catch (\Throwable $e) {
+                $banco->tem_wallet = false;
+            }
+        }
 
         echo $this->view->render("configuracoes/gateway-migracao", [
             "title"  => "Migração Stripe",
@@ -231,6 +249,41 @@ class AppConfiguracaoGateway
 
             echo json_encode(["erro" => false, "onboarding_url" => $onboardingUrl]);
 
+        } catch (\Throwable $e) {
+            echo json_encode(["erro" => true, "msg" => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Cria carteira WinPay para um usuário via AJAX.
+     */
+    public function criarContaWinPay($data)
+    {
+        if ($_SESSION["tipo"] != 1) {
+            echo json_encode(["erro" => true, "msg" => "Sem permissão"]);
+            return;
+        }
+
+        header("Content-Type: application/json");
+
+        $bancoId = (int)($data["banco_id"] ?? 0);
+        $banco   = (new Banco())->findById($bancoId);
+
+        if (!$banco) {
+            echo json_encode(["erro" => true, "msg" => "Banco não encontrado"]);
+            return;
+        }
+
+        try {
+            $winpay = new WinPay();
+            $result = $winpay->criarWallet(["id" => $banco->usuario]);
+
+            if (!$result->success) {
+                echo json_encode(["erro" => true, "msg" => $result->error ?? "Falha ao criar carteira"]);
+                return;
+            }
+
+            echo json_encode(["erro" => false, "msg" => "Carteira WinPay criada com sucesso"]);
         } catch (\Throwable $e) {
             echo json_encode(["erro" => true, "msg" => $e->getMessage()]);
         }
