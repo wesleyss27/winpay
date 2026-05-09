@@ -87,6 +87,15 @@ $router->post("/logar-master", "AppLoginMaster:logar", "logar.master");
 
 
 /*
+* NAMESPACE Source\App\Monitoramento
+*/
+$router->namespace("Source\App\Monitoramento");
+$router->group("monitoramento");
+$router->get("/",    "AppMonitoramento:index", "monitoramento.index");
+$router->get("/api", "AppMonitoramento:api",   "monitoramento.api");
+$router->group(null);
+
+/*
 * NAMESPACE App\Geral
 */
 $router->namespace("Source\App\Geral");
@@ -574,6 +583,8 @@ $router->post("/editar", "AppNotazz:editarIntegracao", "notazz.editar");
 $router->post("/excluir", "AppNotazz:excluirIntegracao", "notazz.excluir");
 
 $router->post("/gerar", "AppNotazz:gerarNota", "notazz.gerar");
+$router->get("/lote", "AppNotazz:notasLote", "notazz.lote");
+$router->post("/lote/emitir", "AppNotazz:emitirLote", "notazz.lote.emitir");
 $router->post("/consultar-cancelar", "AppNotazz:consultar", "notazz.consultarCancelar");
 
 $router->post("/postback", "AppNotazz:postbackNotazz", "notazz.postback");

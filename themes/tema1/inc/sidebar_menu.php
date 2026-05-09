@@ -251,6 +251,15 @@
             </li>
           <?php endif ?>
 
+          <?php if ($section->getTipo() == 1) : ?>
+          <li class="nav-item" title="Monitoramento em tempo real dos checkouts">
+            <a href="<?= url('monitoramento') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+              <span class="material-symbols-rounded">radar</span>
+              <p>Monitoramento <span style="font-size:9px; background:var(--wp-yellow,#ffdd00); color:#111; padding:1px 5px; border-radius:4px; font-weight:700; margin-left:4px; vertical-align:middle;">LIVE</span></p>
+            </a>
+          </li>
+          <?php endif ?>
+
           <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("marketplace")) : ?>
             <li class="nav-item" title="Veja produtos para poder se afiliar a eles">
               <a href="<?= url('marketplace') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
@@ -609,6 +618,7 @@
                 $url_atual == url("integracoes") ||
                 $url_atual == url("api") ||
                 $url_atual == url("notas") ||
+                $url_atual == url("notas/lote") ||
                 $url_atual == url("bling") ||
                 $url_atual == url("notas/integracao") ||
                 $url_atual == url("pixel") ||
@@ -642,6 +652,12 @@
                       <p>Integrações</p>
                     </a>
                   </li>
+                  <li class="nav-item sub-item" title="Rastreio de vendas por campanha Meta Ads">
+                    <a href="<?= url("meta-ads") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                      <span class="material-symbols-rounded nav-icon">ads_click</span>
+                      <p>Meta Ads</p>
+                    </a>
+                  </li>
                 <?php endif ?>
 
                 <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("postback")) : ?>
@@ -672,6 +688,11 @@
                   <li class="nav-item sub-item" title="Ver notas fiscais">
                     <a href="<?= url("notas") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">description</span>
                       <p>Notas Fiscais</p>
+                    </a>
+                  </li>
+                  <li class="nav-item sub-item" title="Emitir notas fiscais em lote">
+                    <a href="<?= url("notas/lote") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">receipt_long</span>
+                      <p>Emissão em Lote</p>
                     </a>
                   </li>
                 <?php endif ?>

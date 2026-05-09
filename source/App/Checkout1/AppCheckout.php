@@ -311,6 +311,15 @@ class AppCheckout
         $dados["campanha"]      = @$cookies->campanha;
         $dados["produtor"]      = @$produto->usuario;
 
+        // Log para o monitoramento em tempo real
+        \Source\App\Monitoramento\AppMonitoramento::logVisita(
+            (string)(@$checkout->codigo ?? ""),
+            (int)(@$produto->usuario ?? 0),
+            (string)(@$checkout->descricao ?? ""),
+            (string)(@$plano->nome ?? ""),
+            (string)(@$checkout->dataProdutor()->nome ?? "")
+        );
+
         echo $this->view->render("$chc", [
             "title" => $plano->nome . " | " . SITE,
             "mensagem" => "",
