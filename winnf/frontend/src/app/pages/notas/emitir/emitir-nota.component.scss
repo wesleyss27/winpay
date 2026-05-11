@@ -111,12 +111,13 @@
   padding: 0 16px;
   margin-bottom: 8px;
 
-  .search-field {
-    flex: 1;
-  }
+  .search-field { flex: 1; }
 
-  button {
-    margin-top: 4px;
+  button { margin-top: 4px; }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    button { width: 100%; margin-top: 0; }
   }
 }
 

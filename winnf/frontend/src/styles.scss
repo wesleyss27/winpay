@@ -90,6 +90,42 @@ html, body {
   --mdc-snackbar-supporting-text-color: #fff;
 }
 
+// ── Mobile helpers ────────────────────────────────────────────────────────────
+
+// Page headers: stack button below title on small screens
+@media (max-width: 600px) {
+  .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+
+    .page-title { font-size: 20px !important; }
+  }
+
+  // Form rows: force single column
+  .form-row {
+    flex-direction: column;
+
+    mat-form-field { min-width: 0 !important; width: 100% !important; }
+
+    .flex-2, .field-tipo, .field-num, .field-uf, .field-cep,
+    .field-kind, .flex-grow { flex: 1 !important; width: 100% !important; }
+  }
+
+  // Filter forms
+  .filter-form {
+    flex-direction: column;
+    mat-form-field { min-width: 0 !important; }
+    .filter-actions { width: 100%; button { flex: 1; } }
+  }
+
+  // Cards: reduce padding
+  .mat-mdc-card { padding: 12px !important; }
+
+  // Submit areas
+  .submit-area button { width: 100% !important; min-width: 0 !important; }
+}
+
 // ── Scrollbar ─────────────────────────────────────────────────────────────────
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f1f1; }
