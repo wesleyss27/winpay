@@ -40,9 +40,10 @@ def create_app(config_name: str | None = None) -> Flask:
         from flask import jsonify
         return jsonify({"success": True, "message": "WinNF API running"}), 200
 
-    # Create tables and seed admin on first run
+    # Create tables (checkfirst=True evita erro se já existirem) e seed admin
     with app.app_context():
-        db.create_all()
+        with db.engine.begin() as conn:
+            db.metadata.create_all(conn, checkfirst=True)
         _seed_admin()
 
     return app
