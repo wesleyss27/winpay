@@ -811,13 +811,14 @@ class AppNotazz
 
         $inicio = @$_GET['inicio'] ?: date('Y-m-d', strtotime('-30 days'));
         $fim    = @$_GET['fim']    ?: date('Y-m-d');
+        $visao  = $isAdmin ? (@$_GET['visao'] ?: 'todos') : 'meu';
 
         $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59'";
-        if (!$isAdmin) $where .= " AND produtor = {$uid}";
+        if (!$isAdmin || $visao === 'meu') $where .= " AND produtor = {$uid}";
 
         $vendas = (new Venda())->find($where)->order("id DESC")->fetch(true);
 
-        $integracoes = $isAdmin ? [] : ((new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? []);
+        $integracoes = ($visao === 'meu') ? ((new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? []) : [];
 
         $emitidas_ids = [];
         $nfMap = [];
@@ -862,6 +863,8 @@ class AppNotazz
             "emitidas"       => $emitidas,
             "inicio"         => $inicio,
             "fim"            => $fim,
+            "isAdmin"        => $isAdmin,
+            "visao"          => $visao,
         ]);
     }
 

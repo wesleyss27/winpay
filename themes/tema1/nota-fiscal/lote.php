@@ -100,6 +100,12 @@
   .btn-emit:hover { filter:brightness(1.1); }
   .btn-emit:disabled { opacity:.5; cursor:not-allowed; filter:none; }
 
+  /* ── visao toggle ───────────────────────────────────────────────── */
+  .lote-visao-toggle { display:flex; gap:.35rem; }
+  .visao-btn { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.6); border-radius:8px; padding:.5rem 1rem; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:.4rem; }
+  .visao-btn:hover { background:rgba(255,255,255,.1); color:#fff; }
+  .visao-btn.active { background:rgba(217,192,0,.15); border-color:rgba(217,192,0,.45); color:#d9c000; }
+
   /* ── mobile cards ────────────────────────────────────────────────── */
   @media (max-width:640px) {
     .lote-title { font-size:1.5rem; }
@@ -156,6 +162,20 @@
 
       <!-- FILTER -->
       <form method="GET" class="lote-filter">
+        <?php if ($isAdmin): ?>
+        <input type="hidden" name="visao" id="input-visao" value="<?= $visao ?>">
+        <div>
+          <label>Visualizar</label>
+          <div class="lote-visao-toggle">
+            <button type="button" class="visao-btn <?= $visao === 'todos' ? 'active' : '' ?>" onclick="setVisao('todos')">
+              <i class="fas fa-globe"></i> Todos
+            </button>
+            <button type="button" class="visao-btn <?= $visao === 'meu' ? 'active' : '' ?>" onclick="setVisao('meu')">
+              <i class="fas fa-user"></i> Meus
+            </button>
+          </div>
+        </div>
+        <?php endif; ?>
         <div>
           <label>De</label>
           <input type="date" name="inicio" value="<?= $inicio ?>">
@@ -342,6 +362,13 @@
 
 <?php $v->start("scripts") ?>
 <script>
+  function setVisao(v) {
+    var inp = document.getElementById('input-visao');
+    if (!inp) return;
+    inp.value = v;
+    inp.closest('form').submit();
+  }
+
   const LIMITE     = 50;
   const URL_EMITIR = "<?= $router->route('notazz.lote.emitir') ?>";
   let   tabAtiva   = 'el';
