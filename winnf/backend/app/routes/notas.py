@@ -75,6 +75,26 @@ def _update_nota_from_notazz_response(nota: NotaFiscal, data: dict) -> None:
     nota.motivo_status = data.get("motivo") or data.get("mensagem") or nota.motivo_status
 
 
+def _upsert_cliente(produtor_id: int, dest: dict, nome: str, cpf_cnpj: str, dest_tipo: str) -> None:
+    """Insert or update cliente record after a successful nota emission."""
+    cliente = Cliente.query.filter_by(produtor_id=produtor_id, cpf_cnpj=cpf_cnpj).first()
+    if cliente is None:
+        cliente = Cliente(produtor_id=produtor_id, cpf_cnpj=cpf_cnpj, nome=nome, tipo=dest_tipo)
+        db.session.add(cliente)
+    else:
+        cliente.nome = nome
+        cliente.tipo = dest_tipo
+    cliente.email = dest.get("email") or cliente.email
+    cliente.telefone = dest.get("telefone") or cliente.telefone
+    cliente.rua = dest.get("rua") or cliente.rua
+    cliente.numero = dest.get("numero") or cliente.numero
+    cliente.complemento = dest.get("complemento") or cliente.complemento
+    cliente.bairro = dest.get("bairro") or cliente.bairro
+    cliente.cidade = dest.get("cidade") or cliente.cidade
+    cliente.uf = dest.get("uf") or cliente.uf
+    cliente.cep = dest.get("cep") or cliente.cep
+
+
 # ---------------------------------------------------------------------------
 # GET /api/notas/clientes  — client search for assistente/produtor
 # ---------------------------------------------------------------------------
@@ -321,6 +341,7 @@ def emitir_nota():
         _update_nota_from_notazz_response(nota, raw_data)
         # Fallback: store notazz id from top level if present
         nota.notazz_id = nota.notazz_id or raw_data.get("id") or raw_data.get("nfse_id")
+        _upsert_cliente(produtor.id, dest, nome, cpf_cnpj, dest_tipo)
     else:
         nota.status = "rejeitada"
         nota.motivo_status = result.get("message", "")
@@ -461,6 +482,7 @@ def emitir_lote():
         if result["success"]:
             _update_nota_from_notazz_response(nota, raw_data)
             nota.notazz_id = nota.notazz_id or raw_data.get("id")
+            _upsert_cliente(produtor.id, dest, nome, cpf_cnpj, dest_tipo)
         else:
             nota.status = "rejeitada"
             nota.motivo_status = result.get("message", "")

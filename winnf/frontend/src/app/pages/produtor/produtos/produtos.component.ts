@@ -48,17 +48,19 @@ import { ApiService } from '../../../core/services/api.service';
 
         <div class="form-row">
           <mat-form-field appearance="outline">
-            <mat-label>CNAE</mat-label>
+            <mat-label>CNAE <span class="optional-tag">(opcional)</span></mat-label>
             <input matInput formControlName="cnae" placeholder="Ex: 6201-5/01" />
+            <mat-hint>Código de atividade econômica</mat-hint>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>LC116</mat-label>
+            <mat-label>LC116 <span class="optional-tag">(opcional)</span></mat-label>
             <input matInput formControlName="lc116" placeholder="Ex: 1.01" />
+            <mat-hint>Lista de serviços da lei complementar</mat-hint>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Valor Padrão (R$)</mat-label>
+          <mat-label>Valor Padrão (R$) <span class="optional-tag">(opcional)</span></mat-label>
           <input matInput type="number" min="0" step="0.01" formControlName="valor_padrao" />
         </mat-form-field>
       </form>
@@ -74,6 +76,7 @@ import { ApiService } from '../../../core/services/api.service';
     .form-row { display: flex; gap: 12px; }
     mat-form-field { flex: 1; }
     mat-dialog-content { overflow: visible; }
+    .optional-tag { font-size: 11px; font-weight: 400; color: #9aa0a6; letter-spacing: 0; }
   `],
 })
 export class ProdutoDialogComponent {
