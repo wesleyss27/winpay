@@ -412,13 +412,16 @@ def create_produto():
             }
         ), 400
 
+    def _nullable_str(v): return v.strip() or None if isinstance(v, str) else v or None
+    def _nullable_float(v): return float(v) if v not in (None, "", False) else None
+
     produto = Produto(
         produtor_id=produtor.id,
         nome=nome,
         tipo=tipo,
-        cnae=data.get("cnae"),
-        lc116=data.get("lc116"),
-        valor_padrao=data.get("valor_padrao"),
+        cnae=_nullable_str(data.get("cnae")),
+        lc116=_nullable_str(data.get("lc116")),
+        valor_padrao=_nullable_float(data.get("valor_padrao")),
         ativo=bool(data.get("ativo", True)),
     )
     db.session.add(produto)
@@ -442,14 +445,21 @@ def update_produto(produto_id: int):
         return jsonify({"success": False, "message": "Produto não encontrado."}), 404
 
     data = request.get_json(silent=True) or {}
+    def _nullable_str(v): return v.strip() or None if isinstance(v, str) else v or None
+    def _nullable_float(v): return float(v) if v not in (None, "", False) else None
+
     fields = ["nome", "tipo", "cnae", "lc116", "valor_padrao", "ativo"]
     for field in fields:
         if field in data:
             value = data[field]
             if field == "tipo" and value:
                 value = value.lower()
-            if field == "ativo":
+            elif field == "ativo":
                 value = bool(value)
+            elif field in ("cnae", "lc116"):
+                value = _nullable_str(value)
+            elif field == "valor_padrao":
+                value = _nullable_float(value)
             setattr(produto, field, value)
 
     db.session.commit()
