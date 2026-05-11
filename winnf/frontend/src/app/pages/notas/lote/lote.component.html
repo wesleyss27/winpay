@@ -1,0 +1,215 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2 class="page-title">Emissão em Lote</h2>
+    <button mat-stroked-button routerLink="/notas">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
+
+  <div class="info-banner">
+    <mat-icon>info_outline</mat-icon>
+    <span>Emita múltiplas notas de uma vez. Selecione os clientes e preencha os dados comuns da nota.</span>
+  </div>
+
+  <!-- Nota data form -->
+  <mat-card class="form-section">
+    <div class="section-header">
+      <span class="section-number">1</span>
+      <span class="section-label">Dados Comuns da Nota</span>
+    </div>
+
+    <form [formGroup]="notaForm" novalidate class="nota-form">
+
+      <!-- Catalog quick-fill -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" style="flex:1">
+          <mat-label>{{ tipoNota === 'nfe' ? 'Produto' : 'Serviço' }} do catálogo (opcional)</mat-label>
+          <mat-select (selectionChange)="onSelectCatalogo($event.value)">
+            <mat-option [value]="null">— Preencher manualmente —</mat-option>
+            <mat-option *ngFor="let p of catalogoFiltrado" [value]="p">
+              {{ p.nome }}{{ p.valor_padrao ? ' · R$ ' + (p.valor_padrao | number:'1.2-2') : '' }}
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="catalogoFiltrado.length > 0">Selecionar pré-preenche descrição, CNAE, LC116 e valor</mat-hint>
+          <mat-hint *ngIf="catalogoFiltrado.length === 0">Nenhum {{ tipoNota === 'nfe' ? 'produto' : 'serviço' }} cadastrado no catálogo ainda</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo">
+            <mat-option value="nfse">NFS-e</mat-option>
+            <mat-option value="nfe">NF-e</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Valor (R$) *</mat-label>
+          <input matInput type="number" min="0" step="0.01" formControlName="valor" />
+          <mat-error *ngIf="notaForm.get('valor')?.hasError('required')">Obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Competência *</mat-label>
+          <input matInput formControlName="competencia" placeholder="AAAA-MM-DD" />
+          <mat-error *ngIf="notaForm.get('competencia')?.hasError('required')">Obrigatório</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descrição *</mat-label>
+        <textarea matInput formControlName="descricao" rows="3" placeholder="Descrição dos serviços/produtos..."></textarea>
+        <mat-error *ngIf="notaForm.get('descricao')?.hasError('required')">Descrição é obrigatória</mat-error>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>CNAE</mat-label>
+          <input matInput formControlName="cnae" placeholder="Ex: 6201-5/01" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>LC116</mat-label>
+          <input matInput formControlName="lc116" placeholder="Ex: 1.01" />
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card>
+
+  <!-- Recipients section -->
+  <mat-card class="form-section">
+    <div class="section-header">
+      <span class="section-number">2</span>
+      <span class="section-label">Destinatários ({{ destinatarios.length }})</span>
+    </div>
+
+    <!-- Search from client list -->
+    <div class="search-area">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar cliente por nome ou CPF/CNPJ</mat-label>
+        <input matInput (input)="onSearchInput($event)" placeholder="Nome ou CPF/CNPJ..." />
+        <mat-icon matSuffix *ngIf="!isSearching">search</mat-icon>
+        <mat-spinner matSuffix diameter="18" *ngIf="isSearching"></mat-spinner>
+      </mat-form-field>
+
+      <!-- Search results dropdown -->
+      <div class="search-results" *ngIf="searchResults.length > 0">
+        <div
+          class="search-result-item"
+          *ngFor="let r of searchResults"
+          (click)="addFromSearch(r)"
+        >
+          <mat-icon>person</mat-icon>
+          <div>
+            <div class="result-name">{{ r.nome }}</div>
+            <div class="result-cpf">{{ r.cpf_cnpj }}</div>
+          </div>
+          <button mat-icon-button color="primary" matTooltip="Adicionar">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <!-- Manual add form -->
+    <div class="manual-add">
+      <p class="manual-label">Ou adicione manualmente:</p>
+      <form [formGroup]="addForm" novalidate class="manual-form">
+        <mat-form-field appearance="outline" class="flex-2">
+          <mat-label>Nome *</mat-label>
+          <input matInput formControlName="nome" />
+          <mat-error *ngIf="addForm.get('nome')?.hasError('required')">Obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>CPF/CNPJ *</mat-label>
+          <input matInput formControlName="cpf_cnpj" />
+          <mat-error *ngIf="addForm.get('cpf_cnpj')?.hasError('required')">Obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-tipo">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo">
+            <mat-option value="F">Física</mat-option>
+            <mat-option value="J">Jurídica</mat-option>
+            <mat-option value="E">Estrangeiro</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>E-mail</mat-label>
+          <input matInput formControlName="email" />
+        </mat-form-field>
+        <button mat-raised-button color="accent" type="button" (click)="addManual()" class="add-btn">
+          <mat-icon>add</mat-icon>
+          Adicionar
+        </button>
+      </form>
+    </div>
+
+    <!-- Recipients table -->
+    <div class="recipients-table" *ngIf="destinatarios.length > 0">
+      <mat-divider class="divider"></mat-divider>
+      <table mat-table [dataSource]="destinatarios" class="data-table">
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cpf_cnpj">
+          <th mat-header-cell *matHeaderCellDef>CPF/CNPJ</th>
+          <td mat-cell *matCellDef="let row">{{ row.cpf_cnpj }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let row">{{ row.tipo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>E-mail</th>
+          <td mat-cell *matCellDef="let row">{{ row.email || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="result-badge {{ getStatusClass(row.status) }}" [matTooltip]="row.statusMsg || ''">
+              {{ row.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let row; let i = index">
+            <button mat-icon-button color="warn" (click)="removeDestinatario(i)" matTooltip="Remover">
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
+      </table>
+    </div>
+
+    <div class="empty-recipients" *ngIf="destinatarios.length === 0">
+      <mat-icon>group_add</mat-icon>
+      <p>Nenhum destinatário adicionado.</p>
+    </div>
+  </mat-card>
+
+  <!-- Submit -->
+  <div class="submit-area">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="emitirLote()"
+      [disabled]="isSubmitting || destinatarios.length === 0"
+      class="submit-btn"
+    >
+      <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+      <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+      <span>{{ isSubmitting ? 'Emitindo lote...' : 'Emitir Lote (' + destinatarios.length + ' notas)' }}</span>
+    </button>
+  </div>
+</div>

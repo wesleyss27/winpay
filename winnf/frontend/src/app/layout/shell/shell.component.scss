@@ -1,0 +1,185 @@
+$sidebar-bg: #111111;
+$sidebar-border: #2a2a2a;
+$sidebar-text: rgba(255, 255, 255, 0.75);
+$sidebar-hover: rgba(255, 221, 0, 0.06);
+$yellow: #FFDD00;
+
+.shell-container {
+  height: 100vh;
+}
+
+.shell-sidenav {
+  width: 240px;
+  background-color: $sidebar-bg;
+  border-right: 1px solid $sidebar-border;
+  display: flex;
+  flex-direction: column;
+
+  .sidenav-header {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid $sidebar-border;
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+
+      .logo-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+        color: $yellow;
+      }
+
+      .logo-text {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: 2px;
+      }
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .role-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        width: fit-content;
+
+        &.role-admin {
+          background-color: $yellow;
+          color: #111111;
+        }
+
+        &.role-produtor {
+          background-color: rgba(255, 221, 0, 0.15);
+          color: $yellow;
+          border: 1px solid rgba(255, 221, 0, 0.3);
+        }
+
+        &.role-assistente {
+          background-color: rgba(40, 167, 69, 0.15);
+          color: #28a745;
+          border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+      }
+    }
+  }
+
+  .nav-list {
+    flex: 1;
+    padding: 8px 0;
+
+    .nav-item {
+      // MDC list-item CSS custom properties for dark sidebar
+      --mdc-list-list-item-label-text-color: #{$sidebar-text};
+      --mdc-list-list-item-leading-icon-color: rgba(255, 255, 255, 0.4);
+      --mdc-list-list-item-hover-label-text-color: rgba(255, 255, 255, 0.95);
+      --mdc-list-list-item-hover-leading-icon-color: rgba(255, 255, 255, 0.7);
+      --mdc-list-list-item-hover-state-layer-color: transparent;
+      --mdc-list-list-item-focus-label-text-color: #{$sidebar-text};
+      --mdc-list-list-item-label-text-size: 14px;
+      --mdc-list-list-item-label-text-weight: 500;
+
+      margin: 2px 10px;
+      border-radius: 8px;
+      transition: background-color 0.15s;
+
+      &:hover {
+        background-color: $sidebar-hover;
+      }
+
+      &.active-link {
+        background-color: rgba(255, 221, 0, 0.1);
+        border-left: 3px solid $yellow;
+        border-radius: 0 8px 8px 0;
+        margin-left: 0;
+        padding-left: 7px;
+
+        --mdc-list-list-item-label-text-color: #{$yellow};
+        --mdc-list-list-item-leading-icon-color: #{$yellow};
+        --mdc-list-list-item-hover-label-text-color: #{$yellow};
+      }
+    }
+  }
+
+  .sidenav-footer {
+    padding: 12px 10px;
+    border-top: 1px solid $sidebar-border;
+
+    .logout-btn {
+      color: rgba(255, 255, 255, 0.5);
+      width: 100%;
+      justify-content: flex-start;
+      gap: 8px;
+      border-radius: 8px;
+
+      &:hover {
+        color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.08);
+      }
+    }
+  }
+}
+
+.shell-content {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+
+  .top-toolbar {
+    background-color: #ffffff;
+    color: #111111;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #e8eaed;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+    .toolbar-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111111;
+      letter-spacing: 1px;
+
+      span { color: $yellow; }
+    }
+
+    .spacer { flex: 1; }
+
+    .toolbar-user {
+      font-size: 13px;
+      font-weight: 500;
+      color: #5f6368;
+      margin-right: 4px;
+    }
+
+    button[mat-icon-button] {
+      color: #5f6368;
+    }
+  }
+
+  .content-area {
+    padding: 24px;
+    flex: 1;
+  }
+}

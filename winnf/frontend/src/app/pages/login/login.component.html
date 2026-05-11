@@ -1,0 +1,73 @@
+<div class="login-wrapper">
+  <!-- Painel esquerdo (visível em telas grandes) -->
+  <div class="login-left">
+    <div class="brand-area">
+      <mat-icon class="brand-icon">receipt_long</mat-icon>
+      <h1 class="brand-name">WinNF</h1>
+      <p class="brand-tagline">Plataforma de Notas Fiscais</p>
+      <ul class="brand-features">
+        <li><mat-icon>verified</mat-icon> Emissão de NFS-e e NF-e</li>
+        <li><mat-icon>group</mat-icon> Gestão de Produtores e Assistentes</li>
+        <li><mat-icon>sync</mat-icon> Integração com Notazz</li>
+        <li><mat-icon>picture_as_pdf</mat-icon> PDF e XML automáticos</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Painel direito (formulário) -->
+  <div class="login-right">
+    <div class="login-header">
+      <div class="mobile-logo">
+        <mat-icon>receipt_long</mat-icon>
+        <span>WinNF</span>
+      </div>
+      <h2>Bem-vindo de volta</h2>
+      <p>Faça login para acessar a plataforma</p>
+    </div>
+
+    <form (submit)="$event.preventDefault(); onSubmit()" novalidate>
+      <div class="field-wrapper">
+        <label>E-mail</label>
+        <div class="input-box">
+          <mat-icon>email</mat-icon>
+          <input
+            type="email"
+            [formControl]="emailControl"
+            placeholder="seu@email.com"
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <div class="field-wrapper">
+        <label>Senha</label>
+        <div class="input-box">
+          <mat-icon>lock</mat-icon>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            [formControl]="passwordControl"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <button type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="error-box" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
+        {{ errorMessage }}
+      </div>
+
+      <button type="button" class="submit-btn" [disabled]="isLoading" (click)="onSubmit()">
+        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        <span *ngIf="!isLoading">Entrar</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      WinNF &copy; {{ currentYear }} · Todos os direitos reservados
+    </div>
+  </div>
+</div>

@@ -14,3 +14,15 @@ pagarme-status.txt
 pagarme.json
 postback-pagarme.txt
 club-main/source/Config.php
+winpay-mobile/
+
+# WinNF
+winnf/frontend/node_modules/
+winnf/frontend/dist/
+winnf/backend/*.db
+winnf/backend/**/__pycache__/
+winnf/backend/**/*.pyc
+
+# Claude / ferramentas locais
+.claude/
+.codex

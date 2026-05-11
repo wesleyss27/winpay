@@ -1,0 +1,110 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2 class="page-title">Notas Fiscais (Administração)</h2>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <form [formGroup]="filterForm" class="filter-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data Início</mat-label>
+        <input matInput [matDatepicker]="dpFrom" formControlName="date_from" />
+        <mat-datepicker-toggle matSuffix [for]="dpFrom"></mat-datepicker-toggle>
+        <mat-datepicker #dpFrom></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data Fim</mat-label>
+        <input matInput [matDatepicker]="dpTo" formControlName="date_to" />
+        <mat-datepicker-toggle matSuffix [for]="dpTo"></mat-datepicker-toggle>
+        <mat-datepicker #dpTo></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar</mat-label>
+        <input matInput formControlName="search" placeholder="Nome, CNPJ..." />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <div class="filter-actions">
+        <button mat-raised-button color="primary" (click)="applyFilters()">
+          <mat-icon>filter_list</mat-icon>
+          Filtrar
+        </button>
+        <button mat-button (click)="clearFilters()">Limpar</button>
+      </div>
+    </form>
+  </mat-card>
+
+  <!-- Table -->
+  <mat-card class="table-card">
+    <div class="loading-wrapper" *ngIf="isLoading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isLoading">
+      <table mat-table [dataSource]="notas" class="data-table">
+        <ng-container matColumnDef="emitente">
+          <th mat-header-cell *matHeaderCellDef>Emitente</th>
+          <td mat-cell *matCellDef="let row">{{ row.emitente_nome ?? row.destinatario_nome ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="produtor">
+          <th mat-header-cell *matHeaderCellDef>Produtor</th>
+          <td mat-cell *matCellDef="let row">{{ row.produtor_nome ?? row.produtor?.name ?? '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="tipo-chip" [class.nfse]="row.tipo === 'nfse'" [class.nfe]="row.tipo === 'nfe'">
+              {{ row.tipo?.toUpperCase() ?? '-' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="status-chip {{ getStatusClass(row.status) }}">
+              {{ row.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="valor">
+          <th mat-header-cell *matHeaderCellDef>Valor</th>
+          <td mat-cell *matCellDef="let row">{{ row.valor | currency: 'BRL' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="data">
+          <th mat-header-cell *matHeaderCellDef>Data</th>
+          <td mat-cell *matCellDef="let row">{{ row.created_at | date: 'dd/MM/yyyy' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
+      </table>
+
+      <div class="empty-state" *ngIf="notas.length === 0">
+        <mat-icon>receipt_long</mat-icon>
+        <p>Nenhuma nota encontrada.</p>
+      </div>
+
+      <mat-paginator
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        *ngIf="totalItems > 0"
+      ></mat-paginator>
+    </div>
+  </mat-card>
+</div>

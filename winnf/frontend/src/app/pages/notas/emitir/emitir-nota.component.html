@@ -1,0 +1,216 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2 class="page-title">Emitir Nota Fiscal</h2>
+    <button mat-stroked-button routerLink="/notas">
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
+
+  <!-- Result banner -->
+  <div class="result-banner success" *ngIf="result?.success">
+    <mat-icon>check_circle</mat-icon>
+    <div>
+      <div class="result-title">Nota emitida com sucesso!</div>
+      <div class="result-sub" *ngIf="result?.notazz_id">ID Notazz: {{ result?.notazz_id }}</div>
+    </div>
+  </div>
+  <div class="result-banner error" *ngIf="result && !result.success">
+    <mat-icon>error_outline</mat-icon>
+    <div>
+      <div class="result-title">Erro ao emitir nota</div>
+      <div class="result-sub">{{ result!.message }}</div>
+    </div>
+  </div>
+
+  <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+    <!-- Section 1: Tipo -->
+    <mat-card class="form-section">
+      <div class="section-header">
+        <span class="section-number">1</span>
+        <span class="section-label">Tipo de Nota</span>
+      </div>
+      <mat-radio-group formControlName="tipo" class="tipo-radio-group">
+        <mat-radio-button value="nfse">NFS-e (Nota Fiscal de Serviço Eletrônica)</mat-radio-button>
+        <mat-radio-button value="nfe">NF-e (Nota Fiscal Eletrônica)</mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
+
+    <!-- Section 2: Destinatário -->
+    <mat-card class="form-section">
+      <div class="section-header">
+        <span class="section-number">2</span>
+        <span class="section-label">Destinatário</span>
+      </div>
+
+      <div class="search-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar Cliente por CPF/CNPJ</mat-label>
+          <input matInput formControlName="search_cpf" (input)="onCpfInput($event)" placeholder="000.000.000-00" />
+          <mat-icon matSuffix *ngIf="!isSearchingClient">search</mat-icon>
+          <mat-spinner matSuffix diameter="20" *ngIf="isSearchingClient"></mat-spinner>
+        </mat-form-field>
+        <button mat-stroked-button type="button" (click)="buscarCliente(form.get('search_cpf')?.value)" [disabled]="isSearchingClient">
+          Buscar Cliente
+        </button>
+      </div>
+
+      <mat-divider class="divider"></mat-divider>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-2">
+          <mat-label>Nome *</mat-label>
+          <input matInput formControlName="nome" />
+          <mat-error *ngIf="form.get('nome')?.hasError('required')">Nome é obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>CPF/CNPJ *</mat-label>
+          <input matInput formControlName="cpf_cnpj" />
+          <mat-error *ngIf="form.get('cpf_cnpj')?.hasError('required')">CPF/CNPJ é obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-tipo">
+          <mat-label>Tipo *</mat-label>
+          <mat-select formControlName="tipo_pessoa">
+            <mat-option value="F">Física</mat-option>
+            <mat-option value="J">Jurídica</mat-option>
+            <mat-option value="E">Estrangeiro</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" formControlName="email" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input matInput formControlName="telefone" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-2">
+          <mat-label>Rua</mat-label>
+          <input matInput formControlName="rua" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-num">
+          <mat-label>Número</mat-label>
+          <input matInput formControlName="numero" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Complemento</mat-label>
+          <input matInput formControlName="complemento" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Bairro</mat-label>
+          <input matInput formControlName="bairro" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="flex-2">
+          <mat-label>Cidade</mat-label>
+          <input matInput formControlName="cidade" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-uf">
+          <mat-label>UF</mat-label>
+          <input matInput formControlName="uf" maxlength="2" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-cep">
+          <mat-label>CEP</mat-label>
+          <input matInput formControlName="cep" maxlength="8" />
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <!-- Section 3: Nota -->
+    <mat-card class="form-section">
+      <div class="section-header">
+        <span class="section-number">3</span>
+        <span class="section-label">Dados da Nota</span>
+      </div>
+
+      <!-- Catalog quick-fill -->
+      <div class="form-row">
+        <mat-form-field appearance="outline" style="flex:1">
+          <mat-label>{{ tipoNota === 'nfe' ? 'Produto' : 'Serviço' }} do catálogo (opcional)</mat-label>
+          <mat-select (selectionChange)="onSelectCatalogo($event.value)">
+            <mat-option [value]="null">— Preencher manualmente —</mat-option>
+            <mat-option *ngFor="let p of catalogoFiltrado" [value]="p">
+              {{ p.nome }}{{ p.valor_padrao ? ' · R$ ' + (p.valor_padrao | number:'1.2-2') : '' }}
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="catalogoFiltrado.length > 0">Selecionar pré-preenche descrição, CNAE, LC116 e valor</mat-hint>
+          <mat-hint *ngIf="catalogoFiltrado.length === 0">Nenhum {{ tipoNota === 'nfe' ? 'produto' : 'serviço' }} cadastrado no catálogo ainda</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Valor (R$) *</mat-label>
+          <input matInput type="number" min="0" step="0.01" formControlName="valor" />
+          <mat-error *ngIf="form.get('valor')?.hasError('required')">Valor é obrigatório</mat-error>
+          <mat-error *ngIf="form.get('valor')?.hasError('min')">Valor deve ser maior que 0</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Competência (AAAA-MM-DD) *</mat-label>
+          <input matInput formControlName="competencia" placeholder="2024-01-31" />
+          <mat-error *ngIf="form.get('competencia')?.hasError('required')">Competência é obrigatória</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descrição *</mat-label>
+        <textarea matInput formControlName="descricao" rows="3"></textarea>
+        <mat-error *ngIf="form.get('descricao')?.hasError('required')">Descrição é obrigatória</mat-error>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>CNAE</mat-label>
+          <input matInput formControlName="cnae" placeholder="Ex: 6201-5/01" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>LC116</mat-label>
+          <input matInput formControlName="lc116" placeholder="Ex: 1.01" />
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <!-- Section 4: Produto (NF-e only) -->
+    <mat-card class="form-section" *ngIf="tipoNota === 'nfe'">
+      <div class="section-header">
+        <span class="section-number">4</span>
+        <span class="section-label">Produto (NF-e)</span>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-2">
+          <mat-label>Nome do Produto *</mat-label>
+          <input matInput formControlName="produto_nome" />
+          <mat-error *ngIf="form.get('produto_nome')?.hasError('required')">Nome do produto é obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="field-num">
+          <mat-label>Quantidade *</mat-label>
+          <input matInput type="number" min="1" formControlName="produto_quantidade" />
+          <mat-error *ngIf="form.get('produto_quantidade')?.hasError('required')">Obrigatório</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Valor Unitário (R$) *</mat-label>
+          <input matInput type="number" min="0" step="0.01" formControlName="produto_valor_unitario" />
+          <mat-error *ngIf="form.get('produto_valor_unitario')?.hasError('required')">Obrigatório</mat-error>
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <!-- Submit -->
+    <div class="submit-area">
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting" class="submit-btn">
+        <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+        <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+        <span>{{ isSubmitting ? 'Emitindo...' : 'Emitir Nota Fiscal' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

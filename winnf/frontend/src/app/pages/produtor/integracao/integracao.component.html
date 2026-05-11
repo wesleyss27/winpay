@@ -1,0 +1,89 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2 class="page-title">Integração Notazz</h2>
+    <p class="page-subtitle">Configure sua chave de API e preferências para emissão de notas fiscais.</p>
+  </div>
+
+  <div class="loading-wrapper" *ngIf="isLoading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <mat-card class="form-card" *ngIf="!isLoading">
+    <mat-card-content>
+      <form [formGroup]="form" novalidate>
+        <div class="section-title">
+          <mat-icon>vpn_key</mat-icon>
+          Autenticação
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>API Key Notazz</mat-label>
+          <textarea
+            matInput
+            formControlName="api_key"
+            rows="4"
+            placeholder="Cole sua chave de API do Notazz aqui"
+          ></textarea>
+          <mat-error *ngIf="form.get('api_key')?.hasError('required')">API Key é obrigatória</mat-error>
+        </mat-form-field>
+
+        <div class="section-title">
+          <mat-icon>tune</mat-icon>
+          Configurações Fiscais
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>CNAE</mat-label>
+            <input matInput formControlName="cnae" placeholder="Ex: 6201-5/01" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Código LC116</mat-label>
+            <input matInput formControlName="lc116" placeholder="Ex: 1.01" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Enviar e-mail ao cliente?</mat-label>
+            <mat-select formControlName="enviar_email">
+              <mat-option value="sim">Sim</mat-option>
+              <mat-option value="nao">Não</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="section-title">
+          <mat-icon>location_on</mat-icon>
+          Localização Padrão
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="flex-grow">
+            <mat-label>Cidade Padrão</mat-label>
+            <input matInput formControlName="cidade_padrao" placeholder="Ex: São Paulo" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-uf">
+            <mat-label>UF</mat-label>
+            <input matInput formControlName="uf_padrao" placeholder="SP" maxlength="2" />
+            <mat-error *ngIf="form.get('uf_padrao')?.hasError('maxlength')">Máx. 2 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-cep">
+            <mat-label>CEP Padrão</mat-label>
+            <input matInput formControlName="cep_padrao" placeholder="00000000" maxlength="8" />
+            <mat-error *ngIf="form.get('cep_padrao')?.hasError('maxlength')">Máx. 8 dígitos</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" (click)="save()" [disabled]="isSaving">
+            <mat-spinner diameter="18" *ngIf="isSaving"></mat-spinner>
+            <mat-icon *ngIf="!isSaving">save</mat-icon>
+            <span *ngIf="!isSaving">Salvar Configuração</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
