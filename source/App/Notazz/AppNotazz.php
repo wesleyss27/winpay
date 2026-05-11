@@ -14,7 +14,10 @@ use Source\Models\Notazz\IntegracaoNotazz;
 use Source\Models\Notazz\NotaFiscal;
 use Source\Models\Permissao\PermissaoModulo;
 use Source\Models\Permissao\Section;
+use Source\Models\Enderecos\Endereco;
+use Source\Models\Produtos\Plano;
 use Source\Models\Produtos\Produto;
+use Source\Models\Usuarios\UsuarioDados;
 use Source\Models\Vendas\Venda;
 
 session_start();
@@ -635,5 +638,256 @@ class AppNotazz
         );
 
         return $fields;
+    }
+
+    // ─── Helpers para emissão em lote ────────────────────────────────────────
+
+    private function buildDadosNota(Venda $venda): array
+    {
+        $c = $venda->dataComprador();
+
+        $tel      = (string)($c->telefone ?? '');
+        $ddd      = substr($tel, 0, 2);
+        $telefone = substr($tel, 2);
+
+        $rua    = $c->rua_entrega    ?: $c->rua;
+        $numero = $c->numero_entrega ?: $c->numero;
+        $comp   = $c->complemento_entrega ?: $c->complemento;
+        $bairro = $c->bairro_entrega ?: $c->bairro;
+        $cidade = $c->cidade_entrega ?: $c->cidade;
+        $estado = $c->estado_entrega ?: $c->estado;
+        $cep    = $c->cep_entrega    ?: $c->cep;
+
+        if (!$rua && $venda->endereco) {
+            $e = $venda->dataEndereco();
+            if ($e) {
+                $rua    = $e->rua;
+                $numero = $e->numero;
+                $comp   = $e->complemento;
+                $bairro = $e->bairro;
+                $cidade = $e->cidade;
+                $estado = $e->estado;
+                $cep    = $e->cep;
+            }
+        }
+
+        $nasc  = date('Y-m-d', mt_rand(strtotime('1970-01-01'), strtotime('2000-01-01')));
+
+        if ($venda->plano) {
+            $plano          = $venda->dataPlano();
+            $nomekit        = $plano->nome;
+            $codigo_produto = $plano->codigo;
+            $quantidade     = $plano->quantidade;
+        } else {
+            $produto        = $venda->dataProduto();
+            $nomekit        = $produto->nome;
+            $codigo_produto = $produto->codigo;
+            $quantidade     = 1;
+        }
+
+        return [
+            'id'             => $venda->id,
+            'transacao'      => $venda->transacao,
+            'produto'        => $venda->produto,
+            'nome_produto'   => $venda->dataProduto()->nome,
+            'produtor'       => $venda->produtor,
+            'nome'           => $c->nome,
+            'email'          => $c->email,
+            'cpf'            => $c->cpf_cnpj,
+            'nasc'           => $nasc,
+            'ddd'            => $ddd,
+            'telefone'       => $telefone,
+            'rua'            => $rua    ?: 'Não Informado',
+            'numero'         => $numero ?: 'S/N',
+            'complemento'    => $comp,
+            'bairro'         => $bairro ?: 'Não Informado',
+            'cidade'         => $cidade ?: 'Não Informado',
+            'estado'         => $estado ?: 'Não Informado',
+            'pais'           => $c->pais_entrega,
+            'cep'            => $cep    ?: '00000000',
+            'nomekit'        => $nomekit,
+            'codigo_produto' => $codigo_produto,
+            'quantidade'     => $quantidade,
+            'email_suporte'  => $venda->dataProduto()->email_suporte,
+            'valor_venda'    => number_format($venda->valor_produto - $venda->valor_desconto, 2, '.', ''),
+            'valor_total'    => $venda->valor_bruto,
+        ];
+    }
+
+    private function checarElegibilidade(Venda $venda, array $integracoes): array
+    {
+        $problemas = [];
+
+        $integracao = null;
+        foreach ($integracoes as $n) {
+            if (!$n->produto || $n->produto == $venda->produto) {
+                $integracao = $n;
+                break;
+            }
+        }
+        if (!$integracao) {
+            $problemas[] = 'sem integração Notazz para este produto';
+            return ['elegivel' => false, 'problemas' => $problemas, 'integracao' => null];
+        }
+
+        $c = $venda->dataComprador();
+        if (!$c->cpf_cnpj) $problemas[] = 'CPF não informado';
+        if (!$c->nome)     $problemas[] = 'nome não informado';
+
+        $cidade = $c->cidade_entrega ?: $c->cidade;
+        $estado = $c->estado_entrega ?: $c->estado;
+        $cep    = $c->cep_entrega    ?: $c->cep;
+
+        if ((!$cidade || !$estado) && $venda->endereco) {
+            $e = $venda->dataEndereco();
+            if ($e) { $cidade = $e->cidade; $estado = $e->estado; $cep = $e->cep; }
+        }
+
+        if (!$cidade && $integracao->cidade_padrao) $cidade = $integracao->cidade_padrao;
+        if (!$estado && $integracao->uf_padrao)     $estado = $integracao->uf_padrao;
+        if (!$cep    && $integracao->cep_padrao)    $cep    = $integracao->cep_padrao;
+
+        if (!$cidade) $problemas[] = 'cidade não informada';
+        if (!$estado || strlen(trim($estado)) !== 2) $problemas[] = 'UF inválida';
+        if (!$cep)    $problemas[] = 'CEP não informado';
+
+        return ['elegivel' => empty($problemas), 'problemas' => $problemas, 'integracao' => $integracao];
+    }
+
+    private function gerarNotaParaVenda(Venda $venda): array
+    {
+        $data     = $this->buildDadosNota($venda);
+        $produto  = (new Produto())->findById($data['produto']);
+        $notazzs  = (new IntegracaoNotazz())->find("usuario = " . $venda->produtor)->fetch(true);
+
+        if (!$notazzs) {
+            return ['statusProcessamento' => 'erro', 'motivo' => 'Sem integração Notazz', 'venda_id' => $venda->id];
+        }
+
+        foreach ($notazzs as $notazz) {
+            if ($notazz->produto && $notazz->produto != $data['produto']) continue;
+
+            $data['api_key']              = $notazz->api_notazz;
+            $data['codigo_cnae']          = $notazz->codigo_cnae;
+            $data['codigo_lc116']         = $notazz->codigo_lc116;
+            $data['enviar_email_cliente'] = isset($notazz->enviar_email_cliente) ? (int)$notazz->enviar_email_cliente : 1;
+            $data['valor_unitario']       = number_format($data['valor_total'] / $data['quantidade'], 2);
+
+            $semCidade = empty($data['cidade']) || $data['cidade'] === 'Não Informado';
+            $semEstado = empty($data['estado']) || $data['estado'] === 'Não Informado';
+            if ($semCidade && $notazz->cidade_padrao) $data['cidade'] = $notazz->cidade_padrao;
+            if ($semEstado && $notazz->uf_padrao)     $data['estado'] = $notazz->uf_padrao;
+            if ((empty($data['cep']) || $data['cep'] === '00000000') && $notazz->cep_padrao) $data['cep'] = $notazz->cep_padrao;
+
+            $fields = ($produto && $produto->tipo_produto == 8)
+                ? $this->criarNFE($data)
+                : $this->criarNFSE($data);
+
+            $enviar = $this->send_data($fields);
+            $enviar['venda_id'] = $venda->id;
+
+            if (($enviar['codigoProcessamento'] ?? '') === '000') {
+                $nf          = new NotaFiscal();
+                $nf->id_nota = $enviar['id'];
+                $nf->status  = 1;
+                $nf->venda   = $venda->id;
+                $nf->usuario = $venda->produtor;
+                $nf->save();
+                $enviar['msg'] = 'Salvo com sucesso';
+            }
+
+            return $enviar;
+        }
+
+        return ['statusProcessamento' => 'erro', 'motivo' => 'Nenhuma integração compatível', 'venda_id' => $venda->id];
+    }
+
+    public function notasLote($data): void
+    {
+        (new Section())->permissaoModulo("notas_fiscais");
+
+        $isAdmin = in_array($_SESSION['tipo'] ?? 0, [1, 2, 3]);
+        $uid     = $this->section->getId();
+
+        $inicio = @$_GET['inicio'] ?: date('Y-m-d', strtotime('-30 days'));
+        $fim    = @$_GET['fim']    ?: date('Y-m-d');
+
+        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59'";
+        if (!$isAdmin) $where .= " AND produtor = {$uid}";
+
+        $vendas = (new Venda())->find($where)->order("id DESC")->fetch(true);
+
+        $integracoes = $isAdmin ? [] : ((new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? []);
+
+        $emitidas_ids = [];
+        $nfMap = [];
+        if ($vendas) {
+            $ids = array_map(fn($v) => $v->id, $vendas);
+            $inList = implode(',', $ids);
+            $nfRows = (new NotaFiscal())->find("venda IN ({$inList})")->order("id DESC")->fetch(true);
+            if ($nfRows) {
+                foreach ($nfRows as $nf) {
+                    if (!isset($nfMap[$nf->venda])) $nfMap[$nf->venda] = $nf;
+                    $emitidas_ids[$nf->venda] = true;
+                }
+            }
+        }
+
+        $elegiveis     = [];
+        $nao_elegiveis = [];
+        $emitidas      = [];
+
+        if ($vendas) {
+            foreach ($vendas as $venda) {
+                $intgs = $isAdmin
+                    ? ((new IntegracaoNotazz())->find("usuario = {$venda->produtor}")->fetch(true) ?? [])
+                    : $integracoes;
+
+                $chk = $this->checarElegibilidade($venda, $intgs);
+
+                if (isset($emitidas_ids[$venda->id])) {
+                    $emitidas[] = ['venda' => $venda, 'nota' => $nfMap[$venda->id], 'elegivel' => $chk['elegivel'], 'problemas' => $chk['problemas']];
+                } elseif ($chk['elegivel']) {
+                    $elegiveis[] = $venda;
+                } else {
+                    $nao_elegiveis[] = ['venda' => $venda, 'problemas' => $chk['problemas']];
+                }
+            }
+        }
+
+        echo $this->view->render("nota-fiscal/lote", [
+            "title"          => "Emissão em Lote",
+            "elegiveis"      => $elegiveis,
+            "nao_elegiveis"  => $nao_elegiveis,
+            "emitidas"       => $emitidas,
+            "inicio"         => $inicio,
+            "fim"            => $fim,
+        ]);
+    }
+
+    public function emitirLote($data): void
+    {
+        (new Section())->permissaoModulo("notas_fiscais");
+
+        $ids = array_filter(array_map('intval', (array)($data['ids'] ?? [])));
+        if (count($ids) > 50) {
+            echo json_encode(['erro' => 'Limite de 50 notas por vez']);
+            return;
+        }
+
+        $uid     = $this->section->getId();
+        $isAdmin = in_array($_SESSION['tipo'] ?? 0, [1, 2, 3]);
+        $resultados = [];
+
+        foreach ($ids as $id) {
+            $venda = (new Venda())->findById($id);
+            if (!$venda) { $resultados[] = ['venda_id' => $id, 'statusProcessamento' => 'erro', 'motivo' => 'Venda não encontrada']; continue; }
+            if (!$isAdmin && $venda->produtor != $uid) { $resultados[] = ['venda_id' => $id, 'statusProcessamento' => 'erro', 'motivo' => 'Sem permissão']; continue; }
+
+            $resultados[] = $this->gerarNotaParaVenda($venda);
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($resultados, JSON_UNESCAPED_UNICODE);
     }
 }
