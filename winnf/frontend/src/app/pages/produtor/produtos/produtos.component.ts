@@ -71,12 +71,18 @@ import { ApiService } from '../../../core/services/api.service';
     </mat-dialog-actions>
   `,
   styles: [`
-    .dialog-form { display: flex; flex-direction: column; gap: 4px; min-width: 420px; padding-top: 8px; }
+    .dialog-form { display: flex; flex-direction: column; gap: 4px; min-width: min(420px, 80vw); padding-top: 8px; }
     .full-width { width: 100%; }
     .form-row { display: flex; gap: 12px; }
-    mat-form-field { flex: 1; }
-    mat-dialog-content { overflow: visible; }
+    mat-form-field { flex: 1; min-width: 0; }
+    mat-dialog-content { overflow: visible; padding: 0 16px; }
+    mat-dialog-title { padding: 16px 16px 0; margin: 0 0 8px; }
+    mat-dialog-actions { padding: 8px 16px 16px; }
     .optional-tag { font-size: 11px; font-weight: 400; color: #9aa0a6; letter-spacing: 0; }
+    @media (max-width: 480px) {
+      .dialog-form { min-width: 0; width: 100%; }
+      .form-row { flex-direction: column; gap: 0; }
+    }
   `],
 })
 export class ProdutoDialogComponent {
@@ -158,6 +164,7 @@ export class ProdutosComponent implements OnInit {
     const ref = this.dialog.open(ProdutoDialogComponent, {
       data: { produto: produto ?? null },
       width: '520px',
+      maxWidth: '95vw',
     });
     ref.afterClosed().subscribe((result) => {
       if (!result) return;
