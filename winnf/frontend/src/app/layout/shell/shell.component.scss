@@ -89,7 +89,6 @@ $yellow: #FFDD00;
     padding: 8px 0;
 
     .nav-item {
-      // MDC list-item CSS custom properties for dark sidebar
       --mdc-list-list-item-label-text-color: #{$sidebar-text};
       --mdc-list-list-item-leading-icon-color: rgba(255, 255, 255, 0.4);
       --mdc-list-list-item-hover-label-text-color: rgba(255, 255, 255, 0.95);
@@ -155,6 +154,11 @@ $yellow: #FFDD00;
     border-bottom: 1px solid #e8eaed;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
+    .menu-btn {
+      color: #111111;
+      margin-right: 4px;
+    }
+
     .toolbar-title {
       font-size: 16px;
       font-weight: 700;
@@ -171,6 +175,10 @@ $yellow: #FFDD00;
       font-weight: 500;
       color: #5f6368;
       margin-right: 4px;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
 
     button[mat-icon-button] {
@@ -181,5 +189,9 @@ $yellow: #FFDD00;
   .content-area {
     padding: 24px;
     flex: 1;
+
+    @media (max-width: 768px) {
+      padding: 16px 12px;
+    }
   }
 }

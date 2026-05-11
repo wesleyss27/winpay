@@ -172,9 +172,7 @@
       min-width: 130px;
     }
 
-    .flex-2 {
-      flex: 2;
-    }
+    .flex-2 { flex: 2; }
 
     .field-tipo {
       width: 110px;
@@ -184,6 +182,12 @@
     .add-btn {
       margin-top: 4px;
       flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+      mat-form-field { min-width: 0; width: 100%; flex: 1 1 100%; }
+      .flex-2, .field-tipo { flex: 1 1 100%; width: 100%; }
+      .add-btn { width: 100%; margin-top: 0; }
     }
   }
 }
