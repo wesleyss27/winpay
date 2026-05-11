@@ -64,12 +64,14 @@
 
       <div class="form-row">
         <mat-form-field appearance="outline">
-          <mat-label>CNAE</mat-label>
+          <mat-label>CNAE <span class="optional-tag">(opcional)</span></mat-label>
           <input matInput formControlName="cnae" placeholder="Ex: 6201-5/01" />
+          <mat-hint>Código de atividade econômica</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>LC116</mat-label>
+          <mat-label>LC116 <span class="optional-tag">(opcional)</span></mat-label>
           <input matInput formControlName="lc116" placeholder="Ex: 1.01" />
+          <mat-hint>Lista de serviços da lei complementar</mat-hint>
         </mat-form-field>
       </div>
     </form>
