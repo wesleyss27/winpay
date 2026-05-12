@@ -892,7 +892,7 @@ class AppNotazz
             $emitidasIds = $nfRows ? array_map(fn($n) => (int)$n->venda, $nfRows) : [];
 
             foreach ($vendas as $venda) {
-                if (in_array($venda->id, $emitidasIds, true)) continue;
+                if (in_array((int)$venda->id, $emitidasIds)) continue;
                 $chk = $this->checarElegibilidade($venda, $integracoes);
                 if ($tipo === 'nao_elegiveis') {
                     if (!$chk['elegivel']) $ids[] = $venda->id;
@@ -930,7 +930,7 @@ class AppNotazz
             $emitidasIds = $nfRows ? array_map(fn($n) => (int)$n->venda, $nfRows) : [];
 
             foreach ($vendas as $venda) {
-                if (in_array($venda->id, $emitidasIds, true)) continue;
+                if (in_array((int)$venda->id, $emitidasIds)) continue;
                 $chk       = $this->checarElegibilidade($venda, $integracoes);
                 $comprador = $venda->dataComprador();
                 $produto   = $venda->dataProduto();
@@ -953,6 +953,72 @@ class AppNotazz
             'total'       => count($result),
             'competencia' => $inicio,
         ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    public function loteConsultarNota($data): void
+    {
+        (new Section())->permissaoModulo("notas_fiscais");
+
+        $uid    = $this->section->getId();
+        $idNota = $data['id_nota'] ?? '';
+
+        header('Content-Type: application/json');
+
+        if (!$idNota) {
+            echo json_encode(['success' => false, 'message' => 'ID da nota não informado']);
+            exit;
+        }
+
+        // Se o link já está salvo no banco, retorna direto sem chamar a API
+        $nf = (new NotaFiscal())->find("id_nota = '{$idNota}' AND usuario = {$uid}")->fetch();
+        if ($nf && $nf->link_pdf) {
+            echo json_encode(['success' => true, 'pdf' => $nf->link_pdf, 'xml' => $nf->link_xml ?? '']);
+            exit;
+        }
+
+        $integracao = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch();
+        if (!$integracao) {
+            echo json_encode(['success' => false, 'message' => 'Integração Notazz não encontrada']);
+            exit;
+        }
+
+        // Determina o método pelo tipo de produto vinculado à venda
+        $metodo = 'consult_nfse';
+        if ($nf && $nf->venda) {
+            $venda = (new Venda())->findById($nf->venda);
+            if ($venda) {
+                $produto = (new Produto())->findById($venda->produto);
+                if ($produto && $produto->tipo_produto == 8) {
+                    $metodo = 'consult_nfe_55';
+                }
+            }
+        }
+
+        $fields = json_encode([
+            'API_KEY'     => $integracao->api_notazz,
+            'METHOD'      => $metodo,
+            'DOCUMENT_ID' => $idNota,
+        ]);
+
+        $raw = $this->send_data($fields);
+
+        if (($raw['codigoProcessamento'] ?? '') === '000') {
+            $pdf    = $raw['pdf']    ?? $raw['linkPdf']    ?? $raw['link_pdf']    ?? '';
+            $xml    = $raw['xml']    ?? $raw['linkXml']    ?? $raw['link_xml']    ?? '';
+            $status = $raw['statusNota'] ?? '';
+
+            if ($nf && ($pdf || $xml)) {
+                if ($pdf) $nf->link_pdf = $pdf;
+                if ($xml) $nf->link_xml = $xml;
+                $nf->save();
+            }
+
+            echo json_encode(['success' => true, 'pdf' => $pdf, 'xml' => $xml, 'status' => $status]);
+        } else {
+            $msg = $raw['motivo'] ?? $raw['mensagemProcessamento'] ?? $raw['message'] ?? 'Erro ao consultar nota';
+            echo json_encode(['success' => false, 'message' => $msg]);
+        }
         exit;
     }
 

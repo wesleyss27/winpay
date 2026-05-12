@@ -100,6 +100,13 @@
   .btn-emit:hover { filter:brightness(1.1); }
   .btn-emit:disabled { opacity:.5; cursor:not-allowed; filter:none; }
 
+  /* ── btn-pdf ─────────────────────────────────────────────────────── */
+  .btn-pdf { display:inline-flex; align-items:center; gap:.35rem; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.35); color:#f87171; border-radius:8px; padding:.3rem .75rem; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; text-decoration:none; white-space:nowrap; }
+  .btn-pdf:hover { background:rgba(239,68,68,.25); color:#fca5a5; text-decoration:none; }
+  .btn-pdf.loading { opacity:.6; pointer-events:none; }
+  .btn-pdf-link { display:inline-flex; align-items:center; gap:.35rem; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35); color:#4ade80; border-radius:8px; padding:.3rem .75rem; font-size:.78rem; font-weight:600; text-decoration:none; white-space:nowrap; transition:all .2s; }
+  .btn-pdf-link:hover { background:rgba(34,197,94,.25); color:#86efac; text-decoration:none; }
+
   /* ── retroativa ──────────────────────────────────────────────────── */
   .retro-search { display:flex; flex-wrap:wrap; align-items:flex-end; gap:1rem; margin-bottom:1.25rem; }
   .retro-search label { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.07rem; color:rgba(255,255,255,.5); margin-bottom:.35rem; }
@@ -318,6 +325,7 @@
                   <th>Emitida em</th>
                   <th>Dados</th>
                   <th>Status</th>
+                  <th>PDF</th>
                 </tr>
               </thead>
               <tbody id="tbody-emitidas">
@@ -337,6 +345,13 @@
                     <?php endif; ?>
                   </td>
                   <td data-label="Status" id="st-em-<?= $venda->id ?>"><span class="tag tag-blue"><i class="fas fa-file-invoice"></i> Emitida</span></td>
+                  <td data-label="PDF" id="pdf-em-<?= $venda->id ?>">
+                    <?php if ($nf->link_pdf): ?>
+                      <a href="<?= htmlspecialchars($nf->link_pdf) ?>" target="_blank" class="btn-pdf-link"><i class="fas fa-file-pdf"></i> PDF</a>
+                    <?php else: ?>
+                      <button type="button" class="btn-pdf" onclick="consultarNota('<?= $nf->id_nota ?>', this)"><i class="fas fa-search"></i> Consultar</button>
+                    <?php endif; ?>
+                  </td>
                 </tr>
               <?php endforeach; ?>
               </tbody>
@@ -459,6 +474,7 @@
   const LIMITE          = 50;
   const URL_EMITIR     = "<?= $router->route('notazz.lote.emitir') ?>";
   const URL_VENDAS_MES = "<?= $router->route('notazz.lote.vendas.mes') ?>";
+  const URL_CONSULTAR  = "<?= $router->route('notazz.lote.consultar.nota') ?>";
   let   tabAtiva        = 'el';
   let   retroativaCompetencia = null;
   let   retroativaVendasAll  = [];
@@ -853,19 +869,22 @@
       + '<span class="lote-counter" id="counter-em">0 selecionados (máx. 50)</span>'
       + '</div>'
       + '<div class="lote-table-wrap"><table class="lote-table"><thead><tr>'
-      + '<th></th><th>Venda</th><th>Cliente</th><th>Produto</th><th>Valor</th><th>Emitida em</th><th>Dados</th><th>Status</th>'
+      + '<th></th><th>Venda</th><th>Cliente</th><th>Produto</th><th>Valor</th><th>Emitida em</th><th>Dados</th><th>Status</th><th>PDF</th>'
       + '</tr></thead><tbody id="tbody-emitidas"></tbody></table></div>'
       + '<div id="pag-em" class="lote-pag"></div>';
     return document.getElementById('tbody-emitidas');
   }
 
-  function buildEmitidaRow(vendaId, nome, produto, valor, elegivel) {
+  function buildEmitidaRow(vendaId, nome, produto, valor, elegivel, idNota) {
     var agora = new Date().toLocaleString('pt-BR', {
       day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
     }).replace(',', '');
     var dadosTag = elegivel
       ? '<span class="tag tag-green"><i class="fas fa-check"></i> Completos</span>'
       : '<span class="tag tag-yellow"><i class="fas fa-exclamation-triangle"></i> Incompletos</span>';
+    var pdfCell = idNota
+      ? '<button type="button" class="btn-pdf" onclick="consultarNota(\'' + idNota + '\', this)"><i class="fas fa-search"></i> Consultar</button>'
+      : '—';
     return '<tr id="row-em-' + vendaId + '">'
       + '<td><input type="checkbox" class="lote-chk chk-em" value="' + vendaId + '" onchange="onCheck(\'em\')"></td>'
       + '<td data-label="Venda">#' + vendaId + '</td>'
@@ -875,7 +894,34 @@
       + '<td data-label="Emitida em" style="font-size:.8rem;color:rgba(255,255,255,.6)">' + agora + '</td>'
       + '<td data-label="Dados">' + dadosTag + '</td>'
       + '<td data-label="Status" id="st-em-' + vendaId + '"><span class="tag tag-blue"><i class="fas fa-file-invoice"></i> Emitida</span></td>'
+      + '<td data-label="PDF" id="pdf-em-' + vendaId + '">' + pdfCell + '</td>'
       + '</tr>';
+  }
+
+  function consultarNota(idNota, btn) {
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consultando...';
+    $.ajax({
+      url: URL_CONSULTAR, method: 'POST', data: { id_nota: idNota }, dataType: 'json',
+      success: function(res) {
+        if (res.success && res.pdf) {
+          btn.closest('td').innerHTML = '<a href="' + res.pdf + '" target="_blank" class="btn-pdf-link"><i class="fas fa-file-pdf"></i> PDF</a>';
+        } else if (res.success && !res.pdf) {
+          btn.classList.remove('loading');
+          btn.innerHTML = '<i class="fas fa-clock"></i> Pendente';
+          btn.title = 'Nota ainda sem PDF disponível';
+        } else {
+          btn.classList.remove('loading');
+          btn.innerHTML = '<i class="fas fa-search"></i> Consultar';
+          alert('Erro ao consultar: ' + (res.message || 'Tente novamente'));
+        }
+      },
+      error: function() {
+        btn.classList.remove('loading');
+        btn.innerHTML = '<i class="fas fa-search"></i> Consultar';
+        alert('Erro de comunicação com o servidor.');
+      }
+    });
   }
 
   function moverParaEmitidas(resultados, tab) {
@@ -909,7 +955,7 @@
       }
 
       if (!document.getElementById('row-em-' + r.venda_id)) {
-        tbody.insertAdjacentHTML('afterbegin', buildEmitidaRow(r.venda_id, nome, produto, valor, elegivel));
+        tbody.insertAdjacentHTML('afterbegin', buildEmitidaRow(r.venda_id, nome, produto, valor, elegivel, r.id || ''));
       }
     });
 
