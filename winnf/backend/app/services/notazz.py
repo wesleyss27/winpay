@@ -7,6 +7,7 @@ All methods return a dict with at least:
 from __future__ import annotations
 
 import json
+import re
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -25,6 +26,16 @@ STATUS_MAP: dict[str, str] = {
     "Rejeitada": "rejeitada",
     "Denegada": "denegada",
 }
+
+
+def _digits_only(value: str | None) -> str:
+    """Strip all non-digit characters (used for CPF/CNPJ, CEP, phone)."""
+    return re.sub(r"\D", "", value or "")
+
+
+def _numero(value: str | None) -> str:
+    """Return numero as-is, defaulting to 'S/N' when empty."""
+    return (value or "").strip() or "S/N"
 
 
 class NotazzService:
@@ -47,6 +58,11 @@ class NotazzService:
         Notazz expects application/x-www-form-urlencoded with a single
         'fields' key whose value is the JSON-encoded payload — matching
         the behaviour of the PHP send_data() helper.
+
+        Notazz also returns HTTP 400 for field-validation failures
+        (codigoProcessamento "102" etc.) with a JSON body. We parse those
+        instead of raising so _parse_response can turn them into a proper
+        { "success": False } result.
         """
         try:
             response = requests.post(
@@ -54,8 +70,22 @@ class NotazzService:
                 data={"fields": json.dumps(payload, ensure_ascii=False)},
                 timeout=30,
             )
+
+            # HTTP 400 from Notazz = field validation error — return JSON body
+            if response.status_code == 400:
+                try:
+                    body = response.json()
+                    logger.warning(
+                        "Notazz validation error (400): %s",
+                        body.get("motivo", body),
+                    )
+                    return body
+                except ValueError:
+                    pass  # fall through to raise_for_status
+
             response.raise_for_status()
             return response.json()
+
         except requests.exceptions.Timeout:
             logger.error("Notazz API timeout")
             raise RuntimeError("Timeout ao conectar com a API Notazz.")
@@ -78,10 +108,16 @@ class NotazzService:
         """
         code = str(raw.get("codigoProcessamento", "")).strip()
         success = code == "000"
+        message = (
+            raw.get("mensagemProcessamento")
+            or raw.get("motivo")
+            or raw.get("message")
+            or ""
+        )
         return {
             "success": success,
             "code": code,
-            "message": raw.get("mensagemProcessamento", raw.get("message", "")),
+            "message": message,
             "data": raw,
         }
 
@@ -121,16 +157,16 @@ class NotazzService:
             "API_KEY": self.api_key,
             "METHOD": "create_nfse",
             "DESTINATION_NAME": nome,
-            "DESTINATION_TAXID": cpf_cnpj,
+            "DESTINATION_TAXID": _digits_only(cpf_cnpj),
             "DESTINATION_TAXTYPE": tipo,
             "DESTINATION_STREET": rua or "",
-            "DESTINATION_NUMBER": numero or "",
+            "DESTINATION_NUMBER": _numero(numero),
             "DESTINATION_COMPLEMENT": complemento or "",
             "DESTINATION_DISTRICT": bairro or "",
             "DESTINATION_CITY": cidade or "",
             "DESTINATION_UF": uf or "",
-            "DESTINATION_ZIPCODE": cep or "",
-            "DESTINATION_PHONE": telefone or "",
+            "DESTINATION_ZIPCODE": _digits_only(cep),
+            "DESTINATION_PHONE": _digits_only(telefone),
             "DESTINATION_EMAIL": email or "",
             "DESTINATION_EMAIL_SEND": (email or "") if send_email else "",
             "DOCUMENT_BASEVALUE": f"{valor:.2f}",
@@ -211,16 +247,16 @@ class NotazzService:
             "API_KEY": self.api_key,
             "METHOD": "create_nfe_55",
             "DESTINATION_NAME": nome,
-            "DESTINATION_TAXID": cpf_cnpj,
+            "DESTINATION_TAXID": _digits_only(cpf_cnpj),
             "DESTINATION_TAXTYPE": tipo,
             "DESTINATION_STREET": rua or "",
-            "DESTINATION_NUMBER": numero or "",
+            "DESTINATION_NUMBER": _numero(numero),
             "DESTINATION_COMPLEMENT": complemento or "",
             "DESTINATION_DISTRICT": bairro or "",
             "DESTINATION_CITY": cidade or "",
             "DESTINATION_UF": uf or "",
-            "DESTINATION_ZIPCODE": cep or "",
-            "DESTINATION_PHONE": telefone or "",
+            "DESTINATION_ZIPCODE": _digits_only(cep),
+            "DESTINATION_PHONE": _digits_only(telefone),
             "DESTINATION_EMAIL": email or "",
             "DESTINATION_EMAIL_SEND": (email or "") if send_email else "",
             "DOCUMENT_BASEVALUE": f"{valor:.2f}",
