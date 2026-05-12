@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -50,6 +51,7 @@ export class EmitirNotaComponent implements OnInit {
   form: FormGroup;
   isSubmitting = false;
   isSearchingClient = false;
+  isFetchingCep = false;
   result: { success: boolean; notazz_id?: string; message?: string } | null = null;
 
   catalogo: Produto[] = [];
@@ -59,6 +61,7 @@ export class EmitirNotaComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
+    private http: HttpClient,
     private snackBar: MatSnackBar
   ) {
     this.form = this.fb.group({
@@ -80,7 +83,7 @@ export class EmitirNotaComponent implements OnInit {
       // Nota
       valor: ['', [Validators.required, Validators.min(0.01)]],
       descricao: ['', Validators.required],
-      competencia: ['', Validators.required],
+      competencia: ['', [Validators.required, Validators.pattern(/^\d{2}\/\d{4}$/)]],
       cnae: [''],
       lc116: [''],
       // Produto (NF-e)
@@ -151,6 +154,30 @@ export class EmitirNotaComponent implements OnInit {
     produtoValor?.updateValueAndValidity();
   }
 
+  onCepInput(event: Event): void {
+    const cep = (event.target as HTMLInputElement).value.replace(/\D/g, '');
+    if (cep.length === 8) this.buscarCep(cep);
+  }
+
+  buscarCep(cep: string): void {
+    this.isFetchingCep = true;
+    this.http.get<any>(`https://viacep.com.br/ws/${cep}/json/`).subscribe({
+      next: (data) => {
+        this.isFetchingCep = false;
+        if (!data.erro) {
+          this.form.patchValue({
+            rua: data.logradouro ?? '',
+            bairro: data.bairro ?? '',
+            cidade: data.localidade ?? '',
+            uf: data.uf ?? '',
+          });
+          this.snackBar.open('Endereço preenchido automaticamente', 'Fechar', { duration: 2000 });
+        }
+      },
+      error: () => { this.isFetchingCep = false; },
+    });
+  }
+
   onCpfInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.searchSubject.next(value);
@@ -203,6 +230,14 @@ export class EmitirNotaComponent implements OnInit {
     this.result = null;
 
     const v = this.form.value;
+
+    // Converte MM/AAAA → YYYY-MM-DD para a API
+    let competencia = v.competencia ?? '';
+    if (/^\d{2}\/\d{4}$/.test(competencia)) {
+      const [mm, aaaa] = competencia.split('/');
+      competencia = `${aaaa}-${mm}-01`;
+    }
+
     const payload: any = {
       tipo: v.tipo,
       destinatario: {
@@ -221,7 +256,7 @@ export class EmitirNotaComponent implements OnInit {
       },
       valor: v.valor,
       descricao: v.descricao,
-      competencia: v.competencia,
+      competencia,
       cnae: v.cnae,
       lc116: v.lc116,
     };
