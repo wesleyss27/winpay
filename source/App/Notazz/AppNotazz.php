@@ -806,19 +806,15 @@ class AppNotazz
     {
         (new Section())->permissaoModulo("notas_fiscais");
 
-        $isAdmin = in_array($_SESSION['tipo'] ?? 0, [1, 2, 3]);
-        $uid     = $this->section->getId();
+        $uid  = $this->section->getId();
 
         $inicio = @$_GET['inicio'] ?: date('Y-m-d', strtotime('-30 days'));
         $fim    = @$_GET['fim']    ?: date('Y-m-d');
-        $visao  = $isAdmin ? (@$_GET['visao'] ?: 'todos') : 'meu';
 
-        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59'";
-        if (!$isAdmin || $visao === 'meu') $where .= " AND produtor = {$uid}";
+        $where = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid}";
 
-        $vendas = (new Venda())->find($where)->order("id DESC")->fetch(true);
-
-        $integracoes = ($visao === 'meu') ? ((new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? []) : [];
+        $vendas      = (new Venda())->find($where)->order("id DESC")->fetch(true);
+        $integracoes = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? [];
 
         $emitidas_ids = [];
         $nfMap = [];
@@ -840,11 +836,7 @@ class AppNotazz
 
         if ($vendas) {
             foreach ($vendas as $venda) {
-                $intgs = $isAdmin
-                    ? ((new IntegracaoNotazz())->find("usuario = {$venda->produtor}")->fetch(true) ?? [])
-                    : $integracoes;
-
-                $chk = $this->checarElegibilidade($venda, $intgs);
+                $chk = $this->checarElegibilidade($venda, $integracoes);
 
                 if (isset($emitidas_ids[$venda->id])) {
                     $emitidas[] = ['venda' => $venda, 'nota' => $nfMap[$venda->id], 'elegivel' => $chk['elegivel'], 'problemas' => $chk['problemas']];
@@ -857,14 +849,12 @@ class AppNotazz
         }
 
         echo $this->view->render("nota-fiscal/lote", [
-            "title"          => "Emissão em Lote",
-            "elegiveis"      => $elegiveis,
-            "nao_elegiveis"  => $nao_elegiveis,
-            "emitidas"       => $emitidas,
-            "inicio"         => $inicio,
-            "fim"            => $fim,
-            "isAdmin"        => $isAdmin,
-            "visao"          => $visao,
+            "title"         => "Emissão em Lote",
+            "elegiveis"     => $elegiveis,
+            "nao_elegiveis" => $nao_elegiveis,
+            "emitidas"      => $emitidas,
+            "inicio"        => $inicio,
+            "fim"           => $fim,
         ]);
     }
 
