@@ -340,6 +340,36 @@
   </button>
 </div>
 
+<!-- MODAL RESUMO -->
+<div id="modal-resumo" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem">
+  <div style="background:#111;border:1px solid rgba(217,192,0,.25);border-radius:20px;width:100%;max-width:600px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+    <!-- header -->
+    <div style="padding:1.25rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <h3 style="margin:0;font-size:1.1rem;font-weight:700;color:#fff">Resumo da Emissão</h3>
+      <button onclick="fecharModal()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:1.4rem;cursor:pointer;line-height:1;padding:0">&times;</button>
+    </div>
+    <!-- summary chips -->
+    <div id="modal-chips" style="display:flex;gap:.75rem;padding:1rem 1.5rem;flex-shrink:0;flex-wrap:wrap"></div>
+    <!-- table -->
+    <div style="overflow-y:auto;flex:1;padding:0 1.5rem 1.5rem">
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+        <thead>
+          <tr style="position:sticky;top:0;background:#111">
+            <th style="text-align:left;padding:.6rem .5rem;color:rgba(255,255,255,.4);font-size:.7rem;text-transform:uppercase;letter-spacing:.06rem;border-bottom:1px solid rgba(255,255,255,.08)">Venda</th>
+            <th style="text-align:left;padding:.6rem .5rem;color:rgba(255,255,255,.4);font-size:.7rem;text-transform:uppercase;letter-spacing:.06rem;border-bottom:1px solid rgba(255,255,255,.08)">Status</th>
+            <th style="text-align:left;padding:.6rem .5rem;color:rgba(255,255,255,.4);font-size:.7rem;text-transform:uppercase;letter-spacing:.06rem;border-bottom:1px solid rgba(255,255,255,.08)">Motivo / ID Nota</th>
+          </tr>
+        </thead>
+        <tbody id="modal-tbody"></tbody>
+      </table>
+    </div>
+    <!-- footer -->
+    <div style="padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.08);text-align:right;flex-shrink:0">
+      <button onclick="fecharModal()" style="background:linear-gradient(135deg,#d9c000,#f4d03f);color:#111;border:none;border-radius:10px;padding:.65rem 1.75rem;font-weight:700;font-size:.9rem;cursor:pointer">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <?php $v->start("scripts") ?>
 <script>
   const LIMITE     = 50;
@@ -474,27 +504,28 @@
       url: URL_EMITIR, method:'POST', data:{ ids: ids },
       success: function(resp) {
         let res;
-        try { res = JSON.parse(resp); } catch(e) { alert('Erro ao processar resposta.'); return; }
+        try { res = JSON.parse(resp); } catch(e) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-paper-plane"></i> Emitir Notas';
+          alert('Erro ao processar resposta do servidor.');
+          return;
+        }
 
         let ok = 0, erro = 0;
         res.forEach(function(r) {
           const cel = document.getElementById(`st-${prefix}-${r.venda_id}`);
-          if (!cel) return;
           if (r.statusProcessamento === 'sucesso' || r.codigoProcessamento === '000') {
-            cel.innerHTML = '<span class="tag tag-green"><i class="fas fa-check"></i> Emitida</span>';
+            if (cel) cel.innerHTML = '<span class="tag tag-green"><i class="fas fa-check"></i> Emitida</span>';
             ok++;
           } else {
-            const motivo = (r.motivo || 'Erro desconhecido').substring(0, 60);
-            cel.innerHTML = `<span class="tag tag-red" title="${motivo}"><i class="fas fa-times"></i> Erro</span>`;
+            if (cel) cel.innerHTML = '<span class="tag tag-red"><i class="fas fa-times"></i> Erro</span>';
             erro++;
           }
         });
 
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Emitir Notas';
-
-        const msg = `✅ ${ok} emitida${ok !== 1 ? 's' : ''} com sucesso` + (erro ? `\n❌ ${erro} com erro` : '');
-        alert(msg);
+        abrirModalResumo(res, ok, erro);
       },
       error: function() {
         btn.disabled = false;
@@ -503,6 +534,50 @@
       }
     });
   }
+
+  // ── modal resumo ──────────────────────────────────────────────────────────
+  function abrirModalResumo(resultados, ok, erro) {
+    // chips de resumo
+    var chips = '';
+    chips += '<div style="display:flex;align-items:center;gap:.5rem;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:.5rem 1rem;font-size:.9rem;font-weight:700;color:#4ade80">'
+           + '<i class="fas fa-check-circle"></i> ' + ok + ' emitida' + (ok !== 1 ? 's' : '') + ' com sucesso</div>';
+    if (erro > 0) {
+      chips += '<div style="display:flex;align-items:center;gap:.5rem;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:.5rem 1rem;font-size:.9rem;font-weight:700;color:#f87171">'
+             + '<i class="fas fa-times-circle"></i> ' + erro + ' com erro</div>';
+    }
+    document.getElementById('modal-chips').innerHTML = chips;
+
+    // linhas da tabela
+    var rows = '';
+    resultados.forEach(function(r) {
+      var sucesso = r.statusProcessamento === 'sucesso' || r.codigoProcessamento === '000';
+      var statusHtml = sucesso
+        ? '<span class="tag tag-green"><i class="fas fa-check"></i> Emitida</span>'
+        : '<span class="tag tag-red"><i class="fas fa-times"></i> Erro</span>';
+      var detalhe = sucesso
+        ? (r.id ? '<span style="color:rgba(255,255,255,.45);font-size:.78rem;word-break:break-all">' + r.id + '</span>' : '-')
+        : '<span style="color:#f87171;font-size:.82rem">' + (r.motivo || 'Erro desconhecido') + '</span>';
+      rows += '<tr style="border-bottom:1px solid rgba(255,255,255,.05)">'
+            + '<td style="padding:.65rem .5rem;color:rgba(255,255,255,.8);white-space:nowrap">#' + r.venda_id + '</td>'
+            + '<td style="padding:.65rem .5rem">' + statusHtml + '</td>'
+            + '<td style="padding:.65rem .5rem">' + detalhe + '</td>'
+            + '</tr>';
+    });
+    document.getElementById('modal-tbody').innerHTML = rows;
+
+    var modal = document.getElementById('modal-resumo');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharModal() {
+    document.getElementById('modal-resumo').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-resumo').addEventListener('click', function(e) {
+    if (e.target === this) fecharModal();
+  });
 
   // clique nos stat cards abre a tab correta
   const tabMap = { 'stat-el':'elegiveis', 'stat-ne':'nao-elegiveis', 'stat-em':'emitidas' };
