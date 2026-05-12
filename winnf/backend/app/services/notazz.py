@@ -148,7 +148,7 @@ class NotazzService:
         payload = {
             "API_KEY": self.api_key,
             "METHOD": "consult_nfse",
-            "id": notazz_id,
+            "DOCUMENT_ID": notazz_id,
         }
         raw = self._post(payload)
         return self._parse_response(raw)
@@ -157,7 +157,7 @@ class NotazzService:
         payload = {
             "API_KEY": self.api_key,
             "METHOD": "cancel_nfse",
-            "id": notazz_id,
+            "DOCUMENT_ID": notazz_id,
         }
         raw = self._post(payload)
         return self._parse_response(raw)
@@ -245,7 +245,7 @@ class NotazzService:
         payload = {
             "API_KEY": self.api_key,
             "METHOD": "consult_nfe_55",
-            "id": notazz_id,
+            "DOCUMENT_ID": notazz_id,
         }
         raw = self._post(payload)
         return self._parse_response(raw)
@@ -254,7 +254,7 @@ class NotazzService:
         payload = {
             "API_KEY": self.api_key,
             "METHOD": "cancel_nfe_55",
-            "id": notazz_id,
+            "DOCUMENT_ID": notazz_id,
         }
         raw = self._post(payload)
         return self._parse_response(raw)
