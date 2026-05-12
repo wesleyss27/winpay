@@ -868,14 +868,15 @@ class AppNotazz
             return;
         }
 
-        $uid     = $this->section->getId();
-        $isAdmin = in_array($_SESSION['tipo'] ?? 0, [1, 2, 3]);
+        $uid        = $this->section->getId();
         $resultados = [];
 
         foreach ($ids as $id) {
             $venda = (new Venda())->findById($id);
-            if (!$venda) { $resultados[] = ['venda_id' => $id, 'statusProcessamento' => 'erro', 'motivo' => 'Venda não encontrada']; continue; }
-            if (!$isAdmin && $venda->produtor != $uid) { $resultados[] = ['venda_id' => $id, 'statusProcessamento' => 'erro', 'motivo' => 'Sem permissão']; continue; }
+            if (!$venda || $venda->produtor != $uid) {
+                $resultados[] = ['venda_id' => $id, 'statusProcessamento' => 'erro', 'motivo' => 'Venda não encontrada ou sem permissão'];
+                continue;
+            }
 
             $resultados[] = $this->gerarNotaParaVenda($venda);
         }
