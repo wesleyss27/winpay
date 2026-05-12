@@ -320,7 +320,7 @@
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="tbody-emitidas">
               <?php foreach ($emitidas as $item): $venda = $item['venda']; $nf = $item['nota']; ?>
                 <tr id="row-em-<?= $venda->id ?>">
                   <td><input type="checkbox" class="lote-chk chk-em" value="<?= $venda->id ?>" onchange="onCheck('em')"></td>
@@ -597,17 +597,17 @@
       success: function(res) {
         let ok = 0, erro = 0;
         res.forEach(function(r) {
-          const cel = document.getElementById('st-' + prefix + '-' + r.venda_id);
           if (r.statusProcessamento === 'sucesso' || r.codigoProcessamento === '000') {
-            if (cel) cel.innerHTML = '<span class="tag tag-green"><i class="fas fa-check"></i> Emitida</span>';
             ok++;
           } else {
+            const cel = document.getElementById('st-' + prefix + '-' + r.venda_id);
             if (cel) cel.innerHTML = '<span class="tag tag-red"><i class="fas fa-times"></i> Erro</span>';
             erro++;
           }
         });
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Emitir Notas';
+        moverParaEmitidas(res, prefix);
         abrirModalResumo(res, ok, erro);
       },
       error: function() {
@@ -814,6 +814,7 @@
       setTimeout(function() {
         document.getElementById('modal-progresso').style.display = 'none';
         document.body.style.overflow = '';
+        moverParaEmitidas(acumulado, 'rv');
         abrirModalResumo(acumulado, ok, err);
       }, 700);
       return;
@@ -837,6 +838,104 @@
         processarChunkMes(chunks, index + 1, acumulado.concat(fake), competencia);
       }
     });
+  }
+
+  // ── realocação para "já emitidas" ────────────────────────────────────────
+
+  function garantirTabelaEmitidas() {
+    var tbody = document.getElementById('tbody-emitidas');
+    if (tbody) return tbody;
+    // painel estava no estado "vazio" — cria estrutura da tabela
+    document.getElementById('panel-emitidas').innerHTML =
+      '<div class="lote-action-bar">'
+      + '<button class="btn-sm-ghost" onclick="selecionarTodos(\'em\')"><i class="fas fa-check-square"></i> Selecionar todos</button>'
+      + '<button class="btn-sm-ghost" onclick="limparSelecao(\'em\')"><i class="fas fa-square"></i> Limpar</button>'
+      + '<span class="lote-counter" id="counter-em">0 selecionados (máx. 50)</span>'
+      + '</div>'
+      + '<div class="lote-table-wrap"><table class="lote-table"><thead><tr>'
+      + '<th></th><th>Venda</th><th>Cliente</th><th>Produto</th><th>Valor</th><th>Emitida em</th><th>Dados</th><th>Status</th>'
+      + '</tr></thead><tbody id="tbody-emitidas"></tbody></table></div>'
+      + '<div id="pag-em" class="lote-pag"></div>';
+    return document.getElementById('tbody-emitidas');
+  }
+
+  function buildEmitidaRow(vendaId, nome, produto, valor, elegivel) {
+    var agora = new Date().toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    }).replace(',', '');
+    var dadosTag = elegivel
+      ? '<span class="tag tag-green"><i class="fas fa-check"></i> Completos</span>'
+      : '<span class="tag tag-yellow"><i class="fas fa-exclamation-triangle"></i> Incompletos</span>';
+    return '<tr id="row-em-' + vendaId + '">'
+      + '<td><input type="checkbox" class="lote-chk chk-em" value="' + vendaId + '" onchange="onCheck(\'em\')"></td>'
+      + '<td data-label="Venda">#' + vendaId + '</td>'
+      + '<td data-label="Cliente">' + htmlEsc(String(nome || '')) + '</td>'
+      + '<td data-label="Produto">' + htmlEsc(String(produto || '')) + '</td>'
+      + '<td data-label="Valor"><strong style="color:#d9c000">R$ ' + formatValor(valor) + '</strong></td>'
+      + '<td data-label="Emitida em" style="font-size:.8rem;color:rgba(255,255,255,.6)">' + agora + '</td>'
+      + '<td data-label="Dados">' + dadosTag + '</td>'
+      + '<td data-label="Status" id="st-em-' + vendaId + '"><span class="tag tag-blue"><i class="fas fa-file-invoice"></i> Emitida</span></td>'
+      + '</tr>';
+  }
+
+  function moverParaEmitidas(resultados, tab) {
+    var sucesso = resultados.filter(function(r) {
+      return r.codigoProcessamento === '000' || r.statusProcessamento === 'sucesso';
+    });
+    if (!sucesso.length) return;
+
+    var tbody = garantirTabelaEmitidas();
+
+    sucesso.forEach(function(r) {
+      var nome = '', produto = '', valor = 0, elegivel = true;
+
+      if (tab === 'rv') {
+        var venda = retroativaVendasAll.find(function(v) { return String(v.id) === String(r.venda_id); });
+        if (venda) { nome = venda.nome; produto = venda.produto; valor = venda.valor; elegivel = venda.elegivel; }
+        retroativaVendasAll = retroativaVendasAll.filter(function(v) { return String(v.id) !== String(r.venda_id); });
+      } else {
+        // el: [chk, #id, cliente, cpf, produto, valor, data, status]
+        // ne: [chk, #id, cliente, produto,  valor, data, pendências, status]
+        var row = document.getElementById('row-' + tab + '-' + r.venda_id);
+        if (row) {
+          var cells = row.querySelectorAll('td');
+          nome     = (cells[2] || {}).textContent || '';
+          produto  = tab === 'el' ? (cells[4] || {}).textContent : (cells[3] || {}).textContent;
+          var valTxt = tab === 'el' ? (cells[5] || {}).textContent : (cells[4] || {}).textContent;
+          valor    = parseFloat((valTxt || '0').replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+          elegivel = tab === 'el';
+          row.remove();
+        }
+      }
+
+      if (!document.getElementById('row-em-' + r.venda_id)) {
+        tbody.insertAdjacentHTML('afterbegin', buildEmitidaRow(r.venda_id, nome, produto, valor, elegivel));
+      }
+    });
+
+    // re-renderiza retroativa sem as vendas emitidas
+    if (tab === 'rv') {
+      renderTabelaRetroativa(getVendasFiltradas(), retroativaMes, retroativaAno);
+    } else {
+      paginar(tab, 1);
+    }
+
+    paginar('em', 1);
+
+    // atualiza contadores
+    var n = sucesso.length;
+    var badgeEm  = document.querySelector('#tab-btn-emitidas .lote-badge');
+    var statEm   = document.querySelector('#stat-em .lote-stat-value');
+    if (badgeEm) badgeEm.textContent = parseInt(badgeEm.textContent || 0) + n;
+    if (statEm)  statEm.textContent  = parseInt(statEm.textContent  || 0) + n;
+
+    if (tab === 'el' || tab === 'ne') {
+      var srcId    = tab === 'el' ? 'elegiveis' : 'nao-elegiveis';
+      var badgeSrc = document.querySelector('#tab-btn-' + srcId + ' .lote-badge');
+      var statSrc  = document.querySelector('#stat-' + tab + ' .lote-stat-value');
+      if (badgeSrc) badgeSrc.textContent = Math.max(0, parseInt(badgeSrc.textContent || 0) - n);
+      if (statSrc)  statSrc.textContent  = Math.max(0, parseInt(statSrc.textContent  || 0) - n);
+    }
   }
 
   function htmlEsc(s) {

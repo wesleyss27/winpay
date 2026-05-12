@@ -820,7 +820,7 @@ class AppNotazz
         $inicio = @$_GET['inicio'] ?: date('Y-m-d', strtotime('-30 days'));
         $fim    = @$_GET['fim']    ?: date('Y-m-d');
 
-        $where = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid}";
+        $where = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid} AND status_transacao IN (4, 8)";
 
         $vendas      = (new Venda())->find($where)->order("id DESC")->fetch(true);
         $integracoes = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? [];
@@ -878,7 +878,7 @@ class AppNotazz
         $inicio = sprintf('%04d-%02d-01', $ano, $mes);
         $fim    = date('Y-m-t', strtotime($inicio));
 
-        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid}";
+        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid} AND status_transacao IN (4, 8)";
         $vendas = (new Venda())->find($where)->order("id ASC")->fetch(true);
         $integracoes = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? [];
 
@@ -918,7 +918,7 @@ class AppNotazz
         $inicio = sprintf('%04d-%02d-01', $ano, $mes);
         $fim    = date('Y-m-t', strtotime($inicio));
 
-        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid}";
+        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid} AND status_transacao IN (4, 8)";
         $vendas = (new Venda())->find($where)->order("id ASC")->fetch(true);
         $integracoes = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? [];
 
