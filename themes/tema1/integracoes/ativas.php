@@ -775,7 +775,7 @@ $json = array(
                                         <td><?= formataDataHora($nota->created_at); ?></td>
                                         <td>
                                             <?php if (!@$_SESSION["subusuario"] || $permissao->editar == 1) : ?>
-                                                <button class="btn btn-warning btn-sm" data-target="#editarintegracaoNotazz" onclick="editarnotazz(<?= $i; ?>)" data-toggle="modal"><i class="fas fa-edit"></i></button>
+                                                <button type="button" class="btn btn-warning btn-sm" data-target="#editarintegracaoNotazz" onclick="editarnotazz(<?= $i; ?>)" data-toggle="modal"><i class="fas fa-edit"></i></button>
                                             <?php endif ?>
 
                                             <?php if (!@$_SESSION["subusuario"] || $permissao->excluir == 1) : ?>
@@ -947,7 +947,7 @@ $json = array(
                 <!-- Modal footer -->
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelarnotazz">Cancelar</button>
-                    <button class="btn btn-primary" id="atualizarnotazz">Editar</button>
+                    <button type="button" class="btn btn-primary" id="atualizarnotazz">Editar</button>
                 </div>
                 <!-- Fim Modal footer -->
             </form>
@@ -3258,63 +3258,49 @@ $json = array(
     });
 
     function salvarnotazz(url) {
-
         var form = $("form[name=formnotazz]");
-        console.log("formulario", form.serialize());
 
         $.ajax({
             url: url,
             type: "POST",
             data: form.serialize(),
-            success: (callback) => {
-                console.log(callback);
-
-                alert(callback);
-                if (callback == "Salvo com sucesso") {
+            success: function(callback) {
+                var msg = (callback || "").trim();
+                if (msg === "Salvo com sucesso") {
                     location.reload();
+                } else {
+                    alert(msg || "Erro ao salvar");
                 }
+            },
+            error: function() {
+                alert("Erro de comunicação com o servidor.");
             }
-        })
+        });
     }
 
     function editarnotazz(i) {
-        var id = dadosnotazz[i]["id"];
-        var api_notazz = dadosnotazz[i]["api_notazz"];
-        var data_nota = dadosnotazz[i]["data_nota"];
-        var produto = dadosnotazz[i]["produto"];
-        var codigo_cnae = dadosnotazz[i]["codigo_cnae"];
-        var codigo_lc116 = dadosnotazz[i]["codigo_lc116"];
-        var enviar_email_cliente = dadosnotazz[i]["enviar_email_cliente"];
-        var cidade_padrao = dadosnotazz[i]["cidade_padrao"];
-        var uf_padrao = dadosnotazz[i]["uf_padrao"];
-        var cep_padrao = dadosnotazz[i]["cep_padrao"];
+        var d = dadosnotazz[i];
 
-        $(".modal-title").html("Editar API");
-        $("#salvar").css("display", "none");
-        $("#editar").css("display", "inline");
-        $("#idnotazz").attr({ "value": id });
-        $("#api_notazz").attr("value", api_notazz);
-        $("#data_nota option[value=" + data_nota + "]").prop("selected", true);
-        $("#produto option[value=" + produto + "]").prop("selected", true);
-        $("#codigo_cnae").attr("value", codigo_cnae);
-        $("#codigo_lc116").attr("value", codigo_lc116);
-        $("#enviar_email_cliente_editar option[value=" + enviar_email_cliente + "]").prop("selected", true);
-        $("#cidade_padrao_editar").val(cidade_padrao);
-        $("#uf_padrao_editar").val(uf_padrao);
-        $("#cep_padrao_editar").val(cep_padrao);
+        $("#idnotazz").val(d["id"]);
+        $("#api_notazz").val(d["api_notazz"]);
+        $("#data_nota").val(d["data_nota"]);
+        $("#produtonotazz").val(d["produto"]);
+        $("#codigo_cnae").val(d["codigo_cnae"]);
+        $("#codigo_lc116").val(d["codigo_lc116"]);
+        $("#enviar_email_cliente_editar").val(d["enviar_email_cliente"]);
+        $("#cidade_padrao_editar").val(d["cidade_padrao"]);
+        $("#uf_padrao_editar").val(d["uf_padrao"]);
+        $("#cep_padrao_editar").val(d["cep_padrao"]);
     }
 
     function cancelarnotazz() {
-        $(".modal-title").html("Integração Notazz");
-        $("#salvar").css("display", "inline");
-        $("#editar").css("display", "none");
-        $("#resultado").css("display", "none");
-        $("#idnotazz").attr({ "value": "" });
-        $("#api_notazz").attr("value", "");
-        $("#data nota option").prop("selected", false);
-        $("#produto option").prop("selected", false);
-        $("#codigo_cnae").attr("value", "");
-        $("#codigo_lc116").attr("value", "");
+        $("#idnotazz").val("");
+        $("#api_notazz").val("");
+        $("#data_nota").val("0");
+        $("#produtonotazz").val("");
+        $("#codigo_cnae").val("");
+        $("#codigo_lc116").val("");
+        $("#enviar_email_cliente_editar").val("1");
         $("#cidade_padrao_editar").val("");
         $("#uf_padrao_editar").val("");
         $("#cep_padrao_editar").val("");

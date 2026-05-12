@@ -170,8 +170,10 @@ class AppNotazz
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
+            exit;
         } else {
             echo $integracao->fail()->getMessage();
+            exit;
         }
     }
 
@@ -191,8 +193,10 @@ class AppNotazz
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
+            exit;
         } else {
             echo $integracao->fail()->getMessage();
+            exit;
         }
     }
 
@@ -505,7 +509,7 @@ class AppNotazz
             "DESTINATION_EMAIL_SEND" => (@$data["enviar_email_cliente"] == 1) ? $data["email"] : "",
             "DOCUMENT_BASEVALUE" => $data["valor_venda"],
             "DOCUMENT_DESCRIPTION" => $data["nomekit"],
-            "DOCUMENT_COMPETENCE" => date("Y-m-d"),
+            "DOCUMENT_COMPETENCE" => !empty($data["competencia"]) ? $data["competencia"] : date("Y-m-d"),
 
             "EXTERNAL_ID" => $data["transacao"],
             "SALE_ID" => "127654",
@@ -545,7 +549,7 @@ class AppNotazz
             "DESTINATION_EMAIL_SEND" => (@$data["enviar_email_cliente"] == 1) ? $data["email"] : "",
             "DOCUMENT_BASEVALUE" => $data["valor_total"],
             "DOCUMENT_DESCRIPTION" => $data["nomekit"],
-            "DOCUMENT_COMPETENCE" => date("Y-m-d"),
+            "DOCUMENT_COMPETENCE" => !empty($data["competencia"]) ? $data["competencia"] : date("Y-m-d"),
 
             "EXTERNAL_ID" => $data["transacao"],
             "SALE_ID" => "127654",
@@ -754,9 +758,10 @@ class AppNotazz
         return ['elegivel' => empty($problemas), 'problemas' => $problemas, 'integracao' => $integracao];
     }
 
-    private function gerarNotaParaVenda(Venda $venda): array
+    private function gerarNotaParaVenda(Venda $venda, ?string $competencia = null): array
     {
         $data     = $this->buildDadosNota($venda);
+        if ($competencia) $data['competencia'] = $competencia;
         $produto  = (new Produto())->findById($data['produto']);
         $notazzs  = (new IntegracaoNotazz())->find("usuario = " . $venda->produtor)->fetch(true);
 
@@ -902,11 +907,62 @@ class AppNotazz
         exit;
     }
 
+    public function loteVendasDoMes($data): void
+    {
+        (new Section())->permissaoModulo("notas_fiscais");
+
+        $uid  = $this->section->getId();
+        $mes  = intval($_GET['mes'] ?? date('m'));
+        $ano  = intval($_GET['ano'] ?? date('Y'));
+
+        $inicio = sprintf('%04d-%02d-01', $ano, $mes);
+        $fim    = date('Y-m-t', strtotime($inicio));
+
+        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid}";
+        $vendas = (new Venda())->find($where)->order("id ASC")->fetch(true);
+        $integracoes = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? [];
+
+        $result = [];
+        if ($vendas) {
+            $vendaIds    = array_map(fn($v) => $v->id, $vendas);
+            $inList      = implode(',', $vendaIds);
+            $nfRows      = (new NotaFiscal())->find("venda IN ({$inList})")->fetch(true);
+            $emitidasIds = $nfRows ? array_map(fn($n) => (int)$n->venda, $nfRows) : [];
+
+            foreach ($vendas as $venda) {
+                if (in_array($venda->id, $emitidasIds, true)) continue;
+                $chk       = $this->checarElegibilidade($venda, $integracoes);
+                $comprador = $venda->dataComprador();
+                $produto   = $venda->dataProduto();
+                $result[]  = [
+                    'id'        => $venda->id,
+                    'nome'      => $comprador->nome ?? '',
+                    'cpf'       => $comprador->cpf_cnpj ?? '',
+                    'produto'   => $produto->nome ?? '',
+                    'valor'     => number_format((float)$venda->valor_bruto, 2, '.', ''),
+                    'data'      => date('d/m/Y', strtotime($venda->created_at)),
+                    'elegivel'  => $chk['elegivel'],
+                    'problemas' => $chk['problemas'],
+                ];
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'vendas'      => $result,
+            'total'       => count($result),
+            'competencia' => $inicio,
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     public function emitirLote($data): void
     {
         (new Section())->permissaoModulo("notas_fiscais");
 
-        $ids = array_filter(array_map('intval', (array)($data['ids'] ?? [])));
+        $ids         = array_filter(array_map('intval', (array)($data['ids'] ?? [])));
+        $competencia = !empty($data['competencia']) ? $data['competencia'] : null;
+
         if (count($ids) > 50) {
             echo json_encode(['erro' => 'Limite de 50 notas por vez']);
             return;
@@ -922,7 +978,7 @@ class AppNotazz
                 continue;
             }
 
-            $resultados[] = $this->gerarNotaParaVenda($venda);
+            $resultados[] = $this->gerarNotaParaVenda($venda, $competencia);
         }
 
         header('Content-Type: application/json');

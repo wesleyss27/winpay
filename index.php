@@ -585,6 +585,8 @@ $router->post("/excluir", "AppNotazz:excluirIntegracao", "notazz.excluir");
 $router->post("/gerar", "AppNotazz:gerarNota", "notazz.gerar");
 $router->get("/lote", "AppNotazz:notasLote", "notazz.lote");
 $router->post("/lote/emitir", "AppNotazz:emitirLote", "notazz.lote.emitir");
+$router->get("/lote/mes-elegiveis", "AppNotazz:loteElegiveisDoMes", "notazz.lote.mes.elegiveis");
+$router->get("/lote/vendas-do-mes", "AppNotazz:loteVendasDoMes", "notazz.lote.vendas.mes");
 $router->post("/consultar-cancelar", "AppNotazz:consultar", "notazz.consultarCancelar");
 
 $router->post("/postback", "AppNotazz:postbackNotazz", "notazz.postback");

@@ -100,16 +100,25 @@
   .btn-emit:hover { filter:brightness(1.1); }
   .btn-emit:disabled { opacity:.5; cursor:not-allowed; filter:none; }
 
-  /* ── mes completo card ──────────────────────────────────────────── */
-  .mes-card { background:rgba(17,17,20,.78); border:1px solid rgba(99,102,241,.25); border-radius:16px; padding:1.25rem 1.5rem; display:flex; flex-wrap:wrap; align-items:flex-end; gap:1rem; margin-bottom:1.75rem; }
-  .mes-card-title { width:100%; font-size:.82rem; font-weight:700; color:#818cf8; text-transform:uppercase; letter-spacing:.07rem; display:flex; align-items:center; gap:.5rem; margin-bottom:.1rem; }
-  .mes-card label { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.07rem; color:rgba(255,255,255,.5); margin-bottom:.35rem; }
-  .mes-card input[type=month] { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:#f5f5f5; border-radius:10px; padding:.6rem .85rem; font-size:.9rem; outline:none; }
-  .mes-card input[type=month]:focus { border-color:rgba(99,102,241,.5); }
-  .btn-mes    { background:linear-gradient(135deg,#6366f1,#818cf8); color:#fff; border:none; border-radius:10px; padding:.65rem 1.4rem; font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.07rem; cursor:pointer; transition:filter .2s; }
-  .btn-mes:hover { filter:brightness(1.15); }
-  .btn-mes-ne { background:linear-gradient(135deg,#92700a,#d9c000); color:#111; border:none; border-radius:10px; padding:.65rem 1.4rem; font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.07rem; cursor:pointer; transition:filter .2s; }
-  .btn-mes-ne:hover { filter:brightness(1.1); }
+  /* ── retroativa ──────────────────────────────────────────────────── */
+  .retro-search { display:flex; flex-wrap:wrap; align-items:flex-end; gap:1rem; margin-bottom:1.25rem; }
+  .retro-search label { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.07rem; color:rgba(255,255,255,.5); margin-bottom:.35rem; }
+  .retro-search input[type=month] { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:#f5f5f5; border-radius:10px; padding:.6rem .85rem; font-size:.9rem; outline:none; }
+  .retro-search input[type=month]:focus { border-color:rgba(99,102,241,.5); }
+  .btn-retro-buscar { background:linear-gradient(135deg,#6366f1,#818cf8); color:#fff; border:none; border-radius:10px; padding:.65rem 1.4rem; font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.07rem; cursor:pointer; transition:filter .2s; }
+  .btn-retro-buscar:hover { filter:brightness(1.15); }
+  .retro-competencia-tag { font-size:.78rem; color:#818cf8; background:rgba(99,102,241,.12); border:1px solid rgba(99,102,241,.25); border-radius:8px; padding:.3rem .75rem; display:none; align-items:center; gap:.4rem; }
+  .retro-emit-all { background:linear-gradient(135deg,#d9c000,#f4d03f); color:#111; border:none; border-radius:10px; padding:.55rem 1.25rem; font-weight:700; font-size:.82rem; cursor:pointer; transition:filter .2s; display:flex; align-items:center; gap:.4rem; }
+  .retro-emit-all:hover { filter:brightness(1.1); }
+  .retro-filter-bar { display:none; flex-wrap:wrap; align-items:center; gap:.5rem; padding:.75rem 0 .5rem; border-top:1px solid rgba(255,255,255,.06); margin-top:.25rem; }
+  .retro-filter-bar-label { font-size:.72rem; text-transform:uppercase; letter-spacing:.07rem; color:rgba(255,255,255,.4); }
+  .rfbtn { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.6); border-radius:8px; padding:.35rem .85rem; font-size:.8rem; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:.4rem; }
+  .rfbtn:hover { background:rgba(255,255,255,.09); color:#fff; }
+  .rfbtn.active-todos  { background:rgba(99,102,241,.15); border-color:rgba(99,102,241,.4); color:#818cf8; }
+  .rfbtn.active-el     { background:rgba(34,197,94,.12);  border-color:rgba(34,197,94,.35); color:#4ade80; }
+  .rfbtn.active-ne     { background:rgba(217,192,0,.12);  border-color:rgba(217,192,0,.35); color:#d9c000; }
+  .retro-empty { text-align:center; padding:3rem 1rem; color:rgba(255,255,255,.35); }
+  .retro-empty i { font-size:2.5rem; margin-bottom:.75rem; display:block; }
 
   /* ── mobile cards ────────────────────────────────────────────────── */
   @media (max-width:640px) {
@@ -178,21 +187,6 @@
         <button type="submit" class="btn-filter"><i class="fas fa-search"></i> Filtrar</button>
       </form>
 
-      <!-- EMISSÃO POR MÊS COMPLETO -->
-      <div class="mes-card">
-        <div class="mes-card-title"><i class="fas fa-calendar-alt"></i> Emissão por Mês Completo</div>
-        <div>
-          <label>Mês / Ano</label>
-          <input type="month" id="mes-input" value="<?= date('Y-m') ?>">
-        </div>
-        <button type="button" class="btn-mes" onclick="emitirMesCompleto('elegiveis')">
-          <i class="fas fa-calendar-check"></i> Emitir Elegíveis
-        </button>
-        <button type="button" class="btn-mes-ne" onclick="emitirMesCompleto('nao_elegiveis')">
-          <i class="fas fa-calendar-exclamation"></i> Emitir Não Elegíveis
-        </button>
-      </div>
-
       <!-- TABS NAV -->
       <div class="lote-tabs">
         <button class="lote-tab-btn active" onclick="abrirTab('elegiveis')" id="tab-btn-elegiveis">
@@ -206,6 +200,9 @@
         <button class="lote-tab-btn" onclick="abrirTab('emitidas')" id="tab-btn-emitidas">
           <i class="fas fa-file-invoice"></i> Já Emitidas
           <span class="lote-badge badge-blue"><?= count($emitidas) ?></span>
+        </button>
+        <button class="lote-tab-btn" onclick="abrirTab('retroativa')" id="tab-btn-retroativa">
+          <i class="fas fa-history"></i> Emissão Retroativa
         </button>
       </div>
 
@@ -351,6 +348,50 @@
         <?php endif; ?>
       </div>
 
+      <!-- ── TAB: RETROATIVA ─────────────────────────────────────────── -->
+      <div class="lote-panel" id="panel-retroativa">
+        <div class="retro-search">
+          <div>
+            <label>Mês / Ano</label>
+            <input type="month" id="retro-mes-input" value="<?= date('Y-m', strtotime('-1 month')) ?>">
+          </div>
+          <button type="button" class="btn-retro-buscar" id="btn-retro-buscar" onclick="buscarVendasRetroativas()">
+            <i class="fas fa-search"></i> Buscar Vendas
+          </button>
+          <div class="retro-competencia-tag" id="retro-competencia-tag"></div>
+        </div>
+
+        <div id="retro-action-bar" class="lote-action-bar" style="display:none">
+          <button class="btn-sm-ghost" onclick="selecionarTodos('rv')"><i class="fas fa-check-square"></i> Selecionar todos</button>
+          <button class="btn-sm-ghost" onclick="limparSelecao('rv')"><i class="fas fa-square"></i> Limpar</button>
+          <span class="lote-counter" id="counter-rv">0 selecionados (máx. 50)</span>
+          <button type="button" class="retro-emit-all" onclick="emitirTodosRetroativa()">
+            <i class="fas fa-paper-plane"></i> Emitir Todos do Mês
+          </button>
+          <span style="font-size:.8rem;color:rgba(255,255,255,.5);margin-left:.25rem">
+            (<span id="retro-total-count">0</span> notas encontradas)
+          </span>
+        </div>
+
+        <!-- filtro elegível / não elegível -->
+        <div class="retro-filter-bar" id="retro-filter-bar">
+          <span class="retro-filter-bar-label">Filtrar:</span>
+          <button class="rfbtn active-todos" id="rfbtn-todos" onclick="filtrarRetroativa('todos')">
+            <i class="fas fa-list"></i> Todos <span class="lote-badge badge-blue" id="rf-count-todos">0</span>
+          </button>
+          <button class="rfbtn" id="rfbtn-elegiveis" onclick="filtrarRetroativa('elegiveis')">
+            <i class="fas fa-check-circle"></i> Elegíveis <span class="lote-badge badge-green" id="rf-count-el">0</span>
+          </button>
+          <button class="rfbtn" id="rfbtn-nao" onclick="filtrarRetroativa('nao_elegiveis')">
+            <i class="fas fa-exclamation-triangle"></i> Não Elegíveis <span class="lote-badge badge-yellow" id="rf-count-ne">0</span>
+          </button>
+        </div>
+
+        <div id="retro-resultado">
+          <div class="retro-empty"><i class="fas fa-history"></i>Selecione um mês e clique em "Buscar Vendas".</div>
+        </div>
+      </div>
+
     </div><!-- /inner -->
   </div><!-- /container -->
 </div>
@@ -416,13 +457,18 @@
 <?php $v->start("scripts") ?>
 <script>
   const LIMITE          = 50;
-  const URL_EMITIR      = "<?= $router->route('notazz.lote.emitir') ?>";
-  const URL_MES_ELEG    = "<?= $router->route('notazz.lote.mes.elegiveis') ?>";
+  const URL_EMITIR     = "<?= $router->route('notazz.lote.emitir') ?>";
+  const URL_VENDAS_MES = "<?= $router->route('notazz.lote.vendas.mes') ?>";
   let   tabAtiva        = 'el';
+  let   retroativaCompetencia = null;
+  let   retroativaVendasAll  = [];
+  let   retroativaMes        = null;
+  let   retroativaAno        = null;
+  let   retroativaFiltro     = 'todos';
 
   // ── tabs ─────────────────────────────────────────────────────────────
   function abrirTab(nome) {
-    const map = { 'elegiveis':'el', 'nao-elegiveis':'ne', 'emitidas':'em' };
+    const map = { 'elegiveis':'el', 'nao-elegiveis':'ne', 'emitidas':'em', 'retroativa':'rv' };
     const slug = map[nome] || nome;
     tabAtiva = slug;
 
@@ -480,7 +526,7 @@
   // ── pagination ────────────────────────────────────────────────────────
   const PER_PAGE  = 50;
   const pageState = { el: 1, ne: 1, em: 1 };
-  const panelMap  = { el: 'elegiveis', ne: 'nao-elegiveis', em: 'emitidas' };
+  const panelMap  = { el: 'elegiveis', ne: 'nao-elegiveis', em: 'emitidas', rv: 'retroativa' };
 
   function getRows(prefix) {
     return [...document.querySelectorAll(`#panel-${panelMap[prefix]} .lote-table tbody tr`)];
@@ -526,7 +572,7 @@
   function atualizarFloatBar() {
     const n     = getSelecionados(tabAtiva).length;
     const bar   = document.getElementById('float-bar');
-    const labels = { el:'Elegíveis', ne:'Não Elegíveis', em:'Já Emitidas' };
+    const labels = { el:'Elegíveis', ne:'Não Elegíveis', em:'Já Emitidas', rv:'Retroativa' };
     document.getElementById('float-count').textContent     = n;
     document.getElementById('float-tab-label').textContent = '— ' + (labels[tabAtiva] || '');
     bar.classList.toggle('visible', n > 0);
@@ -543,9 +589,11 @@
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Emitindo...';
 
     const prefix = tabAtiva;
+    const postData = { ids: ids };
+    if (tabAtiva === 'rv' && retroativaCompetencia) postData.competencia = retroativaCompetencia;
 
     $.ajax({
-      url: URL_EMITIR, method: 'POST', data: { ids: ids }, dataType: 'json',
+      url: URL_EMITIR, method: 'POST', data: postData, dataType: 'json',
       success: function(res) {
         let ok = 0, erro = 0;
         res.forEach(function(r) {
@@ -614,49 +662,142 @@
     if (e.target === this) fecharModal();
   });
 
-  // ── emissão por mês ───────────────────────────────────────────────────
-  function emitirMesCompleto(tipo) {
-    var val = document.getElementById('mes-input').value; // "YYYY-MM"
+  // ── emissão retroativa ────────────────────────────────────────────────
+  function buscarVendasRetroativas() {
+    var val = document.getElementById('retro-mes-input').value; // "YYYY-MM"
     if (!val) { alert('Selecione o mês/ano.'); return; }
     var parts = val.split('-');
     var ano = parts[0], mes = parts[1];
-    var labelTipo = tipo === 'nao_elegiveis' ? 'não elegíveis' : 'elegíveis';
 
-    fetch(URL_MES_ELEG + '?mes=' + mes + '&ano=' + ano + '&tipo=' + tipo)
+    var btn = document.getElementById('btn-retro-buscar');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+
+    fetch(URL_VENDAS_MES + '?mes=' + mes + '&ano=' + ano)
       .then(function(r) { return r.json(); })
       .then(function(json) {
-        var ids = json.ids || [];
-        if (!ids.length) {
-          alert('Nenhuma venda ' + labelTipo + ' para ' + mes + '/' + ano + '.');
-          return;
-        }
-        if (!confirm('Emitir ' + ids.length + ' nota(s) ' + labelTipo + ' do mês ' + mes + '/' + ano + '?\nO processo será automático em lotes de 50.')) return;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-search"></i> Buscar Vendas';
 
-        var CHUNK = 50;
-        var chunks = [];
-        for (var i = 0; i < ids.length; i += CHUNK) {
-          chunks.push(ids.slice(i, i + CHUNK));
-        }
+        retroativaCompetencia = json.competencia || null;
+        retroativaVendasAll   = json.vendas || [];
+        retroativaMes         = mes;
+        retroativaAno         = ano;
+        retroativaFiltro      = 'todos';
 
-        // open progress modal
-        document.getElementById('prog-sub').textContent = 'Preparando ' + ids.length + ' notas...';
-        document.getElementById('prog-bar').style.width = '0%';
-        document.getElementById('prog-ok').textContent = '0';
-        document.getElementById('prog-err').textContent = '0';
-        document.getElementById('prog-total').textContent = ids.length;
-        var barColor = tipo === 'nao_elegiveis'
-          ? 'linear-gradient(90deg,#92700a,#d9c000)'
-          : 'linear-gradient(90deg,#6366f1,#a5b4fc)';
-        document.getElementById('prog-bar').style.background = barColor;
-        document.getElementById('modal-progresso').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        // update filter counts
+        var total = retroativaVendasAll.length;
+        var nEl   = retroativaVendasAll.filter(function(v) { return v.elegivel; }).length;
+        var nNe   = total - nEl;
+        document.getElementById('rf-count-todos').textContent = total;
+        document.getElementById('rf-count-el').textContent    = nEl;
+        document.getElementById('rf-count-ne').textContent    = nNe;
 
-        processarChunkMes(chunks, 0, []);
+        // reset filter buttons
+        document.getElementById('rfbtn-todos').className      = 'rfbtn active-todos';
+        document.getElementById('rfbtn-elegiveis').className  = 'rfbtn';
+        document.getElementById('rfbtn-nao').className        = 'rfbtn';
+
+        // show filter bar (even if empty, so user knows)
+        document.getElementById('retro-filter-bar').style.display = total > 0 ? 'flex' : 'none';
+
+        renderTabelaRetroativa(retroativaVendasAll, mes, ano);
       })
-      .catch(function() { alert('Erro ao buscar vendas ' + labelTipo + '.'); });
+      .catch(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-search"></i> Buscar Vendas';
+        alert('Erro ao buscar vendas.');
+      });
   }
 
-  function processarChunkMes(chunks, index, acumulado) {
+  function getVendasFiltradas() {
+    if (retroativaFiltro === 'elegiveis')    return retroativaVendasAll.filter(function(v) { return v.elegivel; });
+    if (retroativaFiltro === 'nao_elegiveis') return retroativaVendasAll.filter(function(v) { return !v.elegivel; });
+    return retroativaVendasAll;
+  }
+
+  function filtrarRetroativa(filtro) {
+    retroativaFiltro = filtro;
+    document.getElementById('rfbtn-todos').className     = 'rfbtn' + (filtro === 'todos'         ? ' active-todos' : '');
+    document.getElementById('rfbtn-elegiveis').className = 'rfbtn' + (filtro === 'elegiveis'      ? ' active-el'   : '');
+    document.getElementById('rfbtn-nao').className       = 'rfbtn' + (filtro === 'nao_elegiveis'  ? ' active-ne'   : '');
+    limparSelecao('rv');
+    renderTabelaRetroativa(getVendasFiltradas(), retroativaMes, retroativaAno);
+  }
+
+  function renderTabelaRetroativa(vendas, mes, ano) {
+    var tag       = document.getElementById('retro-competencia-tag');
+    var actionBar = document.getElementById('retro-action-bar');
+    var cont      = document.getElementById('retro-resultado');
+
+    tag.innerHTML     = '<i class="fas fa-calendar"></i> Competência: ' + mes + '/' + ano;
+    tag.style.display = 'flex';
+
+    if (!vendas.length) {
+      actionBar.style.display = 'none';
+      var msg = retroativaFiltro === 'elegiveis'
+        ? 'Nenhuma venda elegível em ' + mes + '/' + ano + '.'
+        : retroativaFiltro === 'nao_elegiveis'
+          ? 'Nenhuma venda com dados incompletos em ' + mes + '/' + ano + '.'
+          : 'Nenhuma venda pendente de emissão em ' + mes + '/' + ano + '.';
+      cont.innerHTML = '<div class="retro-empty"><i class="fas fa-check-circle"></i>' + msg + '</div>';
+      return;
+    }
+
+    actionBar.style.display = 'flex';
+    document.getElementById('retro-total-count').textContent = vendas.length;
+
+    var rows = '';
+    vendas.forEach(function(v) {
+      var statusTag = v.elegivel
+        ? '<span class="tag tag-green"><i class="fas fa-check"></i> Elegível</span>'
+        : '<span class="tag tag-yellow" title="' + htmlEsc((v.problemas || []).join(', ')) + '"><i class="fas fa-exclamation-triangle"></i> Dados incompletos</span>';
+      rows += '<tr id="row-rv-' + v.id + '">'
+            + '<td><input type="checkbox" class="lote-chk chk-rv" value="' + v.id + '" onchange="onCheck(\'rv\')"></td>'
+            + '<td data-label="Venda">#' + v.id + '</td>'
+            + '<td data-label="Cliente">' + htmlEsc(v.nome) + '</td>'
+            + '<td data-label="CPF">' + htmlEsc(v.cpf) + '</td>'
+            + '<td data-label="Produto">' + htmlEsc(v.produto) + '</td>'
+            + '<td data-label="Valor"><strong style="color:#d9c000">R$ ' + formatValor(v.valor) + '</strong></td>'
+            + '<td data-label="Data">' + htmlEsc(v.data) + '</td>'
+            + '<td data-label="Status" id="st-rv-' + v.id + '">' + statusTag + '</td>'
+            + '</tr>';
+    });
+
+    cont.innerHTML = '<div class="lote-table-wrap"><table class="lote-table"><thead><tr>'
+      + '<th></th><th>Venda</th><th>Cliente</th><th>CPF</th><th>Produto</th><th>Valor</th><th>Data</th><th>Status</th>'
+      + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
+      + '<div id="pag-rv" class="lote-pag"></div>';
+
+    paginar('rv', 1);
+  }
+
+  function emitirTodosRetroativa() {
+    var checkboxes = document.querySelectorAll('.chk-rv');
+    if (!checkboxes.length) { alert('Nenhuma venda carregada.'); return; }
+    var ids = [...checkboxes].map(function(c) { return c.value; });
+    if (!confirm('Emitir todas ' + ids.length + ' nota(s) retroativas?\nO processo será automático em lotes de 50.')) return;
+
+    var CHUNK = 50;
+    var chunks = [];
+    for (var i = 0; i < ids.length; i += CHUNK) chunks.push(ids.slice(i, i + CHUNK));
+
+    abrirModalProgresso(ids.length);
+    processarChunkMes(chunks, 0, [], retroativaCompetencia);
+  }
+
+  function abrirModalProgresso(total) {
+    document.getElementById('prog-sub').textContent = 'Preparando ' + total + ' notas...';
+    document.getElementById('prog-bar').style.width = '0%';
+    document.getElementById('prog-bar').style.background = 'linear-gradient(90deg,#6366f1,#a5b4fc)';
+    document.getElementById('prog-ok').textContent = '0';
+    document.getElementById('prog-err').textContent = '0';
+    document.getElementById('prog-total').textContent = total;
+    document.getElementById('modal-progresso').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function processarChunkMes(chunks, index, acumulado, competencia) {
     var totalIds = chunks.reduce(function(s, c) { return s + c.length; }, 0);
     var done = acumulado.length;
     var pct  = totalIds > 0 ? Math.round((done / totalIds) * 100) : 0;
@@ -681,19 +822,29 @@
     document.getElementById('prog-sub').textContent =
       'Lote ' + (index + 1) + ' de ' + chunks.length + ' — ' + done + ' de ' + totalIds + ' processadas';
 
+    var postData = { ids: chunks[index] };
+    if (competencia) postData.competencia = competencia;
+
     $.ajax({
-      url: URL_EMITIR, method: 'POST', data: { ids: chunks[index] }, dataType: 'json',
+      url: URL_EMITIR, method: 'POST', data: postData, dataType: 'json',
       success: function(res) {
-        var batch = Array.isArray(res) ? res : [];
-        processarChunkMes(chunks, index + 1, acumulado.concat(batch));
+        processarChunkMes(chunks, index + 1, acumulado.concat(Array.isArray(res) ? res : []), competencia);
       },
       error: function() {
         var fake = chunks[index].map(function(id) {
           return { venda_id: id, statusProcessamento: 'erro', motivo: 'Erro de comunicação' };
         });
-        processarChunkMes(chunks, index + 1, acumulado.concat(fake));
+        processarChunkMes(chunks, index + 1, acumulado.concat(fake), competencia);
       }
     });
+  }
+
+  function htmlEsc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatValor(v) {
+    return parseFloat(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   // clique nos stat cards abre a tab correta
