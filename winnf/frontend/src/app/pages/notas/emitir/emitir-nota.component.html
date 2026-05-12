@@ -94,7 +94,6 @@
           <mat-label>CEP</mat-label>
           <input matInput formControlName="cep" maxlength="8" placeholder="00000000" (input)="onCepInput($event)" />
           <mat-spinner matSuffix diameter="18" *ngIf="isFetchingCep"></mat-spinner>
-          <mat-hint>Preencha para buscar endereço automaticamente</mat-hint>
         </mat-form-field>
         <mat-form-field appearance="outline" class="flex-2">
           <mat-label>Rua</mat-label>
