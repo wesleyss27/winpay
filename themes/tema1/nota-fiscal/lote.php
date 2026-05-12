@@ -100,6 +100,17 @@
   .btn-emit:hover { filter:brightness(1.1); }
   .btn-emit:disabled { opacity:.5; cursor:not-allowed; filter:none; }
 
+  /* ── mes completo card ──────────────────────────────────────────── */
+  .mes-card { background:rgba(17,17,20,.78); border:1px solid rgba(99,102,241,.25); border-radius:16px; padding:1.25rem 1.5rem; display:flex; flex-wrap:wrap; align-items:flex-end; gap:1rem; margin-bottom:1.75rem; }
+  .mes-card-title { width:100%; font-size:.82rem; font-weight:700; color:#818cf8; text-transform:uppercase; letter-spacing:.07rem; display:flex; align-items:center; gap:.5rem; margin-bottom:.1rem; }
+  .mes-card label { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.07rem; color:rgba(255,255,255,.5); margin-bottom:.35rem; }
+  .mes-card input[type=month] { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:#f5f5f5; border-radius:10px; padding:.6rem .85rem; font-size:.9rem; outline:none; }
+  .mes-card input[type=month]:focus { border-color:rgba(99,102,241,.5); }
+  .btn-mes    { background:linear-gradient(135deg,#6366f1,#818cf8); color:#fff; border:none; border-radius:10px; padding:.65rem 1.4rem; font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.07rem; cursor:pointer; transition:filter .2s; }
+  .btn-mes:hover { filter:brightness(1.15); }
+  .btn-mes-ne { background:linear-gradient(135deg,#92700a,#d9c000); color:#111; border:none; border-radius:10px; padding:.65rem 1.4rem; font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.07rem; cursor:pointer; transition:filter .2s; }
+  .btn-mes-ne:hover { filter:brightness(1.1); }
+
   /* ── mobile cards ────────────────────────────────────────────────── */
   @media (max-width:640px) {
     .lote-title { font-size:1.5rem; }
@@ -166,6 +177,21 @@
         </div>
         <button type="submit" class="btn-filter"><i class="fas fa-search"></i> Filtrar</button>
       </form>
+
+      <!-- EMISSÃO POR MÊS COMPLETO -->
+      <div class="mes-card">
+        <div class="mes-card-title"><i class="fas fa-calendar-alt"></i> Emissão por Mês Completo</div>
+        <div>
+          <label>Mês / Ano</label>
+          <input type="month" id="mes-input" value="<?= date('Y-m') ?>">
+        </div>
+        <button type="button" class="btn-mes" onclick="emitirMesCompleto('elegiveis')">
+          <i class="fas fa-calendar-check"></i> Emitir Elegíveis
+        </button>
+        <button type="button" class="btn-mes-ne" onclick="emitirMesCompleto('nao_elegiveis')">
+          <i class="fas fa-calendar-exclamation"></i> Emitir Não Elegíveis
+        </button>
+      </div>
 
       <!-- TABS NAV -->
       <div class="lote-tabs">
@@ -370,11 +396,29 @@
   </div>
 </div>
 
+<!-- MODAL PROGRESSO MÊS -->
+<div id="modal-progresso" style="display:none;position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem">
+  <div style="background:#111;border:1px solid rgba(99,102,241,.3);border-radius:20px;width:100%;max-width:480px;padding:2rem;text-align:center">
+    <div style="font-size:2rem;margin-bottom:.75rem"><i class="fas fa-file-invoice" style="color:#818cf8"></i></div>
+    <div style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.35rem">Emitindo Notas do Mês</div>
+    <div id="prog-sub" style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:1.5rem">Aguarde...</div>
+    <div style="background:rgba(255,255,255,.08);border-radius:999px;height:10px;overflow:hidden;margin-bottom:1.25rem">
+      <div id="prog-bar" style="height:100%;background:linear-gradient(90deg,#6366f1,#a5b4fc);border-radius:999px;transition:width .4s ease;width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:2rem;font-size:.9rem">
+      <div><span id="prog-ok" style="font-size:1.5rem;font-weight:700;color:#4ade80">0</span><div style="color:rgba(255,255,255,.5);font-size:.75rem;margin-top:.2rem">Emitidas</div></div>
+      <div><span id="prog-err" style="font-size:1.5rem;font-weight:700;color:#f87171">0</span><div style="color:rgba(255,255,255,.5);font-size:.75rem;margin-top:.2rem">Erros</div></div>
+      <div><span id="prog-total" style="font-size:1.5rem;font-weight:700;color:#818cf8">0</span><div style="color:rgba(255,255,255,.5);font-size:.75rem;margin-top:.2rem">Total</div></div>
+    </div>
+  </div>
+</div>
+
 <?php $v->start("scripts") ?>
 <script>
-  const LIMITE     = 50;
-  const URL_EMITIR = "<?= $router->route('notazz.lote.emitir') ?>";
-  let   tabAtiva   = 'el';
+  const LIMITE          = 50;
+  const URL_EMITIR      = "<?= $router->route('notazz.lote.emitir') ?>";
+  const URL_MES_ELEG    = "<?= $router->route('notazz.lote.mes.elegiveis') ?>";
+  let   tabAtiva        = 'el';
 
   // ── tabs ─────────────────────────────────────────────────────────────
   function abrirTab(nome) {
@@ -569,6 +613,88 @@
   document.getElementById('modal-resumo').addEventListener('click', function(e) {
     if (e.target === this) fecharModal();
   });
+
+  // ── emissão por mês ───────────────────────────────────────────────────
+  function emitirMesCompleto(tipo) {
+    var val = document.getElementById('mes-input').value; // "YYYY-MM"
+    if (!val) { alert('Selecione o mês/ano.'); return; }
+    var parts = val.split('-');
+    var ano = parts[0], mes = parts[1];
+    var labelTipo = tipo === 'nao_elegiveis' ? 'não elegíveis' : 'elegíveis';
+
+    fetch(URL_MES_ELEG + '?mes=' + mes + '&ano=' + ano + '&tipo=' + tipo)
+      .then(function(r) { return r.json(); })
+      .then(function(json) {
+        var ids = json.ids || [];
+        if (!ids.length) {
+          alert('Nenhuma venda ' + labelTipo + ' para ' + mes + '/' + ano + '.');
+          return;
+        }
+        if (!confirm('Emitir ' + ids.length + ' nota(s) ' + labelTipo + ' do mês ' + mes + '/' + ano + '?\nO processo será automático em lotes de 50.')) return;
+
+        var CHUNK = 50;
+        var chunks = [];
+        for (var i = 0; i < ids.length; i += CHUNK) {
+          chunks.push(ids.slice(i, i + CHUNK));
+        }
+
+        // open progress modal
+        document.getElementById('prog-sub').textContent = 'Preparando ' + ids.length + ' notas...';
+        document.getElementById('prog-bar').style.width = '0%';
+        document.getElementById('prog-ok').textContent = '0';
+        document.getElementById('prog-err').textContent = '0';
+        document.getElementById('prog-total').textContent = ids.length;
+        var barColor = tipo === 'nao_elegiveis'
+          ? 'linear-gradient(90deg,#92700a,#d9c000)'
+          : 'linear-gradient(90deg,#6366f1,#a5b4fc)';
+        document.getElementById('prog-bar').style.background = barColor;
+        document.getElementById('modal-progresso').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        processarChunkMes(chunks, 0, []);
+      })
+      .catch(function() { alert('Erro ao buscar vendas ' + labelTipo + '.'); });
+  }
+
+  function processarChunkMes(chunks, index, acumulado) {
+    var totalIds = chunks.reduce(function(s, c) { return s + c.length; }, 0);
+    var done = acumulado.length;
+    var pct  = totalIds > 0 ? Math.round((done / totalIds) * 100) : 0;
+    var ok   = acumulado.filter(function(r) { return r.statusProcessamento === 'sucesso' || r.codigoProcessamento === '000'; }).length;
+    var err  = done - ok;
+
+    document.getElementById('prog-bar').style.width = pct + '%';
+    document.getElementById('prog-ok').textContent  = ok;
+    document.getElementById('prog-err').textContent = err;
+
+    if (index >= chunks.length) {
+      document.getElementById('prog-bar').style.width = '100%';
+      document.getElementById('prog-sub').textContent = 'Concluído!';
+      setTimeout(function() {
+        document.getElementById('modal-progresso').style.display = 'none';
+        document.body.style.overflow = '';
+        abrirModalResumo(acumulado, ok, err);
+      }, 700);
+      return;
+    }
+
+    document.getElementById('prog-sub').textContent =
+      'Lote ' + (index + 1) + ' de ' + chunks.length + ' — ' + done + ' de ' + totalIds + ' processadas';
+
+    $.ajax({
+      url: URL_EMITIR, method: 'POST', data: { ids: chunks[index] }, dataType: 'json',
+      success: function(res) {
+        var batch = Array.isArray(res) ? res : [];
+        processarChunkMes(chunks, index + 1, acumulado.concat(batch));
+      },
+      error: function() {
+        var fake = chunks[index].map(function(id) {
+          return { venda_id: id, statusProcessamento: 'erro', motivo: 'Erro de comunicação' };
+        });
+        processarChunkMes(chunks, index + 1, acumulado.concat(fake));
+      }
+    });
+  }
 
   // clique nos stat cards abre a tab correta
   const tabMap = { 'stat-el':'elegiveis', 'stat-ne':'nao-elegiveis', 'stat-em':'emitidas' };

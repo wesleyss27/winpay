@@ -862,6 +862,46 @@ class AppNotazz
         ]);
     }
 
+    public function loteElegiveisDoMes($data): void
+    {
+        (new Section())->permissaoModulo("notas_fiscais");
+
+        $uid  = $this->section->getId();
+        $mes  = intval($_GET['mes'] ?? date('m'));
+        $ano  = intval($_GET['ano'] ?? date('Y'));
+
+        $inicio = sprintf('%04d-%02d-01', $ano, $mes);
+        $fim    = date('Y-m-t', strtotime($inicio));
+
+        $where  = "created_at BETWEEN '{$inicio} 00:00:00' AND '{$fim} 23:59:59' AND produtor = {$uid}";
+        $vendas = (new Venda())->find($where)->order("id ASC")->fetch(true);
+        $integracoes = (new IntegracaoNotazz())->find("usuario = {$uid}")->fetch(true) ?? [];
+
+        $tipo = $_GET['tipo'] ?? 'elegiveis'; // 'elegiveis' | 'nao_elegiveis'
+
+        $ids = [];
+        if ($vendas) {
+            $vendaIds = array_map(fn($v) => $v->id, $vendas);
+            $inList   = implode(',', $vendaIds);
+            $nfRows   = (new NotaFiscal())->find("venda IN ({$inList})")->fetch(true);
+            $emitidasIds = $nfRows ? array_map(fn($n) => (int)$n->venda, $nfRows) : [];
+
+            foreach ($vendas as $venda) {
+                if (in_array($venda->id, $emitidasIds, true)) continue;
+                $chk = $this->checarElegibilidade($venda, $integracoes);
+                if ($tipo === 'nao_elegiveis') {
+                    if (!$chk['elegivel']) $ids[] = $venda->id;
+                } else {
+                    if ($chk['elegivel']) $ids[] = $venda->id;
+                }
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(['ids' => $ids, 'total' => count($ids)], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     public function emitirLote($data): void
     {
         (new Section())->permissaoModulo("notas_fiscais");
