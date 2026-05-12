@@ -887,5 +887,6 @@ class AppNotazz
 
         header('Content-Type: application/json');
         echo json_encode($resultados, JSON_UNESCAPED_UNICODE);
+        exit;
     }
 }

@@ -501,19 +501,11 @@
     const prefix = tabAtiva;
 
     $.ajax({
-      url: URL_EMITIR, method:'POST', data:{ ids: ids },
-      success: function(resp) {
-        let res;
-        try { res = JSON.parse(resp); } catch(e) {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-paper-plane"></i> Emitir Notas';
-          alert('Erro ao processar resposta do servidor.');
-          return;
-        }
-
+      url: URL_EMITIR, method: 'POST', data: { ids: ids }, dataType: 'json',
+      success: function(res) {
         let ok = 0, erro = 0;
         res.forEach(function(r) {
-          const cel = document.getElementById(`st-${prefix}-${r.venda_id}`);
+          const cel = document.getElementById('st-' + prefix + '-' + r.venda_id);
           if (r.statusProcessamento === 'sucesso' || r.codigoProcessamento === '000') {
             if (cel) cel.innerHTML = '<span class="tag tag-green"><i class="fas fa-check"></i> Emitida</span>';
             ok++;
@@ -522,7 +514,6 @@
             erro++;
           }
         });
-
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane"></i> Emitir Notas';
         abrirModalResumo(res, ok, erro);
