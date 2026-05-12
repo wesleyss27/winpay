@@ -779,9 +779,13 @@ class AppNotazz
             if ($semEstado && $notazz->uf_padrao)     $data['estado'] = $notazz->uf_padrao;
             if ((empty($data['cep']) || $data['cep'] === '00000000') && $notazz->cep_padrao) $data['cep'] = $notazz->cep_padrao;
 
-            $fields = ($produto && $produto->tipo_produto == 8)
-                ? $this->criarNFE($data)
-                : $this->criarNFSE($data);
+            if ($produto && $produto->tipo_produto == 8) {
+                $data['metodo'] = 'create_nfe_55';
+                $fields = $this->criarNFE($data);
+            } else {
+                $data['metodo'] = 'create_nfse';
+                $fields = $this->criarNFSE($data);
+            }
 
             $enviar = $this->send_data($fields);
             $enviar['venda_id'] = $venda->id;
