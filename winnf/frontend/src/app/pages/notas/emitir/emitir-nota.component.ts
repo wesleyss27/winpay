@@ -14,7 +14,20 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { debounceTime, Subject } from 'rxjs';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
+
+function cpfCnpjValidator(control: AbstractControl): ValidationErrors | null {
+  const digits = (control.value || '').replace(/\D/g, '');
+  if (!digits) return null; // required validator handles empty
+  return digits.length === 11 || digits.length === 14 ? null : { cpfCnpjInvalid: true };
+}
+
+function cepValidator(control: AbstractControl): ValidationErrors | null {
+  const digits = (control.value || '').replace(/\D/g, '');
+  if (!digits) return null;
+  return digits.length === 8 ? null : { cepInvalid: true };
+}
 
 interface Produto {
   id: number;
@@ -68,7 +81,7 @@ export class EmitirNotaComponent implements OnInit {
       tipo: ['nfse', Validators.required],
       // Destinatário
       nome: ['', Validators.required],
-      cpf_cnpj: ['', Validators.required],
+      cpf_cnpj: ['', [Validators.required, cpfCnpjValidator]],
       tipo_pessoa: ['F', Validators.required],
       email: [''],
       telefone: [''],
@@ -78,7 +91,7 @@ export class EmitirNotaComponent implements OnInit {
       bairro: [''],
       cidade: [''],
       uf: ['', Validators.maxLength(2)],
-      cep: ['', Validators.maxLength(8)],
+      cep: ['', cepValidator],
       search_cpf: [''],
       // Nota
       valor: ['', [Validators.required, Validators.min(0.01)]],

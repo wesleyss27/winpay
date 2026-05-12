@@ -67,6 +67,7 @@
           <mat-label>CPF/CNPJ *</mat-label>
           <input matInput formControlName="cpf_cnpj" />
           <mat-error *ngIf="form.get('cpf_cnpj')?.hasError('required')">CPF/CNPJ é obrigatório</mat-error>
+          <mat-error *ngIf="form.get('cpf_cnpj')?.hasError('cpfCnpjInvalid')">CPF deve ter 11 dígitos ou CNPJ 14 dígitos</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="field-tipo">
           <mat-label>Tipo *</mat-label>
@@ -92,8 +93,9 @@
       <div class="form-row">
         <mat-form-field appearance="outline" class="field-cep">
           <mat-label>CEP</mat-label>
-          <input matInput formControlName="cep" maxlength="8" placeholder="00000000" (input)="onCepInput($event)" />
+          <input matInput formControlName="cep" maxlength="9" placeholder="00000-000" (input)="onCepInput($event)" />
           <mat-spinner matSuffix diameter="18" *ngIf="isFetchingCep"></mat-spinner>
+          <mat-error *ngIf="form.get('cep')?.hasError('cepInvalid')">CEP deve ter 8 dígitos</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" class="flex-2">
           <mat-label>Rua</mat-label>
