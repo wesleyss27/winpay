@@ -6,6 +6,7 @@ All methods return a dict with at least:
 """
 from __future__ import annotations
 
+import json
 import uuid
 import logging
 from datetime import datetime, timezone
@@ -41,11 +42,16 @@ class NotazzService:
         return current_app.config["NOTAZZ_POSTBACK_URL"]
 
     def _post(self, payload: dict[str, Any]) -> dict[str, Any]:
-        """Internal POST to Notazz API. Returns parsed JSON or raises."""
+        """Internal POST to Notazz API. Returns parsed JSON or raises.
+
+        Notazz expects application/x-www-form-urlencoded with a single
+        'fields' key whose value is the JSON-encoded payload — matching
+        the behaviour of the PHP send_data() helper.
+        """
         try:
             response = requests.post(
                 self._base_url,
-                json=payload,
+                data={"fields": json.dumps(payload, ensure_ascii=False)},
                 timeout=30,
             )
             response.raise_for_status()
@@ -57,7 +63,8 @@ class NotazzService:
             logger.error("Notazz API connection error")
             raise RuntimeError("Erro de conexão com a API Notazz.")
         except requests.exceptions.HTTPError as exc:
-            logger.error("Notazz HTTP error: %s", exc)
+            body = exc.response.text[:500] if exc.response is not None else ""
+            logger.error("Notazz HTTP error: %s — response body: %s", exc, body)
             raise RuntimeError(f"Erro HTTP da API Notazz: {exc}")
         except ValueError:
             logger.error("Notazz invalid JSON response")
