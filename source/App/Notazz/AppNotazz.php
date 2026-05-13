@@ -694,19 +694,21 @@ class AppNotazz
 
         $nasc  = date('Y-m-d', mt_rand(strtotime('1970-01-01'), strtotime('2000-01-01')));
 
+        $produto = $venda->dataProduto();
         if ($venda->plano) {
             $plano          = $venda->dataPlano();
             $nomekit        = $plano->nome;
-            $descricao      = !empty($plano->descricao) ? $plano->descricao : $plano->nome;
             $codigo_produto = $plano->codigo;
             $quantidade     = $plano->quantidade;
         } else {
-            $produto        = $venda->dataProduto();
+            $plano          = null;
             $nomekit        = $produto->nome;
-            $descricao      = !empty($produto->descricao) ? $produto->descricao : $produto->nome;
             $codigo_produto = $produto->codigo;
             $quantidade     = 1;
         }
+        $descricao = !empty($produto->descricao)
+            ? $produto->descricao
+            : (!empty($plano->descricao) ? $plano->descricao : $produto->nome);
 
         return [
             'id'             => $venda->id,
