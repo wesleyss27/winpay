@@ -167,6 +167,7 @@ class AppNotazz
         $integracao->cidade_padrao       = $data["cidade_padrao"] ?? null;
         $integracao->uf_padrao           = $data["uf_padrao"] ?? null;
         $integracao->cep_padrao          = preg_replace('/\D/', '', $data["cep_padrao"] ?? '')  ?: null;
+        $integracao->tipo_nota           = in_array($data["tipo_nota"] ?? '', ['nfse', 'nfe']) ? $data["tipo_nota"] : null;
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
@@ -190,6 +191,7 @@ class AppNotazz
         $integracao->cidade_padrao        = $data["cidade_padrao"] ?? null;
         $integracao->uf_padrao            = $data["uf_padrao"] ?? null;
         $integracao->cep_padrao           = preg_replace('/\D/', '', $data["cep_padrao"] ?? '') ?: null;
+        $integracao->tipo_nota            = in_array($data["tipo_nota"] ?? '', ['nfse', 'nfe']) ? $data["tipo_nota"] : null;
 
         if ($integracao->save()) {
             echo "Salvo com sucesso";
@@ -269,7 +271,7 @@ class AppNotazz
                     if ($semEstado && !empty($notazz->uf_padrao))     $data["estado"] = $notazz->uf_padrao;
                     if ((empty($data["cep"]) || $data["cep"] === '00000000') && !empty($notazz->cep_padrao)) $data["cep"] = $notazz->cep_padrao;
 
-                    if ($produto->tipo_produto == 8) {
+                    if ($this->_ehNfe($notazz, $produto)) {
                         $data["metodo"] = "create_nfe_55";
                         $nota = $this->criarNFE($data);
                     } else {
@@ -645,6 +647,20 @@ class AppNotazz
         return $fields;
     }
 
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    /**
+     * Decide se deve emitir NF-e (true) ou NFS-e (false).
+     * Prioridade: tipo_nota da integração → fallback para tipo_produto == 8.
+     */
+    private function _ehNfe($notazz, $produto): bool
+    {
+        if (!empty($notazz->tipo_nota)) {
+            return $notazz->tipo_nota === 'nfe';
+        }
+        return $produto && (int)$produto->tipo_produto === 8;
+    }
+
     // ─── Helpers para emissão em lote ────────────────────────────────────────
 
     private function buildDadosNota(Venda $venda): array
@@ -788,7 +804,7 @@ class AppNotazz
             if ($semEstado && $notazz->uf_padrao)     $data['estado'] = $notazz->uf_padrao;
             if ((empty($data['cep']) || $data['cep'] === '00000000') && $notazz->cep_padrao) $data['cep'] = $notazz->cep_padrao;
 
-            if ($produto && $produto->tipo_produto == 8) {
+            if ($this->_ehNfe($notazz, $produto)) {
                 $data['metodo'] = 'create_nfe_55';
                 $fields = $this->criarNFE($data);
             } else {
@@ -988,15 +1004,16 @@ class AppNotazz
         }
 
         // Determina o método pelo tipo de produto vinculado à venda
-        $metodo = 'consult_nfse';
+        $metodo  = 'consult_nfse';
+        $produto = null;
         if ($nf && $nf->venda) {
             $venda = (new Venda())->findById($nf->venda);
             if ($venda) {
                 $produto = (new Produto())->findById($venda->produto);
-                if ($produto && $produto->tipo_produto == 8) {
-                    $metodo = 'consult_nfe_55';
-                }
             }
+        }
+        if ($this->_ehNfe($integracao, $produto)) {
+            $metodo = 'consult_nfe_55';
         }
 
         $fields = json_encode([

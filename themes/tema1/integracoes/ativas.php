@@ -796,6 +796,7 @@ $json = array(
                                         cidade_padrao: "<?= $nota->cidade_padrao ?>",
                                         uf_padrao: "<?= $nota->uf_padrao ?>",
                                         cep_padrao: "<?= $nota->cep_padrao ?>",
+                                        tipo_nota: "<?= $nota->tipo_nota ?>",
                                     }
                                 </script>
 
@@ -904,6 +905,19 @@ $json = array(
                             <select name="enviar_email_cliente" id="enviar_email_cliente_editar" class="form-control">
                                 <option value="1">Sim — enviar por e-mail ao cliente</option>
                                 <option value="0">Não — apenas emitir a nota</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>Modelo de nota fiscal</b>
+                            <select name="tipo_nota" id="tipo_nota_editar" class="form-control">
+                                <option value="">Automático (padrão legado)</option>
+                                <option value="nfse">NFS-e — Nota Fiscal de Serviço</option>
+                                <option value="nfe">NF-e — Nota Fiscal de Produto</option>
                             </select>
                         </div>
                     </div>
@@ -3291,6 +3305,7 @@ $json = array(
         $("#cidade_padrao_editar").val(d["cidade_padrao"]);
         $("#uf_padrao_editar").val(d["uf_padrao"]);
         $("#cep_padrao_editar").val(d["cep_padrao"]);
+        $("#tipo_nota_editar").val(d["tipo_nota"] || "");
     }
 
     function cancelarnotazz() {
@@ -3304,6 +3319,7 @@ $json = array(
         $("#cidade_padrao_editar").val("");
         $("#uf_padrao_editar").val("");
         $("#cep_padrao_editar").val("");
+        $("#tipo_nota_editar").val("");
     }
 
     function excluirnotazz(id) {
