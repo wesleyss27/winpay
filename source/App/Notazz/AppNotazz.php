@@ -517,7 +517,7 @@ class AppNotazz
             "EXTERNAL_ID" => $data["transacao"],
             "SALE_ID" => "127654",
             "DOCUMENT_ISSUE_DATE" => date("Y-m-d H:i:s"),
-            "REQUEST_ORIGIN" => "RedRocket",
+            "REQUEST_ORIGIN" => "WinPay",
             "REQUEST_RETURN" => url("notas/postback")
         );
 
@@ -557,7 +557,7 @@ class AppNotazz
             "EXTERNAL_ID" => $data["transacao"],
             "SALE_ID" => "127654",
             "DOCUMENT_ISSUE_DATE" => date("Y-m-d H:i:s"),
-            "REQUEST_ORIGIN" => "RedRocket",
+            "REQUEST_ORIGIN" => "WinPay",
             "DOCUMENT_PRODUCT" => array(
                 "1" => array(
                     "DOCUMENT_PRODUCT_COD" => $data["codigo_produto"],
