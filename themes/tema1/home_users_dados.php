@@ -339,7 +339,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 mb-4">
+  <div class="col-md-6 mb-4">
     <div class="winpay-card h-100">
       <div class="winpay-card-header">
         <span class="icon-wrapper">
@@ -359,6 +359,7 @@
     </div>
   </div>
 
+  <?php /* TEMPORARIAMENTE OCULTO - Card Disponível para saque WinPay
   <div class="col-md-3 mb-4">
     <div class="winpay-card h-100">
       <div class="winpay-card-header">
@@ -378,6 +379,7 @@
       </div>
     </div>
   </div>
+  */ ?>
 </div>
 
 <div class="row winpay-dashboard-row">
