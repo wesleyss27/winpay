@@ -250,6 +250,7 @@ class AppNotazz
     {
         $produto = (new Produto())->findById($data["produto"]);
         $data["valor_unitario"] = number_format($data["valor_total"] / $data["quantidade"], 2);
+        $data["descricao"]      = !empty($produto->descricao) ? $produto->descricao : ($data["nomekit"] ?? $produto->nome);
 
         $notazz = (new IntegracaoNotazz())->find("usuario = " . $data["produtor"])->fetch(true);
 
@@ -508,7 +509,7 @@ class AppNotazz
             "DESTINATION_EMAIL" => $data["email"],
             "DESTINATION_EMAIL_SEND" => (@$data["enviar_email_cliente"] == 1) ? $data["email"] : "",
             "DOCUMENT_BASEVALUE" => $data["valor_venda"],
-            "DOCUMENT_DESCRIPTION" => $data["nomekit"],
+            "DOCUMENT_DESCRIPTION" => !empty($data["descricao"]) ? $data["descricao"] : $data["nomekit"],
             "DOCUMENT_COMPETENCE" => !empty($data["competencia"]) ? $data["competencia"] : date("Y-m-d"),
 
             "EXTERNAL_ID" => $data["transacao"],
@@ -548,7 +549,7 @@ class AppNotazz
             "DESTINATION_EMAIL" => $data["email"],
             "DESTINATION_EMAIL_SEND" => (@$data["enviar_email_cliente"] == 1) ? $data["email"] : "",
             "DOCUMENT_BASEVALUE" => $data["valor_total"],
-            "DOCUMENT_DESCRIPTION" => $data["nomekit"],
+            "DOCUMENT_DESCRIPTION" => !empty($data["descricao"]) ? $data["descricao"] : $data["nomekit"],
             "DOCUMENT_COMPETENCE" => !empty($data["competencia"]) ? $data["competencia"] : date("Y-m-d"),
 
             "EXTERNAL_ID" => $data["transacao"],
@@ -680,11 +681,13 @@ class AppNotazz
         if ($venda->plano) {
             $plano          = $venda->dataPlano();
             $nomekit        = $plano->nome;
+            $descricao      = !empty($plano->descricao) ? $plano->descricao : $plano->nome;
             $codigo_produto = $plano->codigo;
             $quantidade     = $plano->quantidade;
         } else {
             $produto        = $venda->dataProduto();
             $nomekit        = $produto->nome;
+            $descricao      = !empty($produto->descricao) ? $produto->descricao : $produto->nome;
             $codigo_produto = $produto->codigo;
             $quantidade     = 1;
         }
@@ -710,6 +713,7 @@ class AppNotazz
             'pais'           => $c->pais_entrega,
             'cep'            => $cep    ?: '00000000',
             'nomekit'        => $nomekit,
+            'descricao'      => $descricao,
             'codigo_produto' => $codigo_produto,
             'quantidade'     => $quantidade,
             'email_suporte'  => $venda->dataProduto()->email_suporte,
