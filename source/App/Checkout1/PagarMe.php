@@ -376,6 +376,14 @@ class PagarMe
         ];
       }
     } else {
+      $telDigits = preg_replace('/\D/', '', (string)@$data["telefone"]);
+      // Remove o 0 inicial (DDI/DDD com zero à frente) se tiver 11+ dígitos
+      if (strlen($telDigits) > 11 && $telDigits[0] === '0') {
+        $telDigits = ltrim($telDigits, '0');
+      }
+      $areaCode = substr($telDigits, 0, 2);
+      $telNum   = substr($telDigits, 2);
+
       $registerInfo = [
         "email"          => (string)@$data["email"],
         "document"       => $doc,
@@ -383,6 +391,13 @@ class PagarMe
         "company_name"   => (string)(@$data["nome_fantasia"] ?: @$data["nome"]),
         "trading_name"   => (string)(@$data["razao_social"] ?: @$data["nome"]),
         "annual_revenue" => (int)@$data["receita_anual"],
+        "phone_numbers"  => [
+          "mobile_phone" => [
+            "country_code" => "55",
+            "area_code"    => $areaCode,
+            "number"       => $telNum,
+          ],
+        ],
       ];
     }
 
