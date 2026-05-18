@@ -352,51 +352,69 @@ class PagarMe
 
   public function criarRecebedor($data)
   {
-    if (strlen(trim(@$data["cpf"])) == 11) {
-      $type = "individual";
+    $doc  = preg_replace('/\D/', '', (string)@$data["cpf"]);
+    $isPF = strlen($doc) <= 11;
+
+    if ($isPF) {
+      $registerInfo = [
+        "email"                   => (string)@$data["email"],
+        "document"                => $doc,
+        "type"                    => "individual",
+        "name"                    => (string)@$data["nome"],
+        "birthdate"               => (string)@$data["data_nascimento"],
+        "monthly_income"          => (int)@$data["renda_mensal"],
+        "professional_occupation" => (string)@$data["ocupacao"],
+      ];
+      if (!empty($data["cep"])) {
+        $registerInfo["address"] = [
+          "line_1"   => trim(@$data["numero"] . ", " . @$data["rua"] . ", " . @$data["bairro"], ", "),
+          "line_2"   => (string)@$data["complemento"],
+          "zip_code" => preg_replace('/\D/', '', (string)@$data["cep"]),
+          "city"     => (string)@$data["cidade"],
+          "state"    => strtoupper((string)@$data["estado"]),
+          "country"  => "BR",
+        ];
+      }
     } else {
-      $type = "company";
+      $registerInfo = [
+        "email"          => (string)@$data["email"],
+        "document"       => $doc,
+        "type"           => "corporation",
+        "company_name"   => (string)(@$data["nome_fantasia"] ?: @$data["nome"]),
+        "trading_name"   => (string)(@$data["razao_social"] ?: @$data["nome"]),
+        "annual_revenue" => (int)@$data["receita_anual"],
+      ];
     }
 
-    $dados["url"] = $this->endpoint . "/recipients";
+    $payload = [
+      "code"                 => "user-" . @$data["id"],
+      "register_information" => $registerInfo,
+      "default_bank_account" => [
+        "holder_name"         => (string)@$data["nome"],
+        "holder_type"         => $isPF ? "individual" : "company",
+        "holder_document"     => $doc,
+        "bank"                => (string)@$data["banco"],
+        "branch_number"       => (string)@$data["agencia"],
+        "branch_check_digit"  => (string)(@$data["digito_agencia"] ?: "0"),
+        "account_number"      => (string)@$data["conta"],
+        "account_check_digit" => (string)@$data["digito_conta"],
+        "type"                => (@$data["tipo"] === "corrente") ? "checking" : "savings",
+      ],
+      "transfer_settings" => [
+        "transfer_enabled"  => false,
+        "transfer_interval" => "Daily",
+        "transfer_day"      => 0,
+      ],
+      "automatic_anticipation_settings" => [
+        "enabled"           => false,
+        "type"              => "full",
+        "volume_percentage" => 0,
+        "delay"             => null,
+      ],
+    ];
 
-    $digito_agencia = ! empty( @$data["digito_agencia"] ) ? @$data["digito_agencia"] : 0;
-    $digito_agencia = '"branch_check_digit": "' . @$data["digito_agencia"] . '",';
-
-    $dados["json"] = '{
-      "name": "' . @$data["nome"] . '",
-      "email": "' . @$data["email"] . '",
-      "description": "Recebedor ' . @$data["nome"] . '",
-      "document": "' . @$data["cpf"] . '",
-      "type": "' . $type . '",
-      "default_bank_account": {
-        "holder_name": "' . @$data["nome"] . '",
-        "holder_type": "' . $type . '",
-        "holder_document": "' . @$data["cpf"] . '",
-        "bank": "' . @$data["banco"] . '",
-        "branch_number": "' . @$data["agencia"] . '",
-        ' . @$digito_agencia . '
-        "account_number": "' . @$data["conta"] . '",
-        "account_check_digit": "' . @$data["digito_conta"] . '",
-        "type": "' . ((@$data["tipo"] === 'corrente') ? 'checking' : 'savings') . '"
-      },
-      "transfer_settings": {
-        "transfer_enabled": false,
-        "transfer_interval": "Daily",
-        "transfer_day": 0
-      },
-      "automatic_anticipation_settings": {
-        "enabled": false,
-        "type": "full",
-        "volume_percentage": "50",
-        "delay": null
-      }
-    }';
-
-    // echo $dados["json"];
-    // exit;
-    // return $dados;
-    return $this->executa($dados["url"], "POST", $dados["json"]);
+    $url = $this->endpoint . "recipients";
+    return $this->executa($url, "POST", json_encode($payload, JSON_UNESCAPED_UNICODE));
   }
 
   public function reembolsoCartao($data)

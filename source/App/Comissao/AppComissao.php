@@ -1803,6 +1803,9 @@ class AppComissao
         $banco->digito_conta = @$data["digito_conta"];
         $banco->tipo = @$data["tipo"];
         $banco->chave_pix = @$data["chave_pix"];
+        $banco->renda_mensal = !empty($data["renda_mensal"]) ? (int)round((float)str_replace(',', '.', $data["renda_mensal"]) * 100) : null;
+        $banco->ocupacao = @$data["ocupacao"];
+        $banco->receita_anual = !empty($data["receita_anual"]) ? (int)round((float)str_replace(',', '.', $data["receita_anual"]) * 100) : null;
         $banco->status = 1;
 
         $bancos = $banco->find("principal == 1 && usuario = " . $this->section->getId())->fetch();
@@ -1829,6 +1832,23 @@ class AppComissao
         $data["nome"] = $data["titular"];
         $data["email"] = $_SESSION["email"];
         $data["id"] = $this->section->getId();
+
+        // Enriquece $data com campos do perfil do usuário (endereço, nascimento, dados PJ)
+        $ud = (new UsuarioDados())->find("usuario = " . $this->section->getId())->fetch();
+        if ($ud) {
+            $data["data_nascimento"]  = $data["data_nascimento"]  ?: $ud->data_nascimento;
+            $data["renda_mensal"]     = $banco->renda_mensal;
+            $data["receita_anual"]    = $banco->receita_anual;
+            $data["cep"]              = $ud->cep;
+            $data["rua"]              = $ud->rua;
+            $data["numero"]           = $ud->numero;
+            $data["complemento"]      = $ud->complemento;
+            $data["bairro"]           = $ud->bairro;
+            $data["cidade"]           = $ud->cidade;
+            $data["estado"]           = $ud->estado;
+            $data["razao_social"]  = @$data["razao_social_pj"]  ?: $ud->razao_social;
+            $data["nome_fantasia"] = @$data["nome_fantasia_pj"] ?: $ud->nome_fantasia;
+        }
 
         $pagarMe = (new PagarMe)->criarRecebedor($data);
 
@@ -1952,6 +1972,15 @@ class AppComissao
         $banco->digito_conta = @$data["digito_conta"];
         $banco->tipo = @$data["tipo"];
         $banco->chave_pix = @$data["chave_pix"];
+        if (!empty($data["renda_mensal"])) {
+            $banco->renda_mensal = (int)round((float)str_replace(',', '.', $data["renda_mensal"]) * 100);
+        }
+        if (!empty($data["ocupacao"])) {
+            $banco->ocupacao = $data["ocupacao"];
+        }
+        if (!empty($data["receita_anual"])) {
+            $banco->receita_anual = (int)round((float)str_replace(',', '.', $data["receita_anual"]) * 100);
+        }
         $banco->status = 1;
 
         $bancos = $banco->find("id != $banco->id && principal == 1 && usuario = " . $this->section->getId())->fetch();
@@ -1982,6 +2011,22 @@ class AppComissao
             $salvarUsuario = false;
 
             if (!$banco->pagarme_conta) {
+                // Enriquece $data com campos do perfil do usuário
+                $ud = (new UsuarioDados())->find("usuario = " . $this->section->getId())->fetch();
+                if ($ud) {
+                    $data["data_nascimento"] = @$data["data_nascimento"] ?: $ud->data_nascimento;
+                    $data["renda_mensal"]    = $banco->renda_mensal;
+                    $data["receita_anual"]   = $banco->receita_anual;
+                    $data["cep"]             = $ud->cep;
+                    $data["rua"]             = $ud->rua;
+                    $data["numero"]          = $ud->numero;
+                    $data["complemento"]     = $ud->complemento;
+                    $data["bairro"]          = $ud->bairro;
+                    $data["cidade"]          = $ud->cidade;
+                    $data["estado"]          = $ud->estado;
+                    $data["razao_social"]  = @$data["razao_social_pj"]  ?: $ud->razao_social;
+                    $data["nome_fantasia"] = @$data["nome_fantasia_pj"] ?: $ud->nome_fantasia;
+                }
                 $pagarMe = (new PagarMe)->criarRecebedor($data);
 
                 $arquivo = fopen(DIRETORIO . "logs/dados-recebedor.txt", 'a+');

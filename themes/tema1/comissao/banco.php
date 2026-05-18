@@ -163,7 +163,10 @@ include "lista-bancos.php";
                     status: "<?= $banco->status ?>",
                     observacao: "<?= $banco->observacao ?>",
                     imagem_conta: "<?= $banco->imagem_conta ?>",
-                    principal: "<?= $banco->principal ?>"
+                    principal: "<?= $banco->principal ?>",
+                    renda_mensal: "<?= $banco->renda_mensal ?>",
+                    ocupacao: "<?= htmlspecialchars((string)($banco->ocupacao ?? '')) ?>",
+                    receita_anual: "<?= $banco->receita_anual ?>"
                   }
                 </script>
 
@@ -245,6 +248,58 @@ include "lista-bancos.php";
                     <option value="<?= $cod ?>"><?= $cod . " - " . $lista ?> </option>
                   <?php endforeach; ?>
                 </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campos obrigatórios PagarMe - Pessoa Física -->
+          <?php $udAtual = $usuarioDados->find("usuario = {$_SESSION['id']}")->fetch(); ?>
+          <hr>
+          <div class="card card-body" id="campos-pf">
+            <h6 style="font-family:inter"><i class="fa fa-user"></i> Dados Cadastrais (Pessoa Física)</h6>
+            <small class="text-muted">Obrigatórios pela regulamentação do Banco Central (Circular 3.978/20)</small>
+            <hr>
+            <div class="row">
+              <div class="col-md-4">
+                <label>Data de Nascimento:</label>
+                <input type="date" name="data_nascimento" id="data_nascimento" class="form-control"
+                  value="<?= @$udAtual->data_nascimento ?>">
+              </div>
+              <div class="col-md-4">
+                <label>Renda Mensal (R$):</label>
+                <input type="number" step="0.01" min="0" name="renda_mensal" id="renda_mensal" class="form-control" placeholder="Ex: 3000.00">
+                <small>Valor em reais</small>
+              </div>
+              <div class="col-md-4">
+                <label>Ocupação Profissional:</label>
+                <input type="text" name="ocupacao" id="ocupacao" class="form-control" placeholder="Ex: Empresário, Autônomo">
+              </div>
+            </div>
+          </div>
+
+          <!-- Campos obrigatórios PagarMe - Pessoa Jurídica -->
+          <hr>
+          <div class="card card-body" id="campos-pj" style="display:none">
+            <h6 style="font-family:inter"><i class="fa fa-building"></i> Dados Cadastrais (Pessoa Jurídica)</h6>
+            <small class="text-muted">Obrigatórios pela regulamentação do Banco Central (Circular 3.978/20)</small>
+            <hr>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Nome Fantasia:</label>
+                <input type="text" name="nome_fantasia_pj" id="nome_fantasia_pj" class="form-control"
+                  value="<?= htmlspecialchars((string)(@$udAtual->nome_fantasia ?? '')) ?>">
+              </div>
+              <div class="col-md-6">
+                <label>Razão Social:</label>
+                <input type="text" name="razao_social_pj" id="razao_social_pj" class="form-control"
+                  value="<?= htmlspecialchars((string)(@$udAtual->razao_social ?? '')) ?>">
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label>Receita Anual (R$):</label>
+                <input type="number" step="0.01" min="0" name="receita_anual" id="receita_anual" class="form-control" placeholder="Ex: 120000.00">
+                <small>Valor em reais</small>
               </div>
             </div>
           </div>
@@ -434,7 +489,20 @@ include "lista-bancos.php";
       $("#salvar").attr("disabled", true);
       alert("CPF/CNPJ informado diferente do usuário");
     }*/
-  })
+  });
+
+  function atualizarCamposPfPj() {
+    var doc = $("#cpf").val().replace(/\D/g, "");
+    if (doc.length <= 11) {
+      $("#campos-pf").show();
+      $("#campos-pj").hide();
+    } else {
+      $("#campos-pf").hide();
+      $("#campos-pj").show();
+    }
+  }
+  $("#cpf").on("input blur", atualizarCamposPfPj);
+  atualizarCamposPfPj();
 
   function editar(i) {
     var action = "";
@@ -502,6 +570,16 @@ include "lista-bancos.php";
     $("#imagem_conta").attr({
       "value": imagem_conta
     });
+
+    // Campos PF/PJ
+    var renda_mensal  = dados[i]["renda_mensal"];
+    var ocupacao      = dados[i]["ocupacao"];
+    var receita_anual = dados[i]["receita_anual"];
+    if (renda_mensal)  $("#renda_mensal").val(renda_mensal / 100);
+    if (ocupacao)      $("#ocupacao").val(ocupacao);
+    if (receita_anual) $("#receita_anual").val(receita_anual / 100);
+
+    atualizarCamposPfPj();
 
     if (status == 2) {
       $("#atualizar").hide();
