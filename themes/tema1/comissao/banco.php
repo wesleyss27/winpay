@@ -301,6 +301,13 @@ include "lista-bancos.php";
                 <input type="number" step="0.01" min="0" name="receita_anual" id="receita_anual" class="form-control" placeholder="Ex: 120000.00">
                 <small>Valor em reais</small>
               </div>
+              <div class="col-md-6">
+                <label>Telefone (com DDD):</label>
+                <input type="text" name="telefone_pj" id="telefone_pj" class="form-control"
+                  placeholder="Ex: 31999999999"
+                  value="<?= htmlspecialchars(preg_replace('/\D/', '', (string)(@$udAtual->telefone ?? ''))) ?>">
+                <small>Somente números, com DDD</small>
+              </div>
             </div>
           </div>
 

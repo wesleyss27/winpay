@@ -1839,7 +1839,7 @@ class AppComissao
             $data["data_nascimento"]  = $data["data_nascimento"]  ?: $ud->data_nascimento;
             $data["renda_mensal"]     = $banco->renda_mensal;
             $data["receita_anual"]    = $banco->receita_anual;
-            $data["telefone"]         = $ud->telefone;
+            $data["telefone"]         = @$data["telefone_pj"] ?: $ud->telefone;
             $data["cep"]              = $ud->cep;
             $data["rua"]              = $ud->rua;
             $data["numero"]           = $ud->numero;
@@ -2023,7 +2023,7 @@ class AppComissao
                     $data["data_nascimento"] = @$data["data_nascimento"] ?: $ud->data_nascimento;
                     $data["renda_mensal"]    = $banco->renda_mensal;
                     $data["receita_anual"]   = $banco->receita_anual;
-                    $data["telefone"]        = $ud->telefone;
+                    $data["telefone"]        = @$data["telefone_pj"] ?: $ud->telefone;
                     $data["cep"]             = $ud->cep;
                     $data["rua"]             = $ud->rua;
                     $data["numero"]          = $ud->numero;

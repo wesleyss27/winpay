@@ -377,12 +377,9 @@ class PagarMe
       }
     } else {
       $telDigits = preg_replace('/\D/', '', (string)@$data["telefone"]);
-      // Remove o 0 inicial (DDI/DDD com zero à frente) se tiver 11+ dígitos
       if (strlen($telDigits) > 11 && $telDigits[0] === '0') {
         $telDigits = ltrim($telDigits, '0');
       }
-      $areaCode = substr($telDigits, 0, 2);
-      $telNum   = substr($telDigits, 2);
 
       $registerInfo = [
         "email"          => (string)@$data["email"],
@@ -391,14 +388,18 @@ class PagarMe
         "company_name"   => (string)(@$data["nome_fantasia"] ?: @$data["nome"]),
         "trading_name"   => (string)(@$data["razao_social"] ?: @$data["nome"]),
         "annual_revenue" => (int)@$data["receita_anual"],
-        "phone_numbers"  => [
+      ];
+
+      // Só inclui phone_numbers se houver ao menos DDD + número (10 dígitos)
+      if (strlen($telDigits) >= 10) {
+        $registerInfo["phone_numbers"] = [
           "mobile_phone" => [
             "country_code" => "55",
-            "area_code"    => $areaCode,
-            "number"       => $telNum,
+            "area_code"    => substr($telDigits, 0, 2),
+            "number"       => substr($telDigits, 2),
           ],
-        ],
-      ];
+        ];
+      }
     }
 
     $payload = [
@@ -428,8 +429,14 @@ class PagarMe
       ],
     ];
 
-    $url = $this->endpoint . "recipients";
-    return $this->executa($url, "POST", json_encode($payload, JSON_UNESCAPED_UNICODE));
+    $url     = $this->endpoint . "recipients";
+    $jsonStr = json_encode($payload, JSON_UNESCAPED_UNICODE);
+    if ($jsonStr === false) {
+      error_log("[PagarMe][criarRecebedor] json_encode falhou: " . json_last_error_msg());
+    } else {
+      error_log("[PagarMe][criarRecebedor] payload: " . $jsonStr);
+    }
+    return $this->executa($url, "POST", $jsonStr ?: '{}');
   }
 
   public function reembolsoCartao($data)
