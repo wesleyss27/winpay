@@ -393,11 +393,9 @@ class PagarMe
       // Só inclui phone_numbers se houver ao menos DDD + número (10 dígitos)
       if (strlen($telDigits) >= 10) {
         $registerInfo["phone_numbers"] = [
-          "mobile_phone" => [
-            "country_code" => "55",
-            "area_code"    => substr($telDigits, 0, 2),
-            "number"       => substr($telDigits, 2),
-          ],
+          "country_code" => "55",
+          "area_code"    => substr($telDigits, 0, 2),
+          "number"       => substr($telDigits, 2),
         ];
       }
     }

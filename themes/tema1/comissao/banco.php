@@ -284,15 +284,22 @@ include "lista-bancos.php";
             <small class="text-muted">Obrigatórios pela regulamentação do Banco Central (Circular 3.978/20)</small>
             <hr>
             <div class="row">
+              <?php
+                $preRazao = trim((string)(@$udAtual->razao_social ?? ''));
+                $preFanta = trim((string)(@$udAtual->nome_fantasia ?? ''));
+                // Não pré-preenche se o valor for só dígitos (CNPJ salvo errado)
+                if (preg_match('/^\d+$/', $preRazao)) $preRazao = '';
+                if (preg_match('/^\d+$/', $preFanta)) $preFanta = '';
+              ?>
               <div class="col-md-6">
                 <label>Nome Fantasia:</label>
                 <input type="text" name="nome_fantasia_pj" id="nome_fantasia_pj" class="form-control"
-                  value="<?= htmlspecialchars((string)(@$udAtual->nome_fantasia ?? '')) ?>">
+                  value="<?= htmlspecialchars($preFanta) ?>">
               </div>
               <div class="col-md-6">
                 <label>Razão Social:</label>
                 <input type="text" name="razao_social_pj" id="razao_social_pj" class="form-control"
-                  value="<?= htmlspecialchars((string)(@$udAtual->razao_social ?? '')) ?>">
+                  value="<?= htmlspecialchars($preRazao) ?>">
               </div>
             </div>
             <div class="row mt-2">

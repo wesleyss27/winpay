@@ -1847,13 +1847,15 @@ class AppComissao
             $data["bairro"]           = $ud->bairro;
             $data["cidade"]           = $ud->cidade;
             $data["estado"]           = $ud->estado;
-            // Prefere o valor digitado no formulário; só usa usuario_dados como fallback se não for um documento (CNPJ/CPF)
-            $razaoForm     = trim((string)@$data["razao_social_pj"]);
-            $fantaForm     = trim((string)@$data["nome_fantasia_pj"]);
-            $razaoDb       = preg_match('/^\d+$/', trim((string)$ud->razao_social)) ? '' : $ud->razao_social;
-            $fantaDb       = preg_match('/^\d+$/', trim((string)$ud->nome_fantasia)) ? '' : $ud->nome_fantasia;
-            $data["razao_social"]  = $razaoForm  ?: ($razaoDb  ?: $data["nome"]);
-            $data["nome_fantasia"] = $fantaForm  ?: ($fantaDb  ?: $data["nome"]);
+            // Prefere o valor digitado no formulário; descarta se for só dígitos (CNPJ pré-preenchido errado)
+            $razaoForm = trim((string)@$data["razao_social_pj"]);
+            $fantaForm = trim((string)@$data["nome_fantasia_pj"]);
+            if (preg_match('/^\d+$/', $razaoForm)) $razaoForm = '';
+            if (preg_match('/^\d+$/', $fantaForm)) $fantaForm = '';
+            $razaoDb = preg_match('/^\d+$/', trim((string)$ud->razao_social)) ? '' : $ud->razao_social;
+            $fantaDb = preg_match('/^\d+$/', trim((string)$ud->nome_fantasia)) ? '' : $ud->nome_fantasia;
+            $data["razao_social"]  = $razaoForm ?: ($razaoDb ?: $data["nome"]);
+            $data["nome_fantasia"] = $fantaForm ?: ($fantaDb ?: $data["nome"]);
         }
 
         $pagarMe = (new PagarMe)->criarRecebedor($data);
@@ -2031,12 +2033,14 @@ class AppComissao
                     $data["bairro"]          = $ud->bairro;
                     $data["cidade"]          = $ud->cidade;
                     $data["estado"]          = $ud->estado;
-                    $razaoForm    = trim((string)@$data["razao_social_pj"]);
-                    $fantaForm    = trim((string)@$data["nome_fantasia_pj"]);
-                    $razaoDb      = preg_match('/^\d+$/', trim((string)$ud->razao_social)) ? '' : $ud->razao_social;
-                    $fantaDb      = preg_match('/^\d+$/', trim((string)$ud->nome_fantasia)) ? '' : $ud->nome_fantasia;
-                    $data["razao_social"]  = $razaoForm ?: ($razaoDb  ?: $data["nome"]);
-                    $data["nome_fantasia"] = $fantaForm ?: ($fantaDb  ?: $data["nome"]);
+                    $razaoForm = trim((string)@$data["razao_social_pj"]);
+                    $fantaForm = trim((string)@$data["nome_fantasia_pj"]);
+                    if (preg_match('/^\d+$/', $razaoForm)) $razaoForm = '';
+                    if (preg_match('/^\d+$/', $fantaForm)) $fantaForm = '';
+                    $razaoDb = preg_match('/^\d+$/', trim((string)$ud->razao_social)) ? '' : $ud->razao_social;
+                    $fantaDb = preg_match('/^\d+$/', trim((string)$ud->nome_fantasia)) ? '' : $ud->nome_fantasia;
+                    $data["razao_social"]  = $razaoForm ?: ($razaoDb ?: $data["nome"]);
+                    $data["nome_fantasia"] = $fantaForm ?: ($fantaDb ?: $data["nome"]);
                 }
                 $pagarMe = (new PagarMe)->criarRecebedor($data);
 
