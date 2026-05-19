@@ -316,6 +316,85 @@ include "lista-bancos.php";
                 <small>Somente números, com DDD</small>
               </div>
             </div>
+
+            <hr>
+            <h6 style="font-family:inter"><i class="fa fa-user-tie"></i> Representante Legal</h6>
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <label>Nome do Representante:</label>
+                <input type="text" name="nome_socio" id="nome_socio" class="form-control" placeholder="Nome completo">
+              </div>
+              <div class="col-md-4">
+                <label>CPF do Representante:</label>
+                <input type="text" name="cpf_socio" id="cpf_socio" class="form-control" placeholder="Somente números">
+              </div>
+              <div class="col-md-4">
+                <label>Data de Nascimento:</label>
+                <input type="date" name="data_nascimento_socio" id="data_nascimento_socio" class="form-control">
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label>Renda Mensal do Representante (R$):</label>
+                <input type="number" step="0.01" min="0" name="renda_mensal_socio" id="renda_mensal_socio" class="form-control" placeholder="Ex: 5000.00">
+                <small>Valor em reais</small>
+              </div>
+              <div class="col-md-6">
+                <label>Ocupação Profissional do Representante:</label>
+                <input type="text" name="ocupacao_socio" id="ocupacao_socio" class="form-control" placeholder="Ex: Empresário, Diretor">
+              </div>
+            </div>
+          </div>
+
+          <!-- Endereço — obrigatório para PagarMe (PF e PJ) -->
+          <hr>
+          <div class="card card-body">
+            <h6 style="font-family:inter"><i class="fa fa-map-marker-alt"></i> Endereço</h6>
+            <small class="text-muted">Obrigatório pela regulamentação do Banco Central (Circular 3.978/20)</small>
+            <hr>
+            <div class="row">
+              <div class="col-md-3">
+                <label>CEP:</label>
+                <input type="text" name="cep" id="cep_end" class="form-control" placeholder="00000000"
+                  value="<?= htmlspecialchars(preg_replace('/\D/', '', (string)(@$udAtual->cep ?? ''))) ?>">
+              </div>
+              <div class="col-md-6">
+                <label>Rua:</label>
+                <input type="text" name="rua" id="rua" class="form-control"
+                  value="<?= htmlspecialchars((string)(@$udAtual->rua ?? '')) ?>">
+              </div>
+              <div class="col-md-3">
+                <label>Número:</label>
+                <input type="text" name="numero" id="numero" class="form-control"
+                  value="<?= htmlspecialchars((string)(@$udAtual->numero ?? '')) ?>">
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-3">
+                <label>Complemento:</label>
+                <input type="text" name="complemento" id="complemento" class="form-control" placeholder="Apto, Sala, N/A"
+                  value="<?= htmlspecialchars((string)(@$udAtual->complemento ?? '')) ?>">
+              </div>
+              <div class="col-md-3">
+                <label>Ponto de Referência:</label>
+                <input type="text" name="referencia" id="referencia" class="form-control" placeholder="Ex: próx. ao mercado">
+              </div>
+              <div class="col-md-3">
+                <label>Bairro:</label>
+                <input type="text" name="bairro" id="bairro" class="form-control"
+                  value="<?= htmlspecialchars((string)(@$udAtual->bairro ?? '')) ?>">
+              </div>
+              <div class="col-md-2">
+                <label>Cidade:</label>
+                <input type="text" name="cidade" id="cidade" class="form-control"
+                  value="<?= htmlspecialchars((string)(@$udAtual->cidade ?? '')) ?>">
+              </div>
+              <div class="col-md-1">
+                <label>UF:</label>
+                <input type="text" name="estado" id="estado" class="form-control" maxlength="2"
+                  value="<?= htmlspecialchars(strtoupper((string)(@$udAtual->estado ?? ''))) ?>">
+              </div>
+            </div>
           </div>
 
           <hr>

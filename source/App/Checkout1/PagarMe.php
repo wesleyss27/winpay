@@ -367,12 +367,15 @@ class PagarMe
       ];
       if (!empty($data["cep"])) {
         $registerInfo["address"] = [
-          "line_1"   => trim(@$data["numero"] . ", " . @$data["rua"] . ", " . @$data["bairro"], ", "),
-          "line_2"   => (string)@$data["complemento"],
-          "zip_code" => preg_replace('/\D/', '', (string)@$data["cep"]),
-          "city"     => (string)@$data["cidade"],
-          "state"    => strtoupper((string)@$data["estado"]),
-          "country"  => "BR",
+          "street"          => (string)@$data["rua"],
+          "complementary"   => (string)(@$data["complemento"] ?: "N/A"),
+          "reference_point" => (string)(@$data["referencia"] ?: "N/A"),
+          "street_number"   => (string)@$data["numero"],
+          "neighborhood"    => (string)@$data["bairro"],
+          "city"            => (string)@$data["cidade"],
+          "state"           => strtoupper((string)@$data["estado"]),
+          "country"         => "BR",
+          "zip_code"        => preg_replace('/\D/', '', (string)@$data["cep"]),
         ];
       }
     } else {
@@ -393,10 +396,66 @@ class PagarMe
       // Só inclui phone_numbers se houver ao menos DDD + número (10 dígitos)
       if (strlen($telDigits) >= 10) {
         $registerInfo["phone_numbers"] = [
-          "country_code" => "55",
-          "area_code"    => substr($telDigits, 0, 2),
-          "number"       => substr($telDigits, 2),
+          [
+            "ddd"    => substr($telDigits, 0, 2),
+            "number" => substr($telDigits, 2),
+            "type"   => "mobile",
+          ],
         ];
+      }
+
+      // Endereço principal da empresa (main_address) — obrigatório para PJ
+      if (!empty($data["cep"])) {
+        $registerInfo["main_address"] = [
+          "street"          => (string)@$data["rua"],
+          "complementary"   => (string)(@$data["complemento"] ?: "N/A"),
+          "reference_point" => (string)(@$data["referencia"] ?: "N/A"),
+          "street_number"   => (string)@$data["numero"],
+          "neighborhood"    => (string)@$data["bairro"],
+          "city"            => (string)@$data["cidade"],
+          "state"           => strtoupper((string)@$data["estado"]),
+          "country"         => "BR",
+          "zip_code"        => preg_replace('/\D/', '', (string)@$data["cep"]),
+        ];
+      }
+
+      // Representante legal (managing_partners) — ao menos um obrigatório para PJ
+      $cpfSocio = preg_replace('/\D/', '', (string)@$data["cpf_socio"]);
+      if (!empty($cpfSocio)) {
+        $partner = [
+          "name"                               => (string)(@$data["nome_socio"] ?: @$data["nome"]),
+          "email"                              => (string)@$data["email"],
+          "document"                           => $cpfSocio,
+          "self_declared_legal_representative" => true,
+          "monthly_income"          => (int)(@$data["renda_mensal_socio"] ?: @$data["renda_mensal"]),
+          "professional_occupation" => (string)((@$data["ocupacao_socio"] ?: @$data["ocupacao"]) ?: "N/A"),
+        ];
+        if (!empty(@$data["data_nascimento_socio"])) {
+          $partner["birthdate"] = (string)$data["data_nascimento_socio"];
+        }
+        if (!empty($data["cep"])) {
+          $partner["address"] = [
+            "street"          => (string)@$data["rua"],
+            "complementary"   => (string)(@$data["complemento"] ?: "N/A"),
+            "reference_point" => (string)(@$data["referencia"] ?: "N/A"),
+            "street_number"   => (string)@$data["numero"],
+            "neighborhood"    => (string)@$data["bairro"],
+            "city"            => (string)@$data["cidade"],
+            "state"           => strtoupper((string)@$data["estado"]),
+            "country"         => "BR",
+            "zip_code"        => preg_replace('/\D/', '', (string)@$data["cep"]),
+          ];
+        }
+        if (strlen($telDigits) >= 10) {
+          $partner["phone_numbers"] = [
+            [
+              "ddd"    => substr($telDigits, 0, 2),
+              "number" => substr($telDigits, 2),
+              "type"   => "mobile",
+            ],
+          ];
+        }
+        $registerInfo["managing_partners"] = [$partner];
       }
     }
 
