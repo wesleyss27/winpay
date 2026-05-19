@@ -1,0 +1,10 @@
+Options -Indexes
+RewriteEngine On
+
+# uploads diretos sem roteamento
+RewriteRule ^uploads/ - [L]
+
+# roteamento para index.php
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=/$1 [L,QSA]

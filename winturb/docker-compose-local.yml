@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  php-apache-winturb:
+    image: misaelsilva777/php-apache-redrocket:1.0
+    container_name: php-apache-winturb
+    ports:
+      - "8190:80"
+    volumes:
+      - ./:/var/www/html
+      - ./php:/usr/local/etc/php
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+networks:
+  mynetwork:
+    driver: bridge

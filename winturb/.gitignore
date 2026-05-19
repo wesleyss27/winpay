@@ -1,0 +1,13 @@
+vendor/
+uploads/
+logs/
+*.log
+
+# Migration runners de uso único — rode localmente e delete
+run-migration-*.php
+
+# Arquivos temporários e de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

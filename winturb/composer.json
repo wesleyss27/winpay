@@ -1,0 +1,25 @@
+{
+    "name": "winpay/winturb",
+    "description": "WinTurb — Plataforma de player de vídeo com embed",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "Source\\": "source/"
+        },
+        "files": [
+            "source/Config.php"
+        ]
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-pdo": "*",
+        "coffeecode/datalayer": "1.1.*",
+        "coffeecode/router": "1.0.*",
+        "league/plates": "4.0.0-alpha"
+    }
+}
