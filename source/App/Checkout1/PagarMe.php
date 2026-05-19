@@ -415,15 +415,11 @@ class PagarMe
         "type"                => (@$data["tipo"] === "corrente") ? "checking" : "savings",
       ],
       "transfer_settings" => [
-        "transfer_enabled"  => false,
         "transfer_interval" => "Daily",
         "transfer_day"      => 0,
       ],
       "automatic_anticipation_settings" => [
-        "enabled"           => false,
-        "type"              => "full",
-        "volume_percentage" => 0,
-        "delay"             => null,
+        "type" => "full",
       ],
     ];
 
