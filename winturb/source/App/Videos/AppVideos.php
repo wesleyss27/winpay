@@ -14,7 +14,7 @@ use Source\Models\Anuncios\Anuncio;
 class AppVideos
 {
     private $view;
-    const MAX_SIZE_BYTES = 524288000; // 500 MB
+    const MAX_SIZE_BYTES = 2147483648; // 2 GB
     const ALLOWED_EXT   = ['mp4', 'webm', 'ogg', 'mov', 'mkv'];
 
     public function __construct($router)
