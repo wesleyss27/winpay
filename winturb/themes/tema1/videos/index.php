@@ -331,7 +331,7 @@ $semPastaCount = count(array_filter($videos, fn($v) => !$v->pasta_id));
   <div id="drop-zone" onclick="document.getElementById('file-input').click()">
     <i class="fas fa-cloud-arrow-up drop-icon"></i>
     <p style="font-size:.87rem;font-weight:500;color:var(--text);margin-bottom:.2rem;">Clique ou arraste um vídeo aqui</p>
-    <p style="font-size:.75rem;color:var(--muted);">MP4, WebM, MOV, MKV &mdash; máx. 500 MB</p>
+    <p style="font-size:.75rem;color:var(--muted);">MP4, WebM, MOV, MKV &mdash; máx. 2 GB</p>
   </div>
   <input type="file" id="file-input" accept=".mp4,.webm,.ogg,.mov,.mkv" style="display:none;">
   <div id="upload-progress">
