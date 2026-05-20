@@ -51,7 +51,6 @@
 /* ── Player preview ────────────────────────────────────── */
 .preview-thumb {
   width: 100%;
-  aspect-ratio: 16/9;
   background: #000;
   border-radius: 9px;
   overflow: hidden;
@@ -384,12 +383,15 @@
     <div class="wt-card">
       <div class="wt-card-title"><i class="fas fa-play-circle" style="margin-right:.45rem;color:var(--accent);opacity:.7;"></i>Preview</div>
       <div class="preview-thumb">
-        <iframe
+        <iframe id="preview-iframe"
           src="<?= htmlspecialchars($embedUrl, ENT_QUOTES) ?>"
           allowfullscreen
           allow="autoplay; fullscreen">
         </iframe>
       </div>
+      <button class="btn-wt btn-wt-ghost btn-wt-sm" style="width:100%;justify-content:center;margin-top:.5rem;" onclick="recarregarPreview()">
+        <i class="fas fa-rotate-right"></i> Atualizar preview
+      </button>
     </div>
 
     <!-- Embed button card -->
@@ -539,7 +541,21 @@ const AD_DEL_URL  = <?= json_encode(url("anuncios/excluir")) ?>;
 function setSize(w, h) {
   document.getElementById("largura").value = w;
   document.getElementById("altura").value  = h;
+  atualizarAspectPreview();
 }
+
+function atualizarAspectPreview() {
+  const w = parseInt(document.getElementById("largura").value) || <?= (int)$video->largura ?>;
+  const h = parseInt(document.getElementById("altura").value)  || <?= (int)$video->altura ?>;
+  document.querySelector(".preview-thumb").style.aspectRatio = w + " / " + h;
+}
+
+// Atualiza ao digitar nos campos manualmente
+document.getElementById("largura").addEventListener("input", atualizarAspectPreview);
+document.getElementById("altura").addEventListener("input",  atualizarAspectPreview);
+
+// Aplica o aspect ratio inicial
+atualizarAspectPreview();
 
 function salvarVideo() {
   const fd = new FormData();
@@ -561,13 +577,18 @@ function salvarVideo() {
   fetch(SAVE_URL, { method: "POST", body: fd })
     .then(r => r.json())
     .then(r => {
-      if (r.ok) { wtToast("Salvo com sucesso!", "ok"); atualizarEmbedCode(); }
+      if (r.ok) { wtToast("Salvo com sucesso!", "ok"); atualizarEmbedCode(); recarregarPreview(); }
       else wtToast("Erro ao salvar.", "err");
     });
 }
 
 function atualizarEmbedCode() {
   atualizarCodigoEmbed();
+}
+
+function recarregarPreview() {
+  const f = document.getElementById('preview-iframe');
+  f.src = f.src;
 }
 
 function copiarEmbed() {

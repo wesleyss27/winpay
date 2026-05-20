@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     zip unzip git \
+    ffmpeg \
     && docker-php-ext-install pdo pdo_mysql zip \
     && a2enmod rewrite
 

@@ -107,13 +107,33 @@ class AppVideos
             return;
         }
 
+        // Transcodifica .mov e .mkv para .mp4 (browsers não suportam nativamente)
+        if (in_array($ext, ['mov', 'mkv'])) {
+            $mp4Nome = substr($novoNome, 0, -strlen($ext)) . "mp4";
+            $mp4Path = $baseDir . $mp4Nome;
+            set_time_limit(0);
+            $cmd = sprintf(
+                'ffmpeg -i %s -c:v libx264 -preset fast -crf 23 -c:a aac -b:a 128k -movflags +faststart -y %s 2>&1',
+                escapeshellarg($destino),
+                escapeshellarg($mp4Path)
+            );
+            exec($cmd, $output, $code);
+            if ($code === 0 && is_file($mp4Path)) {
+                @unlink($destino);
+                $novoNome = $mp4Nome;
+                $destino  = $mp4Path;
+                $ext      = 'mp4';
+            }
+            // se ffmpeg falhar, mantém o arquivo original e continua
+        }
+
         $titulo = trim($data["titulo"] ?? pathinfo($file["name"], PATHINFO_FILENAME));
 
         $video              = new Video();
         $video->usuario     = $userId;
         $video->titulo      = $titulo ?: "Vídeo sem título";
         $video->arquivo     = "{$userId}/{$novoNome}";
-        $video->tamanho     = $file["size"];
+        $video->tamanho     = filesize($destino);
         $video->embed_token = Video::gerarToken();
         $video->status      = 1;
 
