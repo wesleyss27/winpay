@@ -39,6 +39,11 @@ class AppPlayer
         $salvarUrl    = url("videos/progresso");
         $eventoUrl    = url("player/evento");
 
+        $hlsFile = __DIR__ . "/../../../uploads/hls/{$video->embed_token}/master.m3u8";
+        $hlsUrl  = ($video->hls_status === 'ready' && is_file($hlsFile))
+            ? url("uploads/hls/{$video->embed_token}/master.m3u8")
+            : null;
+
         echo $this->view->render("player/embed", [
             "video"        => $video,
             "anuncios"     => $anuncios,
@@ -46,6 +51,7 @@ class AppPlayer
             "progressoUrl" => $progressoUrl,
             "salvarUrl"    => $salvarUrl,
             "eventoUrl"    => $eventoUrl,
+            "hlsUrl"       => $hlsUrl,
         ]);
     }
 
@@ -169,6 +175,27 @@ class AppPlayer
         }
         fclose($fp);
         exit;
+    }
+
+    /** GET /player/hls-status/{token} — status da transcodificação HLS */
+    public function hlsStatus($data)
+    {
+        header("Content-Type: application/json");
+        header("Access-Control-Allow-Origin: *");
+
+        $video = (new Video())->findByToken($data["token"] ?? "");
+        if (!$video) {
+            echo json_encode(["status" => "not_found"]);
+            return;
+        }
+
+        $hlsFile = __DIR__ . "/../../../uploads/hls/{$video->embed_token}/master.m3u8";
+        $ready   = $video->hls_status === 'ready' && is_file($hlsFile);
+
+        echo json_encode([
+            "status"  => $video->hls_status ?: 'none',
+            "hls_url" => $ready ? url("uploads/hls/{$video->embed_token}/master.m3u8") : null,
+        ]);
     }
 
     private function sessionKey(): string

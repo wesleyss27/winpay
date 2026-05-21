@@ -138,6 +138,12 @@ class AppVideos
         $video->status      = 1;
 
         if ($video->save()) {
+            // Inicia geração de HLS em background
+            $video->hls_status = 'pending';
+            $video->save();
+            $script = escapeshellarg(__DIR__ . '/../../Scripts/GerarHls.php');
+            exec("php $script {$video->id} > /dev/null 2>&1 &");
+
             echo json_encode(["ok" => true, "id" => $video->id, "titulo" => $video->titulo]);
         } else {
             @unlink($destino);

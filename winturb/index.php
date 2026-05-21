@@ -40,9 +40,10 @@ $router->post("/excluir", "AppAnuncios:excluir", "anuncios.excluir");
 // ── Player público (embed + evento + stream — sem auth) ───────────────────
 $router->namespace("Source\App\Player");
 $router->group(null);
-$router->get("/player/{token}",         "AppPlayer:embed",   "player.embed");
-$router->post("/player/evento",         "AppPlayer:evento",  "player.evento");
-$router->get("/player/stream/{token}",  "AppPlayer:stream",  "player.stream");
+$router->get("/player/{token}",             "AppPlayer:embed",      "player.embed");
+$router->post("/player/evento",             "AppPlayer:evento",     "player.evento");
+$router->get("/player/stream/{token}",      "AppPlayer:stream",     "player.stream");
+$router->get("/player/hls-status/{token}",  "AppPlayer:hlsStatus",  "player.hlsStatus");
 
 // ── Pastas / biblioteca ───────────────────────────────────────────────────
 $router->namespace("Source\App\Pastas");

@@ -336,13 +336,16 @@
       to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
   </style>
+<?php if ($hlsUrl): ?>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<?php endif; ?>
 </head>
 <body>
 
 <div id="wt-wrap">
 
   <video id="wt-video"
-    src="<?= htmlspecialchars($streamUrl, ENT_QUOTES) ?>"
+    <?php if (!$hlsUrl): ?>src="<?= htmlspecialchars($streamUrl, ENT_QUOTES) ?>"<?php endif; ?>
     <?php if ($video->capa) : ?>poster="<?= htmlspecialchars(url("uploads/capas/{$video->capa}"), ENT_QUOTES) ?>"<?php endif; ?>
     preload="none"
     playsinline>
@@ -463,6 +466,7 @@
   const FORCE_PLAY     = <?= $video->force_play   ? 'true' : 'false' ?>;
   const TOKEN          = <?= json_encode($video->embed_token) ?>;
   const STREAM_URL     = <?= json_encode($streamUrl) ?>;
+  const HLS_URL        = <?= json_encode($hlsUrl) ?>;
   const PROGRESSO_GET  = <?= json_encode($progressoUrl) ?>;
   const PROGRESSO_POST = <?= json_encode($salvarUrl) ?>;
   const EVENTO_URL     = <?= json_encode($eventoUrl) ?>;
@@ -503,6 +507,26 @@
   const speedSel    = document.getElementById('wt-speed');
   const watchedFill = document.getElementById('wt-watched-fill');
 
+  // ── HLS init ─────────────────────────────────────────────────────────────
+  let hlsInstance = null;
+
+  (function initVideo() {
+    if (HLS_URL && typeof Hls !== 'undefined' && Hls.isSupported()) {
+      hlsInstance = new Hls({
+        autoStartLoad:  false,
+        enableWorker:   true,
+        backBufferLength: 30,
+        maxBufferLength:  40,
+      });
+      hlsInstance.loadSource(HLS_URL);
+      hlsInstance.attachMedia(video);
+    } else if (HLS_URL && video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari suporta HLS nativamente
+      video.src = HLS_URL;
+    }
+    // Sem HLS: src já definido no HTML (MP4 byte-range)
+  })();
+
   let maxWatched   = 0;
   let savedTime    = 0;
   let metaReady    = false;
@@ -535,7 +559,12 @@
 
   // ── Pré-carregamento inteligente ──────────────────────────────────────────
   function schedulePreload() {
-    const fn = () => { if (!started) video.preload = 'auto'; };
+    const fn = () => {
+      if (!started) {
+        if (hlsInstance) hlsInstance.startLoad();
+        else video.preload = 'auto';
+      }
+    };
     if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 3000 });
     else setTimeout(fn, 500);
   }
@@ -563,7 +592,8 @@
     autoplaying   = true;
     started       = true;
     video.muted   = true;
-    video.preload = 'auto';
+    if (hlsInstance) hlsInstance.startLoad();
+    else video.preload = 'auto';
     poster.classList.add('hidden');
     video.classList.add('ready');
     unmutePill.style.display = 'flex';
@@ -594,7 +624,8 @@
   function iniciar() {
     if (started) return;
     started = true;
-    video.preload = 'auto';
+    if (hlsInstance) hlsInstance.startLoad();
+    else video.preload = 'auto';
     poster.classList.add('hidden');
     video.classList.add('ready');
     showCtrls();
