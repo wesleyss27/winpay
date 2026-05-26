@@ -688,7 +688,9 @@
     const pct = cur / dur;
 
     if (FAKE_SEEKBAR && fakeProg) {
-      fakeProg.style.width = (pct * 100) + '%';
+      // Barra fake: anda 3x mais rápido que o vídeo real, cap em 100%
+      // Isso cria a ilusão de que o vídeo é curto (barra "completa" com 33% do vídeo rodado)
+      fakeProg.style.width = Math.min(100, pct * 3 * 100) + '%';
     }
     if (!HIDE_SEEKBAR && progBar) {
       progBar.style.width  = (pct * 100) + '%';
