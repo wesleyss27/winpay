@@ -286,6 +286,14 @@
           <span class="wt-toggle-track"></span>
           <span class="wt-toggle-label">Ocultar barra de reprodução</span>
         </label>
+        <label class="wt-toggle">
+          <input type="checkbox" id="fake_seekbar" <?= $video->fake_seekbar ? "checked" : "" ?>>
+          <span class="wt-toggle-track"></span>
+          <div>
+            <span class="wt-toggle-label">Barra fake</span>
+            <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem;">Barra visual que avança com o vídeo — usuário não consegue clicar para avançar. Ativa "Ocultar barra" automaticamente.</div>
+          </div>
+        </label>
       </div>
 
       <hr class="wt-divider">
@@ -569,6 +577,7 @@ function salvarVideo() {
   if (document.getElementById("anti_skip").checked)    fd.append("anti_skip", "1");
   if (document.getElementById("allow_speed").checked)  fd.append("allow_speed", "1");
   if (document.getElementById("hide_seekbar").checked) fd.append("hide_seekbar", "1");
+  if (document.getElementById("fake_seekbar").checked) fd.append("fake_seekbar", "1");
   fd.append("cor_acento", document.getElementById("cor_acento").value);
   fd.append("cor_fundo",  document.getElementById("cor_fundo").value);
   const capa = document.getElementById("capa").files[0];
@@ -718,6 +727,14 @@ function excluirAd(id) {
     if (r.ok) { document.getElementById("ad-" + id)?.remove(); wtToast("Removido.", "ok"); }
   });
 }
+
+// fake_seekbar ↔ hide_seekbar: ativar fake força hide; desativar hide desativa fake
+document.getElementById("fake_seekbar").addEventListener("change", function () {
+  if (this.checked) document.getElementById("hide_seekbar").checked = true;
+});
+document.getElementById("hide_seekbar").addEventListener("change", function () {
+  if (!this.checked) document.getElementById("fake_seekbar").checked = false;
+});
 
 // Sync color picker ↔ text input
 ["acento","fundo"].forEach(key => {

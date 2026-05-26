@@ -141,8 +141,15 @@ class AppVideos
             // Inicia geração de HLS em background
             $video->hls_status = 'pending';
             $video->save();
-            $script = escapeshellarg(__DIR__ . '/../../Scripts/GerarHls.php');
-            exec("php $script {$video->id} > /dev/null 2>&1 &");
+            $php    = PHP_BINARY;
+            $script = __DIR__ . '/../../Scripts/GerarHls.php';
+            if (is_file($script)) {
+                exec(sprintf('%s %s %d > /dev/null 2>&1 &',
+                    escapeshellarg($php),
+                    escapeshellarg($script),
+                    (int)$video->id
+                ));
+            }
 
             echo json_encode(["ok" => true, "id" => $video->id, "titulo" => $video->titulo]);
         } else {
@@ -192,6 +199,8 @@ class AppVideos
         $video->anti_skip    = isset($data["anti_skip"])    ? 1 : 0;
         $video->allow_speed  = isset($data["allow_speed"])  ? 1 : 0;
         $video->hide_seekbar = isset($data["hide_seekbar"]) ? 1 : 0;
+        $video->fake_seekbar = isset($data["fake_seekbar"]) ? 1 : 0;
+        if ($video->fake_seekbar) $video->hide_seekbar = 1;
         $video->autoplay     = isset($data["autoplay"])     ? 1 : 0;
         $video->force_play   = isset($data["force_play"])   ? 1 : 0;
         $video->cor_acento   = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_acento"]  ?? "") ? $data["cor_acento"]  : "#7c6af7";
@@ -209,7 +218,9 @@ class AppVideos
             }
         }
 
-        echo json_encode(["ok" => $video->save()]);
+        $ok  = $video->save();
+        $msg = !$ok && $video->fail() ? $video->fail()->getMessage() : null;
+        echo json_encode(["ok" => $ok, "msg" => $msg]);
     }
 
     public function excluir($data)

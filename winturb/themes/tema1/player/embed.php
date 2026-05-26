@@ -277,6 +277,26 @@
       cursor: pointer;
     }
 
+    /* ── Barra fake (decorativa, não clicável) ── */
+    #wt-fake-seek-wrap {
+      display: none;
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 10px;
+      background: rgba(255,255,255,.18);
+      border-radius: 99px;
+      pointer-events: none;
+      z-index: 6;
+      margin: 0 .9rem 0.75rem;
+    }
+    #wt-fake-prog-bar {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: var(--accent); border-radius: 99px;
+      width: 0%;
+      box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 60%, transparent);
+      transition: width .5s linear;
+    }
+
     /* Barra de progresso assistido */
     #wt-watched-wrap {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -402,6 +422,10 @@
     </div>
   </div>
 
+  <div id="wt-fake-seek-wrap">
+    <div id="wt-fake-prog-bar"></div>
+  </div>
+
   <!-- Controles -->
   <div id="wt-controls">
     <?php if (!$video->hide_seekbar) : ?>
@@ -462,6 +486,7 @@
 (function () {
   const ANTI_SKIP      = <?= $video->anti_skip    ? 'true' : 'false' ?>;
   const HIDE_SEEKBAR   = <?= $video->hide_seekbar ? 'true' : 'false' ?>;
+  const FAKE_SEEKBAR   = <?= ($video->fake_seekbar ?? 0) ? 'true' : 'false' ?>;
   const AUTOPLAY       = <?= $video->autoplay     ? 'true' : 'false' ?>;
   const FORCE_PLAY     = <?= $video->force_play   ? 'true' : 'false' ?>;
   const TOKEN          = <?= json_encode($video->embed_token) ?>;
@@ -506,6 +531,9 @@
   const iconFsOff   = document.getElementById('icon-fs-off');
   const speedSel    = document.getElementById('wt-speed');
   const watchedFill = document.getElementById('wt-watched-fill');
+  const fakeWrap    = document.getElementById('wt-fake-seek-wrap');
+  const fakeProg    = document.getElementById('wt-fake-prog-bar');
+  if (FAKE_SEEKBAR && fakeWrap) fakeWrap.style.display = 'block';
 
   // ── HLS init ─────────────────────────────────────────────────────────────
   let hlsInstance = null;
@@ -659,6 +687,9 @@
     const dur = video.duration || 1;
     const pct = cur / dur;
 
+    if (FAKE_SEEKBAR && fakeProg) {
+      fakeProg.style.width = (pct * 100) + '%';
+    }
     if (!HIDE_SEEKBAR && progBar) {
       progBar.style.width  = (pct * 100) + '%';
       seekThumb.style.left = (pct * 100) + '%';
