@@ -495,6 +495,7 @@
   const PROGRESSO_GET  = <?= json_encode($progressoUrl) ?>;
   const PROGRESSO_POST = <?= json_encode($salvarUrl) ?>;
   const EVENTO_URL     = <?= json_encode($eventoUrl) ?>;
+  const HEARTBEAT_URL  = <?= json_encode(url("player/heartbeat")) ?>;
   const OFERTAS        = <?= json_encode(array_map(function($a) {
     return [
       "id"          => (int)$a->id,
@@ -897,6 +898,16 @@
       video.pause();
     }
   }
+  // ── Heartbeat de retenção (a cada 5s durante reprodução) ──────────────────
+  setInterval(() => {
+    if (!video.paused && !video.ended && started && !autoplaying) {
+      navigator.sendBeacon(HEARTBEAT_URL, new URLSearchParams({
+        token:   TOKEN,
+        segundo: Math.floor(video.currentTime),
+        duracao: Math.floor(video.duration || 0),
+      }));
+    }
+  }, 5000);
 })();
 </script>
 </body>
