@@ -44,6 +44,7 @@ $router->get("/player/{token}",             "AppPlayer:embed",      "player.embe
 $router->post("/player/evento",             "AppPlayer:evento",     "player.evento");
 $router->get("/player/stream/{token}",      "AppPlayer:stream",     "player.stream");
 $router->get("/player/hls-status/{token}",  "AppPlayer:hlsStatus",  "player.hlsStatus");
+$router->post("/player/heartbeat",          "AppPlayer:heartbeat",  "player.heartbeat");
 
 // ── Pastas / biblioteca ───────────────────────────────────────────────────
 $router->namespace("Source\App\Pastas");
@@ -55,7 +56,8 @@ $router->post("/mover",   "AppPastas:mover",   "pastas.mover");
 // ── Métricas (autenticado) ────────────────────────────────────────────────
 $router->namespace("Source\App\Metricas");
 $router->group(null);
-$router->get("/metricas/{id}", "AppMetricas:index", "metricas.index");
+$router->get("/metricas/{id}",          "AppMetricas:index",   "metricas.index");
+$router->get("/metricas/ao-vivo/{id}", "AppMetricas:aoVivo",  "metricas.aoVivo");
 
 // ── Despachar ─────────────────────────────────────────────────────────────
 $router->dispatch();

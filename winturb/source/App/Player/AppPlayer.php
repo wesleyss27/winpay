@@ -198,6 +198,90 @@ class AppPlayer
         ]);
     }
 
+    /** POST /player/heartbeat — salva max segundo assistido por sessão */
+    public function heartbeat($data)
+    {
+        header("Content-Type: application/json");
+        $token   = $data["token"]   ?? "";
+        $segundo = (int)($data["segundo"] ?? 0);
+        $duracao = (int)($data["duracao"] ?? 0);
+
+        $video = (new Video())->findByToken($token);
+        if (!$video || $segundo < 0) { echo json_encode(["ok" => false]); return; }
+
+        $sessionKey = $this->sessionKey();
+
+        // Capturar IP real
+        $ip = $_SERVER['HTTP_CF_CONNECTING_IP']
+            ?? $_SERVER['HTTP_X_FORWARDED_FOR']
+            ?? $_SERVER['REMOTE_ADDR']
+            ?? null;
+        if ($ip) $ip = trim(explode(',', $ip)[0]); // pegar só o primeiro se houver lista
+
+        // Detectar device
+        $ua     = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $device = preg_match('/Mobile|Android|iPhone|iPod/i', $ua) ? 'Mobile' :
+                  (preg_match('/iPad|Tablet/i', $ua) ? 'Tablet' : 'Desktop');
+
+        try {
+            $pdo = Connect::getInstance();
+
+            // Inserir/atualizar retenção
+            $stmt = $pdo->prepare("
+                INSERT INTO winturb_retencao (video_id, session_key, max_segundo, duracao, ip, user_agent, device)
+                VALUES (:v, :s, :seg, :dur, :ip, :ua, :dev)
+                ON DUPLICATE KEY UPDATE
+                    max_segundo   = GREATEST(max_segundo, VALUES(max_segundo)),
+                    duracao       = IF(VALUES(duracao) > 0, VALUES(duracao), duracao),
+                    atualizado_em = NOW()
+            ");
+            $stmt->execute([
+                ':v'   => (int)$video->id,
+                ':s'   => $sessionKey,
+                ':seg' => $segundo,
+                ':dur' => $duracao,
+                ':ip'  => $ip ? substr($ip, 0, 45) : null,
+                ':ua'  => substr($ua, 0, 300),
+                ':dev' => $device,
+            ]);
+
+            // Atualizar ip, user_agent e device sempre (para manter frescos)
+            $pdo->prepare("
+                UPDATE winturb_retencao
+                SET ip = :ip, user_agent = :ua, device = :device, atualizado_em = NOW()
+                WHERE video_id = :v AND session_key = :s
+            ")->execute([
+                ':ip'     => $ip ? substr($ip, 0, 45) : null,
+                ':ua'     => substr($ua, 0, 300),
+                ':device' => $device,
+                ':v'      => (int)$video->id,
+                ':s'      => $sessionKey,
+            ]);
+
+            // GeoIP via ip-api.com — somente se geo_ok=0 para este registro
+            $needGeo = $pdo->prepare("SELECT geo_ok FROM winturb_retencao WHERE video_id=:v AND session_key=:s");
+            $needGeo->execute([':v' => (int)$video->id, ':s' => $sessionKey]);
+            $geoOk = (int)($needGeo->fetchColumn() ?? 0);
+
+            if (!$geoOk && $ip) {
+                $geoData = @json_decode(@file_get_contents("http://ip-api.com/json/{$ip}?fields=country,regionName,city&lang=pt-BR"), true);
+                if (!empty($geoData['country'])) {
+                    $pdo->prepare("UPDATE winturb_retencao SET pais=:p, cidade=:c, geo_ok=1 WHERE video_id=:v AND session_key=:s")
+                        ->execute([
+                            ':p' => $geoData['country'],
+                            ':c' => $geoData['city'] . ', ' . $geoData['regionName'],
+                            ':v' => (int)$video->id,
+                            ':s' => $sessionKey,
+                        ]);
+                }
+            }
+
+            echo json_encode(["ok" => true]);
+        } catch (\PDOException $e) {
+            echo json_encode(["ok" => false]);
+        }
+    }
+
     private function sessionKey(): string
     {
         if (session_status() === PHP_SESSION_NONE) @session_start();
