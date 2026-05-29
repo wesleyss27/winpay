@@ -36,6 +36,7 @@ class Video extends DataLayer
  * anti_skip     tinyint        default 1
  * allow_speed   tinyint        default 1
  * status        tinyint        default 1
+ * pitch_time    int            default 0   -- tempo em segundos do pitch
  * created_at    timestamp
  * updated_at    timestamp
  */

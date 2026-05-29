@@ -206,6 +206,10 @@ class AppVideos
         $video->cor_acento   = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_acento"]  ?? "") ? $data["cor_acento"]  : "#7c6af7";
         $video->cor_fundo    = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_fundo"]   ?? "") ? $data["cor_fundo"]   : "#000000";
 
+        if (isset($data["pitch_time"])) {
+            $video->pitch_time = max(0, (int)$data["pitch_time"]);
+        }
+
         // Thumbnail (capa)
         if (!empty($_FILES["capa"]["name"]) && $_FILES["capa"]["error"] === UPLOAD_ERR_OK) {
             $capaExt  = strtolower(pathinfo($_FILES["capa"]["name"], PATHINFO_EXTENSION));
