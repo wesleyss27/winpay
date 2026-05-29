@@ -58,6 +58,7 @@ $router->namespace("Source\App\Metricas");
 $router->group(null);
 $router->get("/metricas/{id}",          "AppMetricas:index",   "metricas.index");
 $router->get("/metricas/ao-vivo/{id}", "AppMetricas:aoVivo",  "metricas.aoVivo");
+$router->post("/metricas/zerar",       "AppMetricas:zerar",   "metricas.zerar");
 
 // ── Despachar ─────────────────────────────────────────────────────────────
 $router->dispatch();

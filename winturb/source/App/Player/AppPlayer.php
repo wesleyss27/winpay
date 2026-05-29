@@ -85,15 +85,19 @@ class AppPlayer
         try {
             $pdo  = Connect::getInstance();
 
-            // Dedup: view do mesmo session_key nas últimas 24h não é contada duas vezes
-            if ($tipo === 'view') {
-                $check = $pdo->prepare("
-                    SELECT id FROM winturb_eventos
-                    WHERE video_id = :v AND session_key = :s AND tipo = 'view'
-                      AND criado_em > NOW() - INTERVAL 1 DAY
-                    LIMIT 1
-                ");
-                $check->execute([':v' => (int)$video->id, ':s' => $sessionKey]);
+            // Dedup por sessão E por IP para view e play
+            $dedupTipos = ['view' => 'INTERVAL 24 HOUR', 'play' => 'INTERVAL 1 HOUR'];
+            if (isset($dedupTipos[$tipo])) {
+                $intervalo = $dedupTipos[$tipo];
+                $checkSql  = "SELECT id FROM winturb_eventos
+                               WHERE video_id = :v AND tipo = :t
+                                 AND criado_em > NOW() - {$intervalo}
+                                 AND (session_key = :s" . ($ip ? " OR ip = :ip" : "") . ")
+                               LIMIT 1";
+                $checkParams = [':v' => (int)$video->id, ':t' => $tipo, ':s' => $sessionKey];
+                if ($ip) $checkParams[':ip'] = substr($ip, 0, 45);
+                $check = $pdo->prepare($checkSql);
+                $check->execute($checkParams);
                 if ($check->fetch()) {
                     echo json_encode(["ok" => true]);
                     return;

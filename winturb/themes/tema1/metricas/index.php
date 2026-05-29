@@ -339,6 +339,9 @@ $engajamento    = $avgPct;
   <span style="font-size:.72rem;color:var(--muted);background:var(--bg);border:1px solid var(--border);padding:.28rem .75rem;border-radius:99px;">
     <i class="fas fa-calendar-days" style="margin-right:.35rem;color:var(--accent);font-size:.7rem;"></i>Últimos 30 dias
   </span>
+  <button onclick="zerarMetricas()" class="btn-wt btn-wt-ghost btn-wt-sm" style="border-color:rgba(239,68,68,.4);color:#f87171;" title="Apaga todos os eventos e dados de retenção deste vídeo">
+    <i class="fas fa-trash-alt"></i> Zerar métricas
+  </button>
 </div>
 
 <!-- ── KPI section header with selector ── -->
@@ -1182,5 +1185,25 @@ function fmtSeg(s) {
     });
   });
 })();
+
+function zerarMetricas() {
+  if (!confirm('Zerar TODAS as métricas deste vídeo?\n\nEsta ação apaga views, plays, retenção e dados geográficos. Não pode ser desfeita.')) return;
+
+  fetch(<?= json_encode(url("metricas/zerar")) ?>, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'video_id=<?= (int)$video->id ?>'
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.ok) {
+      alert('Métricas zeradas com sucesso!');
+      location.reload();
+    } else {
+      alert('Erro: ' + (res.msg || 'Não foi possível zerar as métricas.'));
+    }
+  })
+  .catch(function() { alert('Erro de comunicação.'); });
+}
 </script>
 <?php $v->end() ?>

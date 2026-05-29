@@ -211,4 +211,28 @@ class AppMetricas
             "cidades" => $topCidades,
         ]);
     }
+
+    public function zerar($data)
+    {
+        header("Content-Type: application/json");
+
+        $userId  = AppSessao::usuarioId();
+        $videoId = (int)($data["video_id"] ?? 0);
+
+        $video = (new Video())->findById($videoId);
+
+        if (!$video || (int)$video->usuario !== $userId) {
+            echo json_encode(["ok" => false, "msg" => "Não autorizado."]);
+            return;
+        }
+
+        try {
+            $pdo = Connect::getInstance();
+            $pdo->prepare("DELETE FROM winturb_eventos  WHERE video_id = :v")->execute([':v' => $videoId]);
+            $pdo->prepare("DELETE FROM winturb_retencao WHERE video_id = :v")->execute([':v' => $videoId]);
+            echo json_encode(["ok" => true]);
+        } catch (\PDOException $e) {
+            echo json_encode(["ok" => false, "msg" => $e->getMessage()]);
+        }
+    }
 }
