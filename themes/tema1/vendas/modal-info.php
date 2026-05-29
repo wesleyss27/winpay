@@ -403,6 +403,21 @@
                                         <div class="col-md-7"><a href="mailto:<?= @$venda->dataProduto()->email_suporte; ?>"><?= @$venda->dataProduto()->email_suporte; ?></a></div>
                                     </div>
 
+                                    <?php if ($venda->atendente) :
+                                        $atendente = (new Source\Models\Usuarios\Usuario())->findById($venda->atendente);
+                                    ?>
+                                    <div class="row borda1" style="background:rgba(168,85,247,.07);">
+                                        <div class="col-md-5"><b>Atendente: </b></div>
+                                        <div class="col-md-7">
+                                            <span style="background:rgba(168,85,247,.18);color:#c084fc;border:1px solid rgba(168,85,247,.4);padding:1px 7px;border-radius:999px;font-size:11px;font-weight:700;margin-right:6px;">Venda Personalizada</span>
+                                            <?= htmlspecialchars(@$atendente->nome ?? '—') ?>
+                                            <?php if (@$atendente->email) : ?>
+                                                <div style="font-size:11px;color:#888;margin-top:2px;"><?= htmlspecialchars($atendente->email) ?></div>
+                                            <?php endif ?>
+                                        </div>
+                                    </div>
+                                    <?php endif ?>
+
                                     <div class="row borda1">
                                         <div class="col-md-5"><b>Forma de Pagamento: </b></div>
                                         <div class="col-md-7"><?= $forma_pagamento[$venda->forma_pagamento]; ?></div>

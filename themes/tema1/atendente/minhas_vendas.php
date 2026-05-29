@@ -53,6 +53,7 @@
               <tr>
                 <th>#</th>
                 <th>Data</th>
+                <th>Cliente</th>
                 <th>Produtos</th>
                 <th>Valor</th>
                 <th>Status</th>
@@ -74,10 +75,28 @@
                 }
                 $link = url("pagar/{$venda->link_publico}");
                 ?>
+                <?php $comprador = $venda->dataComprador(); ?>
                 <tr id="row-<?= $venda->id ?>">
                   <td style="font-weight:600;">#<?= $venda->id ?></td>
                   <td style="font-size:.8rem; color:rgba(255,255,255,.6);">
                     <?= date("d/m/Y H:i", strtotime($venda->created_at)) ?>
+                  </td>
+                  <td>
+                    <?php if ($comprador) : ?>
+                      <div style="font-weight:600; font-size:.88rem;"><?= htmlspecialchars($comprador->nome) ?></div>
+                      <?php if ($comprador->email) : ?>
+                        <div style="font-size:.75rem; color:rgba(255,255,255,.5);"><?= htmlspecialchars($comprador->email) ?></div>
+                      <?php endif ?>
+                      <?php if ($comprador->telefone) : ?>
+                        <div style="font-size:.75rem; color:rgba(255,255,255,.4);">
+                          <a href="https://api.whatsapp.com/send?phone=55<?= preg_replace('/\D/','',$comprador->telefone) ?>" target="_blank" style="color:#25d366;">
+                            <?= htmlspecialchars($comprador->telefone) ?>
+                          </a>
+                        </div>
+                      <?php endif ?>
+                    <?php else : ?>
+                      <span style="color:rgba(255,255,255,.3); font-size:.8rem;">—</span>
+                    <?php endif ?>
                   </td>
                   <td>
                     <ul class="itens-list">
