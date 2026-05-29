@@ -51,7 +51,8 @@ class AppUsuarios
         } else {
             // Admin/Master: vê todos os funcionários
             $where = "tipo_usuario = 1 OR tipo_usuario = 2 OR tipo_usuario = 3 OR tipo_usuario = 7";
-            $produtores = (new Usuario())->find("tipo_usuario = 4 AND ativo = 1")->order("nome ASC")->fetch(true) ?? [];
+            // Inclui tipo 1/2 (admins que também podem ter produtos) e tipo 4 (produtores)
+            $produtores = (new Usuario())->find("tipo_usuario IN (1,2,4) AND ativo = 1")->order("nome ASC")->fetch(true) ?? [];
         }
 
         $usuariosCount = (new Usuario())->find($where)->count();
@@ -180,6 +181,48 @@ class AppUsuarios
         } else {
             echo "Erro Ao Atualizar!";
             echo $usuario->fail()->getMessage();
+        }
+    }
+
+    public function bloquearFuncionario($data)
+    {
+        $this->sessao = (new AppSessao())->verificaSeLogado();
+        $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+
+        $sessionTipo = (int)$_SESSION["tipo"];
+        $sessionId   = (int)$_SESSION["id"];
+        $id = (int)($data["id"] ?? 0);
+
+        if (!$id) {
+            echo "ID inválido";
+            exit;
+        }
+
+        $usuario = (new Usuario())->findById($id);
+
+        if (!$usuario) {
+            echo "Usuário não encontrado";
+            exit;
+        }
+
+        // Produtor só pode bloquear atendentes seus
+        if ($sessionTipo === 4 && (int)$usuario->atendente_produtor !== $sessionId) {
+            echo "Sem permissão";
+            exit;
+        }
+
+        // Admin não pode bloquear a si mesmo nem outro master sem ser master
+        if ($sessionTipo !== 1 && (int)$usuario->tipo_usuario === 1) {
+            echo "Sem permissão";
+            exit;
+        }
+
+        $usuario->ativo = $usuario->ativo == 1 ? 0 : 1;
+
+        if ($usuario->save()) {
+            echo $usuario->ativo == 1 ? "Usuário ativado com sucesso!" : "Usuário bloqueado com sucesso!";
+        } else {
+            echo "Erro ao atualizar usuário";
         }
     }
 

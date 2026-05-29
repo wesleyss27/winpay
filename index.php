@@ -405,6 +405,7 @@ $router->get("/p/{page}", "AppUsuarios:usuarios", "appusuarios.home");
 $router->post("/", "AppUsuarios:cadastroFuncionarios", "appusuarios.funcionarios");
 $router->post("/editar", "AppUsuarios:editar", "appusuarios.editar");
 $router->post("/aprovar", "AppUsuarios:aprovar", "appusuarios.aprovar");
+$router->post("/bloquear", "AppUsuarios:bloquearFuncionario", "appusuarios.bloquear");
 $router->post("/verifica-email", "AppUsuarios:verificaEmail", "appusuarios.email");
 $router->post("/verifica-login", "AppUsuarios:verificaLogin", "appusuarios.login");
 $router->post("/verifica-cpf", "AppUsuarios:verificaCpf", "appusuarios.cpf");

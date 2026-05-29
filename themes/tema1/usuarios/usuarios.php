@@ -134,7 +134,9 @@ $i = 1;
                   <?php if ($usuario->tipo_usuario != 1 || $_SESSION["tipo"] == 1) : ?>
                     <td>
                       <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="editar(<?= $i; ?>)"><i class="fas fa-edit"></i></a>
-                      <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#idexcluir"><i class="fas fa-ban"></i></a>
+                      <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#idexcluir" onclick="prepararBloqueio(<?= $usuario->id ?>, '<?= htmlspecialchars($usuario->nome) ?>', <?= $usuario->ativo ?>)">
+                        <i class="fas fa-ban"></i>
+                      </a>
                     </td>
                   <?php endif; ?>
                 </tr>
@@ -270,27 +272,29 @@ $i = 1;
 </div>
 <!-- end cadastrar -->
 
-<!-- excluir plano -->
+<!-- modal bloquear/ativar -->
 <div class="modal fade" id="idexcluir">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Bloquear?</h4>
+        <h4 class="modal-title" id="titulo-bloqueio">Bloquear usuário?</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-
+      <div class="modal-body">
+        <p id="msg-bloqueio" style="font-family:inter; font-size:14px;"></p>
+      </div>
       <div class="modal-footer justify-content-between">
-        <button class="btn btn-default" data-dismiss="modal">Não</button>
-        <button type="submit" class="btn btn-primary" name=""><i class="fa fa-check"></i> Sim</button>
+        <button class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button class="btn btn-danger" id="btn-confirmar-bloqueio" onclick="confirmarBloqueio()">
+          <i class="fa fa-check"></i> Confirmar
+        </button>
       </div>
     </div>
-
   </div>
-
 </div>
-<!-- end excluir plano -->
+<!-- end modal bloquear -->
 
 <?= $v->start("scripts") ?>
 <script>
@@ -484,6 +488,36 @@ $i = 1;
       $("#row-atendente-produtor").hide();
       $("#atendente_produtor").val("");
     }
+  }
+
+  var _bloqueioId   = null;
+  var _bloqueioAtivo = null;
+
+  function prepararBloqueio(id, nome, ativo) {
+    _bloqueioId    = id;
+    _bloqueioAtivo = parseInt(ativo);
+    var acao = _bloqueioAtivo === 1 ? "Bloquear" : "Ativar";
+    $("#titulo-bloqueio").text(acao + " usuário?");
+    $("#msg-bloqueio").text(acao + " o usuário \"" + nome + "\"?");
+    var btnCls = _bloqueioAtivo === 1 ? "btn-danger" : "btn-success";
+    $("#btn-confirmar-bloqueio").removeClass("btn-danger btn-success").addClass(btnCls);
+  }
+
+  function confirmarBloqueio() {
+    if (!_bloqueioId) return;
+    $.ajax({
+      url: "<?= $router->route("appusuarios.bloquear") ?>",
+      type: "POST",
+      data: { id: _bloqueioId },
+      success: function(resp) {
+        alert(resp);
+        location.reload();
+      },
+      error: function() {
+        alert("Erro ao processar. Tente novamente.");
+      }
+    });
+    $("#idexcluir").modal("hide");
   }
 
   function cancelar() {
