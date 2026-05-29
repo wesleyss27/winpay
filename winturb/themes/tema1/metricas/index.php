@@ -406,13 +406,16 @@ $engajamento    = $avgPct;
     <?php else: ?>
       <div class="kpi-val" style="font-size:1.2rem;color:var(--muted);">—</div>
       <div class="kpi-lbl">Ret. ao Pitch</div>
-      <span class="pitch-link" id="pitch-toggle">Definir tempo do Pitch</span>
-      <div id="pitch-form">
-        <input type="text" id="pitch-input" placeholder="mm:ss" maxlength="7">
-        <button id="pitch-save">Salvar</button>
-        <button id="pitch-cancel" type="button">Cancelar</button>
-      </div>
     <?php endif; ?>
+    <span class="pitch-link" id="pitch-toggle">
+      <?= $pitchTime > 0 ? '✏️ ' . gmdate($pitchTime >= 3600 ? 'G:i:s' : 'i:s', $pitchTime) : 'Definir tempo do Pitch' ?>
+    </span>
+    <div id="pitch-form">
+      <input type="text" id="pitch-input" placeholder="mm:ss" maxlength="7"
+             value="<?= $pitchTime > 0 ? gmdate($pitchTime >= 3600 ? 'G:i:s' : 'i:s', $pitchTime) : '' ?>">
+      <button id="pitch-save">Salvar</button>
+      <button id="pitch-cancel" type="button">Cancelar</button>
+    </div>
   </div>
   <div class="kpi-card" data-kpi="engajamento">
     <div class="kpi-icon"><i class="fas fa-chart-line"></i></div>
