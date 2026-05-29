@@ -94,6 +94,8 @@ class AppLogin
 
                 if ($_SESSION["tipo"] == 6)
                     header("Location: " . url("vendas"));
+                elseif ($_SESSION["tipo"] == 7)
+                    header("Location: " . url("atendente/nova-venda"));
                 else
                     header("Location: " . URL_BASE . @$data["redirect"]);
             } else {

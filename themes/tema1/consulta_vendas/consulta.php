@@ -360,12 +360,12 @@ $rebStatusMap = [
                 <th>Comprador</th>
                 <th>Contato</th>
                 <th>Produto</th>
-                <th>Produtor</th>
                 <th>Pagamento</th>
                 <th>Valor</th>
                 <th>Status</th>
                 <th>Reembolso</th>
                 <th>Data</th>
+                <th>Produtor</th>
               </tr>
             </thead>
             <tbody>
@@ -395,8 +395,20 @@ $rebStatusMap = [
                     <span class="contact-email"><?= htmlspecialchars(@$c->email ?? '–') ?></span>
                     <span class="contact-phone"><?= htmlspecialchars(@$c->telefone ?? '') ?></span>
                   </td>
-                  <td><span class="product-name"><?= htmlspecialchars(@$produto->nome ?? '–') ?></span></td>
-                  <td><span class="producer-name"><?= htmlspecialchars(@$produtor->nome ?? (@$produtor->nome_abreviado ?? '–')) ?></span></td>
+                  <td>
+                    <?php if ((int)$venda->tipo_venda === 1) : ?>
+                      <?php $cvItens = (new Source\Models\Atendente\VendaPersonalizadaItem())->porVenda($venda->id); ?>
+                      <?php if ($cvItens) : ?>
+                        <?php foreach ($cvItens as $cvI) : ?>
+                          <span class="product-name" style="display:block;font-size:12px;">• <?= htmlspecialchars($cvI->nome_produto) ?></span>
+                        <?php endforeach ?>
+                      <?php else : ?>
+                        <span class="product-name"><?= htmlspecialchars(@$produto->nome ?? '–') ?></span>
+                      <?php endif ?>
+                    <?php else : ?>
+                      <span class="product-name"><?= htmlspecialchars(@$produto->nome ?? '–') ?></span>
+                    <?php endif ?>
+                  </td>
                   <td>
                     <span class="pgto-chip <?= $pg['cls'] ?>">
                       <i class="<?= $pg['icon'] ?>"></i> <?= $pg['txt'] ?>
@@ -439,6 +451,7 @@ $rebStatusMap = [
                       <span class="date-time">–</span>
                     <?php endif; ?>
                   </td>
+                  <td><span class="producer-name"><?= htmlspecialchars(@$produtor->nome ?? (@$produtor->nome_abreviado ?? '–')) ?></span></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>

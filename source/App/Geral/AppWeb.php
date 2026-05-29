@@ -52,6 +52,11 @@ class AppWeb
     {
         $section = new Section();
 
+        if ((int)$section->getTipo() === 7) {
+            header("Location: " . url("atendente/nova-venda"));
+            exit;
+        }
+
         if (@$_SESSION["subusuario"])
             $permissao = (new PermissaoModulo())->find("usuario_permitido = " . $_SESSION["id"] . " AND modulo = 'inicio'")->fetch();
 

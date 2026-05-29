@@ -41,17 +41,33 @@ class AppUsuarios
         $pagina = @$data["page"];
         $offset = 15;
 
-        $usuariosCount = (new Usuario())->find("tipo_usuario = 1 OR tipo_usuario = 2 OR tipo_usuario = 3")->count();
+        $sessionTipo = (int)$_SESSION["tipo"];
+        $sessionId   = (int)$_SESSION["id"];
+
+        if ($sessionTipo === 4) {
+            // Produtor: vê apenas seus próprios atendentes
+            $where = "tipo_usuario = 7 AND atendente_produtor = {$sessionId}";
+            $produtores = [];
+        } else {
+            // Admin/Master: vê todos os funcionários
+            $where = "tipo_usuario = 1 OR tipo_usuario = 2 OR tipo_usuario = 3 OR tipo_usuario = 7";
+            $produtores = (new Usuario())->find("tipo_usuario = 4 AND ativo = 1")->order("nome ASC")->fetch(true) ?? [];
+        }
+
+        $usuariosCount = (new Usuario())->find($where)->count();
         $paginas = ceil($usuariosCount / $offset);
-        $usuarios = (new Usuario())->find("tipo_usuario = 1 OR tipo_usuario = 2 OR tipo_usuario = 3")->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("id ASC")->fetch(true);
+        $usuarios = (new Usuario())->find($where)->limit($offset)->offset($paginador->paginador($pagina, $offset))->order("id ASC")->fetch(true);
+
         echo $this->view->render("usuarios/usuarios", [
-            "title" => "Gerenciar Usuários",
-            "usuarios" => $usuarios,
-            "paginador" => $paginador,
-            "total" => $paginas,
-            "pagina" => @$data["page"] ? $data["page"] : 1,
-            "msg" => @$data["msg"],
-            "classCss" => @$data["classCss"]
+            "title"      => $sessionTipo === 4 ? "Meus Atendentes" : "Gerenciar Usuários",
+            "usuarios"   => $usuarios,
+            "produtores" => $produtores,
+            "is_produtor" => $sessionTipo === 4,
+            "paginador"  => $paginador,
+            "total"      => $paginas,
+            "pagina"     => @$data["page"] ? $data["page"] : 1,
+            "msg"        => @$data["msg"],
+            "classCss"   => @$data["classCss"]
         ]);
     }
 
@@ -59,6 +75,15 @@ class AppUsuarios
     {
         $this->sessao = (new AppSessao())->verificaSeLogado();
         $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+
+        $sessionTipo = (int)$_SESSION["tipo"];
+        $sessionId   = (int)$_SESSION["id"];
+
+        // Produtor só pode criar atendentes (tipo=7) vinculados a si mesmo
+        if ($sessionTipo === 4) {
+            $data["tipo_usuario"]       = 7;
+            $data["atendente_produtor"] = $sessionId;
+        }
 
         if ($data["email"] == "" || $data["senha"] == "" || @$data["tipo_usuario"] == "") {
             echo "Preecha todos os dados necessários";
@@ -76,6 +101,10 @@ class AppUsuarios
         $usuario->status = 1;
         $usuario->ativo = 1;
         $usuario->tipo_usuario = $data["tipo_usuario"];
+
+        if ((int)$data["tipo_usuario"] === 7 && !empty($data["atendente_produtor"])) {
+            $usuario->atendente_produtor = (int)$data["atendente_produtor"];
+        }
 
         $usuarioDados = new UsuarioDados();
         $usuarioDados->nome = $usuario->nome;
@@ -102,7 +131,22 @@ class AppUsuarios
         $this->sessao = (new AppSessao())->verificaSeLogado();
         $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
 
+        $sessionTipo = (int)$_SESSION["tipo"];
+        $sessionId   = (int)$_SESSION["id"];
+
         $usuario = (new Usuario())->findById($data["id"]);
+
+        // Produtor só pode editar atendentes que lhe pertencem
+        if ($sessionTipo === 4) {
+            if ((int)$usuario->atendente_produtor !== $sessionId) {
+                echo "Sem permissão para editar este usuário.";
+                exit;
+            }
+            // Mantém tipo=7 e vínculo com o produtor, independente do que veio no form
+            $data["tipo_usuario"]       = 7;
+            $data["atendente_produtor"] = $sessionId;
+        }
+
         $usuario->nome = @$data["nome"];
         $nome = explode(" ", @$data["nome"], 2);
         $usuario->nome_abreviado = @$nome[0];
@@ -111,6 +155,10 @@ class AppUsuarios
         $usuario->status = 1;
         $usuario->ativo = 1;
         $usuario->tipo_usuario = $data["tipo_usuario"];
+
+        if ((int)$data["tipo_usuario"] === 7) {
+            $usuario->atendente_produtor = !empty($data["atendente_produtor"]) ? (int)$data["atendente_produtor"] : null;
+        }
 
         $user = (new UsuarioDados())->find("usuario = " . $data["id"])->fetch();
         //var_dump($user);

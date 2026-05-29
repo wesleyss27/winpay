@@ -1,4 +1,43 @@
 <?php $v->layout("_theme"); ?>
+
+<?= $v->start("links"); ?>
+<style>
+/* Modal dark — combina com o tema global */
+#modal-lg .modal-content {
+  background: #1a1a1a;
+  color: #f0f0f0;
+  border: 1px solid rgba(255,255,255,.1);
+}
+#modal-lg .modal-header {
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+#modal-lg .modal-footer {
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+#modal-lg label {
+  color: rgba(255,255,255,.75);
+  font-size: 12px;
+}
+/* Garante que select também fique dark */
+#modal-lg select.form-control {
+  background-color: #151515 !important;
+  color: #fff !important;
+}
+#modal-lg select.form-control option {
+  background: #222;
+  color: #fff;
+}
+/* Corrige autofill do browser — impede fundo branco com letra branca */
+#modal-lg input:-webkit-autofill,
+#modal-lg input:-webkit-autofill:hover,
+#modal-lg input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #1f1f1f inset !important;
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff;
+}
+</style>
+<?= $v->end(); ?>
+
 <?php
 
 $tipo_usuario = array(
@@ -7,12 +46,14 @@ $tipo_usuario = array(
   3 => "FUNCIONÁRIO",
   4 => "PRODUTOR",
   5 => "AFILIADO",
-  6 => "COMPRADOR"
+  6 => "COMPRADOR",
+  7 => "ATENDENTE",
 );
 
 $documento = "";
 
-if ($_SESSION["tipo"] != 1 && $_SESSION["tipo"] != 2) {
+// Acesso permitido para admin (1/2) e produtor (4)
+if (!in_array((int)$_SESSION["tipo"], [1, 2, 4])) {
   header("Location: " . URL_BASE);
 }
 $i = 1;
@@ -25,13 +66,13 @@ $i = 1;
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h4 style="font-family:inter">Gerenciar Usuários</h4>
+          <h4 style="font-family:inter"><?= $is_produtor ? "Meus Atendentes" : "Gerenciar Usuários" ?></h4>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="./">Início</a></li>
             <li class="breadcrumb-item">Configurações</li>
-            <li class="breadcrumb-item active">Gerenciar Usuários</li>
+            <li class="breadcrumb-item active"><?= $is_produtor ? "Meus Atendentes" : "Gerenciar Usuários" ?></li>
           </ol>
         </div>
       </div>
@@ -106,7 +147,8 @@ $i = 1;
                     foto: "<?= $foto ?>",
                     login: "<?= $usuario->login ?>",
                     senha: "<?= $usuario->senha ?>",
-                    tipo_usuario: "<?= $usuario->tipo_usuario ?>"
+                    tipo_usuario: "<?= $usuario->tipo_usuario ?>",
+                    atendente_produtor: "<?= $usuario->atendente_produtor ?>"
                   }
                 </script>
 
@@ -179,18 +221,42 @@ $i = 1;
               <p id="msg-login"></p>
             </div>
 
-            <div class="col-6">
-              <label style="margin-top:10px">Permissão*</label>
-              <select name="tipo_usuario" id="tipo_usuario" class="form-control input-lg" required="required">
-                <option disabled selected>Permissão *</option>
-                <?php if ($_SESSION["tipo"] == 1) : ?>
-                  <option value="1">Master</option>
-                <?php endif; ?>
-                <option value="2">Administrador</option>
-                <option value="3">Funcionário</option>
+            <?php if ($is_produtor) : ?>
+              <!-- Produtor: tipo fixo = Atendente, sem escolha -->
+              <input type="hidden" name="tipo_usuario" id="tipo_usuario" value="7">
+              <div class="col-6">
+                <label style="margin-top:10px">Tipo</label>
+                <input type="text" class="form-control input-lg" value="Atendente" disabled>
+              </div>
+            <?php else : ?>
+              <div class="col-6">
+                <label style="margin-top:10px">Permissão*</label>
+                <select name="tipo_usuario" id="tipo_usuario" class="form-control input-lg" required="required" onchange="toggleProdutor(this.value)">
+                  <option disabled selected>Permissão *</option>
+                  <?php if ($_SESSION["tipo"] == 1) : ?>
+                    <option value="1">Master</option>
+                  <?php endif; ?>
+                  <option value="2">Administrador</option>
+                  <option value="3">Funcionário</option>
+                  <option value="7">Atendente</option>
+                </select>
+              </div>
+            <?php endif ?>
+          </div>
+
+          <?php if (!$is_produtor) : ?>
+          <div class="row" id="row-atendente-produtor" style="display:none;">
+            <div class="col-12">
+              <label style="margin-top:10px">Produtor associado* <small style="color:#aaa;">(obrigatório para Atendente)</small></label>
+              <select name="atendente_produtor" id="atendente_produtor" class="form-control input-lg">
+                <option value="">Selecione o produtor</option>
+                <?php foreach ($produtores as $prod) : ?>
+                  <option value="<?= $prod->id ?>"><?= htmlspecialchars($prod->nome) ?> (<?= htmlspecialchars($prod->email) ?>)</option>
+                <?php endforeach ?>
               </select>
             </div>
           </div>
+          <?php endif ?>
         </div>
 
         <div class="modal-footer justify-content-between">
@@ -403,9 +469,26 @@ $i = 1;
       "selected": true
     });
 
+    toggleProdutor(tipo_usuario);
+
+    var atendente_produtor = dados[i]["atendente_produtor"];
+    if (atendente_produtor) {
+      $("#atendente_produtor option[value=" + atendente_produtor + "]").prop("selected", true);
+    }
+  }
+
+  function toggleProdutor(tipo) {
+    if (tipo == "7") {
+      $("#row-atendente-produtor").show();
+    } else {
+      $("#row-atendente-produtor").hide();
+      $("#atendente_produtor").val("");
+    }
   }
 
   function cancelar() {
+    $("#row-atendente-produtor").hide();
+    $("#atendente_produtor").val("");
     $("#salvar").css("display", "inline");
     $("#editar").css("display", "none");
     $("#id").attr({

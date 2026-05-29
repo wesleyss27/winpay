@@ -521,7 +521,40 @@
                             <div class="col-md-12">
                                 <div class="titulo">Informações do Produto</div>
 
-                                <?php if ($section->getId() == 6) : ?>
+                                <?php if ((int)$venda->tipo_venda === 1) : ?>
+                                    <?php
+                                      $vpItensModal = (new Source\Models\Atendente\VendaPersonalizadaItem())->porVenda($venda->id);
+                                    ?>
+                                    <div class="row borda1">
+                                        <div class="col-md-3"><b>Tipo: </b></div>
+                                        <div class="col-md-9"><span style="background:rgba(168,85,247,.18);color:#c084fc;border:1px solid rgba(168,85,247,.4);padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;">Venda Personalizada</span></div>
+                                    </div>
+                                    <?php if ($vpItensModal) : ?>
+                                        <div class="row borda1">
+                                            <div class="col-md-3"><b>Produtos: </b></div>
+                                            <div class="col-md-9">
+                                                <?php foreach ($vpItensModal as $vpI) : ?>
+                                                    <div style="margin-bottom:4px;">
+                                                        <b><?= htmlspecialchars($vpI->nome_produto) ?></b>
+                                                        <?php if ($vpI->nome_plano) : ?>
+                                                            <small style="color:#888;"> — <?= htmlspecialchars($vpI->nome_plano) ?></small>
+                                                        <?php endif ?>
+                                                    </div>
+                                                <?php endforeach ?>
+                                            </div>
+                                        </div>
+                                    <?php else : ?>
+                                        <div class="row borda1">
+                                            <div class="col-md-3"><b>Produto: </b></div>
+                                            <div class="col-md-9"><?= $venda->dataProduto()->nome ?></div>
+                                        </div>
+                                    <?php endif ?>
+                                    <div class="row borda1">
+                                        <div class="col-md-3"><b>Total: </b></div>
+                                        <div class="col-md-9">R$ <?= number_format($venda->valor_bruto, 2, ",", ".") ?></div>
+                                    </div>
+
+                                <?php elseif ($section->getId() == 6) : ?>
                                     <div class="row borda1">
                                         <div class="col-md-3"><b>Produto: </b></div>
                                         <div class="col-md-9"><?= $venda->dataProduto()->nome; ?></div>
@@ -533,8 +566,7 @@
                                     </div>
                                 <?php endif; ?>
 
-
-                                <?php if ($venda->plano != "") : ?>
+                                <?php if ((int)$venda->tipo_venda !== 1 && $venda->plano != "") : ?>
                                     <div class="row borda1">
                                         <div class="col-md-3"><b>Plano: </b></div>
                                         <div class="col-md-9"><?= $venda->dataPlano()->codigo . " - " . $venda->dataPlano()->nome; ?></div>

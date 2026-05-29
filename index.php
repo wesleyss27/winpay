@@ -865,6 +865,22 @@ $router->post("/postback", "AppNotazz:postbackNotazz", "notazz.postback");
 
 
 /*
+* NAMESPACE Source\App\Atendente
+* Módulo Atendente – venda personalizada multi-produto
+*/
+$router->namespace("Source\App\Atendente");
+$router->group("atendente");
+$router->get("/nova-venda",    "AppAtendente:novaVenda",    "atendente.nova");
+$router->post("/criar-venda",  "AppAtendente:criarVenda",   "atendente.criar");
+$router->get("/minhas-vendas", "AppAtendente:minhasVendas", "atendente.vendas");
+$router->post("/consultar-pix","AppAtendente:consultarPix", "atendente.consultarPix");
+
+// Página pública de pagamento PIX (sem autenticação)
+$router->namespace("Source\App\Atendente");
+$router->group(null);
+$router->get("/pagar/{uuid}", "AppPagamentoPublico:pagar", "pagar.publico");
+
+/*
 * NAMESPACE Source\App\Televendas"
 */
 $router->namespace("Source\App\Televendas");
@@ -941,6 +957,80 @@ $router->get("/resumo-diario",     "AppMobileApi:resumoDiario",     "mobile.resu
 $router->post("/esqueci-senha",    "AppMobileApi:esqueciSenha",     "mobile.forgot");
 $router->post("/redefinir-senha",  "AppMobileApi:redefinirSenha",   "mobile.reset");
 $router->get("/versao",            "AppMobileApi:versao",           "mobile.versao");
+
+/*
+* NAMESPACE Source\App\WinHub
+* API JSON para o app WinHub (rede social dos clientes)
+*/
+$router->namespace("Source\App\WinHub");
+$router->group("winhub");
+
+// Auth
+$router->post("/auth/login",             "AppWinHub:login",         "winhub.auth.login");
+$router->post("/auth/register",          "AppWinHub:register",      "winhub.auth.register");
+$router->post("/auth/logout",            "AppWinHub:logout",        "winhub.auth.logout");
+
+// Feed
+$router->get("/feed",                    "AppWinHub:feed",          "winhub.feed");
+$router->get("/posts/{id}",              "AppWinHub:postDetail",    "winhub.post.detail");
+$router->post("/posts/{id}/like",        "AppWinHub:toggleLike",    "winhub.post.like");
+$router->get("/posts/{id}/comments",     "AppWinHub:getComments",   "winhub.post.comments.get");
+$router->post("/posts/{id}/comments",    "AppWinHub:addComment",    "winhub.post.comments.add");
+
+// Stories
+$router->get("/stories",                 "AppWinHub:stories",       "winhub.stories");
+
+// Anúncios
+$router->get("/ads",                     "AppWinHub:ads",           "winhub.ads");
+$router->get("/ads/{id}",                "AppWinHub:adDetail",      "winhub.ads.detail");
+
+// Perfil
+$router->get("/profile",                 "AppWinHub:profile",       "winhub.profile.get");
+$router->post("/profile",                "AppWinHub:updateProfile",  "winhub.profile.update");
+
+// Análise de Crédito
+$router->get("/credito/info",            "AppWinHub:creditoInfo",          "winhub.credito.info");
+$router->post("/credito/solicitar",      "AppWinHub:creditoSolicitar",     "winhub.credito.solicitar");
+$router->get("/credito/minhas-analises", "AppWinHub:creditoMinhasAnalises","winhub.credito.minhas");
+$router->post("/pix/gerar",              "AppWinHub:pixGerar",             "winhub.pix.gerar");
+$router->get("/pix/status/{analise_id}", "AppWinHub:pixStatus",            "winhub.pix.status");
+
+// Admin
+$router->post("/admin/posts",            "AppWinHub:createPost",    "winhub.admin.post.create");
+$router->post("/admin/stories",          "AppWinHub:createStory",   "winhub.admin.story.create");
+$router->post("/admin/ads",              "AppWinHub:createAd",      "winhub.admin.ad.create");
+$router->post("/upload",                 "AppWinHub:upload",        "winhub.upload");
+
+/*
+* NAMESPACE Source\App\WinHub
+* Painel admin web do WinHub
+*/
+$router->namespace("Source\App\WinHub");
+$router->group("winhub-admin");
+
+$router->get("/",                    "AppWinHubAdmin:index",        "winhub.admin.index");
+
+$router->get("/posts",               "AppWinHubAdmin:posts",        "winhub.admin.posts");
+$router->get("/posts/novo",          "AppWinHubAdmin:postNovo",     "winhub.admin.post.novo");
+$router->get("/posts/editar/{id}",   "AppWinHubAdmin:postEditar",   "winhub.admin.post.editar");
+$router->post("/posts/salvar",       "AppWinHubAdmin:postSalvar",   "winhub.admin.post.salvar");
+$router->post("/posts/excluir",      "AppWinHubAdmin:postExcluir",  "winhub.admin.post.excluir");
+
+$router->get("/stories",             "AppWinHubAdmin:stories",      "winhub.admin.stories");
+$router->get("/stories/novo",        "AppWinHubAdmin:storyNovo",    "winhub.admin.story.novo");
+$router->post("/stories/salvar",     "AppWinHubAdmin:storySalvar",  "winhub.admin.story.salvar");
+$router->post("/stories/excluir",    "AppWinHubAdmin:storyExcluir", "winhub.admin.story.excluir");
+
+$router->get("/ads",                 "AppWinHubAdmin:ads",          "winhub.admin.ads");
+$router->get("/ads/novo",            "AppWinHubAdmin:adNovo",       "winhub.admin.ad.novo");
+$router->get("/ads/editar/{id}",     "AppWinHubAdmin:adEditar",     "winhub.admin.ad.editar");
+$router->post("/ads/salvar",         "AppWinHubAdmin:adSalvar",     "winhub.admin.ad.salvar");
+$router->post("/ads/excluir",        "AppWinHubAdmin:adExcluir",    "winhub.admin.ad.excluir");
+
+$router->get("/analises-credito",    "AppWinHubAdmin:analisesCredito",       "winhub.admin.analises.list");
+$router->post("/analises-credito/status", "AppWinHubAdmin:analiseAtualizarStatus", "winhub.admin.analises.status");
+
+$router->post("/upload",             "AppWinHubAdmin:upload",       "winhub.admin.upload");
 
 /*
 * Processos

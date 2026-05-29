@@ -225,7 +225,7 @@
   use Source\Models\Permissao\Section;
 
   $section = new Section();
-  if ($section->getTipo() != 6) :
+  if (!in_array($section->getTipo(), [6, 7])) :
   ?>
    <div class="brand-logo" style="margin-bottom: 20px;">
     <span class="win-text">WIN</span><span class="highlight">PAY</span>
@@ -239,7 +239,7 @@
   <div class="sidebar">
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="font-family:inter">
-        <?php if ($_SESSION["tipo"] != 6) : ?>
+        <?php if (!in_array((int)$_SESSION["tipo"], [6, 7])) : ?>
 
           <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("inicio")) : ?>
             <li class="nav-item">
@@ -293,7 +293,48 @@
           </li>
         <?php endif ?>
 
-        <?php if ($section->getTipo() != 6) : ?>
+        <?php if ($section->getTipo() == 7) : ?>
+          <?php
+          $url_atual_atend = HTTP . "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+          $atend_ativo = (
+            $url_atual_atend == url("atendente/nova-venda") ||
+            $url_atual_atend == url("atendente/minhas-vendas")
+          );
+          echo $atend_ativo
+            ? "<li class='nav-item menu-open'><a href='#' class='nav-link active'>"
+            : "<li class='nav-item'><a href='#' class='nav-link'>";
+          ?>
+          <span class="material-symbols-rounded">support_agent</span>
+          <p class="txt-branco-octa" style="text-shadow:#343a40">
+            Vendas
+            <span class="material-symbols-rounded right">chevron_left</span>
+          </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item sub-item">
+              <a href="<?= url('atendente/nova-venda') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                <span class="material-symbols-rounded nav-icon">add_shopping_cart</span>
+                <p>Nova Venda</p>
+              </a>
+            </li>
+            <li class="nav-item sub-item">
+              <a href="<?= url('atendente/minhas-vendas') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                <span class="material-symbols-rounded nav-icon">receipt_long</span>
+                <p>Minhas Vendas</p>
+              </a>
+            </li>
+          </ul>
+          </li>
+
+          <li class="nav-item" title="Meus dados">
+            <a href="<?= url('usuarios/perfil/' . $_SESSION["id"]) ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+              <span class="material-symbols-rounded nav-icon">person</span>
+              <p>Meus dados</p>
+            </a>
+          </li>
+        <?php endif ?>
+
+        <?php if (!in_array($section->getTipo(), [6, 7])) : ?>
           <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("venda_menu")) : ?>
 
             <?php
@@ -397,7 +438,7 @@
             <?php endif ?>
           <?php endif ?>
 
-          <?php if ($section->getTipo() != 6) : ?>
+          <?php if (!in_array($section->getTipo(), [6, 7])) : ?>
             <?php if (!@$_SESSION["subusuario"] || $section->permissaoModuloBool("produto_menu")) : ?>
               <?php $url_atual = HTTP . "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
               if (
@@ -452,6 +493,15 @@
                     <a href="<?= url('produtos/coproducoes') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
                       <span class="material-symbols-rounded nav-icon">handshake</span>
                       <p>Minhas Coproduções</p>
+                    </a>
+                  </li>
+                <?php endif ?>
+
+                <?php if ($section->getTipo() == 4) : ?>
+                  <li class="nav-item sub-item" title="Gerencie os atendentes do seu time de vendas">
+                    <a href="<?= url('funcionarios') ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40">
+                      <span class="material-symbols-rounded nav-icon">support_agent</span>
+                      <p>Meus Atendentes</p>
                     </a>
                   </li>
                 <?php endif ?>
@@ -813,6 +863,59 @@
               </li>
             </ul>
           <?php endif; ?>
+
+          <!-- WinCreditos -->
+          <?php
+            $isMasterWin = in_array((int)$_SESSION["tipo"], [1, 2]);
+            $isProdutorWin = (int)($_SESSION["acesso_wincredito"] ?? 0) === 1;
+            if ($isMasterWin || $isProdutorWin) :
+              $winhub_ativo = strpos($url_atual, url("winhub-admin")) !== false;
+              echo $winhub_ativo ? "<li class='nav-item menu-open'>" : "<li class='nav-item'>";
+          ?>
+            <a href="#" class="nav-link <?= $winhub_ativo ? 'active' : '' ?>">
+              <span class="material-symbols-rounded nav-icon">hub</span>
+              <p class="txt-branco-octa">
+                WinCreditos
+                <span class="material-symbols-rounded right">chevron_left</span>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <?php if ($isMasterWin) : ?>
+              <li class="nav-item sub-item">
+                <a href="<?= url("winhub-admin") ?>" class="nav-link txt-branco-octa">
+                  <span class="material-symbols-rounded nav-icon">dashboard</span>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <li class="nav-item sub-item">
+                <a href="<?= url("winhub-admin/posts") ?>" class="nav-link txt-branco-octa">
+                  <span class="material-symbols-rounded nav-icon">newspaper</span>
+                  <p>Posts</p>
+                </a>
+              </li>
+              <li class="nav-item sub-item">
+                <a href="<?= url("winhub-admin/stories") ?>" class="nav-link txt-branco-octa">
+                  <span class="material-symbols-rounded nav-icon">fiber_manual_record</span>
+                  <p>Stories</p>
+                </a>
+              </li>
+              <li class="nav-item sub-item">
+                <a href="<?= url("winhub-admin/ads") ?>" class="nav-link txt-branco-octa">
+                  <span class="material-symbols-rounded nav-icon">campaign</span>
+                  <p>Anúncios</p>
+                </a>
+              </li>
+              <?php endif; ?>
+              <li class="nav-item sub-item">
+                <a href="<?= url("winhub-admin/analises-credito") ?>" class="nav-link txt-branco-octa">
+                  <span class="material-symbols-rounded nav-icon">credit_score</span>
+                  <p>Análise de Crédito</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <?php endif; ?>
+
     </nav>
 
   </div>

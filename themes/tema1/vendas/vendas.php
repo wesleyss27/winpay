@@ -1034,6 +1034,10 @@ function dadosEndereco($venda)
                         <span class="badge-modern bg-azul-octa">Ecommerce</span>
                       <?php endif; ?>
 
+                      <?php if ((int)$venda->tipo_venda === 1) : ?>
+                        <span class="badge-modern" style="background:rgba(168,85,247,.18);color:#c084fc;border-color:rgba(168,85,247,.4);">Personalizada</span>
+                      <?php endif; ?>
+
                     <a href="#" data-toggle="modal" data-target="#myModal<?= $venda->id; ?>" class="sale-id-link">
                       <div style="font-weight: 600; font-size: 12px;">#<?= $venda->id; ?></div>
                       <div style="font-size: 11px; color:rgb(198, 200, 204);">#<?= $venda->transacao; ?></div>
@@ -1073,7 +1077,19 @@ function dadosEndereco($venda)
                     </td>
                   <?php endif ?>
 
-                  <?php if ($venda->plano) : ?>
+                  <?php if ((int)$venda->tipo_venda === 1) : ?>
+                    <td>
+                      <?php
+                        $vpItens = (new Source\Models\Atendente\VendaPersonalizadaItem())->porVenda($venda->id);
+                        if ($vpItens) :
+                          foreach ($vpItens as $vpI) :
+                      ?>
+                        <div style="font-size:12px; color:#e0e0e0;">• <?= htmlspecialchars($vpI->nome_produto) ?><?= $vpI->nome_plano ? ' <span style="color:rgba(255,255,255,.4);">(' . htmlspecialchars($vpI->nome_plano) . ')</span>' : '' ?></div>
+                      <?php endforeach; else : ?>
+                        <div style="font-weight:600;"><?= $venda->dataProduto()->nome ?></div>
+                      <?php endif; ?>
+                    </td>
+                  <?php elseif ($venda->plano) : ?>
                     <td>
                       <a href="<?= url("produtos/detalhe/$venda->produto") ?>" class="product-link">
                         <div style="font-weight: 600; margin-bottom: 4px;"><?= $venda->dataProduto()->nome ?></div>
