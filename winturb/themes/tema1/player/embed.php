@@ -575,16 +575,20 @@
     fetch(EVENTO_URL, { method: 'POST', body });
   }
 
-  // View única por browser a cada 24h — evita contar F5 como nova visualização
-  (function trackView() {
-    const key    = 'wt_v_' + TOKEN;
-    const last   = parseInt(localStorage.getItem(key) || '0', 10);
-    const DAY_MS = 86400000;
-    if (Date.now() - last > DAY_MS) {
+  // Dedup local via localStorage — evita contar reloads como novos eventos
+  function trackOnce(tipo, windowMs) {
+    const key  = 'wt_' + tipo + '_' + TOKEN;
+    const last = parseInt(localStorage.getItem(key) || '0', 10);
+    if (Date.now() - last > windowMs) {
       localStorage.setItem(key, Date.now());
-      track('view');
+      track(tipo);
+      return true;
     }
-  })();
+    return false;
+  }
+
+  // View: 1 por browser a cada 24h
+  (function() { trackOnce('view', 86400000); })();
 
   // ── Pré-carregamento inteligente ──────────────────────────────────────────
   function schedulePreload() {
@@ -669,7 +673,8 @@
   video.addEventListener('play', () => {
     iconPause.style.display = ''; iconPlay.style.display = 'none';
     watchStart = Date.now();
-    if (!didPlay) { didPlay = true; track('play'); }
+    // Play: 1 por browser a cada 1h (localStorage + flag in-session)
+    if (!didPlay) { didPlay = true; trackOnce('play', 3600000); }
   });
 
   video.addEventListener('pause', () => {
