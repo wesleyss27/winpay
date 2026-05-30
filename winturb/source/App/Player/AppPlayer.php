@@ -76,16 +76,23 @@ class AppPlayer
             return;
         }
 
-        $sessionKey = $this->sessionKey();
+        // Usa o viewer_key gerado pelo JS do player (funciona em iframe cross-origin)
+        // Fallback para session PHP se não vier no POST
+        $viewerKey = !empty($data["viewer_key"])
+            ? substr(preg_replace('/[^a-f0-9]/', '', $data["viewer_key"]), 0, 32)
+            : $this->sessionKey();
+
         $ip = $_SERVER["HTTP_CF_CONNECTING_IP"]
-            ?? $_SERVER["HTTP_X_FORWARDED_FOR"]
+            ?? (isset($_SERVER["HTTP_X_FORWARDED_FOR"])
+                ? trim(explode(',', $_SERVER["HTTP_X_FORWARDED_FOR"])[0])
+                : null)
             ?? $_SERVER["REMOTE_ADDR"]
             ?? null;
 
         try {
             $pdo  = Connect::getInstance();
 
-            // Dedup por sessão E por IP para view e play
+            // Dedup por viewer_key (JS) E por IP — funciona em qualquer contexto de embed
             $dedupTipos = ['view' => 'INTERVAL 24 HOUR', 'play' => 'INTERVAL 1 HOUR'];
             if (isset($dedupTipos[$tipo])) {
                 $intervalo = $dedupTipos[$tipo];
@@ -94,7 +101,7 @@ class AppPlayer
                                  AND criado_em > NOW() - {$intervalo}
                                  AND (session_key = :s" . ($ip ? " OR ip = :ip" : "") . ")
                                LIMIT 1";
-                $checkParams = [':v' => (int)$video->id, ':t' => $tipo, ':s' => $sessionKey];
+                $checkParams = [':v' => (int)$video->id, ':t' => $tipo, ':s' => $viewerKey];
                 if ($ip) $checkParams[':ip'] = substr($ip, 0, 45);
                 $check = $pdo->prepare($checkSql);
                 $check->execute($checkParams);
@@ -112,7 +119,7 @@ class AppPlayer
                 ':v'  => (int)$video->id,
                 ':a'  => $adId,
                 ':t'  => $tipo,
-                ':s'  => $sessionKey,
+                ':s'  => $viewerKey,
                 ':ip' => $ip ? substr($ip, 0, 45) : null,
             ]);
             echo json_encode(["ok" => true]);

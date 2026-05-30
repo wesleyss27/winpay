@@ -568,27 +568,42 @@
   let started      = false;
   let autoplaying  = false;
 
+  // ── Viewer key ────────────────────────────────────────────────────────────
+  // Gerado uma vez por carregamento do player; passado em todos os eventos.
+  // Não depende de cookie nem de localStorage — funciona em iframe cross-origin.
+  var VIEWER_KEY = (function() {
+    // Tenta reusar do sessionStorage (mesma aba, mesmo domínio do iframe)
+    try {
+      var stored = sessionStorage.getItem('wt_vk_' + TOKEN);
+      if (stored) return stored;
+    } catch(e) {}
+    // Gera novo UUID simples
+    var key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'.replace(/x/g, function() {
+      return (Math.random() * 16 | 0).toString(16);
+    });
+    try { sessionStorage.setItem('wt_vk_' + TOKEN, key); } catch(e) {}
+    return key;
+  })();
+
   // ── Tracking ──────────────────────────────────────────────────────────────
   function track(tipo, adId) {
-    const body = new URLSearchParams({ token: TOKEN, tipo });
+    var body = new URLSearchParams({ token: TOKEN, tipo: tipo, viewer_key: VIEWER_KEY });
     if (adId) body.append('ad_id', adId);
-    fetch(EVENTO_URL, { method: 'POST', body });
+    fetch(EVENTO_URL, { method: 'POST', body: body });
   }
 
-  // Dedup local via localStorage — evita contar reloads como novos eventos
-  function trackOnce(tipo, windowMs) {
-    const key  = 'wt_' + tipo + '_' + TOKEN;
-    const last = parseInt(localStorage.getItem(key) || '0', 10);
-    if (Date.now() - last > windowMs) {
-      localStorage.setItem(key, Date.now());
-      track(tipo);
-      return true;
-    }
-    return false;
+  // trackOnce: dedup client-side via sessionStorage (funciona em iframe)
+  // O backend tem dedup próprio por IP como segunda camada.
+  var _sentEvents = {};
+  function trackOnce(tipo) {
+    if (_sentEvents[tipo]) return false;
+    _sentEvents[tipo] = true;
+    track(tipo);
+    return true;
   }
 
-  // View: 1 por browser a cada 24h
-  (function() { trackOnce('view', 86400000); })();
+  // View disparada uma vez por carregamento do player
+  (function() { trackOnce('view'); })();
 
   // ── Pré-carregamento inteligente ──────────────────────────────────────────
   function schedulePreload() {
