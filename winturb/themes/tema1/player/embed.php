@@ -921,11 +921,15 @@
   // ── Heartbeat de retenção (a cada 5s durante reprodução) ──────────────────
   setInterval(() => {
     if (!video.paused && !video.ended && started && !autoplaying) {
-      navigator.sendBeacon(HEARTBEAT_URL, new URLSearchParams({
-        token:   TOKEN,
-        segundo: Math.floor(video.currentTime),
-        duracao: Math.floor(video.duration || 0),
-      }));
+      var hbBody = new URLSearchParams({
+        token:      TOKEN,
+        segundo:    Math.floor(video.currentTime),
+        duracao:    Math.floor(video.duration || 0),
+        viewer_key: VIEWER_KEY,
+      });
+      // fetch com keepalive garante envio mesmo ao fechar a página
+      fetch(HEARTBEAT_URL, { method: 'POST', body: hbBody, keepalive: true })
+        .catch(function() {});
     }
   }, 5000);
 })();

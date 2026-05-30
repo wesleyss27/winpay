@@ -58,6 +58,10 @@ class AppPlayer
     /** POST /player/evento — registra um evento de analytics (fire-and-forget) */
     public function evento($data)
     {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+        if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") { http_response_code(200); exit; }
         header("Content-Type: application/json");
 
         $tipos  = ['view', 'play', 'ad_impression', 'ad_click', 'complete'];
@@ -212,6 +216,10 @@ class AppPlayer
     /** POST /player/heartbeat — salva max segundo assistido por sessão */
     public function heartbeat($data)
     {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+        if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") { http_response_code(200); exit; }
         header("Content-Type: application/json");
         $token   = $data["token"]   ?? "";
         $segundo = (int)($data["segundo"] ?? 0);
@@ -220,7 +228,10 @@ class AppPlayer
         $video = (new Video())->findByToken($token);
         if (!$video || $segundo < 0) { echo json_encode(["ok" => false]); return; }
 
-        $sessionKey = $this->sessionKey();
+        // Usa viewer_key do JS (funciona em iframe cross-origin sem depender de cookie)
+        $sessionKey = !empty($data["viewer_key"])
+            ? substr(preg_replace('/[^a-f0-9]/', '', $data["viewer_key"]), 0, 32)
+            : $this->sessionKey();
 
         // Capturar IP real
         $ip = $_SERVER['HTTP_CF_CONNECTING_IP']
