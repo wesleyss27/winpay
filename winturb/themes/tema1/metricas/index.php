@@ -1197,6 +1197,10 @@ function zerarMetricas() {
   .then(function(r) { return r.json(); })
   .then(function(res) {
     if (res.ok) {
+      // Limpa o dedup do localStorage para este vídeo
+      var token = <?= json_encode($video->embed_token) ?>;
+      localStorage.removeItem('wt_view_' + token);
+      localStorage.removeItem('wt_play_' + token);
       alert('Métricas zeradas com sucesso!');
       location.reload();
     } else {
