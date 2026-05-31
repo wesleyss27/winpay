@@ -102,7 +102,7 @@ class AppPlayer
                 $intervalo = $dedupTipos[$tipo];
                 $checkSql  = "SELECT id FROM winturb_eventos
                                WHERE video_id = :v AND tipo = :t
-                                 AND criado_em > NOW() - {$intervalo}
+                                 AND created_at > NOW() - {$intervalo}
                                  AND (session_key = :s" . ($ip ? " OR ip = :ip" : "") . ")
                                LIMIT 1";
                 $checkParams = [':v' => (int)$video->id, ':t' => $tipo, ':s' => $viewerKey];
