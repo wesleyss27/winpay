@@ -205,6 +205,9 @@ class AppVideos
         $video->force_play   = isset($data["force_play"])   ? 1 : 0;
         $video->cor_acento   = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_acento"]  ?? "") ? $data["cor_acento"]  : "#7c6af7";
         $video->cor_fundo    = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_fundo"]   ?? "") ? $data["cor_fundo"]   : "#000000";
+        $video->cor_play_btn  = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_play_btn"]  ?? "") ? $data["cor_play_btn"]  : null;
+        $video->cor_unmute_bg    = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_unmute_bg"]    ?? "") ? $data["cor_unmute_bg"]    : null;
+        $video->cor_unmute_texto = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_unmute_texto"] ?? "") ? $data["cor_unmute_texto"] : null;
 
         if (isset($data["pitch_time"])) {
             $video->pitch_time = max(0, (int)$data["pitch_time"]);

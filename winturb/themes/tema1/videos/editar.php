@@ -322,6 +322,53 @@
         </div>
       </div>
 
+      <!-- Cor do botão play + fundo do card "Clique para ouvir" -->
+      <div class="wt-grid-2" style="gap:.8rem;margin-bottom:1.1rem;">
+        <div>
+          <label class="wt-label">Cor do botão Play <small style="font-weight:400;color:var(--muted);">(vazio = cor de destaque)</small></label>
+          <div class="color-row">
+            <input type="color" id="cor_play_btn" value="<?= htmlspecialchars($video->cor_play_btn ?? ($video->cor_acento ?? '#f97316'), ENT_QUOTES) ?>">
+            <input class="wt-input" type="text" id="cor_play_btn_txt"
+              value="<?= htmlspecialchars($video->cor_play_btn ?? '', ENT_QUOTES) ?>"
+              style="font-family:'JetBrains Mono',monospace;font-size:.8rem;"
+              maxlength="7" placeholder="igual à cor de destaque">
+          </div>
+        </div>
+        <div>
+          <label class="wt-label">Fundo do card "Clique para ouvir" <small style="font-weight:400;color:var(--muted);">(vazio = preto)</small></label>
+          <div class="color-row">
+            <input type="color" id="cor_unmute_bg" value="<?= htmlspecialchars($video->cor_unmute_bg ?? '#000000', ENT_QUOTES) ?>">
+            <input class="wt-input" type="text" id="cor_unmute_bg_txt"
+              value="<?= htmlspecialchars($video->cor_unmute_bg ?? '', ENT_QUOTES) ?>"
+              style="font-family:'JetBrains Mono',monospace;font-size:.8rem;"
+              maxlength="7" placeholder="#000000">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.1rem;">
+        <label class="wt-label">Cor do texto do card "Clique para ouvir" <small style="font-weight:400;color:var(--muted);">(vazio = branco)</small></label>
+        <div style="display:flex;gap:.5rem;align-items:center;">
+          <button type="button" onclick="setUnmuteTexto('#ffffff')"
+            id="btn-texto-branco"
+            style="padding:.4rem 1rem;border-radius:8px;border:2px solid #fff;background:#fff;color:#111;font-size:.8rem;font-weight:700;cursor:pointer;">
+            Branco
+          </button>
+          <button type="button" onclick="setUnmuteTexto('#000000')"
+            id="btn-texto-preto"
+            style="padding:.4rem 1rem;border-radius:8px;border:2px solid #333;background:#000;color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;">
+            Preto
+          </button>
+          <div class="color-row" style="flex:1;">
+            <input type="color" id="cor_unmute_texto" value="<?= htmlspecialchars($video->cor_unmute_texto ?? '#ffffff', ENT_QUOTES) ?>">
+            <input class="wt-input" type="text" id="cor_unmute_texto_txt"
+              value="<?= htmlspecialchars($video->cor_unmute_texto ?? '', ENT_QUOTES) ?>"
+              style="font-family:'JetBrains Mono',monospace;font-size:.8rem;"
+              maxlength="7" placeholder="#ffffff">
+          </div>
+        </div>
+      </div>
+
       <!-- Capa -->
       <div class="wt-field">
         <label class="wt-label">Capa / thumbnail</label>
@@ -578,8 +625,14 @@ function salvarVideo() {
   if (document.getElementById("allow_speed").checked)  fd.append("allow_speed", "1");
   if (document.getElementById("hide_seekbar").checked) fd.append("hide_seekbar", "1");
   if (document.getElementById("fake_seekbar").checked) fd.append("fake_seekbar", "1");
-  fd.append("cor_acento", document.getElementById("cor_acento").value);
-  fd.append("cor_fundo",  document.getElementById("cor_fundo").value);
+  fd.append("cor_acento",   document.getElementById("cor_acento").value);
+  fd.append("cor_fundo",    document.getElementById("cor_fundo").value);
+  const playBtnTxt  = document.getElementById("cor_play_btn_txt").value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(playBtnTxt)) fd.append("cor_play_btn", playBtnTxt);
+  const unmuteBgTxt  = document.getElementById("cor_unmute_bg_txt").value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(unmuteBgTxt)) fd.append("cor_unmute_bg", unmuteBgTxt);
+  const unmuteTextoTxt = document.getElementById("cor_unmute_texto_txt").value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(unmuteTextoTxt)) fd.append("cor_unmute_texto", unmuteTextoTxt);
   const capa = document.getElementById("capa").files[0];
   if (capa) fd.append("capa", capa);
 
@@ -736,8 +789,13 @@ document.getElementById("hide_seekbar").addEventListener("change", function () {
   if (!this.checked) document.getElementById("fake_seekbar").checked = false;
 });
 
+function setUnmuteTexto(hex) {
+  document.getElementById("cor_unmute_texto").value     = hex;
+  document.getElementById("cor_unmute_texto_txt").value = hex;
+}
+
 // Sync color picker ↔ text input
-["acento","fundo"].forEach(key => {
+["acento","fundo","play_btn","unmute_bg","unmute_texto"].forEach(key => {
   const picker = document.getElementById("cor_" + key);
   const txt    = document.getElementById("cor_" + key + "_txt");
   if (!picker || !txt) return;

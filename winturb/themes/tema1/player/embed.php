@@ -8,8 +8,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent: <?= preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_acento ?? '') ? htmlspecialchars($video->cor_acento, ENT_QUOTES) : '#f97316' ?>;
-      --bg:     <?= preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_fundo  ?? '') ? htmlspecialchars($video->cor_fundo,  ENT_QUOTES) : '#000000' ?>;
+      --accent:   <?= preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_acento ?? '') ? htmlspecialchars($video->cor_acento, ENT_QUOTES) : '#f97316' ?>;
+      --bg:       <?= preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_fundo  ?? '') ? htmlspecialchars($video->cor_fundo,  ENT_QUOTES) : '#000000' ?>;
+      --play-btn:  <?= preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_play_btn  ?? '') ? htmlspecialchars($video->cor_play_btn,  ENT_QUOTES) : 'var(--accent)' ?>;
+      <?php
+        // Converte hex para RGB para uso no rgba() do fundo do card unmute
+        $unmuteBg = preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_unmute_bg ?? '') ? $video->cor_unmute_bg : '#000000';
+        $ur = hexdec(substr($unmuteBg, 1, 2));
+        $ug = hexdec(substr($unmuteBg, 3, 2));
+        $ub = hexdec(substr($unmuteBg, 5, 2));
+      ?>
+      --unmute-bg-r: <?= $ur ?>; --unmute-bg-g: <?= $ug ?>; --unmute-bg-b: <?= $ub ?>;
+      --unmute-txt: <?= preg_match('/^#[0-9a-fA-F]{6}$/', $video->cor_unmute_texto ?? '') ? htmlspecialchars($video->cor_unmute_texto, ENT_QUOTES) : '#ffffff' ?>;
     }
 
     html, body {
@@ -62,37 +72,47 @@
       display: flex; align-items: center; justify-content: center;
       z-index: 1;
     }
-    /* Glow ring pulsante */
-    #wt-play-btn::before {
+
+    /* Dois anéis de ripple — sempre visíveis, expansão contínua */
+    #wt-play-btn::before,
+    #wt-play-btn::after {
       content: '';
-      position: absolute; inset: -10px;
+      position: absolute;
+      inset: 0;
       border-radius: 50%;
-      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%);
-      animation: ring-pulse 2.2s ease-in-out infinite;
+      border: 2.5px solid var(--play-btn);
       opacity: 0;
+      animation: ripple-ring 2.4s ease-out infinite;
     }
-    @keyframes ring-pulse {
-      0%, 100% { transform: scale(.85); opacity: 0; }
-      50%       { transform: scale(1.15); opacity: 1; }
+    #wt-play-btn::after {
+      animation-delay: 1.2s;
     }
-    /* Círculo branco semitransparente */
+    @keyframes ripple-ring {
+      0%   { transform: scale(1);   opacity: .75; }
+      100% { transform: scale(2.4); opacity: 0;   }
+    }
+
+    /* Botão inner — pulso sutil de escala + glow */
     #wt-play-btn-inner {
       width: 72px; height: 72px;
       border-radius: 50%;
-      background: rgba(255,255,255,.14);
-      border: 1.5px solid rgba(255,255,255,.28);
-      backdrop-filter: blur(8px);
+      background: var(--play-btn);
+      border: none;
       display: flex; align-items: center; justify-content: center;
-      transition: transform .18s cubic-bezier(.22,1,.36,1),
-                  background .18s, border-color .18s;
-      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s;
+      box-shadow: 0 0 0 0 var(--play-btn);
+      animation: btn-breathe 2.4s ease-in-out infinite;
+    }
+    @keyframes btn-breathe {
+      0%, 100% { transform: scale(1);    box-shadow: 0 0 12px 2px color-mix(in srgb, var(--play-btn) 50%, transparent); }
+      50%       { transform: scale(1.07); box-shadow: 0 0 28px 8px color-mix(in srgb, var(--play-btn) 70%, transparent); }
     }
     #wt-poster:hover #wt-play-btn-inner {
-      transform: scale(1.1);
-      background: var(--accent);
-      border-color: var(--accent);
+      transform: scale(1.14) !important;
+      animation-play-state: paused;
+      box-shadow: 0 0 36px 10px color-mix(in srgb, var(--play-btn) 80%, transparent) !important;
     }
-    #wt-play-btn svg { width: 26px; height: 26px; fill: #fff; margin-left: 4px; }
+    #wt-play-btn svg { width: 28px; height: 28px; fill: #fff; margin-left: 4px; }
 
     /* ── Loader ── */
     #wt-loader {
@@ -321,35 +341,67 @@
       transform: translate(-50%, -50%);
       z-index: 7;
       display: flex; flex-direction: column; align-items: center; gap: .65rem;
-      background: rgba(0,0,0,.78);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1.5px solid rgba(255,255,255,.18);
+      background: rgba(var(--unmute-bg-r), var(--unmute-bg-g), var(--unmute-bg-b), .55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid var(--play-btn);
       border-radius: 20px;
       padding: 1.5rem 2.2rem;
       color: #fff;
       cursor: pointer;
       white-space: nowrap;
       animation: unmute-in .4s cubic-bezier(.22,1,.36,1) both;
-      transition: background .15s, transform .15s;
-      box-shadow: 0 12px 40px rgba(0,0,0,.55);
+      transition: transform .15s;
     }
+
+    /* Dois anéis de ripple expandindo ao redor do card — sempre visíveis */
+    #wt-unmute-pill::before,
+    #wt-unmute-pill::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      border: 2px solid var(--play-btn);
+      background: transparent;
+      opacity: 0;
+      animation: pill-ripple 2.4s ease-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    #wt-unmute-pill::after {
+      animation-delay: 1.2s;
+    }
+    @keyframes pill-ripple {
+      0%   { transform: scale(1);    opacity: .85; }
+      100% { transform: scale(1.35); opacity: 0;   }
+    }
+
     #wt-unmute-pill:hover {
-      background: rgba(15,10,40,.9);
-      transform: translate(-50%, -50%) scale(1.04);
+      transform: translate(-50%, -50%) scale(1.05);
     }
+    #wt-unmute-pill:hover::before,
+    #wt-unmute-pill:hover::after {
+      animation-play-state: paused;
+    }
+
     .unmute-icon-wrap {
       width: 52px; height: 52px; border-radius: 50%;
-      background: rgba(255,255,255,.12);
-      border: 1.5px solid rgba(255,255,255,.2);
+      background: var(--play-btn);
       display: flex; align-items: center; justify-content: center;
+      animation: icon-breathe 2.4s ease-in-out infinite;
     }
-    #wt-unmute-pill svg { width: 24px; height: 24px; fill: #fff; }
+    @keyframes icon-breathe {
+      0%, 100% { box-shadow: 0 0  8px 2px var(--play-btn); }
+      50%       { box-shadow: 0 0 20px 6px var(--play-btn); opacity: .85; }
+    }
+
+    #wt-unmute-pill svg { width: 24px; height: 24px; fill: var(--unmute-txt); }
     #wt-unmute-pill .unmute-label {
       font-size: .84rem; font-weight: 700; letter-spacing: .03em;
+      color: var(--unmute-txt);
     }
     #wt-unmute-pill .unmute-sub {
-      font-size: .7rem; color: rgba(255,255,255,.5); margin-top: -.3rem;
+      font-size: .7rem; color: var(--unmute-txt); opacity: .75; margin-top: -.3rem;
     }
     @keyframes unmute-in {
       from { opacity: 0; transform: translate(-50%, -50%) scale(.88); }
