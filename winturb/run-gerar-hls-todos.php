@@ -1,6 +1,6 @@
 <?php
 /**
- * Gera HLS para todos os vídeos que ainda não foram processados.
+ * Gera HLS multi-bitrate para todos os vídeos pendentes.
  * Rode: php run-gerar-hls-todos.php
  */
 
@@ -24,69 +24,19 @@ if (!$ids) {
 }
 
 $total = count($ids);
-echo "Iniciando geração de HLS para $total vídeo(s)...\n\n";
+echo "Iniciando geração de HLS multi-bitrate para $total vídeo(s)...\n\n";
+
+$script = __DIR__ . '/source/Scripts/GerarHls.php';
 
 foreach ($ids as $i => $videoId) {
-    $num   = $i + 1;
-    $video = (new Video())->findById($videoId);
-
-    if (!$video) {
-        echo "[$num/$total] #{$videoId} — não encontrado, pulando.\n";
-        continue;
-    }
-
-    echo "[$num/$total] #{$video->id} — {$video->titulo} ... ";
+    $num = $i + 1;
+    echo "[$num/$total] Vídeo #{$videoId}...\n";
     flush();
 
-    $input = __DIR__ . '/uploads/videos/' . $video->arquivo;
-    if (!is_file($input)) {
-        echo "ARQUIVO NÃO ENCONTRADO\n";
-        $video->hls_status = 'failed';
-        $video->save();
-        continue;
-    }
+    $cmd = sprintf('php %s %d', escapeshellarg($script), (int)$videoId);
+    passthru($cmd, $code);
 
-    $outDir = __DIR__ . '/uploads/hls/' . $video->embed_token . '/';
-    if (!is_dir($outDir)) {
-        mkdir($outDir, 0775, true);
-    }
-
-    $video->hls_status = 'processing';
-    $video->save();
-
-    $playlist = $outDir . 'master.m3u8';
-    $segPat   = $outDir . 'seg_%04d.ts';
-
-    $cmd = sprintf(
-        'ffmpeg -i %s'
-        . ' -c:v libx264 -preset veryfast -crf 23 -g 48 -sc_threshold 0'
-        . ' -c:a aac -b:a 128k'
-        . ' -hls_time 4'
-        . ' -hls_playlist_type vod'
-        . ' -hls_flags independent_segments'
-        . ' -hls_segment_filename %s'
-        . ' -y %s 2>&1',
-        escapeshellarg($input),
-        escapeshellarg($segPat),
-        escapeshellarg($playlist)
-    );
-
-    $output = [];
-    $code   = 0;
-    exec($cmd, $output, $code);
-
-    if ($code === 0 && is_file($playlist)) {
-        $video->hls_status = 'ready';
-        echo "OK\n";
-    } else {
-        $video->hls_status = 'failed';
-        echo "FALHOU (código $code)\n";
-        $tail = array_slice($output, -5);
-        foreach ($tail as $line) {
-            echo "  $line\n";
-        }
-    }
-    $video->save();
+    echo $code === 0 ? "  → Concluído\n\n" : "  → FALHOU (código $code)\n\n";
 }
 
-echo "\nConcluído.\n";
+echo "Concluído.\n";

@@ -39,7 +39,9 @@ class Video extends DataLayer
  * pitch_time    int            default 0   -- tempo em segundos do pitch
  * cor_play_btn  varchar(7)     default null -- cor hex do botão play (null = usa cor_acento)
  * cor_unmute_bg    varchar(7)  default null -- cor hex do fundo do card "Clique para ouvir"
- * cor_unmute_texto varchar(7)  default null -- cor hex do texto do card "Clique para ouvir"
+ * cor_unmute_texto varchar(7)   default null -- cor hex do texto do card "Clique para ouvir"
+ * unmute_label     varchar(100) default null -- título do card (null = "Clique para ouvir")
+ * unmute_sub       varchar(150) default null -- subtítulo do card (null = "Vídeo com som desativado")
  * created_at    timestamp
  * updated_at    timestamp
  */

@@ -441,8 +441,8 @@
     <div class="unmute-icon-wrap">
       <svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
     </div>
-    <span class="unmute-label">Clique para ouvir</span>
-    <span class="unmute-sub">Vídeo com som desativado</span>
+    <span class="unmute-label"><?= htmlspecialchars($video->unmute_label ?: 'Clique para ouvir', ENT_QUOTES) ?></span>
+    <span class="unmute-sub"><?= htmlspecialchars($video->unmute_sub ?: 'Vídeo com som desativado', ENT_QUOTES) ?></span>
   </div>
 
   <!-- Oferta desktop -->
@@ -594,15 +594,34 @@
   (function initVideo() {
     if (HLS_URL && typeof Hls !== 'undefined' && Hls.isSupported()) {
       hlsInstance = new Hls({
-        autoStartLoad:  false,
-        enableWorker:   true,
-        backBufferLength: 30,
-        maxBufferLength:  40,
+        // ── Carregamento ──────────────────────────────────────────────────
+        autoStartLoad:    false,   // inicia só ao clicar play
+        enableWorker:     true,
+
+        // ── ABR — começa na qualidade mais baixa e sobe rápido ────────────
+        startLevel:       -1,      // -1 = hls.js escolhe com base no bandwidth estimado
+        abrEwmaDefaultEstimate: 500000, // estimativa inicial conservadora (500 kbps)
+        abrBandWidthFactor:     0.90,   // usa 90% do bandwidth medido para escolher qualidade
+        abrBandWidthUpFactor:   0.75,   // mais cauteloso ao subir (evita oscilação)
+        abrEwmaFastLive:  3,
+        abrEwmaSlowLive:  9,
+        abrEwmaFastVoD:   3,
+        abrEwmaSlowVoD:   9,
+
+        // ── Buffer ────────────────────────────────────────────────────────
+        maxBufferLength:      16,  // buffer máx em segundos (era 40 — muito alto)
+        maxMaxBufferLength:   30,  // cap absoluto
+        maxBufferSize:   30 * 1000 * 1000, // 30 MB máx
+        backBufferLength:     10,  // mantém 10s de buffer passado
+
+        // ── Segmentos ────────────────────────────────────────────────────
+        maxFragLookUpTolerance: 0.2,
+        progressive:    true,      // começa a reproduzir antes de carregar tudo
       });
       hlsInstance.loadSource(HLS_URL);
       hlsInstance.attachMedia(video);
     } else if (HLS_URL && video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari suporta HLS nativamente
+      // Safari suporta HLS nativamente (ABR gerenciado pelo SO)
       video.src = HLS_URL;
     }
     // Sem HLS: src já definido no HTML (MP4 byte-range)

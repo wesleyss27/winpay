@@ -208,6 +208,8 @@ class AppVideos
         $video->cor_play_btn  = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_play_btn"]  ?? "") ? $data["cor_play_btn"]  : null;
         $video->cor_unmute_bg    = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_unmute_bg"]    ?? "") ? $data["cor_unmute_bg"]    : null;
         $video->cor_unmute_texto = preg_match('/^#[0-9a-fA-F]{6}$/', $data["cor_unmute_texto"] ?? "") ? $data["cor_unmute_texto"] : null;
+        $video->unmute_label     = !empty($data["unmute_label"])  ? substr(strip_tags($data["unmute_label"]),  0, 100) : null;
+        $video->unmute_sub       = !empty($data["unmute_sub"])    ? substr(strip_tags($data["unmute_sub"]),    0, 150) : null;
 
         if (isset($data["pitch_time"])) {
             $video->pitch_time = max(0, (int)$data["pitch_time"]);

@@ -346,6 +346,22 @@
         </div>
       </div>
 
+      <!-- Textos do card unmute -->
+      <div class="wt-grid-2" style="gap:.8rem;margin-bottom:1.1rem;">
+        <div>
+          <label class="wt-label">Título do card <small style="font-weight:400;color:var(--muted);">(vazio = "Clique para ouvir")</small></label>
+          <input class="wt-input" type="text" id="unmute_label" maxlength="100"
+            placeholder="Clique para ouvir"
+            value="<?= htmlspecialchars($video->unmute_label ?? '', ENT_QUOTES) ?>">
+        </div>
+        <div>
+          <label class="wt-label">Subtítulo do card <small style="font-weight:400;color:var(--muted);">(vazio = "Vídeo com som desativado")</small></label>
+          <input class="wt-input" type="text" id="unmute_sub" maxlength="150"
+            placeholder="Vídeo com som desativado"
+            value="<?= htmlspecialchars($video->unmute_sub ?? '', ENT_QUOTES) ?>">
+        </div>
+      </div>
+
       <div style="margin-bottom:1.1rem;">
         <label class="wt-label">Cor do texto do card "Clique para ouvir" <small style="font-weight:400;color:var(--muted);">(vazio = branco)</small></label>
         <div style="display:flex;gap:.5rem;align-items:center;">
@@ -633,6 +649,10 @@ function salvarVideo() {
   if (/^#[0-9a-fA-F]{6}$/.test(unmuteBgTxt)) fd.append("cor_unmute_bg", unmuteBgTxt);
   const unmuteTextoTxt = document.getElementById("cor_unmute_texto_txt").value.trim();
   if (/^#[0-9a-fA-F]{6}$/.test(unmuteTextoTxt)) fd.append("cor_unmute_texto", unmuteTextoTxt);
+  const unmuteLabelVal = document.getElementById("unmute_label").value.trim();
+  if (unmuteLabelVal) fd.append("unmute_label", unmuteLabelVal);
+  const unmuteSubVal = document.getElementById("unmute_sub").value.trim();
+  if (unmuteSubVal) fd.append("unmute_sub", unmuteSubVal);
   const capa = document.getElementById("capa").files[0];
   if (capa) fd.append("capa", capa);
 
