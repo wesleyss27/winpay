@@ -717,8 +717,9 @@ a:hover { color: #fff; text-decoration: underline; }
                   </video>
 
                   <!-- overlay de loading -->
-                  <div id="win-loader" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);pointer-events:none;">
+                  <div id="win-loader" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.6rem;background:rgba(0,0,0,0.55);pointer-events:none;">
                     <i class="fas fa-circle-notch fa-spin" style="font-size:2rem;color:var(--wh-accent);"></i>
+                    <span id="win-loader-msg" style="font-size:0.75rem;color:rgba(255,255,255,0.7);letter-spacing:0.04em;"></span>
                   </div>
 
                   <!-- overlay de oferta -->
@@ -803,6 +804,9 @@ a:hover { color: #fff; text-decoration: underline; }
                         <button id="win-fs-btn" type="button" style="background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:0.2rem;" title="Tela cheia">
                           <i class="fas fa-expand"></i>
                         </button>
+
+                        <!-- indicador de conexão -->
+                        <div id="win-conn-dot" title="Qualidade de conexão" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);flex-shrink:0;transition:background 0.5s;"></div>
                       </div>
                     </div>
                   </div>
@@ -880,14 +884,121 @@ a:hover { color: #fff; text-decoration: underline; }
 
                   // ─── Eventos do vídeo ───
                   video.addEventListener('loadedmetadata', () => {
-                    loader.style.display = 'none';
+                    hideLoader();
                     durTxt.textContent = fmtTime(video.duration);
                     metaReady = true;
                     applySavedTime();
                   });
 
-                  video.addEventListener('waiting', () => { loader.style.display = 'flex'; });
-                  video.addEventListener('canplay',  () => { loader.style.display = 'none'; });
+                  // ─── Qualidade de conexão e stall recovery ───
+                  const connDot    = document.getElementById('win-conn-dot');
+                  const loaderMsg  = document.getElementById('win-loader-msg');
+                  let stallTimer   = null;
+                  let stallCount   = 0;
+                  let connQuality  = 'unknown'; // 'good' | 'medium' | 'poor' | 'unknown'
+
+                  const CONN_COLORS = { good: '#4ade80', medium: '#facc15', poor: '#f87171', unknown: 'rgba(255,255,255,0.25)' };
+
+                  function setConnQuality(q) {
+                    connQuality = q;
+                    connDot.style.background = CONN_COLORS[q] || CONN_COLORS.unknown;
+                    connDot.title = { good: 'Conexão boa', medium: 'Conexão moderada', poor: 'Conexão lenta', unknown: 'Verificando conexão' }[q] || '';
+                  }
+
+                  function setLoaderMsg(msg) {
+                    loaderMsg.textContent = msg;
+                  }
+
+                  function showLoader(msg) {
+                    loader.style.display = 'flex';
+                    setLoaderMsg(msg || '');
+                  }
+
+                  function hideLoader() {
+                    loader.style.display = 'none';
+                    setLoaderMsg('');
+                  }
+
+                  // Detecta qualidade: Network Information API primeiro, depois medição real
+                  (async function detectConnection() {
+                    const nc = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                    if (nc) {
+                      function applyNetworkInfo() {
+                        const eff = nc.effectiveType;
+                        const dl  = nc.downlink; // Mbps estimado pelo browser
+                        if (eff === 'slow-2g' || eff === '2g' || dl < 0.5) {
+                          setConnQuality('poor');
+                          video.preload = 'none';
+                        } else if (eff === '3g' || dl < 2) {
+                          setConnQuality('medium');
+                          video.preload = 'metadata';
+                        } else {
+                          setConnQuality('good');
+                          video.preload = 'auto';
+                        }
+                      }
+                      applyNetworkInfo();
+                      nc.addEventListener('change', applyNetworkInfo);
+                      return;
+                    }
+
+                    // Fallback: mede a velocidade baixando os primeiros 100 KB do vídeo
+                    try {
+                      const t0   = performance.now();
+                      const resp = await fetch(STREAM_URL, {
+                        headers: { Range: 'bytes=0-102399' },
+                        cache: 'no-store',
+                        signal: AbortSignal.timeout(8000),
+                      });
+                      const buf  = await resp.arrayBuffer();
+                      const secs = (performance.now() - t0) / 1000;
+                      const mbps = (buf.byteLength * 8) / (secs * 1024 * 1024);
+
+                      if (mbps < 1)      { setConnQuality('poor');   video.preload = 'none'; }
+                      else if (mbps < 4) { setConnQuality('medium'); video.preload = 'metadata'; }
+                      else               { setConnQuality('good');   video.preload = 'auto'; }
+                    } catch (_) {
+                      setConnQuality('unknown');
+                    }
+                  })();
+
+                  // Tenta recuperar playback após stall: recarrega src a partir do ponto atual
+                  function recoverPlayback() {
+                    const t = video.currentTime;
+                    video.src = STREAM_URL + (STREAM_URL.includes('?') ? '&' : '?') + '_r=' + Date.now();
+                    video.load();
+                    video.currentTime = t;
+                    video.play().catch(() => {});
+                  }
+
+                  video.addEventListener('waiting', () => {
+                    showLoader(stallCount === 0 ? 'Carregando…' : 'Conexão lenta, aguardando buffer…');
+                    clearTimeout(stallTimer);
+                    stallTimer = setTimeout(() => {
+                      stallCount++;
+                      if (stallCount === 1) {
+                        setLoaderMsg('Conexão lenta — tentando recuperar…');
+                        setConnQuality('poor');
+                        recoverPlayback();
+                      } else {
+                        setLoaderMsg('Conexão instável. Tente pausar e aguardar o buffer carregar.');
+                      }
+                    }, 6000);
+                  });
+
+                  video.addEventListener('canplay', () => {
+                    clearTimeout(stallTimer);
+                    hideLoader();
+                    // Após recuperação bem-sucedida, suaviza o indicador
+                    if (stallCount > 0 && connQuality === 'poor') {
+                      stallCount = Math.max(0, stallCount - 1);
+                    }
+                  });
+
+                  video.addEventListener('playing', () => {
+                    clearTimeout(stallTimer);
+                    hideLoader();
+                  });
 
                   video.addEventListener('play', () => {
                     playIcon.className = 'fas fa-pause';
