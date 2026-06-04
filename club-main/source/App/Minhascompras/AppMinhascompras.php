@@ -281,7 +281,7 @@ class AppMinhascompras
                 $codigo = $stmtCo->fetchColumn();
                 if (!$codigo) continue;
 
-                $o->checkout_url = URL_BASE_WINPAY . "/checkout/" . $codigo;
+                $o->checkout_url = (defined('URL_BASE_WINPAY') ? URL_BASE_WINPAY : 'https://app.winpay.digital') . "/checkout/" . $codigo;
 
                 // Overlay no player: vinculada a esta aula com tempo configurado
                 if ($o->aula_id == $aula->id && $o->exibir_em !== null) {
