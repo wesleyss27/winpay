@@ -12,8 +12,8 @@ RewriteRule ^ - [L]
 #</FilesMatch>
 
 # Upload limits
-php_value upload_max_filesize 160M
-php_value post_max_size 165M
+php_value upload_max_filesize 500M
+php_value post_max_size 510M
 php_value max_execution_time 300
 php_value max_input_time 300
 php_value memory_limit 256M
