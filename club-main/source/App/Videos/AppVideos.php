@@ -116,15 +116,26 @@ class AppVideos
         $video->status  = 1;
 
         if ($video->save()) {
-            // Comprime para 480p em background se FFmpeg disponível (não bloqueia a resposta)
             $ffmpeg = trim((string) shell_exec('which ffmpeg 2>/dev/null'));
             if ($ffmpeg) {
+                // 1. Faststart: move o moov atom para o início do arquivo.
+                //    Isso permite seeking imediato sem baixar o arquivo inteiro.
+                //    É uma operação rápida (sem re-codificação).
+                $tmp = $destino . '.fst.mp4';
+                exec($ffmpeg . ' -i ' . escapeshellarg($destino)
+                    . ' -c copy -movflags +faststart '
+                    . escapeshellarg($tmp) . ' > /dev/null 2>&1');
+                if (is_file($tmp) && filesize($tmp) > 0) {
+                    rename($tmp, $destino);
+                } else {
+                    @unlink($tmp);
+                }
+
+                // 2. Comprime para 480p em background (não bloqueia a resposta)
                 $dst = self::path480($destino);
-                $cmd = $ffmpeg . ' -i ' . escapeshellarg($destino)
-                     . ' -vf scale=-2:480 -c:v libx264 -crf 26 -preset fast -c:a aac -b:a 96k '
-                     . escapeshellarg($dst)
-                     . ' > /dev/null 2>&1 &';
-                exec($cmd);
+                exec($ffmpeg . ' -i ' . escapeshellarg($destino)
+                    . ' -vf scale=-2:480 -c:v libx264 -crf 26 -preset fast -c:a aac -b:a 96k '
+                    . escapeshellarg($dst) . ' > /dev/null 2>&1 &');
             }
             echo json_encode(["ok" => true, "id" => $video->id, "titulo" => $titulo]);
         } else {
