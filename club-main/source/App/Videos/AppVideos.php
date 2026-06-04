@@ -37,6 +37,12 @@ class AppVideos
         $this->pastaVideos = $userDir;
     }
 
+    /** Caminho da versão 480p comprimida de um arquivo */
+    private static function path480(string $path): string
+    {
+        return preg_replace('/(\.[^.\/]+)$/', '_480p.mp4', $path);
+    }
+
     /** Biblioteca de vídeos do produtor */
     public function biblioteca($data)
     {
@@ -44,6 +50,13 @@ class AppVideos
             ->find("usuario = :u", "u={$_SESSION['id']}")
             ->order("id DESC")
             ->fetch(true);
+
+        $baseDir = realpath(__DIR__ . "/../../..") . "/uploads/videos/";
+        if ($videos) {
+            foreach ($videos as $v) {
+                $v->has480 = is_file(self::path480($baseDir . $v->arquivo));
+            }
+        }
 
         echo $this->view->render("videos/biblioteca", [
             "title"  => "Minha Biblioteca de Vídeos",
@@ -103,6 +116,16 @@ class AppVideos
         $video->status  = 1;
 
         if ($video->save()) {
+            // Comprime para 480p em background se FFmpeg disponível (não bloqueia a resposta)
+            $ffmpeg = trim((string) shell_exec('which ffmpeg 2>/dev/null'));
+            if ($ffmpeg) {
+                $dst = self::path480($destino);
+                $cmd = $ffmpeg . ' -i ' . escapeshellarg($destino)
+                     . ' -vf scale=-2:480 -c:v libx264 -crf 26 -preset fast -c:a aac -b:a 96k '
+                     . escapeshellarg($dst)
+                     . ' > /dev/null 2>&1 &';
+                exec($cmd);
+            }
             echo json_encode(["ok" => true, "id" => $video->id, "titulo" => $titulo]);
         } else {
             @unlink($destino);
@@ -125,6 +148,10 @@ class AppVideos
         $arquivo = realpath(__DIR__ . "/../../..") . "/uploads/videos/" . $video->arquivo;
         if (is_file($arquivo)) {
             @unlink($arquivo);
+        }
+        $arquivo480 = self::path480($arquivo);
+        if (is_file($arquivo480)) {
+            @unlink($arquivo480);
         }
 
         echo json_encode(["ok" => $video->destroy()]);
@@ -149,12 +176,16 @@ class AppVideos
             exit("Acesso negado.");
         }
 
-        $arquivo = realpath(__DIR__ . "/../../..") . "/uploads/videos/" . $video->arquivo;
+        $original = realpath(__DIR__ . "/../../..") . "/uploads/videos/" . $video->arquivo;
 
-        if (!is_file($arquivo)) {
+        if (!is_file($original)) {
             http_response_code(404);
             exit("Arquivo não encontrado.");
         }
+
+        // Prefere versão 480p comprimida se já estiver pronta
+        $arquivo480 = self::path480($original);
+        $arquivo    = is_file($arquivo480) ? $arquivo480 : $original;
 
         $ext = strtolower(pathinfo($arquivo, PATHINFO_EXTENSION));
         $mimeMap = [
@@ -164,14 +195,24 @@ class AppVideos
             'mov'  => 'video/quicktime',
             'mkv'  => 'video/x-matroska',
         ];
-        $mime = $mimeMap[$ext] ?? 'application/octet-stream';
+        $mime = $mimeMap[$ext] ?? 'video/mp4';
 
         $tamanho = filesize($arquivo);
+        $etag    = '"' . md5($arquivo . $tamanho) . '"';
         $inicio  = 0;
         $fim     = $tamanho - 1;
 
         header("Accept-Ranges: bytes");
         header("Content-Type: $mime");
+        // Permite cache privado de 2h — reduz requests repetidos para o mesmo vídeo
+        header("Cache-Control: private, max-age=7200");
+        header("ETag: $etag");
+
+        // Responde 304 se o cliente já tem a versão atual em cache
+        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+            http_response_code(304);
+            exit;
+        }
 
         if (isset($_SERVER['HTTP_RANGE'])) {
             preg_match('/bytes=(\d+)-(\d*)/', $_SERVER['HTTP_RANGE'], $matches);
@@ -185,16 +226,20 @@ class AppVideos
 
         $length = $fim - $inicio + 1;
         header("Content-Length: $length");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
+
+        // Limpa output buffer e configura para stream longo
+        if (ob_get_level()) ob_end_clean();
+        set_time_limit(0);
+        ignore_user_abort(true);
 
         $fp = fopen($arquivo, 'rb');
         fseek($fp, $inicio);
         $restante = $length;
         while ($restante > 0 && !feof($fp)) {
-            $chunk = min(65536, $restante);
+            $chunk = min(1048576, $restante); // 1 MB por chunk (era 64 KB)
             echo fread($fp, $chunk);
-            $restante -= $chunk;
             flush();
+            $restante -= $chunk;
         }
         fclose($fp);
         exit;
