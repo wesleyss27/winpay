@@ -20,7 +20,7 @@ if ($_SESSION["tipo"] == 6) {
             <section class="win-section">
                 <div class="win-section-header">
                     <h2>Enviar novo vídeo</h2>
-                    <span class="win-section-subtitle">Formatos aceitos: MP4, WebM, OGG, MOV, MKV · Máximo: 150 MB</span>
+                    <span class="win-section-subtitle">Formatos aceitos: MP4, WebM, OGG, MOV, MKV · Máximo: 500 MB</span>
                 </div>
 
                 <div class="win-form">
@@ -123,6 +123,14 @@ $('#btn-upload').on('click', function () {
 
     if (!arquivo) { alert('Selecione um vídeo.'); return; }
     if (!titulo)  { alert('Informe o título.'); return; }
+
+    const MAX_MB  = 500;
+    const MAX_BYTES = MAX_MB * 1024 * 1024;
+    if (arquivo.size > MAX_BYTES) {
+        const sizeMb = (arquivo.size / 1048576).toFixed(1);
+        alert(`Arquivo muito grande: ${sizeMb} MB.\nO limite é ${MAX_MB} MB. Comprima o vídeo antes de enviar.`);
+        return;
+    }
 
     const form = new FormData();
     form.append('arquivo', arquivo);

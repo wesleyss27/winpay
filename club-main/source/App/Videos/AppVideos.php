@@ -16,8 +16,8 @@ class AppVideos
     private $tema;
     private $pastaVideos;
 
-    // 150 MB em bytes
-    const MAX_SIZE_BYTES = 157286400;
+    // 500 MB em bytes
+    const MAX_SIZE_BYTES = 524288000;
 
     const ALLOWED_EXT = ['mp4', 'webm', 'ogg', 'mov', 'mkv'];
 
@@ -55,6 +55,13 @@ class AppVideos
     public function upload($data)
     {
         header("Content-Type: application/json");
+
+        // post_max_size excedido: PHP descarta $_FILES e $_POST completamente
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_FILES) && empty($_POST)) {
+            $limit = ini_get('post_max_size');
+            echo json_encode(["ok" => false, "msg" => "Arquivo muito grande para o servidor (limite: {$limit}). Reduza o tamanho ou contate o suporte."]);
+            return;
+        }
 
         if (empty($_FILES["arquivo"]["name"])) {
             echo json_encode(["ok" => false, "msg" => "Nenhum arquivo enviado."]);
