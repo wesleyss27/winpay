@@ -22,7 +22,7 @@ foreach ($iterator as $file) {
     $ext  = strtolower($file->getExtension());
 
     // Só processa MP4 originais (ignora _480p já comprimidos)
-    if ($ext !== 'mp4' || str_ends_with($path, '_480p.mp4')) continue;
+    if ($ext !== 'mp4' || substr($path, -8) === '_480p.mp4') continue;
     $total++;
 
     // Verifica se já tem faststart: lê os primeiros 12 bytes e procura por 'moov' cedo
