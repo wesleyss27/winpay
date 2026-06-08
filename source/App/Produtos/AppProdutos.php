@@ -261,6 +261,7 @@ class AppProdutos
         $produto->descricao = $data["descricao"];
         $produto->habilitar_ecommerce = $data["habilitar_ecommerce"];
         $produto->caracteristicas = $data["caracteristicas"];
+        $produto->wincredito = isset($data["wincredito"]) ? (int)$data["wincredito"] : 0;
         $produto->nome_fatura = @$data["nome_fatura"];
         $produto->tipo_cobranca = @$data["tipo_cobranca"];
         $produto->tipo_precificacao = @$data["tipo_precificacao"];
@@ -411,6 +412,7 @@ class AppProdutos
 
             if (@$data["st4rt"])
                 $produto->st4rt = @$data["st4rt"];
+            $produto->wincredito = isset($data["wincredito"]) ? (int)$data["wincredito"] : 0;
             $produto->usuario_ultima_alteracao = $this->section->getId();
 
             if ($produto->save()) {
@@ -499,6 +501,7 @@ class AppProdutos
         $produto->descricao = $data["descricao"];
         $produto->habilitar_ecommerce = $data["habilitar_ecommerce"];
         $produto->caracteristicas = $data["caracteristicas"];
+        $produto->wincredito = isset($data["wincredito"]) ? (int)$data["wincredito"] : 0;
         $produto->tipo_cobranca = @$data["tipo_cobranca"];
         $produto->tipo_precificacao = @$data["tipo_precificacao"];
         $produto->preco = $data["preco"];
@@ -861,6 +864,9 @@ class AppProdutos
         // $checkout->dataPlano()->codigo
 
         if ($excluir == 1) {
+            if (!$checkout) {
+                return;
+            }
             $data["usuario"] = @$checkout->usuario;
             $data["codigo"] = @$checkout->codigo;
             $data["produto"] = @$checkout->dataProduto()->codigo;
