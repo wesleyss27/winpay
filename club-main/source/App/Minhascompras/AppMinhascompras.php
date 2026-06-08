@@ -134,8 +134,9 @@ class AppMinhascompras
 
         $curso  = (new Cursos())->findById($cursoId);
         $turma  = (new Turmaaluno())->find("curso = {$cursoId} AND aluno = {$aluno}")->fetch();
+        $isDono = $curso && (int) $curso->usuario === $aluno;
 
-        if (!$turma) {
+        if (!$turma && !$isDono) {
             header("Location: " . url("minhas-compras"));
             exit;
         }

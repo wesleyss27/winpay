@@ -17,7 +17,7 @@ $liberacao = [
 					<h1><?= $title ?></h1>
 				</div>
 				<div class="win-page-actions">
-					<a class="btn-win btn-win-ghost" href="<?= url("minhas-compras/viewcursos/" . $cursos->id) ?>" target="_blank">
+					<a class="btn-win btn-win-ghost" href="<?= url("minhas-compras/viewmodulos/" . $cursos->id) ?>" target="_blank">
 						<i class="fa fa-eye"></i>
 						Ver como aluno
 					</a>
