@@ -237,6 +237,10 @@ a:hover { color: #fff; text-decoration: underline; }
   border: none;
 }
 
+.lesson-video iframe {
+  min-height: clamp(240px, 42vw, 460px);
+}
+
 #win-player-wrap {
   aspect-ratio: 16 / 9;
 }
