@@ -233,9 +233,19 @@ a:hover { color: #fff; text-decoration: underline; }
 .lesson-video iframe,
 .lesson-video video {
   width: 100%;
-  min-height: clamp(240px, 42vw, 460px);
   display: block;
   border: none;
+}
+
+#win-player-wrap {
+  aspect-ratio: 16 / 9;
+}
+
+#win-player-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  min-height: unset;
 }
 
 .lesson-meta {
@@ -713,7 +723,7 @@ a:hover { color: #fff; text-decoration: underline; }
                     src="<?= htmlspecialchars($streamUrl, ENT_QUOTES, 'UTF-8') ?>"
                     preload="metadata"
                     playsinline
-                    style="width:100%;display:block;min-height:clamp(240px,42vw,460px);">
+                    style="width:100%;height:100%;display:block;object-fit:contain;">
                   </video>
 
                   <!-- overlay de loading -->
