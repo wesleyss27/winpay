@@ -681,34 +681,6 @@ a:hover { color: #fff; text-decoration: underline; }
         </div>
       </div>
 
-      <section class="win-hero lesson-hero" style="background: linear-gradient(135deg, rgba(11, 15, 28, 0.9), rgba(5, 5, 8, 0.92)), url('<?= $courseCoverAttr; ?>') center/cover no-repeat;">
-        <div class="win-page-title">
-          <small><?= $courseName; ?> · <?= $moduleName; ?></small>
-          <h2><?= $lessonName; ?></h2>
-        </div>
-        <p><?= $heroDescription; ?></p>
-
-        <div class="lesson-hero-meta">
-          <span class="lesson-hero-pill"><i class="far fa-circle"></i> Aula <?= str_pad($currentPosition, 2, "0", STR_PAD_LEFT); ?> de <?= $totalLessons; ?></span>
-          <span class="lesson-hero-pill"><i class="far fa-folder-open"></i> <?= $moduleName; ?></span>
-        </div>
-
-        <div class="hero-actions" style="margin-top: 1.4rem;">
-          <?php if ($prevUrlAttr) : ?>
-            <a href="<?= $prevUrlAttr; ?>" class="btn-win-ghost">
-              <i class="far fa-arrow-alt-circle-left"></i>
-              Aula anterior
-            </a>
-          <?php endif; ?>
-
-          <?php if ($nextUrlAttr) : ?>
-            <a href="<?= $nextUrlAttr; ?>" class="btn-win">
-              Próxima aula
-              <i class="far fa-arrow-alt-circle-right"></i>
-            </a>
-          <?php endif; ?>
-        </div>
-      </section>
 
       <div class="lesson-layout">
         <div class="lesson-main-stack">
