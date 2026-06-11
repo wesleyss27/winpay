@@ -365,6 +365,19 @@ class PagarMe
         "monthly_income"          => (int)@$data["renda_mensal"],
         "professional_occupation" => (string)@$data["ocupacao"],
       ];
+      $telDigitsPF = preg_replace('/\D/', '', (string)@$data["telefone"]);
+      if (strlen($telDigitsPF) > 11 && $telDigitsPF[0] === '0') {
+        $telDigitsPF = ltrim($telDigitsPF, '0');
+      }
+      if (strlen($telDigitsPF) >= 10) {
+        $registerInfo["phone_numbers"] = [
+          [
+            "ddd"    => substr($telDigitsPF, 0, 2),
+            "number" => substr($telDigitsPF, 2),
+            "type"   => "mobile",
+          ],
+        ];
+      }
       if (!empty($data["cep"])) {
         $registerInfo["address"] = [
           "street"          => (string)@$data["rua"],
@@ -460,7 +473,7 @@ class PagarMe
     }
 
     $payload = [
-      "code"                 => "user-" . @$data["id"],
+      "code"                 => "user-" . @$data["id"] . "-" . (@$data["banco_ref"] ?: uniqid('', true)),
       "register_information" => $registerInfo,
       "default_bank_account" => [
         "holder_name"         => (string)@$data["nome"],

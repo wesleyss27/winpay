@@ -1858,6 +1858,7 @@ class AppComissao
             $data["nome_fantasia"] = $fantaForm ?: ($fantaDb ?: $data["nome"]);
         }
 
+        $data["banco_ref"] = uniqid('', true);
         $pagarMe = (new PagarMe)->criarRecebedor($data);
 
         error_log(json_encode($pagarMe, true));
