@@ -1031,7 +1031,19 @@ $router->post("/ads/excluir",        "AppWinHubAdmin:adExcluir",    "winhub.admi
 $router->get("/analises-credito",    "AppWinHubAdmin:analisesCredito",       "winhub.admin.analises.list");
 $router->post("/analises-credito/status", "AppWinHubAdmin:analiseAtualizarStatus", "winhub.admin.analises.status");
 
+$router->get("/usuarios",            "AppWinHubAdmin:usuarios",              "winhub.admin.usuarios");
+$router->post("/usuarios/toggle-ativo", "AppWinHubAdmin:usuarioToggleAtivo", "winhub.admin.usuarios.toggle");
+
 $router->post("/upload",             "AppWinHubAdmin:upload",       "winhub.admin.upload");
+
+/*
+* NAMESPACE Source\App\LaudosDemo
+* Gerador de laudo demo para curso
+*/
+$router->namespace("Source\App\LaudosDemo");
+$router->group("laudos-demo");
+$router->get("/", "AppLaudosDemo:form", "laudos.demo.form");
+$router->group(null);
 
 /*
 * Processos
