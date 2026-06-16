@@ -759,6 +759,11 @@
                       <p>Login Master</p>
                     </a>
                   </li>
+                  <li class="nav-item sub-item" title="">
+                    <a href="<?= url("laudos-demo") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">description</span>
+                      <p>Laudo Demo</p>
+                    </a>
+                  </li>
                 <?php endif; ?>
 
               </ul>
@@ -910,6 +915,12 @@
                 <a href="<?= url("winhub-admin/analises-credito") ?>" class="nav-link txt-branco-octa">
                   <span class="material-symbols-rounded nav-icon">credit_score</span>
                   <p>Análise de Crédito</p>
+                </a>
+              </li>
+              <li class="nav-item sub-item">
+                <a href="<?= url("winhub-admin/usuarios") ?>" class="nav-link txt-branco-octa">
+                  <span class="material-symbols-rounded nav-icon">group</span>
+                  <p>Usuários</p>
                 </a>
               </li>
             </ul>
