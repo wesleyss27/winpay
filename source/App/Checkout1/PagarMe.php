@@ -361,7 +361,7 @@ class PagarMe
         "document"                => $doc,
         "type"                    => "individual",
         "name"                    => (string)@$data["nome"],
-        "birthdate"               => (string)@$data["data_nascimento"],
+        "birthdate"               => $this->formatarDataPagarMe((string)@$data["data_nascimento"]),
         "monthly_income"          => (int)@$data["renda_mensal"],
         "professional_occupation" => (string)@$data["ocupacao"],
       ];
@@ -444,7 +444,7 @@ class PagarMe
           "professional_occupation" => (string)((@$data["ocupacao_socio"] ?: @$data["ocupacao"]) ?: "N/A"),
         ];
         if (!empty(@$data["data_nascimento_socio"])) {
-          $partner["birthdate"] = (string)$data["data_nascimento_socio"];
+          $partner["birthdate"] = $this->formatarDataPagarMe((string)$data["data_nascimento_socio"]);
         }
         if (!empty($data["cep"])) {
           $partner["address"] = [
@@ -687,5 +687,14 @@ class PagarMe
     $url = $this->endpoint . "charges/" . $chargeId;
 
     return $this->executa($url, "DELETE", $json);
+  }
+
+  private function formatarDataPagarMe(string $data): string
+  {
+    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $data, $m)) {
+      return $m[3] . $m[2] . $m[1]; // DDMMYYYY
+    }
+    // já no formato esperado (DDMMYYYY) ou DD/MM/YYYY — normaliza removendo separadores
+    return preg_replace('/\D/', '', $data);
   }
 }
