@@ -692,9 +692,11 @@ class PagarMe
   private function formatarDataPagarMe(string $data): string
   {
     if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $data, $m)) {
-      return $m[3] . $m[2] . $m[1]; // DDMMYYYY
+      return $m[3] . '/' . $m[2] . '/' . $m[1]; // DD/MM/YYYY
     }
-    // já no formato esperado (DDMMYYYY) ou DD/MM/YYYY — normaliza removendo separadores
-    return preg_replace('/\D/', '', $data);
+    if (preg_match('/^(\d{2})(\d{2})(\d{4})$/', $data, $m)) {
+      return $m[1] . '/' . $m[2] . '/' . $m[3]; // DD/MM/YYYY
+    }
+    return $data; // já em DD/MM/YYYY
   }
 }
