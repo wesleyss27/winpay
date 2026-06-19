@@ -2,6 +2,8 @@ services:
   openclaw:
     image: alpine/openclaw
     container_name: openclaw
+    environment:
+      - gateway.mode=local
     networks:
       - mynetwork
     labels:
