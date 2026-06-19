@@ -81,6 +81,9 @@ def chatwoot_reply(conv_id: int, content: str, media_url: str = None):
             local_path = media_url.replace("/root/.openclaw/", "/openclaw-media/")
             with open(local_path, "rb") as f:
                 img_data = f.read()
+        elif media_url.startswith("/"):
+            with open(media_url, "rb") as f:
+                img_data = f.read()
         else:
             img_data = requests.get(media_url, timeout=30).content
         ext = media_url.split(".")[-1] if "." in media_url else "png"
