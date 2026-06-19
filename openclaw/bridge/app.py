@@ -3,6 +3,7 @@ import json
 import threading
 import logging
 import subprocess
+import glob
 import requests
 from flask import Flask, request, jsonify
 
@@ -29,6 +30,14 @@ def get_conv_lock(conv_id: int) -> threading.Lock:
         return _conv_locks[conv_id]
 
 
+MEDIA_DIR = "/openclaw-media/media/tool-image-generation"
+
+def get_media_files() -> set:
+    if not os.path.exists(MEDIA_DIR):
+        return set()
+    return set(glob.glob(f"{MEDIA_DIR}/**/*", recursive=True))
+
+
 def openclaw_agent(conv_id: int, message: str) -> tuple:
     session_key = f"agent:main:conv_{conv_id}"
     cmd = [
@@ -39,12 +48,14 @@ def openclaw_agent(conv_id: int, message: str) -> tuple:
         "--message", message,
         "--json",
     ]
+    files_before = get_media_files()
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
     if result.returncode != 0:
         raise RuntimeError(f"openclaw agent falhou: {result.stderr}")
 
+    new_files = get_media_files() - files_before
+
     data = json.loads(result.stdout)
-    log.info(f"[conv:{conv_id}] JSON keys: {list(data.keys())} | payloads: {data.get('payloads')}")
     payloads = data.get("payloads", [])
     text = ""
     media_url = None
@@ -52,14 +63,11 @@ def openclaw_agent(conv_id: int, message: str) -> tuple:
         text = payloads[0].get("text", "").strip()
         media_url = payloads[0].get("mediaUrl")
     if not text:
-        text = data.get("meta", {}).get("finalAssistantVisibleText", "")
-    if not media_url:
-        for p in payloads:
-            if p.get("mediaUrl"):
-                media_url = p.get("mediaUrl")
-                break
+        text = data.get("meta", {}).get("finalAssistantVisibleText", "").strip()
+    if not media_url and new_files:
+        media_url = sorted(new_files)[-1]
+        log.info(f"[conv:{conv_id}] Imagem detectada via filesystem: {media_url}")
     if not text and not media_url:
-        log.warning(f"[conv:{conv_id}] Resposta vazia — payloads: {payloads}")
         text = "Sem resposta."
     return text, media_url
 
