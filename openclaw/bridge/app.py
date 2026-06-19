@@ -45,7 +45,7 @@ def process_message(conv_id: int, goal: str):
         log.info(f"[conv:{conv_id}] Criando flow: {goal}")
         result = openclaw_post({"action": "create_flow", "goal": goal})
         log.info(f"[conv:{conv_id}] Resposta create_flow: {result}")
-        flow_id = result.get("result", {}).get("flowId")
+        flow_id = result.get("result", {}).get("flow", {}).get("flowId")
         if not flow_id:
             log.error(f"[conv:{conv_id}] flowId não retornado")
             return
