@@ -1,7 +1,8 @@
 import os
-import time
+import json
 import threading
 import logging
+import subprocess
 import requests
 from flask import Flask, request, jsonify
 
@@ -10,25 +11,31 @@ log = logging.getLogger("bridge")
 
 app = Flask(__name__)
 
-OPENCLAW_URL     = os.environ.get("OPENCLAW_GATEWAY_URL", "http://openclaw-gateway:18789")
-OPENCLAW_SECRET  = os.environ.get("OPENCLAW_WEBHOOK_SECRET", "")
-CHATWOOT_URL     = os.environ.get("CHATWOOT_BASE_URL", "")
-CHATWOOT_TOKEN   = os.environ.get("CHATWOOT_API_TOKEN", "")
-CHATWOOT_ACCOUNT = os.environ.get("CHATWOOT_ACCOUNT_ID", "")
-
-POLL_INTERVAL = 2
-POLL_TIMEOUT  = 60
+OPENCLAW_CONTAINER = os.environ.get("OPENCLAW_CONTAINER", "openclaw-gateway")
+CHATWOOT_URL       = os.environ.get("CHATWOOT_BASE_URL", "")
+CHATWOOT_TOKEN     = os.environ.get("CHATWOOT_API_TOKEN", "")
+CHATWOOT_ACCOUNT   = os.environ.get("CHATWOOT_ACCOUNT_ID", "")
 
 
-def openclaw_post(payload: dict) -> dict:
-    resp = requests.post(
-        f"{OPENCLAW_URL}/plugins/webhooks/chatwoot",
-        json=payload,
-        headers={"Authorization": f"Bearer {OPENCLAW_SECRET}"},
-        timeout=10,
-    )
-    resp.raise_for_status()
-    return resp.json()
+def openclaw_agent(conv_id: int, message: str) -> str:
+    session_key = f"agent:main:conv_{conv_id}"
+    cmd = [
+        "docker", "exec", OPENCLAW_CONTAINER,
+        "openclaw", "agent",
+        "--local",
+        "--session-key", session_key,
+        "--message", message,
+        "--json",
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+    if result.returncode != 0:
+        raise RuntimeError(f"openclaw agent falhou: {result.stderr}")
+
+    data = json.loads(result.stdout)
+    payloads = data.get("payloads", [])
+    if payloads:
+        return payloads[0].get("text", "").strip()
+    return data.get("meta", {}).get("finalAssistantVisibleText", "Sem resposta.")
 
 
 def chatwoot_reply(conv_id: int, content: str):
@@ -40,41 +47,12 @@ def chatwoot_reply(conv_id: int, content: str):
     )
 
 
-def process_message(conv_id: int, goal: str):
+def process_message(conv_id: int, content: str):
     try:
-        log.info(f"[conv:{conv_id}] Criando flow: {goal}")
-        result = openclaw_post({"action": "create_flow", "goal": goal})
-        log.info(f"[conv:{conv_id}] Resposta create_flow: {result}")
-        flow_id = result.get("result", {}).get("flow", {}).get("flowId")
-        if not flow_id:
-            log.error(f"[conv:{conv_id}] flowId não retornado")
-            return
-
-        deadline = time.time() + POLL_TIMEOUT
-        while time.time() < deadline:
-            time.sleep(POLL_INTERVAL)
-            poll = openclaw_post({"action": "get_flow", "flowId": flow_id})
-            flow = poll.get("result", {}).get("flow", {})
-            status = flow.get("status", "")
-            log.info(f"[conv:{conv_id}] Status flow: {status}")
-
-            if status in ("done", "resolved", "finished"):
-                reply = (
-                    flow.get("output")
-                    or flow.get("summary")
-                    or flow.get("result")
-                    or "Sem resposta."
-                )
-                log.info(f"[conv:{conv_id}] Respondendo no Chatwoot: {reply}")
-                chatwoot_reply(conv_id, str(reply))
-                return
-
-            if status in ("failed", "cancelled"):
-                chatwoot_reply(conv_id, "Ocorreu um erro ao processar sua mensagem.")
-                return
-
-        log.warning(f"[conv:{conv_id}] Timeout aguardando resposta do OpenClaw")
-
+        log.info(f"[conv:{conv_id}] Processando: {content}")
+        reply = openclaw_agent(conv_id, content)
+        log.info(f"[conv:{conv_id}] Resposta: {reply}")
+        chatwoot_reply(conv_id, reply)
     except Exception as e:
         log.error(f"[conv:{conv_id}] Erro: {e}")
 
@@ -84,7 +62,7 @@ def webhook():
     data = request.get_json(silent=True) or {}
 
     message_type = data.get("message_type")
-    log.info(f"Evento recebido: event={data.get('event')} message_type={message_type}")
+    log.info(f"Evento: event={data.get('event')} message_type={message_type}")
 
     if data.get("event") != "message_created":
         return jsonify({"ok": True}), 200
