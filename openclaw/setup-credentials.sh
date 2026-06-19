@@ -49,8 +49,8 @@ EOF
 [[ -n "$OPENROUTER_API_KEY"  ]] && echo "OPENROUTER_API_KEY=${OPENROUTER_API_KEY}"   >> .env
 
 echo "▶ Garantindo permissões da pasta de config..."
-mkdir -p data/config data/auth
-chown -R 1000:1000 data/
+mkdir -p ./data/config ./data/auth
+chown -R 1000:1000 ./data/ || true
 
 echo "▶ Configurando gateway.mode e gateway.bind..."
 docker run --rm \
@@ -93,8 +93,8 @@ docker run --rm \
   ]'
 
 echo "▶ Escrevendo token no config dir..."
-echo "OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}" > data/config/.env
-chown 1000:1000 data/config/.env
+echo "OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}" > ./data/config/.env
+chown 1000:1000 ./data/config/.env || true
 
 echo "▶ Subindo serviços..."
 docker-compose down 2>/dev/null || true
