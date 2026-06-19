@@ -1,8 +1,12 @@
 import os
 import time
 import threading
+import logging
 import requests
 from flask import Flask, request, jsonify
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+log = logging.getLogger("bridge")
 
 app = Flask(__name__)
 
@@ -38,9 +42,12 @@ def chatwoot_reply(conv_id: int, content: str):
 
 def process_message(conv_id: int, goal: str):
     try:
+        log.info(f"[conv:{conv_id}] Criando flow: {goal}")
         result = openclaw_post({"action": "create_flow", "goal": goal})
+        log.info(f"[conv:{conv_id}] Resposta create_flow: {result}")
         flow_id = result.get("result", {}).get("flowId")
         if not flow_id:
+            log.error(f"[conv:{conv_id}] flowId não retornado")
             return
 
         deadline = time.time() + POLL_TIMEOUT
@@ -49,6 +56,7 @@ def process_message(conv_id: int, goal: str):
             poll = openclaw_post({"action": "get_flow", "flowId": flow_id})
             flow = poll.get("result", {})
             status = flow.get("status", "")
+            log.info(f"[conv:{conv_id}] Status flow: {status}")
 
             if status in ("done", "resolved", "finished"):
                 reply = (
@@ -57,6 +65,7 @@ def process_message(conv_id: int, goal: str):
                     or flow.get("result")
                     or "Sem resposta."
                 )
+                log.info(f"[conv:{conv_id}] Respondendo no Chatwoot: {reply}")
                 chatwoot_reply(conv_id, str(reply))
                 return
 
@@ -64,8 +73,10 @@ def process_message(conv_id: int, goal: str):
                 chatwoot_reply(conv_id, "Ocorreu um erro ao processar sua mensagem.")
                 return
 
+        log.warning(f"[conv:{conv_id}] Timeout aguardando resposta do OpenClaw")
+
     except Exception as e:
-        app.logger.error(f"Erro ao processar mensagem: {e}")
+        log.error(f"[conv:{conv_id}] Erro: {e}")
 
 
 @app.route("/webhook", methods=["POST"])
