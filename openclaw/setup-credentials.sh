@@ -8,10 +8,6 @@ GEMINI_API_KEY=""           # Google  — AIza...
 GROQ_API_KEY=""             # Groq    — gsk_...
 OPENROUTER_API_KEY=""       # OpenRouter
 
-# Modelo padrão do agente (provider/modelo)
-# Exemplos: anthropic/claude-sonnet-4-5  |  openai/gpt-4o  |  groq/llama-3.3-70b-versatile
-AGENT_PRIMARY_MODEL="anthropic/claude-sonnet-4-5"
-
 # ─── Chatwoot ─────────────────────────────────────────────────────────────────
 CHATWOOT_BASE_URL="https://app.winflowbr.com.br"        # ex: https://chatwoot.suaempresa.com
 CHATWOOT_API_TOKEN="PsVVwYtuHF3dv1q2W49CRiPe"
@@ -68,29 +64,6 @@ docker run --rm \
   node dist/index.js config set --batch-json \
   '[{"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.winpay.digital"]}]'
 
-echo "▶ Configurando modelo padrão do agente..."
-docker run --rm \
-  -v "$(pwd)/data/config:/home/node/.openclaw" \
-  -v "$(pwd)/data/auth:/home/node/.config/openclaw" \
-  ghcr.io/openclaw/openclaw:latest \
-  node dist/index.js config set --batch-json \
-  "[{\"path\":\"agents.main.model\",\"value\":\"${AGENT_PRIMARY_MODEL}\"}]" 2>/dev/null || \
-  echo "  (config agents.main.model não suportado nesta versão — configure pelo UI)"
-
-echo "▶ Ativando plugin Webhooks..."
-docker run --rm \
-  -v "$(pwd)/data/config:/home/node/.openclaw" \
-  -v "$(pwd)/data/auth:/home/node/.config/openclaw" \
-  ghcr.io/openclaw/openclaw:latest \
-  node dist/index.js config set --batch-json \
-  '[
-    {"path":"plugins.entries.webhooks.enabled","value":true},
-    {"path":"plugins.entries.webhooks.config.routes.chatwoot.sessionKey","value":"agent:main:main"},
-    {"path":"plugins.entries.webhooks.config.routes.chatwoot.secret.source","value":"env"},
-    {"path":"plugins.entries.webhooks.config.routes.chatwoot.secret.provider","value":"default"},
-    {"path":"plugins.entries.webhooks.config.routes.chatwoot.secret.id","value":"OPENCLAW_WEBHOOK_SECRET"},
-    {"path":"plugins.entries.webhooks.config.routes.chatwoot.description","value":"Chatwoot bridge"}
-  ]'
 
 echo "▶ Escrevendo token no config dir..."
 echo "OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}" > ./data/config/.env
