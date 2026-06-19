@@ -29,7 +29,7 @@ def get_conv_lock(conv_id: int) -> threading.Lock:
         return _conv_locks[conv_id]
 
 
-def openclaw_agent(conv_id: int, message: str) -> str:
+def openclaw_agent(conv_id: int, message: str) -> tuple:
     session_key = f"agent:main:conv_{conv_id}"
     cmd = [
         "docker", "exec", OPENCLAW_CONTAINER,
@@ -45,18 +45,27 @@ def openclaw_agent(conv_id: int, message: str) -> str:
 
     data = json.loads(result.stdout)
     payloads = data.get("payloads", [])
+    text = ""
+    media_url = None
     if payloads:
-        return payloads[0].get("text", "").strip()
-    return data.get("meta", {}).get("finalAssistantVisibleText", "Sem resposta.")
+        text = payloads[0].get("text", "").strip()
+        media_url = payloads[0].get("mediaUrl")
+    if not text:
+        text = data.get("meta", {}).get("finalAssistantVisibleText", "Sem resposta.")
+    return text, media_url
 
 
-def chatwoot_reply(conv_id: int, content: str):
-    requests.post(
-        f"{CHATWOOT_URL}/api/v1/accounts/{CHATWOOT_ACCOUNT}/conversations/{conv_id}/messages",
-        json={"content": content, "message_type": "outgoing"},
-        headers={"api_access_token": CHATWOOT_TOKEN},
-        timeout=10,
-    )
+def chatwoot_reply(conv_id: int, content: str, media_url: str = None):
+    url = f"{CHATWOOT_URL}/api/v1/accounts/{CHATWOOT_ACCOUNT}/conversations/{conv_id}/messages"
+    headers = {"api_access_token": CHATWOOT_TOKEN}
+
+    if media_url:
+        img_data = requests.get(media_url, timeout=30).content
+        requests.post(url, headers=headers, files={
+            "attachments[]": ("image.png", img_data, "image/png"),
+        }, data={"message_type": "outgoing", "content": content or ""})
+    else:
+        requests.post(url, json={"content": content, "message_type": "outgoing"}, headers=headers, timeout=10)
 
 
 def process_message(conv_id: int, content: str):
@@ -66,9 +75,9 @@ def process_message(conv_id: int, content: str):
         return
     try:
         log.info(f"[conv:{conv_id}] Processando: {content}")
-        reply = openclaw_agent(conv_id, content)
-        log.info(f"[conv:{conv_id}] Resposta: {reply}")
-        chatwoot_reply(conv_id, reply)
+        reply, media_url = openclaw_agent(conv_id, content)
+        log.info(f"[conv:{conv_id}] Resposta: {reply} | media: {media_url}")
+        chatwoot_reply(conv_id, reply, media_url)
     except Exception as e:
         log.error(f"[conv:{conv_id}] Erro: {e}")
     finally:
