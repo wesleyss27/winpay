@@ -1,0 +1,16 @@
+services:
+  openclaw:
+    image: alpine/openclaw
+    container_name: openclaw
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openclaw.rule=Host(`openclaw.winpay.digital`)"
+      - "traefik.http.services.openclaw.loadbalancer.server.port=80"
+      - "traefik.http.routers.openclaw.tls.certresolver=myresolver"
+    restart: unless-stopped
+
+networks:
+  mynetwork:
+    driver: bridge
