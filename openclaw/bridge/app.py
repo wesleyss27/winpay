@@ -54,6 +54,7 @@ def process_message(conv_id: int, goal: str):
         while time.time() < deadline:
             time.sleep(POLL_INTERVAL)
             poll = openclaw_post({"action": "get_flow", "flowId": flow_id})
+            log.info(f"[conv:{conv_id}] Resposta get_flow: {poll}")
             flow = poll.get("result", {})
             status = flow.get("status", "")
             log.info(f"[conv:{conv_id}] Status flow: {status}")
