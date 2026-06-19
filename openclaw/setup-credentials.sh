@@ -2,8 +2,8 @@
 set -e
 
 # ─── Providers de AI — preencha as chaves que quiser usar ────────────────────
-ANTHROPIC_API_KEY=""        # Claude  — sk-ant-...
-OPENAI_API_KEY=""           # OpenAI  — sk-...
+ANTHROPIC_API_KEY="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"        # Claude  — sk-ant-...
+OPENAI_API_KEY="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"       >
 GEMINI_API_KEY=""           # Google  — AIza...
 GROQ_API_KEY=""             # Groq    — gsk_...
 OPENROUTER_API_KEY=""       # OpenRouter
@@ -13,9 +13,9 @@ OPENROUTER_API_KEY=""       # OpenRouter
 AGENT_PRIMARY_MODEL="anthropic/claude-sonnet-4-5"
 
 # ─── Chatwoot ─────────────────────────────────────────────────────────────────
-CHATWOOT_BASE_URL=""        # ex: https://chatwoot.suaempresa.com
-CHATWOOT_API_TOKEN=""
-CHATWOOT_ACCOUNT_ID=""
+CHATWOOT_BASE_URL="https://app.winflowbr.com.br"        # ex: https://chatwoot.suaempresa.com
+CHATWOOT_API_TOKEN="PsVVwYtuHF3dv1q2W49CRiPe"
+CHATWOOT_ACCOUNT_ID="7"
 # ──────────────────────────────────────────────────────────────────────────────
 
 if [[ -z "$CHATWOOT_BASE_URL" || -z "$CHATWOOT_API_TOKEN" || -z "$CHATWOOT_ACCOUNT_ID" ]]; then
