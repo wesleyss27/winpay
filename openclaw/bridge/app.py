@@ -83,6 +83,8 @@ def process_message(conv_id: int, goal: str):
 def webhook():
     data = request.get_json(silent=True) or {}
 
+    log.info(f"Evento recebido: event={data.get('event')} message_type={data.get('message', {}).get('message_type')}")
+
     if data.get("event") != "message_created":
         return jsonify({"ok": True}), 200
 
