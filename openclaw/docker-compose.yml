@@ -1,6 +1,8 @@
 services:
   openclaw-gateway:
-    image: ghcr.io/openclaw/openclaw:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.native
     container_name: openclaw-gateway
     volumes:
       - ./data/config:/home/node/.openclaw

@@ -1,0 +1,17 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y \
+    curl bash ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV OPENCLAW_SKIP_ONBOARDING=1
+ENV OPENCLAW_DISABLE_BONJOUR=1
+
+RUN curl -fsSL https://openclaw.ai/install.sh | bash
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 18789
+
+ENTRYPOINT ["/entrypoint.sh"]
