@@ -1,18 +1,45 @@
 services:
-  openclaw:
-    image: alpine/openclaw
-    container_name: openclaw
+  openclaw-gateway:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw-gateway
     volumes:
-      - ./config:/root/.config/openclaw
+      - ./data/config:/home/node/.openclaw
+      - ./data/auth:/home/node/.config/openclaw
+    environment:
+      - OPENCLAW_GATEWAY_BIND=lan
+      - OPENCLAW_DISABLE_BONJOUR=1
+    env_file:
+      - .env
     networks:
       - mynetwork
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.openclaw.rule=Host(`openclaw.winpay.digital`)"
-      - "traefik.http.services.openclaw.loadbalancer.server.port=80"
+      - "traefik.http.services.openclaw.loadbalancer.server.port=18789"
       - "traefik.http.routers.openclaw.tls.certresolver=myresolver"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:18789/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
     restart: unless-stopped
+
+  openclaw-cli:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw-cli
+    volumes:
+      - ./data/config:/home/node/.openclaw
+      - ./data/auth:/home/node/.config/openclaw
+    env_file:
+      - .env
+    network_mode: "service:openclaw-gateway"
+    entrypoint: ["node", "dist/index.js"]
+    profiles:
+      - cli
 
 networks:
   mynetwork:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.50.0/24
