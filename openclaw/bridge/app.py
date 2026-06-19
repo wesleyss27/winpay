@@ -83,17 +83,17 @@ def process_message(conv_id: int, goal: str):
 def webhook():
     data = request.get_json(silent=True) or {}
 
-    log.info(f"Evento recebido: event={data.get('event')} message_type={data.get('message', {}).get('message_type')}")
+    message_type = data.get("message_type")
+    log.info(f"Evento recebido: event={data.get('event')} message_type={message_type}")
 
     if data.get("event") != "message_created":
         return jsonify({"ok": True}), 200
 
-    msg = data.get("message", {})
-    if msg.get("message_type") not in ("incoming", 0):
+    if message_type not in ("incoming", 0):
         return jsonify({"ok": True}), 200
 
     conv_id = data.get("conversation", {}).get("id")
-    content = msg.get("content", "").strip()
+    content = data.get("content", "").strip()
     contact_name = data.get("contact", {}).get("name", "Usuário")
 
     if not conv_id or not content:
