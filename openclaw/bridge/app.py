@@ -60,9 +60,16 @@ def chatwoot_reply(conv_id: int, content: str, media_url: str = None):
     headers = {"api_access_token": CHATWOOT_TOKEN}
 
     if media_url:
-        img_data = requests.get(media_url, timeout=30).content
+        if media_url.startswith("/root/.openclaw/"):
+            local_path = media_url.replace("/root/.openclaw/", "/openclaw-media/")
+            with open(local_path, "rb") as f:
+                img_data = f.read()
+        else:
+            img_data = requests.get(media_url, timeout=30).content
+        ext = media_url.split(".")[-1] if "." in media_url else "png"
+        mime = f"image/{ext}" if ext in ("png", "jpg", "jpeg", "webp") else "image/png"
         requests.post(url, headers=headers, files={
-            "attachments[]": ("image.png", img_data, "image/png"),
+            "attachments[]": (f"image.{ext}", img_data, mime),
         }, data={"message_type": "outgoing", "content": content or ""})
     else:
         requests.post(url, json={"content": content, "message_type": "outgoing"}, headers=headers, timeout=10)
