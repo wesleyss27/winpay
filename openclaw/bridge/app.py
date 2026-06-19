@@ -16,6 +16,18 @@ CHATWOOT_URL       = os.environ.get("CHATWOOT_BASE_URL", "")
 CHATWOOT_TOKEN     = os.environ.get("CHATWOOT_API_TOKEN", "")
 CHATWOOT_ACCOUNT   = os.environ.get("CHATWOOT_ACCOUNT_ID", "")
 
+_seen_messages: set = set()
+_seen_lock = threading.Lock()
+_conv_locks: dict = {}
+_conv_locks_mutex = threading.Lock()
+
+
+def get_conv_lock(conv_id: int) -> threading.Lock:
+    with _conv_locks_mutex:
+        if conv_id not in _conv_locks:
+            _conv_locks[conv_id] = threading.Lock()
+        return _conv_locks[conv_id]
+
 
 def openclaw_agent(conv_id: int, message: str) -> str:
     session_key = f"agent:main:conv_{conv_id}"
@@ -48,6 +60,10 @@ def chatwoot_reply(conv_id: int, content: str):
 
 
 def process_message(conv_id: int, content: str):
+    lock = get_conv_lock(conv_id)
+    if not lock.acquire(blocking=False):
+        log.warning(f"[conv:{conv_id}] Já processando — ignorando duplicata")
+        return
     try:
         log.info(f"[conv:{conv_id}] Processando: {content}")
         reply = openclaw_agent(conv_id, content)
@@ -55,6 +71,8 @@ def process_message(conv_id: int, content: str):
         chatwoot_reply(conv_id, reply)
     except Exception as e:
         log.error(f"[conv:{conv_id}] Erro: {e}")
+    finally:
+        lock.release()
 
 
 @app.route("/webhook", methods=["POST"])
@@ -69,6 +87,14 @@ def webhook():
 
     if message_type not in ("incoming", 0):
         return jsonify({"ok": True}), 200
+
+    msg_id = data.get("id")
+    with _seen_lock:
+        if msg_id and msg_id in _seen_messages:
+            log.info(f"Mensagem duplicada ignorada: id={msg_id}")
+            return jsonify({"ok": True}), 200
+        if msg_id:
+            _seen_messages.add(msg_id)
 
     conv_id = data.get("conversation", {}).get("id")
     content = data.get("content", "").strip()
