@@ -44,6 +44,7 @@ def openclaw_agent(conv_id: int, message: str) -> tuple:
         raise RuntimeError(f"openclaw agent falhou: {result.stderr}")
 
     data = json.loads(result.stdout)
+    log.info(f"[conv:{conv_id}] JSON keys: {list(data.keys())} | payloads: {data.get('payloads')}")
     payloads = data.get("payloads", [])
     text = ""
     media_url = None
@@ -51,7 +52,15 @@ def openclaw_agent(conv_id: int, message: str) -> tuple:
         text = payloads[0].get("text", "").strip()
         media_url = payloads[0].get("mediaUrl")
     if not text:
-        text = data.get("meta", {}).get("finalAssistantVisibleText", "Sem resposta.")
+        text = data.get("meta", {}).get("finalAssistantVisibleText", "")
+    if not media_url:
+        for p in payloads:
+            if p.get("mediaUrl"):
+                media_url = p.get("mediaUrl")
+                break
+    if not text and not media_url:
+        log.warning(f"[conv:{conv_id}] Resposta vazia — payloads: {payloads}")
+        text = "Sem resposta."
     return text, media_url
 
 
