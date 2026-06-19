@@ -39,7 +39,7 @@ def openclaw_agent(conv_id: int, message: str) -> str:
         "--message", message,
         "--json",
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
     if result.returncode != 0:
         raise RuntimeError(f"openclaw agent falhou: {result.stderr}")
 
