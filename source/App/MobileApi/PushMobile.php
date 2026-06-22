@@ -130,7 +130,7 @@ class PushMobile
                 return;
             }
 
-            self::sendFcmV1($row["expo_token"], $titulo, $corpo, array_merge(["type" => $tipo], $extra));
+            self::sendPush($row["expo_token"], $titulo, $corpo, array_merge(["type" => $tipo], $extra));
         } catch (\Throwable $e) {
             error_log("[PushMobile] Erro ao enviar push para user {$userId}: " . $e->getMessage());
         }
@@ -146,10 +146,56 @@ class PushMobile
             $tokens = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
             foreach ($tokens as $token) {
-                self::sendFcmV1($token, $titulo, $corpo, array_merge(["type" => $tipo], $extra));
+                self::sendPush($token, $titulo, $corpo, array_merge(["type" => $tipo], $extra));
             }
         } catch (\Throwable $e) {
             error_log("[PushMobile] Erro ao enviar push broadcast: " . $e->getMessage());
+        }
+    }
+
+    // ── Roteador ─────────────────────────────────────────────────────────────
+
+    private static function sendPush(string $token, string $titulo, string $corpo, array $data = []): void
+    {
+        if (str_starts_with($token, "ExponentPushToken[")) {
+            self::sendViaExpo($token, $titulo, $corpo, $data);
+        } else {
+            self::sendFcmV1($token, $titulo, $corpo, $data);
+        }
+    }
+
+    private static function sendViaExpo(string $token, string $titulo, string $corpo, array $data = []): void
+    {
+        $payload = json_encode([
+            "to"    => $token,
+            "title" => $titulo,
+            "body"  => $corpo,
+            "sound" => "default",
+            "data"  => $data,
+        ]);
+
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL            => "https://exp.host/--/api/v2/push/send",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 10,
+            CURLOPT_CUSTOMREQUEST  => "POST",
+            CURLOPT_POSTFIELDS     => $payload,
+            CURLOPT_HTTPHEADER     => [
+                "Accept: application/json",
+                "Accept-Encoding: gzip, deflate",
+                "Content-Type: application/json",
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $errno    = curl_errno($curl);
+        curl_close($curl);
+
+        if ($errno) {
+            error_log("[PushMobile] cURL error {$errno} ao enviar Expo push");
+        } else {
+            error_log("[PushMobile] Expo push response: " . $response);
         }
     }
 
