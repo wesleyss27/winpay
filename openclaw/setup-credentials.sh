@@ -48,38 +48,40 @@ echo "▶ Garantindo permissões da pasta de config..."
 mkdir -p ./data/config ./data/auth
 chown -R 1000:1000 ./data/ || true
 
-echo "▶ Configurando gateway.mode e gateway.bind..."
-docker run --rm \
-  -v "$(pwd)/data/config:/home/node/.openclaw" \
-  -v "$(pwd)/data/auth:/home/node/.config/openclaw" \
-  ghcr.io/openclaw/openclaw:latest \
-  node dist/index.js config set --batch-json \
-  '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"}]'
-
-echo "▶ Configurando origens permitidas no Control UI..."
-docker run --rm \
-  -v "$(pwd)/data/config:/home/node/.openclaw" \
-  -v "$(pwd)/data/auth:/home/node/.config/openclaw" \
-  ghcr.io/openclaw/openclaw:latest \
-  node dist/index.js config set --batch-json \
-  '[{"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.winpay.digital"]}]'
-
-
-echo "▶ Escrevendo token no config dir..."
-echo "OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}" > ./data/config/.env
-chown 1000:1000 ./data/config/.env || true
-
 echo "▶ Subindo serviços..."
 docker-compose down 2>/dev/null || true
 docker-compose up -d --build
 
+echo "▶ Aguardando gateway inicializar..."
+sleep 5
+
+echo "▶ Configurando gateway..."
+docker-compose exec openclaw-gateway openclaw config set --batch-json \
+  '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.winpay.digital"]}]'
+
+docker-compose restart openclaw-gateway
+
+echo "▶ Aguardando gateway reiniciar..."
+sleep 5
+
+echo "▶ Escrevendo token no config dir..."
+echo "OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}" > ./data/config/.env
+
+echo "▶ Adicionando canal WhatsApp..."
+docker-compose exec openclaw-gateway openclaw channels add --channel whatsapp || \
+  echo "  WhatsApp: configure manualmente após conectar na UI"
+
 echo ""
 echo "✔ Pronto!"
 echo ""
-echo "  Control UI : https://openclaw.winpay.digital"
-echo "  Token      : ${OPENCLAW_GATEWAY_TOKEN}"
-echo "  Webhook URL: https://openclaw.winpay.digital/webhook"
-echo "  Webhook Secret para o Chatwoot: ${OPENCLAW_WEBHOOK_SECRET}"
+echo "  Control UI  : https://openclaw.winpay.digital"
+echo "  Token       : ${OPENCLAW_GATEWAY_TOKEN}"
+echo "  Webhook URL : https://openclaw.winpay.digital/webhook"
+echo "  Webhook Secret (Chatwoot): ${OPENCLAW_WEBHOOK_SECRET}"
 echo ""
-echo "  Aprovação de dispositivo (após conectar na UI):"
-echo "  docker-compose exec openclaw-gateway node dist/index.js devices approve <ID>"
+echo "  Próximos passos:"
+echo "  1. Acesse https://openclaw.winpay.digital e conecte com o token acima"
+echo "  2. Aprovação de dispositivo:"
+echo "     docker-compose exec openclaw-gateway openclaw devices approve <ID>"
+echo "  3. QR code do WhatsApp:"
+echo "     docker-compose exec openclaw-gateway openclaw channels login"
