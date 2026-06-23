@@ -72,6 +72,24 @@ def openclaw_agent(conv_id: int, message: str) -> tuple:
     return text, media_url
 
 
+def chatwoot_typing(conv_id: int, digitando: bool):
+    try:
+        requests.post(
+            f"{CHATWOOT_URL}/api/v1/accounts/{CHATWOOT_ACCOUNT}/conversations/{conv_id}/typing_status",
+            json={"typing_status": "on" if digitando else "off"},
+            headers={"api_access_token": CHATWOOT_TOKEN},
+            timeout=5,
+        )
+    except Exception:
+        pass
+
+
+def simular_digitacao(texto: str):
+    palavras = len(texto.split())
+    segundos = min(max(palavras * 0.08, 1.5), 8.0)
+    time.sleep(segundos)
+
+
 def chatwoot_reply(conv_id: int, content: str, media_url: str = None):
     url = f"{CHATWOOT_URL}/api/v1/accounts/{CHATWOOT_ACCOUNT}/conversations/{conv_id}/messages"
     headers = {"api_access_token": CHATWOOT_TOKEN}
@@ -102,8 +120,11 @@ def process_message(conv_id: int, content: str):
         return
     try:
         log.info(f"[conv:{conv_id}] Processando: {content}")
+        chatwoot_typing(conv_id, True)
         reply, media_url = openclaw_agent(conv_id, content)
         log.info(f"[conv:{conv_id}] Resposta: {reply} | media: {media_url}")
+        simular_digitacao(reply or "")
+        chatwoot_typing(conv_id, False)
         chatwoot_reply(conv_id, reply, media_url)
     except Exception as e:
         log.error(f"[conv:{conv_id}] Erro: {e}")

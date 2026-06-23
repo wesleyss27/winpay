@@ -16,7 +16,7 @@ services:
       - mynetwork
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.openclaw.rule=Host(`openclaw.winpay.digital`)"
+      - "traefik.http.routers.openclaw.rule=Host(`openclaw.quickcodebr.com.br`)"
       - "traefik.http.services.openclaw.loadbalancer.server.port=18789"
       - "traefik.http.routers.openclaw.tls.certresolver=myresolver"
     healthcheck:
@@ -55,9 +55,36 @@ services:
       - mynetwork
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.openclaw-bridge.rule=Host(`openclaw.winpay.digital`) && PathPrefix(`/webhook`)"
+      - "traefik.http.routers.openclaw-bridge.rule=Host(`openclaw.quickcodebr.com.br`) && PathPrefix(`/webhook`)"
       - "traefik.http.services.openclaw-bridge.loadbalancer.server.port=5000"
       - "traefik.http.routers.openclaw-bridge.tls.certresolver=myresolver"
+    restart: unless-stopped
+
+  painel-backend:
+    build: ./painel/backend
+    container_name: painel-backend
+    volumes:
+      - ./painel/data:/app/data
+    environment:
+      - OPENCLAW_URL=http://openclaw-gateway:18789
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+    restart: unless-stopped
+
+  painel-frontend:
+    build: ./painel/frontend
+    container_name: painel-frontend
+    depends_on:
+      - painel-backend
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.painel.rule=Host(`painelopen.quickcodebr.com.br`)"
+      - "traefik.http.services.painel.loadbalancer.server.port=80"
+      - "traefik.http.routers.painel.tls.certresolver=myresolver"
     restart: unless-stopped
 
   openclaw-cli:

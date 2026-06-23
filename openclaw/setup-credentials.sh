@@ -27,11 +27,13 @@ fi
 echo "▶ Gerando tokens..."
 OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 OPENCLAW_WEBHOOK_SECRET=$(openssl rand -hex 32)
+CHAVE_SECRETA=$(openssl rand -hex 32)
 
 echo "▶ Escrevendo .env..."
 cat > .env <<EOF
 OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
 OPENCLAW_WEBHOOK_SECRET=${OPENCLAW_WEBHOOK_SECRET}
+CHAVE_SECRETA=${CHAVE_SECRETA}
 CHATWOOT_BASE_URL=${CHATWOOT_BASE_URL}
 CHATWOOT_API_TOKEN=${CHATWOOT_API_TOKEN}
 CHATWOOT_ACCOUNT_ID=${CHATWOOT_ACCOUNT_ID}
@@ -57,7 +59,7 @@ sleep 5
 
 echo "▶ Configurando gateway..."
 docker-compose exec openclaw-gateway openclaw config set --batch-json \
-  '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.winpay.digital"]}]'
+  '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.quickcodebr.com.br"]}]'
 
 docker-compose restart openclaw-gateway
 
@@ -71,17 +73,27 @@ echo "▶ Adicionando canal WhatsApp..."
 docker-compose exec openclaw-gateway openclaw channels add --channel whatsapp || \
   echo "  WhatsApp: configure manualmente após conectar na UI"
 
+echo "▶ Configurando WhatsApp (acesso aberto + plugin confiável)..."
+docker-compose exec openclaw-gateway openclaw config set --batch-json \
+  '[{"path":"channels.whatsapp.accounts.default.dmPolicy","value":"open"},{"path":"channels.whatsapp.accounts.default.allowFrom","value":["*"]},{"path":"plugins.allow","value":["whatsapp"]}]' || true
+
+docker-compose restart openclaw-gateway
+
 echo ""
 echo "✔ Pronto!"
 echo ""
-echo "  Control UI  : https://openclaw.winpay.digital"
+echo "  OpenClaw    : https://openclaw.quickcodebr.com.br"
+echo "  Painel      : https://painelopen.quickcodebr.com.br"
+echo "  Admin login : admin@quickcodebr.com.br / admin123"
 echo "  Token       : ${OPENCLAW_GATEWAY_TOKEN}"
-echo "  Webhook URL : https://openclaw.winpay.digital/webhook"
+echo "  Webhook URL : https://openclaw.quickcodebr.com.br/webhook"
 echo "  Webhook Secret (Chatwoot): ${OPENCLAW_WEBHOOK_SECRET}"
 echo ""
 echo "  Próximos passos:"
-echo "  1. Acesse https://openclaw.winpay.digital e conecte com o token acima"
+echo "  1. Acesse https://openclaw.quickcodebr.com.br e conecte com o token acima"
 echo "  2. Aprovação de dispositivo:"
 echo "     docker-compose exec openclaw-gateway openclaw devices approve <ID>"
-echo "  3. QR code do WhatsApp:"
+echo "  3. QR code do WhatsApp (escanear com o celular):"
 echo "     docker-compose exec openclaw-gateway openclaw channels login"
+echo "  4. QR code público (acesso via URL com token):"
+echo "     docker-compose exec openclaw-gateway openclaw qr --public-url https://openclaw.quickcodebr.com.br --token \$(grep OPENCLAW_GATEWAY_TOKEN .env | cut -d= -f2)"
