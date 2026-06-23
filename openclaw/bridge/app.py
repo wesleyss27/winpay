@@ -30,7 +30,7 @@ def get_conv_lock(conv_id: int) -> threading.Lock:
         return _conv_locks[conv_id]
 
 
-MEDIA_DIR = "/openclaw-media/media/tool-image-generation"
+MEDIA_DIR = "/openclaw-media/media"
 
 def get_media_files() -> set:
     if not os.path.exists(MEDIA_DIR):

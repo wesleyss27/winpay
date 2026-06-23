@@ -32,7 +32,8 @@ services:
       dockerfile: Dockerfile.native
     container_name: openclaw-agent-runner
     volumes:
-      - ./data/agent-sessions:/root/.openclaw
+      - ./data/config:/root/.openclaw
+      - ./data/auth:/root/.config/openclaw
     env_file:
       - .env
     entrypoint: ["tail", "-f", "/dev/null"]
@@ -49,7 +50,7 @@ services:
       - .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/agent-sessions:/openclaw-media:ro
+      - ./data/config:/openclaw-media:ro
     networks:
       - mynetwork
     labels:
