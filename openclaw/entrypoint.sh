@@ -9,8 +9,7 @@ if [ ! -f "$CONFIG_FILE" ]; then
   openclaw config set --batch-json '[
     {"path":"gateway.mode","value":"local"},
     {"path":"gateway.bind","value":"lan"},
-    {"path":"gateway.webLoginProvider","value":"https://openclaw.winpay.digital"},
-    {"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.winpay.digital"]}
+{"path":"gateway.controlUi.allowedOrigins","value":["https://openclaw.winpay.digital"]}
   ]'
 
   if [ -n "$OPENCLAW_GATEWAY_TOKEN" ]; then
