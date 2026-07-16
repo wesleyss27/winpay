@@ -342,7 +342,7 @@ if ($_SESSION["tipo"] == 6) {
                   <div class="col-md-12">
                     <div class="row bg-azul-gradient card card-body">
                       <label for="octa">
-                        <input type="radio" name="membros" id="octa" value="octaclube"> RedClube
+                        <input type="radio" name="membros" id="octa" value="octaclube"> Winpay
                         <img src="<?= url("themes/imgs/logos/logo2-2.png") ?>" alt="" width="100%">
                       </label>
                     </div>
@@ -571,9 +571,16 @@ if ($_SESSION["tipo"] == 6) {
 
         <div class="card card-body">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <label>Habilitar para ecommerce</label>
               <select name="habilitar_ecommerce" id="habilitar_ecommerce" class="form-control">
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label>Cadastrar comprador no WinCreditos?</label>
+              <select name="wincredito" class="form-control">
                 <option value="0">Não</option>
                 <option value="1">Sim</option>
               </select>
