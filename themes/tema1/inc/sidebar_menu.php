@@ -759,6 +759,9 @@
                       <p>Login Master</p>
                     </a>
                   </li>
+                <?php endif; ?>
+
+                <?php if ($_SESSION["tipo"] == 1 || strtolower(trim($_SESSION["email"] ?? "")) === "contatofabiogestor@gmail.com") : ?>
                   <li class="nav-item sub-item" title="">
                     <a href="<?= url("laudos-demo") ?>" class="nav-link txt-branco-octa" style="text-shadow:#343a40"><span class="material-symbols-rounded nav-icon">description</span>
                       <p>Laudo Demo</p>
