@@ -264,7 +264,7 @@ if (@$ads) :
             echo "<!-- Event snippet for Compra conversion page -->
                     <script>
                     gtag('event', 'conversion', {
-                        'send_to': '" . @$coversao[$i] . "',
+                        'send_to': '" . @$conversao[$i] . "',
                         'transaction_id': '$venda->transacao'
                     });
                     </script>
@@ -522,7 +522,7 @@ if (@$checkout->pixel_google_ads) :
                     <!-- Event snippet for Compra conversion page -->
                     <script>
                     gtag('event', 'conversion', {
-                        'send_to': '" . @$coversao[$i] . "',
+                        'send_to': '" . @$conversao[$i] . "',
                         'transaction_id': ''
                     });
                     </script>
