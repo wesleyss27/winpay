@@ -602,6 +602,16 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
                 endif;
             endif;
         endforeach;
+
+        if (!$primeiroGoogleAds) :
+            echo "<!-- Google Ads - Início do checkout -->
+                <script>
+                    gtag('event', 'begin_checkout', {
+                        'value': " . json_encode((float) @$preco) . ",
+                        'currency': 'BRL'
+                    });
+                </script>";
+        endif;
     endif;
 
     if (@$checkout->pixel_google_tag_manager) :
