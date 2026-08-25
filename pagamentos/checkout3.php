@@ -223,14 +223,14 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <meta name="robots" content="index, follow">
 
     <!-- Título mostrado na pré-visualização -->
-    <meta property="og:title" content=<?= $title; ?>>
+    <meta property="og:title" content="<?= $title; ?>">
     <link rel="icon" href="<?= url("themes/tema1/images/favicon.png"); ?>">
 
     <!-- Deixar os outros campos em branco para ocultar -->
 
     <!-- Twitter (opcional) -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content=<?= $title; ?>>
+    <meta name="twitter:title" content="<?= $title; ?>">
     <meta name="twitter:description" content="">
 
     <title><?= $title; ?></title>
@@ -579,30 +579,42 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
     <?php
     if (@$checkout->pixel_google_analitics) :
         $google = explode(",", $checkout->dataPixelGoogleAnalitics()->id_pixel);
+        $primeiroGoogle = true;
         foreach ($google as $google) :
             if (@$checkout->dataPixelGoogleAnalitics()->executar_checkout == 1) :
-                echo "<script async src='https://www.googletagmanager.com/gtag/js?id=$google'></script>
+                if ($primeiroGoogle) :
+                    echo "<script async src='https://www.googletagmanager.com/gtag/js?id=$google'></script>
                         <script>
                             window.dataLayer = window.dataLayer || [];
                             function gtag(){dataLayer.push(arguments);}
                             gtag('js', new Date());
                             gtag('config', '$google');
                         </script>";
+                    $primeiroGoogle = false;
+                else :
+                    echo "<script>gtag('config', '$google');</script>";
+                endif;
             endif;
         endforeach;
     endif;
 
     if (@$checkout->pixel_google_ads) :
         $google = explode(",", $checkout->dataPixelGoogleAds()->id_pixel);
+        $primeiroGoogleAds = true;
         foreach ($google as $google) :
             if (@$checkout->dataPixelGoogleAds()->executar_checkout == 1) :
-                echo "<script async src='https://www.googletagmanager.com/gtag/js?id=$google'></script>
+                if ($primeiroGoogleAds) :
+                    echo "<script async src='https://www.googletagmanager.com/gtag/js?id=$google'></script>
                         <script>
                             window.dataLayer = window.dataLayer || [];
                             function gtag(){dataLayer.push(arguments);}
                             gtag('js', new Date());
                             gtag('config', '$google');
                         </script>";
+                    $primeiroGoogleAds = false;
+                else :
+                    echo "<script>gtag('config', '$google');</script>";
+                endif;
             endif;
         endforeach;
     endif;
