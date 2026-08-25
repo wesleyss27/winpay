@@ -259,21 +259,6 @@ $utm_content  = @$cookies->utm_content != "" ? @$cookies->utm_content : @$_GET["
 
 
     <?php if (@$sandbox == 0) : ?>
-        <!-- ANALYTICS REDROCKET -->
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-154130073-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-
-            gtag('config', 'UA-154130073-1');
-        </script>
-        <!-- FIM ANALYTICS REDROCKET -->
-
         <script>
             (function(h, o, t, j, a, r) {
                 h.hj = h.hj || function() {
