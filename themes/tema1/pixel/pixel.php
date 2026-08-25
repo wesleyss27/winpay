@@ -541,7 +541,7 @@ small {
 
               <div class="col-sm-2 text-center zoom">
                 <div class="card" style="border-radius: 30px">
-                  <a class="btn" data-toggle="modal" data-target="#modal-lg" style="font-family:inter" id="googleAs">
+                  <a class="btn" data-toggle="modal" data-target="#modal-lg" style="font-family:inter" id="googleAds">
                     <img src="<?= url('themes/imgs/GoogleAs.png') ?>" width='100%'>
                   </a>
                 </div>
@@ -741,7 +741,7 @@ $mensagem_whats = "Email: {$_SESSION["nome"]} %0D" .
                   <option value="Facebook">Facebook</option>
                   <option value="Taboola">Taboola</option>
                   <option value="GoogleAnalitics">Google Analitics</option>
-                  <option value="GoogleAs">Google Ads</option>
+                  <option value="GoogleAds">Google Ads</option>
                   <option value="GoogleTagManager">Google Tag Manager</option>
                   <option value="TikTok">TikTok</option>
                   <option value="Kwai">Kwai</option>
