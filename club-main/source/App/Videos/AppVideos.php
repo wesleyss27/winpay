@@ -16,8 +16,8 @@ class AppVideos
     private $tema;
     private $pastaVideos;
 
-    // 500 MB em bytes
-    const MAX_SIZE_BYTES = 524288000;
+    // 800 MB em bytes
+    const MAX_SIZE_BYTES = 838860800;
 
     const ALLOWED_EXT = ['mp4', 'webm', 'ogg', 'mov', 'mkv'];
 
@@ -90,7 +90,7 @@ class AppVideos
         }
 
         if ($file["size"] > self::MAX_SIZE_BYTES) {
-            echo json_encode(["ok" => false, "msg" => "Arquivo excede o limite de 150 MB."]);
+            echo json_encode(["ok" => false, "msg" => "Arquivo excede o limite de 800 MB."]);
             return;
         }
 
