@@ -54,6 +54,7 @@ class PagarMe
       CURLOPT_CUSTOMREQUEST => "$metodo",
       CURLOPT_POSTFIELDS => $json,
       CURLOPT_HTTPHEADER => $headers,
+      CURLOPT_USERAGENT => 'WinPay/1.0 (+https://winpay.digital)',
     ));
 
     $response = curl_exec($curl);
@@ -97,6 +98,7 @@ class PagarMe
         "Authorization: Basic $autorization",
         'Content-Type: application/json'
       ),
+      CURLOPT_USERAGENT => 'WinPay/1.0 (+https://winpay.digital)',
     ));
 
     $response = curl_exec($curl);
