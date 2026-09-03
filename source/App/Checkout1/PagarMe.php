@@ -133,8 +133,8 @@ class PagarMe
         $i++;
       }
 
-      // sem trailing comma no array nem após o campo
-      return '"split": [' . implode(',', $items) . '],';
+      // vírgula líder (não trailing) pra poder ser anexado direto após o campo anterior
+      return ',"split": [' . implode(',', $items) . ']';
     }
   }
 
@@ -225,13 +225,12 @@ class PagarMe
             "cvv": "' . $cvv . '",
             "exp_month": "' . @$data["mes-val"] . '",
             "exp_year": "' . @$ano_val . '",
-            "holder_name": "' . @$data["titular"] . '",
+            "holder_name": "' . @$data["titular"] . '"
           },
           "recurrence": false,
           "installments": ' . @$data["parcela"] . ',
-          "statement_descriptor": "' . @$data["nome_fatura"] . '",
-        },
-        ' . $split . '
+          "statement_descriptor": "' . @$data["nome_fatura"] . '"
+        }' . $split . '
       }
       ]
     }';
@@ -286,8 +285,7 @@ class PagarMe
                 "boleto": {
                     "instructions": "Pagar até o vencimento",
                     "due_at": "' . @$data["vencimento"] . '"
-                },
-                ' . $split . '
+                }' . $split . '
             }
           ]
       }';
@@ -338,8 +336,7 @@ class PagarMe
             "payment_method": "pix",
             "pix": {
                 "expires_in": "3600"
-            },
-            ' . $split . '
+            }' . $split . '
         }
       ]
   }';
