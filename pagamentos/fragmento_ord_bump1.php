@@ -1,17 +1,25 @@
 <hr><br>
-<?php $planos_order_bump = explode(",", $checkout->planos_order_bump);
-$i = 1;
-// var_dump($planos_order_bump);
-foreach ($planos_order_bump as $cod_plano) :
-    $order_bump = $planos->findById($cod_plano);
-
-    if ($order_bump) :
-        $temPrecoOriginal = @$order_bump->preco_original && $order_bump->preco_original > $order_bump->preco;
+<?php
+// Verifica se existe ao menos 1 plano válido antes de desenhar o card
+$planos_order_bump = explode(",", $checkout->planos_order_bump);
+$order_bumps_validos = [];
+foreach ($planos_order_bump as $cod_plano) {
+    $ob = $planos->findById($cod_plano);
+    if ($ob) {
+        $order_bumps_validos[$cod_plano] = $ob;
+    }
+}
 ?>
-        <label class="box-order-bump comprar-order-bump<?= $i ?>" for="comprar-order-bump<?= $i ?>">
-            <span class="ordbump-badge"><i class="fas fa-tag"></i> Oferta especial</span>
+<?php if ($order_bumps_validos) : ?>
+    <div class="box-order-bump">
+        <span class="ordbump-badge"><i class="fas fa-tag"></i> Oferta especial</span>
 
-            <div class="ordbump-linha">
+        <div class="ordbump-list">
+<?php $i = 1;
+foreach ($order_bumps_validos as $cod_plano => $order_bump) :
+    $temPrecoOriginal = @$order_bump->preco_original && $order_bump->preco_original > $order_bump->preco;
+?>
+            <label class="ordbump-linha comprar-order-bump<?= $i ?>" for="comprar-order-bump<?= $i ?>">
                 <div class="ordbump-img-wrap">
                     <?php $foto = $order_bump->foto ? $order_bump->foto : @$order_bump->dataProduto()->foto ?>
                     <img class="img-produto-order-bump" src="<?= url("uploads/produtos/$foto") ?>" alt="">
@@ -36,17 +44,18 @@ foreach ($planos_order_bump as $cod_plano) :
                     <input type="checkbox" class="dias" name="codigo_order_bump[<?= $cod_plano ?>]" id="comprar-order-bump<?= $i ?>" onclick="order(this.id, this.checked)" onload="order(this.id, this.checked)" value="<?= $order_bump->preco ?>">
                     <span class="ordbump-checkmark"></span>
                 </div>
-            </div>
-
-            <div class="ordbump-rodape">
-                <i class="fas fa-shield-alt"></i> Oferta única e exclusiva &bull; Não perca!
-            </div>
-        </label>
+            </label>
 <?php
-        $i++;
-    endif;
+    $i++;
 endforeach;
 ?>
+        </div>
+
+        <div class="ordbump-rodape">
+            <i class="fas fa-shield-alt"></i> Oferta única e exclusiva &bull; Não perca!
+        </div>
+    </div>
+<?php endif; ?>
 
 <style>
     .box-order-bump {
@@ -57,16 +66,9 @@ endforeach;
         border-radius: 16px;
         padding: 18px 16px 0;
         margin: 16px 0;
-        cursor: pointer;
         font-family: inherit;
         box-shadow: 0 0 32px -8px rgba(0, 200, 83, .35), 0 8px 20px rgba(0, 0, 0, .3);
-        transition: box-shadow .2s ease, border-color .2s ease;
-    }
-
-    .box-order-bump:hover,
-    .box-order-bump.selecionado {
-        border-color: var(--accent, #00C853);
-        box-shadow: 0 0 40px -6px rgba(0, 200, 83, .5), 0 8px 20px rgba(0, 0, 0, .3);
+        overflow: hidden;
     }
 
     .ordbump-badge {
@@ -81,7 +83,12 @@ endforeach;
         text-transform: uppercase;
         padding: 5px 14px;
         border-radius: 20px;
-        margin-bottom: 14px;
+        margin-bottom: 4px;
+    }
+
+    .ordbump-list {
+        display: flex;
+        flex-direction: column;
     }
 
     .ordbump-linha {
@@ -89,6 +96,21 @@ endforeach;
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
+        padding: 14px 0;
+        margin: 0 -16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        cursor: pointer;
+        transition: background-color .15s ease;
+    }
+
+    .ordbump-linha+.ordbump-linha {
+        border-top: 1px solid var(--stroke, #2c2c2c);
+    }
+
+    .ordbump-linha:hover,
+    .ordbump-linha.selecionado {
+        background-color: rgba(0, 200, 83, .08);
     }
 
     .ordbump-img-wrap {
@@ -210,7 +232,7 @@ endforeach;
     }
 
     .ordbump-rodape {
-        margin-top: 16px;
+        margin: 0 -16px;
         padding: 10px 16px;
         border-top: 1px solid var(--stroke, #2c2c2c);
         background: rgba(128, 128, 128, .05);
@@ -218,7 +240,6 @@ endforeach;
         font-size: 11.5px;
         font-weight: 500;
         text-align: center;
-        border-radius: 0 0 15px 15px;
     }
 
     .ordbump-rodape i {

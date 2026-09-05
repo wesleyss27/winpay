@@ -81,6 +81,7 @@ $ativo = array(
                             id : "<?= $plano->id ?>",
                             nome : "<?= $plano->nome ?>",
                             preco : "<?= $plano->preco ?>",
+                            preco_original : "<?= $plano->preco_original ?>",
                             quantidade : "<?= $plano->quantidade ?>",
                             descricao : "<?= $plano->descricao ?>",
                             privado : "<?= $plano->privado ?>",
@@ -146,6 +147,14 @@ $ativo = array(
                 <input type="text" name="quantidade" id='quantidade' class="form-control input-lg" placeholder="Quantidade *">
             </div>
             <small>Quantidade de itens que serão enviados nesse plano</small>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+            Preço original: <small>opcional, exibido riscado</small>
+            <input type="text" name="preco_original" id='preco_original' class="form-control input-lg" placeholder="Ex: 19,90">
             </div>
         </div>
 
@@ -258,6 +267,7 @@ $ativo = array(
         var id = dados[i]["id"];
         var nome = dados[i]["nome"];
         var preco = dados[i]["preco"];
+        var preco_original = dados[i]["preco_original"];
         var quantidade = dados[i]["quantidade"];
         var descricao = dados[i]["descricao"];
         var privado = (dados[i]["privado"] == 1) ? true : false;
@@ -271,6 +281,7 @@ $ativo = array(
         $("#cancelar").css("display", "inline");
         $("#id").attr({"value": id});
         $("#preco").attr({"value": preco});
+        $("#preco_original").attr({"value": preco_original});
         $("#nome").attr({"value": nome});
         $("#quantidade").attr({"value": quantidade});
         
@@ -285,6 +296,7 @@ $ativo = array(
         $("#cancelar").css("display", "none");
         $("#id").attr({"value": ""});
         $("#preco").attr({"value": ""});
+        $("#preco_original").attr({"value": ""});
         $("#nome").attr({"value": ""});
         $("#quantidade").attr({"value": ""});
         
