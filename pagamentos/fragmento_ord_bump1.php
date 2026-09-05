@@ -1,7 +1,8 @@
 <hr><br>
-<span class="txt_titulo_order_bump">
-    <b><?= $checkout->titulo_informativo ?></b>
-</span>
+<div class="ordbump-header">
+    <span class="ordbump-badge">Oferta especial</span>
+    <span class="txt_titulo_order_bump"><?= $checkout->titulo_informativo ?></span>
+</div>
 
 <?php $planos_order_bump = explode(",", $checkout->planos_order_bump);
 $i = 1;
@@ -11,42 +12,180 @@ foreach ($planos_order_bump as $cod_plano) :
 
     if ($order_bump) :
 ?>
-        <div class="box-order-bump comprar-order-bump<?= $i ?>">
-            <div class="row">
-                <div class="col-md-3 col-6">
-                    <label for="comprar-oder-bump">
-                        <!-- <input type="hidden" class="dias" name="planos_order_bump[<?= $i ?>]" id="comprar-order-bump<?= $i ?>" value="<?= $cod_plano ?>"> &nbsp; -->
-
-                        <?php $foto = $order_bump->foto ? $order_bump->foto : @$order_bump->dataProduto()->foto ?>
-                        <img class="img-produto-order-bump" src="<?= url("uploads/produtos/$foto") ?>" alt="" width="100%">
-                    </label>
-                </div>
-
-                <div class="col-md-9 col-6" style="display:flex; align-items: center">
-                    <div>
-                        <div class="check-order-bump texto-destaque">
-                            <input type="checkbox" class="dias" name="codigo_order_bump[<?= $cod_plano ?>]" id="comprar-order-bump<?= $i ?>" onclick="order(this.id, this.checked)" onload="order(this.id, this.checked)" value="<?= $order_bump->preco ?>"> &nbsp;
-                            Adicionar <?= $order_bump->quantidade ? $order_bump->quantidade : 1 ?> unidade(s) de <b><?= $order_bump->dataProduto()->nome ?></b> por apenas R$ <?= number_format($order_bump->preco, 2, ",", ".") ?></b>
-                        </div>
-                        <?= $order_bump->descricao ? $order_bump->descricao : "" ?>
-                    </div>
-
-                </div>
+        <label class="box-order-bump comprar-order-bump<?= $i ?>" for="comprar-order-bump<?= $i ?>">
+            <div class="ordbump-img-wrap">
+                <?php $foto = $order_bump->foto ? $order_bump->foto : @$order_bump->dataProduto()->foto ?>
+                <img class="img-produto-order-bump" src="<?= url("uploads/produtos/$foto") ?>" alt="">
             </div>
-        </div>
+
+            <div class="ordbump-content">
+                <div class="check-order-bump texto-destaque">
+                    Adicionar <?= $order_bump->quantidade ? $order_bump->quantidade : 1 ?> unidade(s) de <b><?= $order_bump->dataProduto()->nome ?></b> por apenas <span class="ordbump-preco">R$ <?= number_format($order_bump->preco, 2, ",", ".") ?></span>
+                </div>
+                <?= $order_bump->descricao ? '<div class="ordbump-desc">' . $order_bump->descricao . '</div>' : "" ?>
+            </div>
+
+            <div class="ordbump-check">
+                <input type="checkbox" class="dias" name="codigo_order_bump[<?= $cod_plano ?>]" id="comprar-order-bump<?= $i ?>" onclick="order(this.id, this.checked)" onload="order(this.id, this.checked)" value="<?= $order_bump->preco ?>">
+                <span class="ordbump-checkmark"></span>
+            </div>
+        </label>
 <?php
         $i++;
     endif;
 endforeach;
 ?>
 
+<style>
+    .ordbump-header {
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .ordbump-badge {
+        display: inline-block;
+        background: var(--accent, #00C853);
+        color: #06210f;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        padding: 3px 12px;
+        border-radius: 20px;
+        margin-bottom: 6px;
+    }
+
+    .txt_titulo_order_bump {
+        display: block;
+        color: var(--text, #f5f5f5);
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .box-order-bump {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--card, #1E1E1E);
+        border: 1px solid var(--stroke, #333);
+        border-radius: 12px;
+        padding: 14px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: border-color .15s ease, background-color .15s ease;
+    }
+
+    .box-order-bump:hover {
+        border-color: var(--accent, #00C853);
+    }
+
+    .box-order-bump.selecionado {
+        border-color: var(--accent, #00C853);
+        background-color: rgba(0, 200, 83, .08);
+    }
+
+    .ordbump-img-wrap {
+        flex-shrink: 0;
+    }
+
+    .img-produto-order-bump {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .ordbump-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .check-order-bump.texto-destaque {
+        color: var(--text, #f5f5f5);
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: 500;
+    }
+
+    .ordbump-preco {
+        color: var(--accent-2, #00E676);
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .ordbump-desc {
+        color: var(--muted, #aaa);
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .ordbump-check {
+        flex-shrink: 0;
+        position: relative;
+        width: 22px;
+        height: 22px;
+    }
+
+    .ordbump-check input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+    }
+
+    .ordbump-checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        border: 2px solid var(--muted, #555);
+        border-radius: 6px;
+        background: var(--card, #2A2A2A);
+        transition: background-color .15s ease, border-color .15s ease;
+    }
+
+    .ordbump-check input:checked~.ordbump-checkmark {
+        background: var(--accent, #00C853);
+        border-color: var(--accent, #00C853);
+    }
+
+    .ordbump-checkmark::after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 7px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid #06210f;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    .ordbump-check input:checked~.ordbump-checkmark::after {
+        display: block;
+    }
+
+    @media (max-width: 500px) {
+        .box-order-bump {
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .img-produto-order-bump {
+            width: 46px;
+            height: 46px;
+        }
+    }
+</style>
+
 <script>
     function order(id, checked) {
-        if (checked) {
-            $("." + id).css("border", "2px dashed green");
-        } else {
-            $("." + id).css("border", "2px dashed red");
-        }
+        $("." + id).toggleClass("selecionado", checked);
     }
 
     // Atualiza preços com order_bump
