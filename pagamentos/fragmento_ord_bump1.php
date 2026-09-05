@@ -44,35 +44,39 @@ endforeach;
     .ordbump-card {
         background: var(--card, #1E1E1E);
         border: 1px solid var(--stroke, #333);
-        border-radius: 14px;
-        padding: 16px 0 4px;
-        margin: 10px 0;
+        border-radius: 16px;
+        padding: 0;
+        margin: 16px 0;
         overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+        font-family: inherit;
     }
 
     .ordbump-header {
         text-align: center;
-        margin-bottom: 12px;
-        padding: 0 16px;
+        padding: 18px 16px 14px;
+        background: linear-gradient(180deg, rgba(0, 200, 83, .1), rgba(0, 200, 83, 0) 70%);
     }
 
     .ordbump-badge {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
         background: var(--accent, #00C853);
         color: #06210f;
         font-weight: 700;
         font-size: 11px;
         letter-spacing: .04em;
         text-transform: uppercase;
-        padding: 3px 12px;
+        padding: 4px 14px;
         border-radius: 20px;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
     }
 
     .txt_titulo_order_bump {
         display: block;
         color: var(--text, #f5f5f5);
-        font-size: 1rem;
+        font-size: 1.05rem;
         font-weight: 700;
     }
 
@@ -86,7 +90,11 @@ endforeach;
         align-items: center;
         gap: 14px;
         padding: 14px 16px;
+        margin: 0;
         cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        border: none;
         border-top: 1px solid var(--stroke, #333);
         transition: background-color .15s ease;
     }
@@ -104,10 +112,11 @@ endforeach;
     }
 
     .img-produto-order-bump {
-        width: 56px;
-        height: 56px;
+        width: 54px;
+        height: 54px;
         border-radius: 10px;
         object-fit: cover;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
     }
 
     .ordbump-content {
@@ -117,9 +126,11 @@ endforeach;
 
     .check-order-bump.texto-destaque {
         color: var(--text, #f5f5f5);
-        font-size: 14px;
-        line-height: 1.4;
-        font-weight: 500;
+        font-size: 13.5px;
+        line-height: 1.45;
+        font-weight: 400;
+        padding: 0;
+        width: auto;
     }
 
     .ordbump-preco {
@@ -137,8 +148,8 @@ endforeach;
     .ordbump-check {
         flex-shrink: 0;
         position: relative;
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
     }
 
     .ordbump-check input {
@@ -146,8 +157,8 @@ endforeach;
         inset: 0;
         opacity: 0;
         margin: 0;
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
         cursor: pointer;
     }
 
@@ -155,25 +166,26 @@ endforeach;
         position: absolute;
         top: 0;
         left: 0;
-        width: 22px;
-        height: 22px;
-        border: 2px solid var(--muted, #555);
-        border-radius: 6px;
-        background: var(--card, #2A2A2A);
-        transition: background-color .15s ease, border-color .15s ease;
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--muted, #666);
+        border-radius: 50%;
+        background: transparent;
+        transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
     }
 
     .ordbump-check input:checked~.ordbump-checkmark {
         background: var(--accent, #00C853);
         border-color: var(--accent, #00C853);
+        transform: scale(1.05);
     }
 
     .ordbump-checkmark::after {
         content: "";
         position: absolute;
         display: none;
-        left: 7px;
-        top: 3px;
+        left: 8px;
+        top: 4px;
         width: 5px;
         height: 10px;
         border: solid #06210f;
