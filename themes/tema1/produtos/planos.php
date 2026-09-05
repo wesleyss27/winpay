@@ -441,6 +441,7 @@ if ($_SESSION["tipo"] == 6) {
                                     nome: "<?= $plano->nome ?>",
                                     preco: "<?= $plano->preco ?>",
                                     preco_original: "<?= $plano->preco_original ?>",
+                                    texto_informativo: "<?= addslashes($plano->texto_informativo) ?>",
                                     foto: "<?= $plano->foto ?>",
                                     assumir_juros: "<?= $plano->assumir_juros ?>",
                                     parcelas: "<?= $plano->parcelas ?>",
@@ -527,6 +528,11 @@ if ($_SESSION["tipo"] == 6) {
                             <div class="col-md-4">
                                 <label>Preço original: <small>opcional, exibido riscado</small></label>
                                 <input type="text" name="preco_original" id='preco_original' class="form-control input-lg" placeholder="Ex: 19,90">
+                            </div>
+
+                            <div class="col-md-8">
+                                <label>Texto informativo do order bump: <small>opcional, chamada exibida no card da oferta</small></label>
+                                <input type="text" name="texto_informativo" id='texto_informativo' class="form-control input-lg" placeholder="Ex: Sim! Quero adicionar">
                             </div>
 
                             <div class="col-md-4">
@@ -1080,6 +1086,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         var nome = dados[i]["nome"];
         var preco = dados[i]["preco"];
         var preco_original = dados[i]["preco_original"];
+        var texto_informativo = dados[i]["texto_informativo"];
         var foto = dados[i]["foto"];
         var assumir_juros = dados[i]["assumir_juros"];
         var parcelas = dados[i]["parcelas"];
@@ -1115,6 +1122,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#nome").val(nome);
         $("#preco").val(preco);
         $("#preco_original").val(preco_original);
+        $("#texto_informativo").val(texto_informativo);
         $("#descricao").val(descricao);
         $("#assumir_juros").val(assumir_juros);
         if (statusPlano !== undefined && statusPlano !== null) {
@@ -1222,6 +1230,7 @@ $mensagem_whats = "Email: {$_SESSION["email"]} %0D" .
         $("#id").val("");
         $("#preco").val("");
         $("#preco_original").val("");
+        $("#texto_informativo").val("");
         $("#descricao").val("");
         $("#assumir_juros").val("0");
         $("#nome").val("");

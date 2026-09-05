@@ -18,6 +18,9 @@ foreach ($planos_order_bump as $cod_plano) {
 <?php $i = 1;
 foreach ($order_bumps_validos as $cod_plano => $order_bump) :
     $temPrecoOriginal = @$order_bump->preco_original && $order_bump->preco_original > $order_bump->preco;
+    $textoInformativo = @$order_bump->texto_informativo
+        ? $order_bump->texto_informativo
+        : "Sim! Quero adicionar " . ($order_bump->quantidade ? $order_bump->quantidade : 1) . " unidade(s) de";
 ?>
             <label class="ordbump-linha comprar-order-bump<?= $i ?>" for="comprar-order-bump<?= $i ?>">
                 <div class="ordbump-img-wrap">
@@ -27,7 +30,7 @@ foreach ($order_bumps_validos as $cod_plano => $order_bump) :
 
                 <div class="ordbump-content">
                     <div class="check-order-bump texto-destaque">
-                        <span class="ordbump-headline">Sim! Quero adicionar <?= $order_bump->quantidade ? $order_bump->quantidade : 1 ?> unidade(s) de</span>
+                        <span class="ordbump-headline"><?= $textoInformativo ?></span>
                         <b class="ordbump-produto"><?= $order_bump->dataProduto()->nome ?></b>
                     </div>
                     <?= $order_bump->descricao ? '<div class="ordbump-desc">' . $order_bump->descricao . '</div>' : "" ?>

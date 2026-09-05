@@ -1347,6 +1347,7 @@ class AppProdutos
         $plano->usuario = $this->section->getId();
         $plano->preco = $data["preco"];
         $plano->preco_original = isset($data["preco_original"]) && is_numeric($data["preco_original"]) ? (float)$data["preco_original"] : null;
+        $plano->texto_informativo = @$data["texto_informativo"] !== "" ? trim(@$data["texto_informativo"]) : null;
         $plano->descricao = @$data["descricao"];
         $plano->assumir_juros = @$data["assumir_juros"];
         // fix: parcelas vazio ("") quebra o save() com SQLSTATE[22007] (coluna é inteira)
@@ -1568,6 +1569,7 @@ class AppProdutos
         $plano->quantidade = @$data["quantidade"] ? @$data["quantidade"] : NULL;
         $plano->preco = $data["preco"];
         $plano->preco_original = isset($data["preco_original"]) && is_numeric($data["preco_original"]) ? (float)$data["preco_original"] : null;
+        $plano->texto_informativo = @$data["texto_informativo"] !== "" ? trim(@$data["texto_informativo"]) : null;
         $plano->descricao = @$data["descricao"];
         $plano->assumir_juros = @$data["assumir_juros"];
         // fix: parcelas vazio ("") quebra o save() com SQLSTATE[22007] (coluna é inteira)

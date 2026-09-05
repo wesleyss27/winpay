@@ -82,6 +82,7 @@ $ativo = array(
                             nome : "<?= $plano->nome ?>",
                             preco : "<?= $plano->preco ?>",
                             preco_original : "<?= $plano->preco_original ?>",
+                            texto_informativo : "<?= addslashes($plano->texto_informativo) ?>",
                             quantidade : "<?= $plano->quantidade ?>",
                             descricao : "<?= $plano->descricao ?>",
                             privado : "<?= $plano->privado ?>",
@@ -155,6 +156,11 @@ $ativo = array(
             <div class="col-md-6">
             Preço original: <small>opcional, exibido riscado</small>
             <input type="text" name="preco_original" id='preco_original' class="form-control input-lg" placeholder="Ex: 19,90">
+            </div>
+
+            <div class="col-md-6">
+            Texto informativo do order bump: <small>opcional</small>
+            <input type="text" name="texto_informativo" id='texto_informativo' class="form-control input-lg" placeholder="Ex: Sim! Quero adicionar">
             </div>
         </div>
 
@@ -268,6 +274,7 @@ $ativo = array(
         var nome = dados[i]["nome"];
         var preco = dados[i]["preco"];
         var preco_original = dados[i]["preco_original"];
+        var texto_informativo = dados[i]["texto_informativo"];
         var quantidade = dados[i]["quantidade"];
         var descricao = dados[i]["descricao"];
         var privado = (dados[i]["privado"] == 1) ? true : false;
@@ -282,6 +289,7 @@ $ativo = array(
         $("#id").attr({"value": id});
         $("#preco").attr({"value": preco});
         $("#preco_original").attr({"value": preco_original});
+        $("#texto_informativo").attr({"value": texto_informativo});
         $("#nome").attr({"value": nome});
         $("#quantidade").attr({"value": quantidade});
         
@@ -297,6 +305,7 @@ $ativo = array(
         $("#id").attr({"value": ""});
         $("#preco").attr({"value": ""});
         $("#preco_original").attr({"value": ""});
+        $("#texto_informativo").attr({"value": ""});
         $("#nome").attr({"value": ""});
         $("#quantidade").attr({"value": ""});
         
