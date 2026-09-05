@@ -36,16 +36,18 @@ foreach ($order_bumps_validos as $cod_plano => $order_bump) :
                     <?= $order_bump->descricao ? '<div class="ordbump-desc">' . $order_bump->descricao . '</div>' : "" ?>
                 </div>
 
-                <div class="ordbump-precobox">
-                    <?php if ($temPrecoOriginal) : ?>
-                        <span class="ordbump-preco-de">R$ <?= number_format($order_bump->preco_original, 2, ",", ".") ?></span>
-                    <?php endif; ?>
-                    <span class="ordbump-preco">R$ <?= number_format($order_bump->preco, 2, ",", ".") ?></span>
-                </div>
+                <div class="ordbump-acao">
+                    <div class="ordbump-precobox">
+                        <?php if ($temPrecoOriginal) : ?>
+                            <span class="ordbump-preco-de">R$ <?= number_format($order_bump->preco_original, 2, ",", ".") ?></span>
+                        <?php endif; ?>
+                        <span class="ordbump-preco">R$ <?= number_format($order_bump->preco, 2, ",", ".") ?></span>
+                    </div>
 
-                <div class="ordbump-check">
-                    <input type="checkbox" class="dias" name="codigo_order_bump[<?= $cod_plano ?>]" id="comprar-order-bump<?= $i ?>" onclick="order(this.id, this.checked)" onload="order(this.id, this.checked)" value="<?= $order_bump->preco ?>">
-                    <span class="ordbump-checkmark"></span>
+                    <div class="ordbump-check">
+                        <input type="checkbox" class="dias" name="codigo_order_bump[<?= $cod_plano ?>]" id="comprar-order-bump<?= $i ?>" onclick="order(this.id, this.checked)" onload="order(this.id, this.checked)" value="<?= $order_bump->preco ?>">
+                        <span class="ordbump-checkmark"></span>
+                    </div>
                 </div>
             </label>
 <?php
@@ -161,10 +163,17 @@ endforeach;
         margin-top: 4px;
     }
 
+    .ordbump-acao {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
     .ordbump-precobox {
         flex-shrink: 0;
         text-align: right;
-        margin-left: auto;
     }
 
     .ordbump-preco-de {
@@ -250,15 +259,14 @@ endforeach;
     }
 
     @media (max-width: 500px) {
-        .ordbump-precobox {
+        .ordbump-acao {
             margin-left: 0;
-            text-align: left;
             flex-basis: 100%;
-            order: 3;
+            justify-content: space-between;
         }
 
-        .ordbump-check {
-            order: 4;
+        .ordbump-precobox {
+            text-align: left;
         }
     }
 </style>
