@@ -1,9 +1,11 @@
 <hr><br>
-<div class="ordbump-header">
-    <span class="ordbump-badge">Oferta especial</span>
-    <span class="txt_titulo_order_bump"><?= $checkout->titulo_informativo ?></span>
-</div>
+<div class="ordbump-card">
+    <div class="ordbump-header">
+        <span class="ordbump-badge">Oferta especial</span>
+        <span class="txt_titulo_order_bump"><?= $checkout->titulo_informativo ?></span>
+    </div>
 
+    <div class="ordbump-list">
 <?php $planos_order_bump = explode(",", $checkout->planos_order_bump);
 $i = 1;
 // var_dump($planos_order_bump);
@@ -35,11 +37,23 @@ foreach ($planos_order_bump as $cod_plano) :
     endif;
 endforeach;
 ?>
+    </div>
+</div>
 
 <style>
+    .ordbump-card {
+        background: var(--card, #1E1E1E);
+        border: 1px solid var(--stroke, #333);
+        border-radius: 14px;
+        padding: 16px 0 4px;
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
     .ordbump-header {
         text-align: center;
         margin-bottom: 12px;
+        padding: 0 16px;
     }
 
     .ordbump-badge {
@@ -62,26 +76,27 @@ endforeach;
         font-weight: 700;
     }
 
+    .ordbump-list {
+        display: flex;
+        flex-direction: column;
+    }
+
     .box-order-bump {
         display: flex;
         align-items: center;
         gap: 14px;
-        background: var(--card, #1E1E1E);
-        border: 1px solid var(--stroke, #333);
-        border-radius: 12px;
-        padding: 14px;
-        margin: 10px 0;
+        padding: 14px 16px;
         cursor: pointer;
-        transition: border-color .15s ease, background-color .15s ease;
+        border-top: 1px solid var(--stroke, #333);
+        transition: background-color .15s ease;
     }
 
     .box-order-bump:hover {
-        border-color: var(--accent, #00C853);
+        background-color: rgba(128, 128, 128, .08);
     }
 
     .box-order-bump.selecionado {
-        border-color: var(--accent, #00C853);
-        background-color: rgba(0, 200, 83, .08);
+        background-color: rgba(0, 200, 83, .1);
     }
 
     .ordbump-img-wrap {
@@ -172,7 +187,7 @@ endforeach;
 
     @media (max-width: 500px) {
         .box-order-bump {
-            padding: 10px;
+            padding: 12px;
             gap: 10px;
         }
 
