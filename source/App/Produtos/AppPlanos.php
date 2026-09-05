@@ -122,6 +122,7 @@ class AppProdutos
         $plano->quantidade = @$data["quantidade"];
         $plano->usuario = $_SESSION["id"];
         $plano->preco = $data["preco"];
+        $plano->preco_original = @$data["preco_original"] !== "" ? @$data["preco_original"] : null;
         $plano->descricao = $data["descricao"];
         $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
         $plano->status = isset($data["status"]) ? (int)$data["status"] : null;
@@ -151,6 +152,7 @@ class AppProdutos
         $plano->nome = $data["nome"];
         $plano->quantidade = @$data["quantidade"];
         $plano->preco = $data["preco"];
+        $plano->preco_original = @$data["preco_original"] !== "" ? @$data["preco_original"] : null;
         $plano->descricao = $data["descricao"];
         $plano->privado = isset($data["privado"]) ? (int)$data["privado"] : 0;
         $plano->status = isset($data["status"]) ? (int)$data["status"] : null;

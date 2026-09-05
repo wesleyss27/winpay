@@ -1,0 +1,2 @@
+ALTER TABLE planos
+ADD COLUMN preco_original DECIMAL(10,2) NULL DEFAULT NULL AFTER preco;
