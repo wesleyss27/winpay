@@ -1346,9 +1346,13 @@ class AppProdutos
         $plano->quantidade = @$data["quantidade"] ? @$data["quantidade"] : NULL;
         $plano->usuario = $this->section->getId();
         $plano->preco = $data["preco"];
+        $plano->preco_original = isset($data["preco_original"]) && is_numeric($data["preco_original"]) ? (float)$data["preco_original"] : null;
         $plano->descricao = @$data["descricao"];
         $plano->assumir_juros = @$data["assumir_juros"];
-        $plano->parcelas = @$data["parcelas"];
+        // fix: parcelas vazio ("") quebra o save() com SQLSTATE[22007] (coluna é inteira)
+        $plano->parcelas = isset($data["parcelas"]) && $data["parcelas"] !== ''
+            ? (int) $data["parcelas"]
+            : null;
         $plano->periodo = @$data["periodo"];
         $plano->maximo_recorrencia = isset($data["maximo_recorrencia"]) && $data["maximo_recorrencia"] !== '' 
     ? (int) $data["maximo_recorrencia"] 
@@ -1465,7 +1469,10 @@ class AppProdutos
         $plano->preco = $data["preco"];
         $plano->descricao = @$data["descricao"];
         $plano->assumir_juros = @$data["assumir_juros"];
-        $plano->parcelas = @$data["parcelas"];
+        // fix: parcelas vazio ("") quebra o save() com SQLSTATE[22007] (coluna é inteira)
+        $plano->parcelas = isset($data["parcelas"]) && $data["parcelas"] !== ''
+            ? (int) $data["parcelas"]
+            : null;
         $plano->periodo = @$data["periodo"];
         $plano->maximo_recorrencia = isset($data["maximo_recorrencia"]) && $data["maximo_recorrencia"] !== '' 
     ? (int) $data["maximo_recorrencia"] 
@@ -1560,9 +1567,13 @@ class AppProdutos
         $plano->nome = trim($data["nome"]);
         $plano->quantidade = @$data["quantidade"] ? @$data["quantidade"] : NULL;
         $plano->preco = $data["preco"];
+        $plano->preco_original = isset($data["preco_original"]) && is_numeric($data["preco_original"]) ? (float)$data["preco_original"] : null;
         $plano->descricao = @$data["descricao"];
         $plano->assumir_juros = @$data["assumir_juros"];
-        $plano->parcelas = @$data["parcelas"];
+        // fix: parcelas vazio ("") quebra o save() com SQLSTATE[22007] (coluna é inteira)
+        $plano->parcelas = isset($data["parcelas"]) && $data["parcelas"] !== ''
+            ? (int) $data["parcelas"]
+            : null;
         $plano->periodo = @$data["periodo"];
         $plano->maximo_recorrencia = isset($data["maximo_recorrencia"]) && $data["maximo_recorrencia"] !== '' 
     ? (int) $data["maximo_recorrencia"] 
