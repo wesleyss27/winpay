@@ -53,27 +53,28 @@ endforeach;
         position: relative;
         display: block;
         background: var(--card, #1E1E1E);
-        border: 1px solid var(--accent, #00C853);
+        border: 1px solid var(--stroke, #2c2c2c);
         border-radius: 16px;
         padding: 18px 16px 0;
         margin: 16px 0;
         cursor: pointer;
         font-family: inherit;
-        box-shadow: 0 0 0 1px rgba(0, 200, 83, .15), 0 0 18px rgba(0, 200, 83, .25);
+        box-shadow: 0 0 32px -8px rgba(0, 200, 83, .35), 0 8px 20px rgba(0, 0, 0, .3);
         transition: box-shadow .2s ease, border-color .2s ease;
     }
 
     .box-order-bump:hover,
     .box-order-bump.selecionado {
-        box-shadow: 0 0 0 1px rgba(0, 200, 83, .3), 0 0 26px rgba(0, 200, 83, .4);
+        border-color: var(--accent, #00C853);
+        box-shadow: 0 0 40px -6px rgba(0, 200, 83, .5), 0 8px 20px rgba(0, 0, 0, .3);
     }
 
     .ordbump-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        border: 1px solid var(--accent, #00C853);
-        color: var(--accent, #00C853);
+        background: var(--accent, #00C853);
+        color: #06210f;
         font-weight: 700;
         font-size: 11px;
         letter-spacing: .04em;
@@ -179,14 +180,15 @@ endforeach;
         left: 0;
         width: 26px;
         height: 26px;
-        border: 2px solid var(--accent, #00C853);
+        border: 2px solid var(--muted, #555);
         border-radius: 8px;
-        background: transparent;
-        transition: background-color .15s ease, transform .15s ease;
+        background: rgba(128, 128, 128, .08);
+        transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
     }
 
     .ordbump-check input:checked~.ordbump-checkmark {
         background: var(--accent, #00C853);
+        border-color: var(--accent, #00C853);
         transform: scale(1.05);
     }
 
@@ -198,7 +200,7 @@ endforeach;
         top: 4px;
         width: 6px;
         height: 11px;
-        border: solid #06210f;
+        border: solid #fff;
         border-width: 0 2px 2px 0;
         transform: rotate(45deg);
     }
@@ -210,13 +212,17 @@ endforeach;
     .ordbump-rodape {
         margin-top: 16px;
         padding: 10px 16px;
-        border-top: 1px solid rgba(0, 200, 83, .25);
-        background: rgba(0, 200, 83, .08);
-        color: var(--accent, #00C853);
-        font-size: 12px;
-        font-weight: 600;
+        border-top: 1px solid var(--stroke, #2c2c2c);
+        background: rgba(128, 128, 128, .05);
+        color: var(--muted, #999);
+        font-size: 11.5px;
+        font-weight: 500;
         text-align: center;
         border-radius: 0 0 15px 15px;
+    }
+
+    .ordbump-rodape i {
+        color: var(--accent, #00C853);
     }
 
     @media (max-width: 500px) {
