@@ -58,6 +58,28 @@
 }
 .preview-thumb iframe { width: 100%; height: 100%; display: block; border: none; }
 
+/* ── Opções do player ─────────────────────────────────── */
+.opt-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: .9rem; }
+.opt-hint { font-size: .76rem; color: var(--muted); margin-top: .2rem; }
+.opt-presets { display: flex; gap: .4rem; flex-wrap: wrap; }
+.opt-group { border: 1px solid var(--border); border-radius: 12px; margin-bottom: .8rem; overflow: hidden; }
+.opt-group-title { font-size: .76rem; font-weight: 700; color: var(--muted); background: var(--bg); padding: .5rem .9rem; border-bottom: 1px solid var(--border); }
+.opt { display: flex; align-items: flex-start; gap: .8rem; padding: .8rem .9rem; cursor: pointer; }
+.opt + .opt { border-top: 1px solid var(--border); }
+.opt:hover { background: #fafbfe; }
+.opt input[type="checkbox"] { display: none; }
+.opt-text { flex: 1; min-width: 0; }
+.opt-text b { display: block; font-size: .86rem; font-weight: 700; }
+.opt-text span { display: block; font-size: .78rem; color: var(--muted); margin-top: .15rem; line-height: 1.45; }
+.opt-text .opt-when { color: var(--accent); }
+.opt-state { font-size: .72rem; font-weight: 700; color: var(--muted); margin-top: .1rem; min-width: 62px; text-align: right; }
+.opt-state::before { content: "Desligado"; }
+.opt input:checked ~ .opt-state { color: var(--accent); }
+.opt input:checked ~ .opt-state::before { content: "Ligado"; }
+.opt .wt-toggle-track { margin-top: .05rem; }
+.opt input:checked ~ .wt-toggle-track { background: var(--accent); border-color: var(--accent); }
+.opt input:checked ~ .wt-toggle-track::after { transform: translateX(15px); }
+
 /* ── Toggle switch ─────────────────────────────────────── */
 .wt-toggle {
   display: flex; align-items: center;
@@ -255,46 +277,80 @@
 
       <hr class="wt-divider">
 
-      <!-- Toggles -->
-      <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.1rem;">
-        <label class="wt-toggle">
+      <!-- Comportamento do player -->
+      <div class="opt-head">
+        <div>
+          <div class="wt-label" style="margin:0;">Comportamento do player</div>
+          <div class="opt-hint">Escolha um perfil pronto ou ajuste cada opção. Vale só depois de salvar.</div>
+        </div>
+        <div class="opt-presets">
+          <button type="button" class="wt-preset-btn" onclick="aplicarPerfil('vsl')" title="Autoplay mudo, sem avançar, sem velocidade e com barra falsa">VSL de vendas</button>
+          <button type="button" class="wt-preset-btn" onclick="aplicarPerfil('aula')" title="Player padrão, com barra e velocidade livres">Aula / conteúdo</button>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-group-title">Como o vídeo começa</div>
+        <label class="opt">
+          <div class="opt-text">
+            <b>Autoplay mudo</b>
+            <span>O vídeo começa sozinho, sem som. O visitante clica para ouvir e o vídeo reinicia do começo.</span>
+            <span class="opt-when">Use em VSL e páginas de vendas, onde o vídeo precisa começar sem clique.</span>
+          </div>
           <input type="checkbox" id="autoplay" <?= $video->autoplay ? "checked" : "" ?>>
-          <span class="wt-toggle-track"></span>
-          <div>
-            <span class="wt-toggle-label">Autoplay mudo ao carregar</span>
-            <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem;">Inicia silencioso — clique desbloqueia o áudio</div>
-          </div>
+          <span class="opt-state"></span><span class="wt-toggle-track"></span>
         </label>
-        <label class="wt-toggle" style="padding:.6rem .7rem;background:var(--bg);border-radius:9px;border:1px solid var(--border);">
+        <label class="opt">
+          <div class="opt-text">
+            <b>Reprodução forçada</b>
+            <span>Depois do clique para ouvir, some todo o controle: não dá para pausar, voltar nem mexer no volume.</span>
+            <span class="opt-when">Só funciona com o autoplay mudo, então ele é ligado junto.</span>
+          </div>
           <input type="checkbox" id="force_play" <?= $video->force_play ? "checked" : "" ?>>
-          <span class="wt-toggle-track"></span>
-          <div>
-            <span class="wt-toggle-label">Reprodução forçada</span>
-            <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem;">Sem controles, sem pausa — volume máximo após clicar para ouvir</div>
-          </div>
+          <span class="opt-state"></span><span class="wt-toggle-track"></span>
         </label>
-        <label class="wt-toggle">
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-group-title">O que o visitante pode fazer</div>
+        <label class="opt">
+          <div class="opt-text">
+            <b>Bloquear avanço (anti-skip)</b>
+            <span>Impede pular para uma parte que o visitante ainda não assistiu.</span>
+            <span class="opt-when">Use quando a oferta aparece no meio ou no fim e você quer que ele assista até lá.</span>
+          </div>
           <input type="checkbox" id="anti_skip" <?= $video->anti_skip ? "checked" : "" ?>>
-          <span class="wt-toggle-track"></span>
-          <span class="wt-toggle-label">Anti-skip — impede avançar o vídeo</span>
+          <span class="opt-state"></span><span class="wt-toggle-track"></span>
         </label>
-        <label class="wt-toggle">
-          <input type="checkbox" id="allow_speed" <?= $video->allow_speed ? "checked" : "" ?>>
-          <span class="wt-toggle-track"></span>
-          <span class="wt-toggle-label">Controle de velocidade</span>
-        </label>
-        <label class="wt-toggle">
-          <input type="checkbox" id="hide_seekbar" <?= $video->hide_seekbar ? "checked" : "" ?>>
-          <span class="wt-toggle-track"></span>
-          <span class="wt-toggle-label">Ocultar barra de reprodução</span>
-        </label>
-        <label class="wt-toggle">
-          <input type="checkbox" id="fake_seekbar" <?= $video->fake_seekbar ? "checked" : "" ?>>
-          <span class="wt-toggle-track"></span>
-          <div>
-            <span class="wt-toggle-label">Barra fake</span>
-            <div style="font-size:.73rem;color:var(--muted);margin-top:.1rem;">Barra visual que avança com o vídeo — usuário não consegue clicar para avançar. Ativa "Ocultar barra" automaticamente.</div>
+        <label class="opt">
+          <div class="opt-text">
+            <b>Permitir mudar a velocidade</b>
+            <span>Mostra o seletor de 0,5× a 2× no player.</span>
+            <span class="opt-when">Bom para aulas. Em VSL, deixe desligado.</span>
           </div>
+          <input type="checkbox" id="allow_speed" <?= $video->allow_speed ? "checked" : "" ?>>
+          <span class="opt-state"></span><span class="wt-toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-group-title">Barra de progresso</div>
+        <label class="opt">
+          <div class="opt-text">
+            <b>Esconder a barra</b>
+            <span>Tira a barra de tempo do player. O visitante não vê quanto falta nem clica para pular.</span>
+          </div>
+          <input type="checkbox" id="hide_seekbar" <?= $video->hide_seekbar ? "checked" : "" ?>>
+          <span class="opt-state"></span><span class="wt-toggle-track"></span>
+        </label>
+        <label class="opt">
+          <div class="opt-text">
+            <b>Mostrar barra falsa</b>
+            <span>Coloca no lugar uma barra fina que avança com o vídeo, sem clique. Esconde a barra normal junto.</span>
+            <span class="opt-when">Dá sensação de progresso sem deixar o visitante pular.</span>
+          </div>
+          <input type="checkbox" id="fake_seekbar" <?= $video->fake_seekbar ? "checked" : "" ?>>
+          <span class="opt-state"></span><span class="wt-toggle-track"></span>
         </label>
       </div>
 
@@ -801,6 +857,26 @@ function excluirAd(id) {
   }).then(r => r.json()).then(r => {
     if (r.ok) { document.getElementById("ad-" + id)?.remove(); wtToast("Removido.", "ok"); }
   });
+}
+
+// Regras entre opções: forçada exige autoplay; barra falsa exige barra escondida
+document.getElementById("force_play").addEventListener("change", function () {
+  if (this.checked) document.getElementById("autoplay").checked = true;
+});
+document.getElementById("autoplay").addEventListener("change", function () {
+  if (!this.checked) document.getElementById("force_play").checked = false;
+});
+
+// Perfis prontos (só preenchem o formulário; vale ao salvar)
+function aplicarPerfil(nome) {
+  var perfis = {
+    vsl:  { autoplay: 1, force_play: 0, anti_skip: 1, allow_speed: 0, hide_seekbar: 1, fake_seekbar: 1 },
+    aula: { autoplay: 0, force_play: 0, anti_skip: 0, allow_speed: 1, hide_seekbar: 0, fake_seekbar: 0 }
+  };
+  Object.keys(perfis[nome]).forEach(function (id) {
+    document.getElementById(id).checked = !!perfis[nome][id];
+  });
+  wtToast("Perfil aplicado. Clique em Salvar para confirmar.", "ok");
 }
 
 // fake_seekbar ↔ hide_seekbar: ativar fake força hide; desativar hide desativa fake
