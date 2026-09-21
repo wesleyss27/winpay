@@ -16,7 +16,8 @@ $retMedia    = $retMap ? round(array_sum($retMap) / count($retMap)) : null;
 $statusDe = function ($vid) {
     if ((int)$vid->status !== 1) return ["Inativo", "warn"];
     $h = $vid->hls_status ?? "none";
-    if (in_array($h, ["pending", "processing"], true)) return ["Processando", "info"];
+    $recente = strtotime($vid->created_at) > time() - 6 * 3600;
+    if ($recente && in_array($h, ["pending", "processing"], true)) return ["Processando", "info"];
     if ($h === "failed") return ["Falha no HLS", "warn"];
     return ["Publicado", "ok"];
 };
@@ -78,7 +79,7 @@ $statusDe = function ($vid) {
   display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
   padding: 0 1.3rem; border-bottom: 1px solid var(--border);
 }
-.lib-tabs { display: flex; gap: .4rem; max-width: 100%; overflow-x: auto; }
+.lib-tabs { display: flex; gap: .4rem; max-width: 100%; }
 .lib-tab {
   display: flex; align-items: center; gap: .5rem;
   padding: 1rem .8rem;
@@ -222,6 +223,9 @@ $statusDe = function ($vid) {
 
 @media (max-width: 768px) {
   .lib-bar { padding: 0 .8rem; }
+  .lib-tabs { overflow-x: auto; scrollbar-width: none; }
+  .lib-tabs::-webkit-scrollbar { display: none; }
+  .lib-tab { margin-bottom: 0; }
   .lib-filters { width: 100%; padding-top: 0; }
   .lib-filters .metric-select { flex: 1; }
 }
