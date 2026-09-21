@@ -1,5 +1,45 @@
 <?php $v->layout("_theme") ?>
 
+<?php
+// ── Dados derivados para a view ─────────────────────────────────────────────
+$countPorPasta = [];
+foreach ($videos as $vid) {
+    if ($vid->pasta_id) {
+        $countPorPasta[(int)$vid->pasta_id] = ($countPorPasta[(int)$vid->pasta_id] ?? 0) + 1;
+    }
+}
+
+$totalPlays  = array_sum($playsMap);
+$publicados  = count(array_filter($videos, fn($x) => (int)$x->status === 1));
+$retMedia    = $retMap ? round(array_sum($retMap) / count($retMap)) : null;
+
+$statusDe = function ($vid) {
+    if ((int)$vid->status !== 1) return ["Inativo", "warn"];
+    $h = $vid->hls_status ?? "none";
+    if (in_array($h, ["pending", "processing"], true)) return ["Processando", "info"];
+    if ($h === "failed") return ["Falha no HLS", "warn"];
+    return ["Publicado", "ok"];
+};
+?>
+
+<?php $v->start("page_head") ?>
+  <h1>Meus vídeos</h1>
+  <p>Gerencie, organize e analise o desempenho dos seus vídeos em um só lugar.</p>
+<?php $v->end() ?>
+
+<?php $v->start("actions") ?>
+  <label class="wt-search">
+    <i class="fas fa-magnifying-glass"></i>
+    <input type="search" id="search-input" placeholder="Buscar vídeos…" aria-label="Buscar vídeos">
+  </label>
+  <button class="btn-wt" id="btn-novo-video" onclick="toggleUpload()">
+    <i class="fas fa-plus"></i> Novo vídeo
+  </button>
+  <button class="btn-wt btn-wt-ghost" onclick="abrirNovaPasta()">
+    <i class="fas fa-folder-plus"></i> Nova pasta
+  </button>
+<?php $v->end() ?>
+
 <?php $v->start("styles") ?>
 <style>
 /* ── Upload panel ─────────────────────────────────────── */
@@ -8,321 +48,207 @@
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.3rem;
+  padding: 1.2rem;
   margin-bottom: 1.1rem;
   box-shadow: var(--shadow);
   animation: wt-in .22s cubic-bezier(.22,1,.36,1);
 }
 #drop-zone {
-  border: 2px dashed rgba(108,92,231,.22);
-  border-radius: 10px;
-  padding: 2rem 1.5rem;
+  border: 1.5px dashed var(--accent-border);
+  border-radius: 12px;
+  padding: 2.2rem 1.5rem;
   text-align: center;
   cursor: pointer;
   transition: border-color .18s, background .18s;
-  background: rgba(108,92,231,.025);
+  background: var(--accent-soft);
 }
-#drop-zone:hover, #drop-zone.over {
-  border-color: rgba(108,92,231,.5);
-  background: rgba(108,92,231,.06);
-}
+#drop-zone:hover, #drop-zone.over { border-color: var(--accent); background: rgba(91,77,240,.14); }
 #drop-zone .drop-icon {
-  font-size: 1.7rem; color: var(--accent); opacity: .65;
-  display: block; margin-bottom: .55rem;
-  transition: transform .2s, opacity .2s;
+  font-size: 1.8rem; color: var(--accent);
+  display: block; margin-bottom: .6rem;
+  transition: transform .2s;
 }
-#drop-zone:hover .drop-icon { opacity: 1; transform: translateY(-3px); }
-#upload-progress { display: none; margin-top: .85rem; }
-#upload-bar-track {
-  height: 3px; background: var(--bg3);
-  border-radius: 99px; overflow: hidden;
-}
-#upload-bar-fill {
-  height: 100%;
-  background: var(--accent);
-  width: 0%; transition: width .2s;
-}
+#drop-zone:hover .drop-icon { transform: translateY(-3px); }
+#upload-progress { display: none; margin-top: .9rem; }
+#upload-bar-track { height: 6px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+#upload-bar-fill { height: 100%; background: var(--grad); width: 0%; transition: width .2s; border-radius: 99px; }
 
-/* ── Header ────────────────────────────────────────────── */
-.lib-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 1.1rem; flex-wrap: wrap; gap: .7rem;
+/* ── Tabs + filtros ─────────────────────────────────────── */
+.lib-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  padding: 0 1.3rem; border-bottom: 1px solid var(--border);
 }
-.lib-search {
-  display: flex; align-items: center; gap: .4rem;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: .42rem .85rem;
-  flex: 1; max-width: 260px;
-  box-shadow: var(--shadow);
-  transition: border-color .15s, box-shadow .15s;
-}
-.lib-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,92,231,.1); }
-.lib-search i { color: var(--muted); font-size: .82rem; }
-.lib-search input {
-  background: none; border: none; outline: none;
-  color: var(--text); font-family: 'Outfit', sans-serif;
-  font-size: .85rem; width: 100%;
-}
-.lib-search input::placeholder { color: var(--muted); }
-
-/* ── Tabs ───────────────────────────────────────────────── */
-.lib-tabs {
-  display: flex; gap: 0;
-  border-bottom: 1px solid var(--border);
-}
+.lib-tabs { display: flex; gap: .4rem; max-width: 100%; overflow-x: auto; }
 .lib-tab {
-  display: flex; align-items: center; gap: .38rem;
-  padding: .65rem 1.05rem;
-  font-size: .83rem; font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  display: flex; align-items: center; gap: .5rem;
+  padding: 1rem .8rem;
+  font-size: .86rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; background: none; border: none; font-family: inherit; white-space: nowrap;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
   transition: color .15s, border-color .15s;
-  user-select: none;
 }
 .lib-tab:hover { color: var(--text); }
 .lib-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tab-badge {
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
-  color: var(--accent);
-  font-size: .62rem; font-weight: 700;
-  padding: .06rem .38rem; border-radius: 99px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .68rem; font-weight: 700; padding: .08rem .45rem; border-radius: 99px;
 }
+.lib-filters { display: flex; align-items: center; gap: .6rem; padding: .6rem 0; }
+.lib-filters .metric-select { min-height: 38px; }
 
-/* ── Video table ────────────────────────────────────────── */
-.video-table-wrap {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
-  overflow: visible;
-  box-shadow: var(--shadow);
+/* ── Tabela ─────────────────────────────────────────────── */
+.lib-panel {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden;
 }
-.video-table-head {
+.table-scroll { overflow-x: auto; }
+.table-inner { min-width: 1036px; }
+.video-table-head, .video-row {
   display: grid;
-  grid-template-columns: 24px 52px 1fr 120px 140px;
-  gap: .7rem; align-items: center;
-  padding: .6rem 1.1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
+  grid-template-columns: minmax(260px, 2.6fr) 120px 96px 68px 118px 96px 124px 176px;
+  gap: 1rem; align-items: center; padding: 0 1.3rem;
 }
-.video-table-head span {
-  font-size: .66rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .1em;
-  color: var(--muted);
-}
-.video-row {
-  display: grid;
-  grid-template-columns: 24px 52px 1fr 120px 140px;
-  gap: .7rem; align-items: center;
-  padding: .7rem 1.1rem;
-  border-bottom: 1px solid var(--border);
-  transition: background .12s;
-}
+.video-table-head { padding-top: .85rem; padding-bottom: .7rem; border-bottom: 1px solid var(--border); }
+.video-table-head span { font-size: .74rem; font-weight: 700; color: var(--muted); }
+.video-row { padding-top: .8rem; padding-bottom: .8rem; border-bottom: 1px solid var(--border); transition: background .12s; }
 .video-row:last-child { border-bottom: none; }
-.video-row:hover { background: var(--bg); }
+.video-row:hover { background: #fafbfe; }
 
-/* Thumbnail */
+.video-cell { display: flex; align-items: center; gap: .9rem; min-width: 0; }
 .video-thumb {
-  width: 52px; height: 38px;
-  border-radius: 6px; overflow: hidden;
-  background: var(--bg3);
-  border: 1px solid var(--border);
+  position: relative; width: 84px; aspect-ratio: 16/10; flex-shrink: 0;
+  border-radius: 9px; overflow: hidden;
+  background: linear-gradient(135deg, #2a2660, #14122f);
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  color: rgba(255,255,255,.35);
 }
-.video-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.video-thumb i { font-size: .72rem; color: var(--muted); opacity: .35; }
-
-/* Name */
+.video-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-dur {
+  position: absolute; right: 4px; bottom: 4px;
+  background: rgba(10,8,30,.78); color: #fff; border-radius: 5px;
+  font-size: .64rem; font-weight: 700; padding: .1rem .35rem; letter-spacing: .01em;
+}
 .video-name a {
-  font-size: .87rem; font-weight: 500; color: var(--text);
-  text-decoration: none; transition: color .12s;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  display: block;
+  font-size: .9rem; font-weight: 700; color: var(--text); text-decoration: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;
 }
 .video-name a:hover { color: var(--accent); }
+.video-desc {
+  font-size: .76rem; color: var(--muted); margin-top: .12rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cell-muted { font-size: .8rem; color: var(--muted); }
+.cell-num { font-size: .92rem; font-weight: 800; letter-spacing: -.01em; }
 .video-pasta-tag {
-  display: inline-flex; align-items: center; gap: .3rem;
-  font-size: .68rem; color: var(--muted);
-  margin-top: .1rem; cursor: pointer;
-  transition: color .12s;
+  display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; color: var(--text);
+  cursor: pointer; min-width: 0;
 }
+.video-pasta-tag i { color: var(--accent); }
 .video-pasta-tag:hover { color: var(--accent); }
+.metric { font-size: .8rem; font-weight: 700; }
+.metric .bar { width: 88px; }
 
-/* Plays */
-.plays-val {
-  font-family: 'Syne', sans-serif;
-  font-size: .92rem; font-weight: 700; color: var(--text);
-}
-.plays-sub { font-size: .65rem; color: var(--muted); }
-
-/* Actions */
-.row-actions {
-  display: flex; align-items: center; gap: .28rem;
-  justify-content: flex-end;
-}
+.row-actions { display: flex; align-items: center; gap: .35rem; justify-content: flex-end; }
 .row-btn {
-  width: 29px; height: 29px; border-radius: 7px;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--muted); font-size: .76rem;
+  width: 32px; height: 32px; border-radius: 9px;
+  border: 1px solid var(--border); background: #fff;
+  color: var(--muted); font-size: .8rem;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background .12s, color .12s, border-color .12s, box-shadow .12s;
-  text-decoration: none; position: relative;
-  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  cursor: pointer; text-decoration: none; position: relative;
+  transition: background .12s, color .12s, border-color .12s;
 }
 .row-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
-.row-btn.danger:hover { background: #fee2e2; color: #dc2626; border-color: rgba(239,68,68,.3); }
+.row-btn.danger:hover { background: var(--danger-soft); color: var(--danger); border-color: rgba(229,72,77,.3); }
 
-/* Checkbox */
-.row-check {
-  appearance: none; -webkit-appearance: none;
-  width: 15px; height: 15px;
-  border: 1.5px solid var(--border);
-  border-radius: 4px; background: transparent;
-  cursor: pointer; transition: border-color .15s, background .15s;
-  flex-shrink: 0;
-}
-.row-check:checked { background: var(--accent); border-color: var(--accent); }
+.video-empty { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+.video-empty i { font-size: 2.4rem; opacity: .18; display: block; margin-bottom: 1rem; }
+.video-empty .btn-wt { margin-top: 1rem; }
+.no-results { display: none; }
 
-/* Empty */
-.video-empty {
-  text-align: center; padding: 4rem 2rem; color: var(--muted);
-}
-.video-empty i { font-size: 2.5rem; opacity: .1; display: block; margin-bottom: 1rem; }
+.lib-foot { padding: .9rem 1.3rem; border-top: 1px solid var(--border); font-size: .8rem; color: var(--muted); }
 
-/* ── Biblioteca ──────────────────────────────────────────── */
-.biblioteca-wrap {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
-  padding: 1.4rem;
-  box-shadow: var(--shadow);
-}
-.pasta-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: .9rem;
-  margin-top: 1rem;
-}
+/* ── Biblioteca (pastas) ─────────────────────────────────── */
+.biblioteca-wrap { padding: 1.4rem 1.3rem 1.6rem; }
+.pasta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; margin-top: 1rem; transition: opacity .15s; }
 .pasta-card {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.1rem 1rem;
-  cursor: pointer;
-  transition: border-color .15s, background .15s, transform .1s;
-  display: flex; flex-direction: column; gap: .5rem;
-  position: relative;
+  background: #fff; border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.1rem; cursor: pointer; position: relative;
+  display: flex; flex-direction: column; gap: .55rem;
+  transition: border-color .15s, box-shadow .15s;
 }
-.pasta-card:hover { border-color: var(--accent-border); background: var(--accent-soft); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.pasta-card:hover { border-color: var(--accent-border); box-shadow: var(--shadow-md); }
 .pasta-card.active-pasta { border-color: var(--accent); background: var(--accent-soft); }
 .pasta-icon {
-  width: 36px; height: 36px;
-  border-radius: 9px;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--accent); font-size: .9rem;
+  width: 40px; height: 40px; border-radius: 11px;
+  background: var(--accent-soft); color: var(--accent);
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
 }
-.pasta-name { font-size: .87rem; font-weight: 600; color: var(--text); }
-.pasta-count { font-size: .72rem; color: var(--muted); }
+.pasta-name { font-size: .9rem; font-weight: 700; }
+.pasta-count { font-size: .76rem; color: var(--muted); }
 .pasta-del {
-  position: absolute; top: .5rem; right: .5rem;
-  width: 22px; height: 22px; border-radius: 5px;
-  background: none; border: none;
-  color: var(--muted); font-size: .72rem; cursor: pointer;
+  position: absolute; top: .6rem; right: .6rem;
+  width: 26px; height: 26px; border-radius: 7px; background: none; border: none;
+  color: var(--muted); font-size: .76rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity .15s, color .15s;
+  opacity: 0; transition: opacity .15s, color .15s, background .15s;
 }
-.pasta-card:hover .pasta-del { opacity: 1; }
-.pasta-del:hover { color: #fca5a5; }
+.pasta-card:hover .pasta-del, .pasta-del:focus-visible { opacity: 1; }
+.pasta-del:hover { color: var(--danger); background: var(--danger-soft); }
 
-.pasta-videos-wrap {
-  margin-top: 1.2rem; display: none;
-}
+.pasta-videos-wrap { margin-top: 1.5rem; display: none; }
 .pasta-videos-wrap.show { display: block; }
-.pasta-videos-header {
-  display: flex; align-items: center; gap: .6rem;
-  margin-bottom: .8rem;
-  font-size: .82rem; color: var(--muted);
-}
+.pasta-videos-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .8rem; font-size: .84rem; color: var(--muted); }
 .pasta-videos-header strong { color: var(--text); }
-.pasta-back { cursor: pointer; }
-.pasta-back:hover { color: var(--accent); }
+.pasta-back { cursor: pointer; padding: .2rem .4rem; border-radius: 6px; }
+.pasta-back:hover { color: var(--accent); background: var(--accent-soft); }
 
 /* Dropdown mover para pasta */
 .move-dropdown {
-  position: fixed;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  min-width: 190px;
-  z-index: 9000;
-  padding: .4rem;
-  display: none;
-  box-shadow: 0 4px 24px rgba(0,0,0,.12), 0 1px 4px rgba(0,0,0,.06);
+  position: absolute;
+  background: #fff; border: 1px solid var(--border); border-radius: 12px;
+  min-width: 200px; z-index: 9000; padding: .4rem; display: none;
+  box-shadow: 0 12px 32px -8px rgba(20,24,60,.22), 0 2px 6px rgba(20,24,60,.06);
   animation: dropdown-in .15s cubic-bezier(.22,1,.36,1);
 }
-@keyframes dropdown-in {
-  from { opacity: 0; transform: translateY(-6px) scale(.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
+@keyframes dropdown-in { from { opacity: 0; transform: translateY(-6px) scale(.97); } to { opacity: 1; transform: none; } }
 .move-dropdown.open { display: block; }
-.move-drop-title {
-  font-size: .62rem; font-weight: 700; letter-spacing: .11em;
-  text-transform: uppercase; color: var(--muted);
-  padding: .35rem .7rem .2rem;
-}
+.move-drop-title { font-size: .72rem; font-weight: 700; color: var(--muted); padding: .4rem .7rem .3rem; }
 .move-opt {
-  display: flex; align-items: center; gap: .55rem;
-  padding: .5rem .7rem;
-  border-radius: 7px;
-  font-size: .83rem; font-weight: 500; color: var(--text);
-  cursor: pointer; transition: background .1s, color .1s;
+  display: flex; align-items: center; gap: .6rem; padding: .55rem .7rem; border-radius: 8px;
+  font-size: .84rem; font-weight: 600; cursor: pointer; transition: background .1s, color .1s;
 }
 .move-opt:hover { background: var(--accent-soft); color: var(--accent); }
-.move-opt i { width: 15px; text-align: center; font-size: .78rem; color: var(--accent); opacity: .75; flex-shrink: 0; }
+.move-opt i { width: 15px; text-align: center; font-size: .78rem; color: var(--accent); flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .lib-bar { padding: 0 .8rem; }
+  .lib-filters { width: 100%; padding-top: 0; }
+  .lib-filters .metric-select { flex: 1; }
+}
 </style>
 <?php $v->end() ?>
 
-<?php
-$videosTop = $videos;
-if ($videosTop) {
-    usort($videosTop, fn($a, $b) => ($playsMap[$b->id] ?? 0) - ($playsMap[$a->id] ?? 0));
-}
-// Contagem de vídeos por pasta
-$countPorPasta = [];
-foreach ($videos as $vid) {
-    if ($vid->pasta_id) {
-        $countPorPasta[(int)$vid->pasta_id] = ($countPorPasta[(int)$vid->pasta_id] ?? 0) + 1;
-    }
-}
-$semPastaCount = count(array_filter($videos, fn($v) => !$v->pasta_id));
-?>
-
-<!-- ── Header ── -->
-<div class="lib-header">
-  <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
-    <button class="btn-wt btn-wt-sm" id="btn-novo-video" onclick="toggleUpload()">
-      <i class="fas fa-plus"></i> Novo vídeo
-    </button>
-    <button class="btn-wt btn-wt-sm btn-wt-ghost" onclick="abrirNovaPasta()">
-      <i class="fas fa-folder-plus"></i> Nova pasta
-    </button>
-    <span style="font-size:.77rem;color:var(--muted);">
-      <?= count($videos) ?> vídeo<?= count($videos) !== 1 ? 's' : '' ?>
-    </span>
+<!-- ── KPIs ── -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-icon purple"><i class="fas fa-video"></i></div>
+    <div class="kpi-lbl">Total de vídeos</div>
+    <div class="kpi-val"><?= number_format(count($videos), 0, ",", ".") ?></div>
   </div>
-  <div class="lib-search">
-    <i class="fas fa-magnifying-glass"></i>
-    <input type="text" id="search-input" placeholder="Buscar…">
+  <div class="kpi-card">
+    <div class="kpi-icon blue"><i class="fas fa-play"></i></div>
+    <div class="kpi-lbl">Plays totais</div>
+    <div class="kpi-val"><?= number_format($totalPlays, 0, ",", ".") ?></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon green"><i class="fas fa-eye"></i></div>
+    <div class="kpi-lbl">Retenção média</div>
+    <div class="kpi-val"><?= $retMedia !== null ? $retMedia . "%" : "—" ?></div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon rose"><i class="fas fa-circle-check"></i></div>
+    <div class="kpi-lbl">Vídeos publicados</div>
+    <div class="kpi-val"><?= number_format($publicados, 0, ",", ".") ?></div>
   </div>
 </div>
 
@@ -330,180 +256,214 @@ $semPastaCount = count(array_filter($videos, fn($v) => !$v->pasta_id));
 <div id="upload-panel">
   <div id="drop-zone" onclick="document.getElementById('file-input').click()">
     <i class="fas fa-cloud-arrow-up drop-icon"></i>
-    <p style="font-size:.87rem;font-weight:500;color:var(--text);margin-bottom:.2rem;">Clique ou arraste um vídeo aqui</p>
-    <p style="font-size:.75rem;color:var(--muted);">MP4, WebM, MOV, MKV &mdash; máx. 2 GB</p>
+    <p style="font-size:.9rem;font-weight:700;margin-bottom:.2rem;">Clique ou arraste um vídeo aqui</p>
+    <p style="font-size:.78rem;color:var(--muted);">MP4, WebM, MOV ou MKV &mdash; até 2 GB</p>
   </div>
   <input type="file" id="file-input" accept=".mp4,.webm,.ogg,.mov,.mkv" style="display:none;">
   <div id="upload-progress">
-    <div style="display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted);margin-bottom:.32rem;">
-      <span id="upload-name" style="font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:72%;"></span>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.4rem;">
+      <span id="upload-name" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:72%;"></span>
       <span id="upload-pct" style="color:var(--accent);font-weight:700;">0%</span>
     </div>
     <div id="upload-bar-track"><div id="upload-bar-fill"></div></div>
   </div>
 </div>
 
-<!-- ── Tabs ── -->
-<div class="lib-tabs">
-  <div class="lib-tab active" onclick="switchTab('recentes')" id="tab-btn-recentes">
-    <i class="fas fa-film"></i> Meus vídeos
-    <?php if ($videos) : ?><span class="tab-badge"><?= count($videos) ?></span><?php endif; ?>
-  </div>
-  <div class="lib-tab" onclick="switchTab('biblioteca')" id="tab-btn-biblioteca">
-    <i class="fas fa-folder"></i> Biblioteca
-    <?php if ($pastas) : ?><span class="tab-badge"><?= count($pastas) ?></span><?php endif; ?>
-  </div>
-  <div class="lib-tab" onclick="switchTab('top')" id="tab-btn-top">
-    <i class="fas fa-fire"></i> Top vídeos
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════ -->
-<!-- Tab: Meus vídeos + Top vídeos (mesma tabela, ordenação diferente) -->
-<!-- ══════════════════════════════════════════════════════ -->
-<div id="panel-recentes" class="video-table-wrap">
-  <?php if ($videos) : ?>
-  <div class="video-table-head">
-    <span></span><span></span>
-    <span>Nome</span>
-    <span>Plays (30d)</span>
-    <span style="text-align:right;">Ações</span>
-  </div>
-  <div id="video-list">
-    <?php foreach ($videos as $vid) :
-      $plays    = $playsMap[$vid->id] ?? 0;
-      $thumbUrl = $vid->capa ? url("uploads/capas/{$vid->capa}") : null;
-      $pasta    = $vid->pasta_id ? ($pastaMap[(int)$vid->pasta_id] ?? null) : null;
-    ?>
-    <div class="video-row" id="row-<?= $vid->id ?>"
-         data-titulo="<?= htmlspecialchars(strtolower($vid->titulo), ENT_QUOTES) ?>"
-         data-plays="<?= $plays ?>"
-         data-pasta="<?= (int)($vid->pasta_id ?? 0) ?>"
-         data-created="<?= $vid->created_at ?>">
-      <input type="checkbox" class="row-check">
-      <div class="video-thumb">
-        <?php if ($thumbUrl) : ?>
-          <img src="<?= htmlspecialchars($thumbUrl, ENT_QUOTES) ?>" alt="">
-        <?php else : ?>
-          <i class="fas fa-film"></i>
-        <?php endif; ?>
-      </div>
-      <div style="min-width:0;">
-        <div class="video-name">
-          <a href="<?= url("videos/editar/{$vid->id}") ?>">
-            <?= htmlspecialchars($vid->titulo, ENT_QUOTES) ?>
-          </a>
-        </div>
-        <?php if ($pasta) : ?>
-          <span class="video-pasta-tag" onclick="switchTab('biblioteca');focusPasta(<?= (int)$vid->pasta_id ?>)">
-            <i class="fas fa-folder" style="font-size:.6rem;color:var(--accent);opacity:.7;"></i>
-            <?= htmlspecialchars($pasta, ENT_QUOTES) ?>
-          </span>
-        <?php endif; ?>
-      </div>
-      <div>
-        <div class="plays-val"><?= number_format($plays) ?></div>
-        <div class="plays-sub">plays</div>
-      </div>
-      <div class="row-actions">
-        <a href="<?= url("metricas/{$vid->id}") ?>" class="row-btn" title="Métricas">
-          <i class="fas fa-chart-bar"></i>
-        </a>
-        <button class="row-btn" title="Copiar embed"
-          onclick="copiarEmbed('<?= htmlspecialchars(url("player/{$vid->embed_token}"), ENT_QUOTES) ?>',<?= (int)$vid->largura ?>,<?= (int)$vid->altura ?>)">
-          <i class="fas fa-code"></i>
-        </button>
-        <div style="position:relative;">
-          <button class="row-btn" title="Mover para pasta"
-            onclick="toggleMoveDropdown(this, <?= $vid->id ?>)">
-            <i class="fas fa-folder-open"></i>
-          </button>
-          <div class="move-dropdown" id="move-<?= $vid->id ?>">
-            <div class="move-drop-title">Mover para pasta</div>
-            <div class="move-opt" onclick="moverVideo(<?= $vid->id ?>, null)">
-              <i class="fas fa-x"></i> Sem pasta
-            </div>
-            <?php foreach ($pastas as $p) : ?>
-            <div class="move-opt" onclick="moverVideo(<?= $vid->id ?>, <?= $p->id ?>)">
-              <i class="fas fa-folder"></i> <?= htmlspecialchars($p->nome, ENT_QUOTES) ?>
-            </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-        <a href="<?= url("videos/editar/{$vid->id}") ?>" class="row-btn" title="Editar">
-          <i class="fas fa-pen"></i>
-        </a>
-        <button class="row-btn danger" title="Excluir" onclick="excluir(<?= $vid->id ?>)">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-  <?php else : ?>
-  <div class="video-empty">
-    <i class="fas fa-film"></i>
-    <p>Nenhum vídeo ainda. Envie o primeiro!</p>
-    <button class="btn-wt" onclick="toggleUpload()">
-      <i class="fas fa-plus"></i> Enviar vídeo
-    </button>
-  </div>
-  <?php endif; ?>
-</div>
-
-<!-- ══════════════════════════════════════════════════════ -->
-<!-- Tab: Biblioteca -->
-<!-- ══════════════════════════════════════════════════════ -->
-<div id="panel-biblioteca" class="video-table-wrap" style="display:none;padding:1.4rem;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;">
-    <div class="wt-card-title" style="margin:0;">
-      <i class="fas fa-folder" style="margin-right:.4rem;color:var(--accent);opacity:.7;"></i>Pastas
-    </div>
-    <button class="btn-wt btn-wt-sm btn-wt-ghost" onclick="abrirNovaPasta()">
-      <i class="fas fa-plus"></i> Nova pasta
-    </button>
-  </div>
-
-  <?php if ($pastas) : ?>
-  <div class="pasta-grid" id="pasta-grid">
-    <?php foreach ($pastas as $p) :
-      $cnt = $countPorPasta[(int)$p->id] ?? 0;
-    ?>
-    <div class="pasta-card" id="pasta-card-<?= $p->id ?>" onclick="abrirPasta(<?= $p->id ?>, '<?= htmlspecialchars($p->nome, ENT_QUOTES) ?>')">
-      <button class="pasta-del" onclick="event.stopPropagation();excluirPasta(<?= $p->id ?>)" title="Excluir pasta">
-        <i class="fas fa-times"></i>
+<!-- ── Biblioteca ── -->
+<div class="lib-panel">
+  <div class="lib-bar">
+    <div class="lib-tabs" role="tablist">
+      <button class="lib-tab active" role="tab" onclick="switchTab('recentes')" id="tab-btn-recentes">
+        <i class="fas fa-film"></i> Recentes
+        <?php if ($videos) : ?><span class="tab-badge"><?= count($videos) ?></span><?php endif; ?>
       </button>
-      <div class="pasta-icon"><i class="fas fa-folder"></i></div>
-      <div class="pasta-name"><?= htmlspecialchars($p->nome, ENT_QUOTES) ?></div>
-      <div class="pasta-count"><?= $cnt ?> vídeo<?= $cnt !== 1 ? 's' : '' ?></div>
+      <button class="lib-tab" role="tab" onclick="switchTab('top')" id="tab-btn-top">
+        <i class="fas fa-fire"></i> Top vídeos
+      </button>
+      <button class="lib-tab" role="tab" onclick="switchTab('biblioteca')" id="tab-btn-biblioteca">
+        <i class="fas fa-folder"></i> Pastas
+        <?php if ($pastas) : ?><span class="tab-badge"><?= count($pastas) ?></span><?php endif; ?>
+      </button>
     </div>
-    <?php endforeach; ?>
+    <?php if ($videos && $pastas) : ?>
+    <div class="lib-filters" id="lib-filters">
+      <select class="metric-select" id="filtro-pasta" aria-label="Filtrar por pasta">
+        <option value="">Todas as pastas</option>
+        <option value="0">Sem pasta</option>
+        <?php foreach ($pastas as $p) : ?>
+          <option value="<?= (int)$p->id ?>"><?= htmlspecialchars($p->nome, ENT_QUOTES) ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <?php endif; ?>
   </div>
-  <?php else : ?>
-  <div class="video-empty" style="padding:2.5rem 1rem;">
-    <i class="fas fa-folder-open"></i>
-    <p>Nenhuma pasta criada ainda.</p>
-    <button class="btn-wt btn-wt-sm" onclick="abrirNovaPasta()">
-      <i class="fas fa-plus"></i> Criar pasta
-    </button>
-  </div>
-  <?php endif; ?>
 
-  <!-- Vídeos dentro da pasta selecionada -->
-  <div class="pasta-videos-wrap" id="pasta-videos-wrap">
-    <div class="pasta-videos-header">
-      <span class="pasta-back" onclick="fecharPasta()"><i class="fas fa-chevron-left"></i></span>
-      <i class="fas fa-folder" style="color:var(--accent);opacity:.7;"></i>
-      <strong id="pasta-nome-label"></strong>
-    </div>
-    <div class="video-table-wrap" style="border-radius:var(--radius);">
-      <div class="video-table-head">
-        <span></span><span></span>
-        <span>Nome</span>
-        <span>Plays (30d)</span>
-        <span style="text-align:right;">Ações</span>
+  <!-- Tab: Recentes + Top vídeos (mesma tabela, ordenação diferente) -->
+  <div id="panel-recentes">
+    <?php if ($videos) : ?>
+    <div class="table-scroll">
+      <div class="table-inner">
+        <div class="video-table-head">
+          <span>Vídeo</span>
+          <span>Pasta</span>
+          <span>Data</span>
+          <span>Plays</span>
+          <span>Retenção</span>
+          <span>Conversão</span>
+          <span>Status</span>
+          <span style="text-align:right;">Ações</span>
+        </div>
+        <div id="video-list">
+          <?php foreach ($videos as $vid) :
+            $plays    = $playsMap[$vid->id] ?? 0;
+            $cliques  = $cliquesMap[$vid->id] ?? 0;
+            $conv     = $plays > 0 ? round($cliques / $plays * 100, 1) : null;
+            $ret      = $retMap[$vid->id] ?? null;
+            $dur      = $durMap[$vid->id] ?? 0;
+            $thumbUrl = $vid->capa ? url("uploads/capas/{$vid->capa}") : null;
+            $pasta    = $vid->pasta_id ? ($pastaMap[(int)$vid->pasta_id] ?? null) : null;
+            [$stTxt, $stCls] = $statusDe($vid);
+          ?>
+          <div class="video-row" id="row-<?= $vid->id ?>"
+               data-titulo="<?= htmlspecialchars(mb_strtolower($vid->titulo), ENT_QUOTES) ?>"
+               data-plays="<?= $plays ?>"
+               data-pasta="<?= (int)($vid->pasta_id ?? 0) ?>"
+               data-created="<?= $vid->created_at ?>">
+            <div class="video-cell">
+              <div class="video-thumb">
+                <?php if ($thumbUrl) : ?>
+                  <img src="<?= htmlspecialchars($thumbUrl, ENT_QUOTES) ?>" alt="" loading="lazy">
+                <?php else : ?>
+                  <i class="fas fa-play"></i>
+                <?php endif; ?>
+                <?php if ($dur > 0) : ?><span class="video-dur"><?= wt_duracao($dur) ?></span><?php endif; ?>
+              </div>
+              <div style="min-width:0;">
+                <div class="video-name">
+                  <a href="<?= url("videos/editar/{$vid->id}") ?>"><?= htmlspecialchars($vid->titulo, ENT_QUOTES) ?></a>
+                </div>
+                <?php if (!empty($vid->descricao)) : ?>
+                  <div class="video-desc"><?= htmlspecialchars($vid->descricao, ENT_QUOTES) ?></div>
+                <?php endif; ?>
+              </div>
+            </div>
+            <div>
+              <?php if ($pasta) : ?>
+                <span class="video-pasta-tag" onclick="switchTab('biblioteca');focusPasta(<?= (int)$vid->pasta_id ?>)">
+                  <i class="fas fa-folder"></i><?= htmlspecialchars($pasta, ENT_QUOTES) ?>
+                </span>
+              <?php else : ?><span class="cell-muted">—</span><?php endif; ?>
+            </div>
+            <div class="cell-muted"><?= date("d/m/Y", strtotime($vid->created_at)) ?></div>
+            <div class="cell-num"><?= number_format($plays, 0, ",", ".") ?></div>
+            <div class="metric">
+              <?php if ($ret !== null) : ?><?= $ret ?>%<div class="bar"><i style="width:<?= min(100, $ret) ?>%"></i></div>
+              <?php else : ?><span class="cell-muted">—</span><?php endif; ?>
+            </div>
+            <div class="metric">
+              <?php if ($conv !== null) : ?><?= str_replace(".", ",", (string)$conv) ?>%<div class="bar ok"><i style="width:<?= min(100, $conv) ?>%"></i></div>
+              <?php else : ?><span class="cell-muted">—</span><?php endif; ?>
+            </div>
+            <div><span class="wt-badge <?= $stCls ?>"><span class="dot"></span><?= $stTxt ?></span></div>
+            <div class="row-actions">
+              <a href="<?= url("metricas/{$vid->id}") ?>" class="row-btn" title="Métricas" aria-label="Métricas">
+                <i class="fas fa-chart-column"></i>
+              </a>
+              <button class="row-btn" title="Copiar embed" aria-label="Copiar embed"
+                onclick="copiarEmbed('<?= htmlspecialchars(url("player/{$vid->embed_token}"), ENT_QUOTES) ?>',<?= (int)$vid->largura ?>,<?= (int)$vid->altura ?>)">
+                <i class="fas fa-code"></i>
+              </button>
+              <div style="position:relative;">
+                <button class="row-btn" title="Mover para pasta" aria-label="Mover para pasta"
+                  onclick="toggleMoveDropdown(this, <?= $vid->id ?>)">
+                  <i class="fas fa-folder-open"></i>
+                </button>
+                <div class="move-dropdown" id="move-<?= $vid->id ?>">
+                  <div class="move-drop-title">Mover para pasta</div>
+                  <div class="move-opt" onclick="moverVideo(<?= $vid->id ?>, null)">
+                    <i class="fas fa-xmark"></i> Sem pasta
+                  </div>
+                  <?php foreach ($pastas as $p) : ?>
+                  <div class="move-opt" onclick="moverVideo(<?= $vid->id ?>, <?= $p->id ?>)">
+                    <i class="fas fa-folder"></i> <?= htmlspecialchars($p->nome, ENT_QUOTES) ?>
+                  </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+              <a href="<?= url("videos/editar/{$vid->id}") ?>" class="row-btn" title="Editar" aria-label="Editar">
+                <i class="fas fa-pen"></i>
+              </a>
+              <button class="row-btn danger" title="Excluir" aria-label="Excluir" onclick="excluir(<?= $vid->id ?>)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <div class="video-empty no-results" id="no-results">
+          <i class="fas fa-magnifying-glass"></i>
+          <p>Nenhum vídeo encontrado com esses filtros.</p>
+        </div>
       </div>
-      <div id="pasta-video-list"></div>
+    </div>
+    <div class="lib-foot" id="lib-foot"><?= count($videos) ?> vídeo<?= count($videos) !== 1 ? "s" : "" ?></div>
+    <?php else : ?>
+    <div class="video-empty">
+      <i class="fas fa-film"></i>
+      <p>Você ainda não enviou nenhum vídeo.</p>
+      <button class="btn-wt" onclick="toggleUpload()">
+        <i class="fas fa-plus"></i> Enviar primeiro vídeo
+      </button>
+    </div>
+    <?php endif; ?>
+  </div>
+
+  <!-- Tab: Pastas -->
+  <div id="panel-biblioteca" class="biblioteca-wrap" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+      <div class="wt-card-title" style="margin:0;">Suas pastas</div>
+      <button class="btn-wt btn-wt-sm btn-wt-ghost" onclick="abrirNovaPasta()">
+        <i class="fas fa-plus"></i> Nova pasta
+      </button>
+    </div>
+
+    <?php if ($pastas) : ?>
+    <div class="pasta-grid" id="pasta-grid">
+      <?php foreach ($pastas as $p) :
+        $cnt = $countPorPasta[(int)$p->id] ?? 0;
+      ?>
+      <div class="pasta-card" id="pasta-card-<?= $p->id ?>" onclick="abrirPasta(<?= $p->id ?>, '<?= htmlspecialchars(addslashes($p->nome), ENT_QUOTES) ?>')">
+        <button class="pasta-del" onclick="event.stopPropagation();excluirPasta(<?= $p->id ?>)" title="Excluir pasta" aria-label="Excluir pasta">
+          <i class="fas fa-xmark"></i>
+        </button>
+        <div class="pasta-icon"><i class="fas fa-folder"></i></div>
+        <div class="pasta-name"><?= htmlspecialchars($p->nome, ENT_QUOTES) ?></div>
+        <div class="pasta-count"><?= $cnt ?> vídeo<?= $cnt !== 1 ? "s" : "" ?></div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php else : ?>
+    <div class="video-empty" style="padding:2.5rem 1rem;">
+      <i class="fas fa-folder-open"></i>
+      <p>Nenhuma pasta criada ainda.</p>
+      <button class="btn-wt btn-wt-sm" onclick="abrirNovaPasta()">
+        <i class="fas fa-plus"></i> Criar pasta
+      </button>
+    </div>
+    <?php endif; ?>
+
+    <!-- Vídeos dentro da pasta selecionada -->
+    <div class="pasta-videos-wrap" id="pasta-videos-wrap">
+      <div class="pasta-videos-header">
+        <span class="pasta-back" onclick="fecharPasta()"><i class="fas fa-chevron-left"></i></span>
+        <i class="fas fa-folder" style="color:var(--accent);"></i>
+        <strong id="pasta-nome-label"></strong>
+      </div>
+      <div class="lib-panel" style="box-shadow:none;">
+        <div class="table-scroll"><div class="table-inner">
+          <div id="pasta-video-list"></div>
+        </div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -517,29 +477,13 @@ const excluirPastaUrl = <?= json_encode(url("pastas/excluir")) ?>;
 const moverUrl   = <?= json_encode(url("pastas/mover")) ?>;
 const editarBase = <?= json_encode(url("videos/editar/")) ?>;
 
-// Todos os vídeos como JSON para renderização na biblioteca
-var TODOS_VIDEOS = <?= json_encode(array_map(function($vid) use ($playsMap, $pastaMap) {
-  return [
-    'id'          => (int)$vid->id,
-    'titulo'      => $vid->titulo,
-    'pasta_id'    => $vid->pasta_id ? (int)$vid->pasta_id : null,
-    'pasta_nome'  => $vid->pasta_id ? ($pastaMap[(int)$vid->pasta_id] ?? '') : '',
-    'plays'       => $playsMap[$vid->id] ?? 0,
-    'capa'        => $vid->capa,
-    'largura'     => (int)$vid->largura,
-    'altura'      => (int)$vid->altura,
-    'embedToken'  => $vid->embed_token,
-    'created_at'  => $vid->created_at,
-  ];
-}, $videos), JSON_UNESCAPED_UNICODE) ?>;
-
 var embedBase    = <?= json_encode(url("player/")) ?>;
 var metricasBase = <?= json_encode(url("metricas/")) ?>;
 
 // ── Upload ─────────────────────────────────────────────────
-function toggleUpload() {
+function toggleUpload(forcar) {
   var p = document.getElementById('upload-panel');
-  var open = p.style.display === 'block';
+  var open = forcar === true ? false : p.style.display === 'block';
   p.style.display = open ? 'none' : 'block';
   var btn = document.getElementById('btn-novo-video');
   btn.innerHTML = open ? '<i class="fas fa-plus"></i> Novo vídeo' : '<i class="fas fa-times"></i> Fechar';
@@ -551,6 +495,8 @@ var progWrap = document.getElementById("upload-progress");
 var barFill  = document.getElementById("upload-bar-fill");
 var pctTxt   = document.getElementById("upload-pct");
 var nameTxt  = document.getElementById("upload-name");
+
+if (location.hash === '#novo') toggleUpload(true);
 
 dropZone.addEventListener("dragover",  function(e) { e.preventDefault(); dropZone.classList.add("over"); });
 dropZone.addEventListener("dragleave", function()  { dropZone.classList.remove("over"); });
@@ -586,34 +532,47 @@ var currentTab = 'recentes';
 function switchTab(tab) {
   currentTab = tab;
   ['recentes','biblioteca','top'].forEach(function(t) {
-    document.getElementById('tab-btn-' + t).classList.remove('active');
+    var b = document.getElementById('tab-btn-' + t);
+    b.classList.toggle('active', t === tab);
+    b.setAttribute('aria-selected', t === tab);
   });
-  document.getElementById('tab-btn-' + tab).classList.add('active');
-  document.getElementById('panel-recentes').style.display  = 'none';
-  document.getElementById('panel-biblioteca').style.display= 'none';
+  var lista = tab === 'recentes' || tab === 'top';
+  document.getElementById('panel-recentes').style.display   = lista ? '' : 'none';
+  document.getElementById('panel-biblioteca').style.display = lista ? 'none' : '';
+  var filtros = document.getElementById('lib-filters');
+  if (filtros) filtros.style.display = lista ? '' : 'none';
 
-  if (tab === 'recentes' || tab === 'top') {
-    document.getElementById('panel-recentes').style.display = '';
-    var rows = Array.from(document.querySelectorAll('.video-row'));
+  if (lista) {
+    var rows = Array.from(document.querySelectorAll('#video-list .video-row'));
     if (tab === 'top') {
       rows.sort(function(a, b) { return parseInt(b.dataset.plays||0) - parseInt(a.dataset.plays||0); });
     } else {
       rows.sort(function(a, b) { return a.dataset.created < b.dataset.created ? 1 : -1; });
     }
     var list = document.getElementById('video-list');
-    rows.forEach(function(r) { list.appendChild(r); });
-  } else {
-    document.getElementById('panel-biblioteca').style.display = '';
+    if (list) rows.forEach(function(r) { list.appendChild(r); });
   }
 }
 
-// ── Search ──────────────────────────────────────────────────
-document.getElementById('search-input').addEventListener('input', function() {
-  var q = this.value.toLowerCase().trim();
-  document.querySelectorAll('.video-row').forEach(function(row) {
-    row.style.display = (!q || row.dataset.titulo.includes(q)) ? '' : 'none';
+// ── Busca + filtro de pasta ─────────────────────────────────
+function aplicarFiltros() {
+  var q = document.getElementById('search-input').value.toLowerCase().trim();
+  var sel = document.getElementById('filtro-pasta');
+  var pasta = sel ? sel.value : '';
+  var visiveis = 0;
+  document.querySelectorAll('#video-list .video-row').forEach(function(row) {
+    var ok = (!q || row.dataset.titulo.includes(q)) && (pasta === '' || row.dataset.pasta === pasta);
+    row.style.display = ok ? '' : 'none';
+    if (ok) visiveis++;
   });
-});
+  var nr = document.getElementById('no-results');
+  if (nr) nr.style.display = visiveis === 0 ? 'block' : 'none';
+  var foot = document.getElementById('lib-foot');
+  if (foot) foot.textContent = visiveis + (visiveis === 1 ? ' vídeo' : ' vídeos');
+}
+document.getElementById('search-input').addEventListener('input', aplicarFiltros);
+var filtroPasta = document.getElementById('filtro-pasta');
+if (filtroPasta) filtroPasta.addEventListener('change', aplicarFiltros);
 
 // ── Excluir vídeo ────────────────────────────────────────────
 function excluir(id) {
@@ -622,7 +581,7 @@ function excluir(id) {
     method: "POST", headers: {"Content-Type": "application/x-www-form-urlencoded"},
     body: "id=" + id,
   }).then(function(r) { return r.json(); }).then(function(r) {
-    if (r.ok) { document.getElementById("row-" + id)?.remove(); wtToast("Vídeo excluído.", "ok"); }
+    if (r.ok) { document.getElementById("row-" + id)?.remove(); aplicarFiltros(); wtToast("Vídeo excluído.", "ok"); }
     else wtToast("Erro ao excluir.", "err");
   });
 }
@@ -633,7 +592,7 @@ function copiarEmbed(embedUrl, w, h) {
   navigator.clipboard.writeText(code).then(function() { wtToast("Embed copiado!", "ok"); });
 }
 
-// ── Move dropdown (position:fixed para nunca ser cortado) ─────
+// ── Move dropdown (movido para o body para nunca ser cortado) ──
 function toggleMoveDropdown(btn, id) {
   var dd = document.getElementById('move-' + id);
   var wasOpen = dd.classList.contains('open');
@@ -641,10 +600,10 @@ function toggleMoveDropdown(btn, id) {
   document.querySelectorAll('.move-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
   if (wasOpen) return;
 
-  // Posiciona via getBoundingClientRect (fixed viewport coords)
+  // Posiciona em coordenadas de página a partir do botão
   var rect = btn.getBoundingClientRect();
   dd.style.top  = (rect.bottom + 6 + window.scrollY) + 'px';
-  dd.style.right = (window.innerWidth - rect.right) + 'px';
+  dd.style.right = (document.documentElement.clientWidth - rect.right) + 'px';
   dd.style.left  = 'auto';
   document.body.appendChild(dd); // move para body para evitar qualquer clipping
   dd.classList.add('open');
@@ -704,29 +663,30 @@ function abrirPasta(id, nome) {
 
   document.getElementById('pasta-nome-label').textContent = nome;
   var list = document.getElementById('pasta-video-list');
-  var vids = TODOS_VIDEOS.filter(function(v) { return v.pasta_id === id; });
-
-  if (!vids.length) {
+  list.innerHTML = '';
+  var cab = document.querySelector('.video-table-head');
+  if (cab) list.appendChild(cab.cloneNode(true));
+  var rows = document.querySelectorAll('#video-list .video-row');
+  var achou = 0;
+  rows.forEach(function(row) {
+    if (parseInt(row.dataset.pasta, 10) !== id) return;
+    var c = row.cloneNode(true);
+    c.removeAttribute('id');
+    c.style.display = '';
+    // ações que dependem do estado da lista principal ficam só lá
+    var mover = c.querySelector('.move-dropdown');
+    if (mover) mover.parentElement.remove();
+    var del = c.querySelector('.row-btn.danger');
+    if (del) del.remove();
+    list.appendChild(c);
+    achou++;
+  });
+  if (!achou) {
     list.innerHTML = '<div class="video-empty" style="padding:2rem;"><i class="fas fa-film"></i><p>Nenhum vídeo nesta pasta.</p></div>';
-  } else {
-    list.innerHTML = vids.map(function(v) {
-      return '<div class="video-row">' +
-        '<input type="checkbox" class="row-check">' +
-        '<div class="video-thumb"><i class="fas fa-film"></i></div>' +
-        '<div style="min-width:0;">' +
-          '<div class="video-name"><a href="' + editarBase + v.id + '">' + escHtml(v.titulo) + '</a></div>' +
-        '</div>' +
-        '<div><div class="plays-val">' + v.plays.toLocaleString() + '</div><div class="plays-sub">plays</div></div>' +
-        '<div class="row-actions">' +
-          '<a href="' + metricasBase + v.id + '" class="row-btn" title="Métricas"><i class="fas fa-chart-bar"></i></a>' +
-          '<a href="' + editarBase + v.id + '" class="row-btn" title="Editar"><i class="fas fa-pen"></i></a>' +
-        '</div>' +
-      '</div>';
-    }).join('');
   }
 
   document.getElementById('pasta-videos-wrap').classList.add('show');
-  document.getElementById('pasta-grid').style.opacity = '.4';
+  document.getElementById('pasta-grid').style.opacity = '.45';
 }
 
 function fecharPasta() {
@@ -741,8 +701,5 @@ function focusPasta(id) {
   if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); card.click(); }
 }
 
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
 </script>
 <?php $v->end() ?>

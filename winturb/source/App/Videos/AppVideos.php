@@ -32,22 +32,43 @@ class AppVideos
             ->order("id DESC")
             ->fetch(true);
 
-        $playsMap = [];
-        $pdo      = \CoffeeCode\DataLayer\Connect::getInstance();
+        $playsMap   = [];
+        $cliquesMap = [];
+        $retMap     = [];
+        $durMap     = [];
+        $pdo        = \CoffeeCode\DataLayer\Connect::getInstance();
 
         if ($videos && $pdo) {
             $ids          = array_map(fn($v) => (int)$v->id, $videos);
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
             $stmt = $pdo->prepare(
-                "SELECT video_id, COUNT(*) AS total
+                "SELECT video_id,
+                        SUM(tipo = 'play')     AS plays,
+                        SUM(tipo = 'ad_click') AS cliques
                  FROM winturb_eventos
-                 WHERE tipo = 'play' AND video_id IN ($placeholders)
+                 WHERE tipo IN ('play','ad_click') AND video_id IN ($placeholders)
                  GROUP BY video_id"
             );
             $stmt->execute($ids);
             foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
-                $playsMap[(int)$row->video_id] = (int)$row->total;
+                $playsMap[(int)$row->video_id]   = (int)$row->plays;
+                $cliquesMap[(int)$row->video_id] = (int)$row->cliques;
+            }
+
+            // Retenção média (% do vídeo assistido por sessão) e duração
+            $stmt = $pdo->prepare(
+                "SELECT video_id,
+                        MAX(duracao) AS dur,
+                        AVG(LEAST(max_segundo / NULLIF(duracao, 0), 1)) * 100 AS ret
+                 FROM winturb_retencao
+                 WHERE video_id IN ($placeholders)
+                 GROUP BY video_id"
+            );
+            $stmt->execute($ids);
+            foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
+                $durMap[(int)$row->video_id] = (int)$row->dur;
+                if ($row->ret !== null) $retMap[(int)$row->video_id] = round((float)$row->ret);
             }
         }
 
@@ -62,6 +83,9 @@ class AppVideos
             "title"    => "Meus Vídeos — " . WINTURB_NAME,
             "videos"   => $videos ?: [],
             "playsMap" => $playsMap,
+            "cliquesMap" => $cliquesMap,
+            "retMap"   => $retMap,
+            "durMap"   => $durMap,
             "pastas"   => $pastas,
             "pastaMap" => $pastaMap,
             "usuario"  => AppSessao::usuarioNome(),

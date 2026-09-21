@@ -25,33 +25,29 @@
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.1rem 1.3rem;
-  display: flex; flex-direction: column; gap: .3rem;
+  padding: 1.1rem 1.2rem;
+  display: flex; flex-direction: column; align-items: flex-start; gap: .3rem;
   position: relative; overflow: hidden;
   box-shadow: var(--shadow);
-  transition: box-shadow .2s, transform .15s;
 }
-.kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
 .kpi-icon {
-  font-size: .8rem; color: var(--accent);
+  font-size: .85rem; color: var(--accent);
   background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
-  width: 28px; height: 28px;
-  border-radius: 7px;
+  width: 34px; height: 34px; grid-row: auto;
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: .15rem;
+  margin-bottom: .35rem;
 }
 .kpi-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 2rem; font-weight: 700; line-height: 1;
-  color: var(--text);
+  font-size: 1.85rem; font-weight: 800; line-height: 1.05;
+  letter-spacing: -.035em;
+  color: var(--text); align-self: auto;
 }
 .kpi-lbl {
-  font-size: .68rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .1em;
-  color: var(--muted);
+  font-size: .8rem; font-weight: 700;
+  color: var(--text); align-self: auto;
 }
-.kpi-sub { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
+.kpi-sub { font-size: .74rem; color: var(--muted); margin-top: .1rem; }
 
 /* ── Pitch inline editor ─────────────────────────────────── */
 .pitch-link {
@@ -83,13 +79,14 @@
   border-bottom: 1px solid var(--border);
   margin-bottom: 1.4rem;
   background: #fff;
-  border-radius: var(--radius) var(--radius) 0 0;
-  padding: 0 .5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 .6rem;
   box-shadow: var(--shadow);
 }
 .wt-tab {
-  padding: .65rem 1.1rem;
-  font-size: .82rem; font-weight: 600;
+  padding: .95rem 1.1rem;
+  font-size: .86rem; font-weight: 600;
   color: var(--muted);
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -117,13 +114,13 @@
   margin-bottom: 1.2rem;
   flex-wrap: wrap; gap: .5rem;
 }
-.chart-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.chart-title { font-size: .95rem; font-weight: 700; color: var(--text); }
 .chart-legend {
   display: flex; align-items: center; gap: .4rem;
   font-size: .75rem; color: var(--muted);
 }
 .chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-.chart-legend-dot.green { background: #22c55e; }
+.chart-legend-dot.green { background: #12a765; }
 
 .chart-outer {
   display: flex;
@@ -173,7 +170,7 @@
 }
 .chart-tooltip.show { opacity: 1; transform: translateY(0); }
 .chart-tooltip strong { color: var(--accent); }
-.chart-tooltip.green strong { color: #22c55e; }
+.chart-tooltip.green strong { color: #12a765; }
 
 /* ── Conv pills ──────────────────────────────────────────── */
 .conv-pill {
@@ -181,9 +178,9 @@
   padding: .18rem .6rem; border-radius: 99px;
   font-size: .71rem; font-weight: 700;
 }
-.conv-pill.hot  { background: rgba(52,211,153,.1);  border: 1px solid rgba(52,211,153,.25);  color: #34d399; }
-.conv-pill.warm { background: rgba(251,191,36,.1);  border: 1px solid rgba(251,191,36,.25);  color: #fbbf24; }
-.conv-pill.cold { background: rgba(148,163,184,.06); border: 1px solid rgba(148,163,184,.15); color: var(--muted); }
+.conv-pill.hot  { background: var(--ok-soft);   color: var(--ok); }
+.conv-pill.warm { background: var(--warn-soft); color: var(--warn); }
+.conv-pill.cold { background: var(--bg3);       color: var(--muted); }
 
 /* ── Empty state ─────────────────────────────────────────── */
 .empty-ads {
@@ -200,7 +197,7 @@
   display: inline-block;
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: #ef4444;
+  background: var(--danger);
   animation: wt-live-pulse 1.4s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -211,13 +208,11 @@
   margin-bottom: 1.4rem;
 }
 .aovivo-count {
-  font-family: 'Syne', sans-serif;
-  font-size: 3.2rem; font-weight: 700; line-height: 1;
+  font-size: 3.2rem; font-weight: 800; letter-spacing: -.04em; line-height: 1;
   color: var(--text);
 }
 .aovivo-label {
-  font-size: .78rem; font-weight: 600; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .08em;
+  font-size: .82rem; font-weight: 600; color: var(--muted);
 }
 .aovivo-updated {
   font-size: .7rem; color: var(--muted); margin-top: .25rem;
@@ -236,9 +231,8 @@
   padding: 1.1rem 1.3rem;
 }
 .aovivo-card-title {
-  font-size: .68rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .1em;
-  color: var(--muted); margin-bottom: .9rem;
+  font-size: .86rem; font-weight: 700;
+  color: var(--text); margin-bottom: .9rem;
 }
 .aovivo-bar-row {
   display: flex; align-items: center; gap: .6rem;
@@ -282,9 +276,8 @@
 }
 .kpi-popover.open { display: block; }
 .kpi-popover-title {
-  font-size: .68rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .1em;
-  color: var(--muted); margin-bottom: .75rem;
+  font-size: .82rem; font-weight: 700;
+  color: var(--text); margin-bottom: .75rem;
 }
 .kpi-popover-item {
   display: flex; align-items: center; gap: .55rem;
@@ -322,27 +315,21 @@ $compRate       = $plays > 0       ? round($completes / $plays * 100, 1) : 0;
 $engajamento    = $avgPct;
 ?>
 
-<!-- ── Header ── -->
-<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;">
-  <a href="<?= url("videos/editar/{$video->id}") ?>" class="btn-wt btn-wt-ghost btn-wt-sm">
+<?php $v->start("page_head") ?>
+  <h1 style="font-size:1.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?= htmlspecialchars($video->titulo, ENT_QUOTES) ?></h1>
+  <p><a href="<?= htmlspecialchars($embedUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener"
+        style="font-size:.76rem;text-decoration:none;font-family:'JetBrains Mono',monospace;"><?= htmlspecialchars($embedUrl, ENT_QUOTES) ?></a></p>
+<?php $v->end() ?>
+
+<?php $v->start("actions") ?>
+  <span class="wt-badge"><i class="fas fa-calendar-days"></i> Últimos 30 dias</span>
+  <a href="<?= url("videos/editar/{$video->id}") ?>" class="btn-wt btn-wt-ghost">
     <i class="fas fa-arrow-left"></i> Voltar
   </a>
-  <div style="flex:1;min-width:0;">
-    <h2 style="font-size:.95rem;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-      <?= htmlspecialchars($video->titulo, ENT_QUOTES) ?>
-    </h2>
-    <a href="<?= htmlspecialchars($embedUrl, ENT_QUOTES) ?>" target="_blank" rel="noopener"
-       style="font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
-      <?= htmlspecialchars($embedUrl, ENT_QUOTES) ?>
-    </a>
-  </div>
-  <span style="font-size:.72rem;color:var(--muted);background:var(--bg);border:1px solid var(--border);padding:.28rem .75rem;border-radius:99px;">
-    <i class="fas fa-calendar-days" style="margin-right:.35rem;color:var(--accent);font-size:.7rem;"></i>Últimos 30 dias
-  </span>
-  <button onclick="zerarMetricas()" class="btn-wt btn-wt-ghost btn-wt-sm" style="border-color:rgba(239,68,68,.4);color:#f87171;" title="Apaga todos os eventos e dados de retenção deste vídeo">
-    <i class="fas fa-trash-alt"></i> Zerar métricas
+  <button onclick="zerarMetricas()" class="btn-wt btn-wt-danger" title="Apaga todos os eventos e dados de retenção deste vídeo">
+    <i class="fas fa-trash-can"></i> Zerar métricas
   </button>
-</div>
+<?php $v->end() ?>
 
 <!-- ── KPI section header with selector ── -->
 <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:.6rem;gap:.5rem;">
@@ -484,13 +471,13 @@ $engajamento    = $avgPct;
         <svg id="chart-svg" preserveAspectRatio="none">
           <defs>
             <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#f97316" stop-opacity=".25"/>
-              <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+              <stop offset="0%"   stop-color="#5b4df0" stop-opacity=".25"/>
+              <stop offset="100%" stop-color="#5b4df0" stop-opacity="0"/>
             </linearGradient>
           </defs>
           <g id="chart-grid"></g>
           <path id="chart-area-fill" fill="url(#area-grad)"/>
-          <path id="chart-line" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="chart-line" fill="none" stroke="#5b4df0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <g id="chart-dots"></g>
           <rect id="chart-hover-zone" fill="transparent" style="cursor:crosshair;"/>
         </svg>
@@ -508,7 +495,7 @@ $engajamento    = $avgPct;
   <!-- Curva de retenção -->
   <div class="chart-card">
     <div class="chart-header">
-      <span class="chart-title"><i class="fas fa-wave-square" style="color:#22c55e;margin-right:.4rem;opacity:.8;"></i>Curva de Retenção</span>
+      <span class="chart-title"><i class="fas fa-wave-square" style="color:#12a765;margin-right:.4rem;opacity:.8;"></i>Curva de Retenção</span>
       <span class="chart-legend"><span class="chart-legend-dot green"></span> % assistindo</span>
     </div>
 
@@ -520,13 +507,13 @@ $engajamento    = $avgPct;
         <svg id="ret-svg" preserveAspectRatio="none">
           <defs>
             <linearGradient id="ret-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#22c55e" stop-opacity=".28"/>
-              <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+              <stop offset="0%"   stop-color="#12a765" stop-opacity=".28"/>
+              <stop offset="100%" stop-color="#12a765" stop-opacity="0"/>
             </linearGradient>
           </defs>
           <g id="ret-grid"></g>
           <path id="ret-area-fill" fill="url(#ret-grad)"/>
-          <path id="ret-line" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="ret-line" fill="none" stroke="#12a765" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <g id="ret-dots"></g>
           <rect id="ret-hover-zone" fill="transparent" style="cursor:crosshair;"/>
         </svg>
@@ -798,7 +785,7 @@ function fmtSeg(s) {
       var c = document.createElementNS('http://www.w3.org/2000/svg','circle');
       c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]);
       c.setAttribute('r', '4');
-      c.setAttribute('fill', '#f97316');
+      c.setAttribute('fill', '#5b4df0');
       c.setAttribute('stroke', '#f2f3f8');
       c.setAttribute('stroke-width', '2');
       c.style.opacity = '0';
@@ -942,7 +929,7 @@ function fmtSeg(s) {
       var c = document.createElementNS('http://www.w3.org/2000/svg','circle');
       c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]);
       c.setAttribute('r', '4');
-      c.setAttribute('fill', '#22c55e');
+      c.setAttribute('fill', '#12a765');
       c.setAttribute('stroke', '#f2f3f8');
       c.setAttribute('stroke-width', '2');
       c.style.opacity = '0';
@@ -1081,7 +1068,7 @@ function fmtSeg(s) {
           var pct = Math.round(cnt / maxCid * 100);
           cidHtml += '<div class="aovivo-location-row">' +
             '<span class="aovivo-loc-label" title="' + cidade + '">' + cidade + '</span>' +
-            '<div class="aovivo-bar-track" style="max-width:60px;"><div class="aovivo-bar-fill" style="width:' + pct + '%;background:#22c55e;"></div></div>' +
+            '<div class="aovivo-bar-track" style="max-width:60px;"><div class="aovivo-bar-fill" style="width:' + pct + '%;background:#12a765;"></div></div>' +
             '<span class="aovivo-loc-val">' + cnt + '</span>' +
             '</div>';
         });

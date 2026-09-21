@@ -20,7 +20,7 @@
 .embed-box:hover {
   border-color: var(--accent-border);
   background: var(--accent-soft);
-  box-shadow: 0 0 0 3px rgba(108,92,231,.07);
+  box-shadow: 0 0 0 3px rgba(91,77,240,.08);
 }
 
 /* ── Ad item ───────────────────────────────────────────── */
@@ -94,7 +94,8 @@
 }
 .wt-toggle-label {
   font-size: .84rem;
-  color: var(--muted);
+  font-weight: 600;
+  color: var(--text);
   transition: color .15s;
 }
 .wt-toggle input:checked ~ .wt-toggle-label,
@@ -117,7 +118,7 @@
 /* ── Embed modal ───────────────────────────────────────── */
 #modal-embed {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.72);
+  background: rgba(10,8,30,.6);
   backdrop-filter: blur(4px);
   z-index: 200;
   align-items: center; justify-content: center;
@@ -130,7 +131,7 @@
   padding: .18rem .65rem;
   background: var(--accent-soft); border: 1px solid var(--accent-border);
   border-radius: 99px; font-size: .67rem; font-weight: 700;
-  color: var(--accent); letter-spacing: .04em; text-transform: uppercase;
+  color: var(--accent);
 }
 .embed-tab-pill {
   display: inline-flex; align-items: center;
@@ -160,7 +161,7 @@
 /* ── Modal ─────────────────────────────────────────────── */
 #modal-ad {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.72);
+  background: rgba(10,8,30,.6);
   backdrop-filter: blur(4px);
   z-index: 200;
   align-items: center; justify-content: center;
@@ -170,7 +171,7 @@
 .modal-box {
   background: #fff;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 18px;
   width: 100%; max-width: 420px;
   padding: 1.6rem;
   display: flex; flex-direction: column; gap: 1rem;
@@ -184,7 +185,7 @@
 .modal-title {
   display: flex; justify-content: space-between; align-items: center;
 }
-.modal-title h3 { font-size: .95rem; font-weight: 600; }
+.modal-title h3 { font-size: 1rem; font-weight: 700; }
 .modal-close {
   background: none; border: none;
   color: var(--muted); cursor: pointer;
@@ -195,18 +196,19 @@
 </style>
 <?php $v->end() ?>
 
-<!-- Page header -->
-<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:1.6rem;flex-wrap:wrap;">
-  <a href="<?= url("videos") ?>" class="btn-wt btn-wt-ghost btn-wt-sm">
+<?php $v->start("page_head") ?>
+  <h1 style="font-size:1.5rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><?= htmlspecialchars($video->titulo, ENT_QUOTES) ?></h1>
+  <p>Ajuste o player, o embed e os botões de oferta deste vídeo.</p>
+<?php $v->end() ?>
+
+<?php $v->start("actions") ?>
+  <a href="<?= url("videos") ?>" class="btn-wt btn-wt-ghost">
     <i class="fas fa-arrow-left"></i> Voltar
   </a>
-  <h2 style="font-size:1rem;font-weight:600;flex:1;margin:0;">
-    <?= htmlspecialchars($video->titulo, ENT_QUOTES) ?>
-  </h2>
-  <a href="<?= url("metricas/{$video->id}") ?>" class="btn-wt btn-wt-ghost btn-wt-sm">
-    <i class="fas fa-chart-bar"></i> Métricas
+  <a href="<?= url("metricas/{$video->id}") ?>" class="btn-wt btn-wt-ghost">
+    <i class="fas fa-chart-column"></i> Métricas
   </a>
-</div>
+<?php $v->end() ?>
 
 <div class="wt-grid-2" style="gap:1.4rem;align-items:start;">
 

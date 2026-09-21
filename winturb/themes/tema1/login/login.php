@@ -6,26 +6,28 @@
   <title>Entrar — WinTurb</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:     #f2f3f8;
-      --accent: #6c5ce7;
-      --accent2:#5a4bd6;
-      --text:   #1e1c3a;
-      --muted:  rgba(30,28,58,.42);
-      --border: rgba(0,0,0,.09);
-      --nav-bg: #13112b;
+      --bg:     #f5f6fb;
+      --accent: #5b4df0;
+      --accent2:#4a3de0;
+      --grad:   linear-gradient(135deg, #5b4df0 0%, #6f5cf6 55%, #7c6bff 100%);
+      --text:   #15173b;
+      --muted:  #737797;
+      --border: #e8eaf3;
+      --nav-bg: #0e0c27;
     }
 
     html, body {
       height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
     .login-wrap {
@@ -38,7 +40,7 @@
     ══════════════════════════════════ */
     .login-left {
       width: 44%;
-      background: var(--nav-bg);
+      background: linear-gradient(180deg, #0e0c27 0%, #130f36 100%);
       display: flex; flex-direction: column;
       justify-content: space-between;
       padding: 3rem 3.2rem;
@@ -51,7 +53,7 @@
       content: '';
       position: absolute;
       width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(108,92,231,.18) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(91,77,240,.3) 0%, transparent 65%);
       top: -100px; right: -160px;
       border-radius: 50%; pointer-events: none;
       animation: glow-drift 9s ease-in-out infinite alternate;
@@ -60,7 +62,7 @@
       content: '';
       position: absolute;
       width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(108,92,231,.1) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(91,77,240,.16) 0%, transparent 65%);
       bottom: -60px; left: -80px;
       border-radius: 50%; pointer-events: none;
       animation: glow-drift 13s ease-in-out infinite alternate-reverse;
@@ -85,22 +87,17 @@
     .login-left-foot { position: relative; z-index: 1; }
 
     .login-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.8rem; font-weight: 800;
-      letter-spacing: -.03em; color: #fff;
-      margin-bottom: .35rem;
+      font-size: 2rem; font-weight: 800;
+      letter-spacing: -.04em; color: #fff;
+      margin-bottom: .5rem;
     }
-    .login-logo em { font-style: normal; color: var(--accent); }
-    .login-logo-dot {
-      display: inline-block; width: 5px; height: 5px;
-      background: var(--accent); border-radius: 50%;
-      margin-left: 2px; vertical-align: middle;
-      position: relative; top: -2px;
-      animation: blink 2.6s ease-in-out infinite;
+    .login-logo em {
+      font-style: normal;
+      background: linear-gradient(90deg, #8f84ff, #5aa7ff);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
     .login-tagline {
-      font-size: .88rem; color: rgba(255,255,255,.45); line-height: 1.55;
+      font-size: .92rem; color: rgba(255,255,255,.55); line-height: 1.6;
     }
 
     /* Analytics card */
@@ -108,32 +105,29 @@
       margin-top: 2.6rem;
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.1);
-      border-radius: 14px;
-      padding: 1.25rem 1.3rem;
+      border-radius: 18px;
+      padding: 1.3rem 1.4rem;
       backdrop-filter: blur(8px);
       display: flex; flex-direction: column; gap: 1.1rem;
-      animation: card-float 5.5s ease-in-out infinite;
     }
-    @keyframes card-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
     .mc-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
     .mc-label {
-      font-size: .64rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: rgba(255,255,255,.4);
+      font-size: .76rem; font-weight: 600; color: rgba(255,255,255,.5);
     }
     .mc-val {
-      font-family: 'Syne', sans-serif; font-size: 1.55rem; font-weight: 800;
+      font-size: 1.7rem; font-weight: 800; letter-spacing: -.03em;
       line-height: 1; color: #fff;
     }
     .mc-icon {
       width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center; font-size: .88rem;
     }
-    .mc-icon-v { background: rgba(108,92,231,.25); border: 1px solid rgba(108,92,231,.4); color: #a78bfa; }
-    .mc-icon-g { background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.3);  color: #34d399; }
+    .mc-icon-v { background: rgba(124,107,255,.22); color: #b8afff; }
+    .mc-icon-g { background: rgba(52,211,153,.15); color: #34d399; }
 
     .mc-bars { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
-    .mc-bar { width: 7px; border-radius: 3px 3px 0 0; background: rgba(108,92,231,.25); animation: bar-grow .5s cubic-bezier(.22,1,.36,1) both; }
+    .mc-bar { width: 7px; border-radius: 3px 3px 0 0; background: rgba(124,107,255,.28); animation: bar-grow .5s cubic-bezier(.22,1,.36,1) both; }
     .mc-bar.hi { background: var(--accent); }
     @keyframes bar-grow { from { transform: scaleY(0); transform-origin: bottom; } to { transform: scaleY(1); transform-origin: bottom; } }
 
@@ -145,11 +139,11 @@
       border-radius: 99px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.1);
-      font-size: .7rem; color: rgba(255,255,255,.55);
+      font-size: .74rem; font-weight: 500; color: rgba(255,255,255,.65);
     }
-    .pill i { font-size: .62rem; color: var(--accent); }
+    .pill i { font-size: .65rem; color: #9d92ff; }
 
-    .login-left-foot { font-size: .68rem; color: rgba(255,255,255,.2); }
+    .login-left-foot { font-size: .72rem; color: rgba(255,255,255,.32); }
 
     /* ══════════════════════════════════
        RIGHT — light form area
@@ -162,36 +156,34 @@
     }
 
     .login-form-wrap {
-      width: 100%; max-width: 360px;
+      width: 100%; max-width: 380px;
       animation: form-in .48s cubic-bezier(.22,1,.36,1) both;
     }
+    @media (prefers-reduced-motion: reduce) { .login-form-wrap, .mc-bar { animation: none; } }
     @keyframes form-in {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .login-form-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.5rem; font-weight: 800;
-      letter-spacing: -.02em; color: var(--text);
+      font-size: 1.6rem; font-weight: 800;
+      letter-spacing: -.04em; color: var(--text);
       margin-bottom: 1.8rem; display: none;
     }
     .login-form-logo em { font-style: normal; color: var(--accent); }
 
     .login-form-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.6rem; font-weight: 800;
-      letter-spacing: -.03em; margin-bottom: .35rem; color: var(--text);
+      font-size: 1.85rem; font-weight: 800;
+      letter-spacing: -.035em; margin-bottom: .4rem; color: var(--text);
     }
     .login-form-sub {
-      font-size: .84rem; color: var(--muted); margin-bottom: 1.9rem; line-height: 1.5;
+      font-size: .9rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.5;
     }
 
     .field { margin-bottom: 1.1rem; }
     .field label {
-      display: block; font-size: .68rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: .4rem;
+      display: block; font-size: .8rem; font-weight: 700;
+      color: var(--text); margin-bottom: .45rem;
     }
     .field-inner { position: relative; }
     .field-inner i {
@@ -202,36 +194,38 @@
     .field input {
       width: 100%;
       background: #fff;
-      border: 1px solid rgba(0,0,0,.1);
-      border-radius: 10px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
       color: var(--text);
-      padding: .7rem .9rem .7rem 2.35rem;
-      font-size: .9rem; font-family: 'Outfit', sans-serif;
+      padding: .8rem .9rem .8rem 2.5rem;
+      font-size: .92rem; font-family: inherit;
       outline: none;
-      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      box-shadow: 0 1px 2px rgba(20,24,60,.04);
       transition: border-color .15s, box-shadow .15s;
     }
     .field input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(108,92,231,.12);
+      box-shadow: 0 0 0 3px rgba(91,77,240,.14);
     }
-    .field input::placeholder { color: rgba(30,28,58,.2); }
+    .field input::placeholder { color: #b3b6cc; }
 
     .btn-login {
       width: 100%; margin-top: .5rem;
-      background: var(--accent);
-      color: #fff; border: none; border-radius: 10px;
-      padding: .78rem; font-size: .92rem; font-weight: 600;
-      font-family: 'Outfit', sans-serif; cursor: pointer;
-      transition: background .15s, box-shadow .2s, transform .1s;
+      background: var(--grad);
+      color: #fff; border: none; border-radius: 11px;
+      padding: .85rem; font-size: .95rem; font-weight: 700;
+      font-family: inherit; cursor: pointer;
+      box-shadow: 0 8px 20px -8px rgba(91,77,240,.75), inset 0 1px 0 rgba(255,255,255,.18);
+      transition: filter .15s, box-shadow .2s, transform .1s;
     }
-    .btn-login:hover { background: var(--accent2); box-shadow: 0 6px 20px rgba(108,92,231,.32); }
+    .btn-login:hover { filter: brightness(1.07); }
+    .btn-login:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .btn-login:active { transform: scale(.98); }
 
     .login-error {
-      background: #fff1f2; border: 1px solid #fecdd3;
-      border-radius: 10px; padding: .7rem .9rem;
-      font-size: .83rem; color: #e11d48;
+      background: rgba(229,72,77,.08); border: 1px solid rgba(229,72,77,.22);
+      border-radius: 11px; padding: .75rem .95rem;
+      font-size: .85rem; font-weight: 500; color: #d13438;
       margin-bottom: 1.3rem;
       display: flex; align-items: center; gap: .5rem;
     }
@@ -251,7 +245,7 @@
     <div class="login-grid"></div>
 
     <div class="login-left-top">
-      <div class="login-logo">Win<em>Turb</em><span class="login-logo-dot"></span></div>
+      <div class="login-logo">Win<em>Turb</em></div>
       <p class="login-tagline">Player inteligente, métricas reais,<br>conversões que aparecem.</p>
 
       <div class="metrics-card">
@@ -277,7 +271,7 @@
           </div>
           <div style="text-align:right;">
             <div class="mc-label">Completados</div>
-            <div style="font-size:1.1rem;font-family:'Syne',sans-serif;font-weight:800;color:#34d399;">64%</div>
+            <div style="font-size:1.15rem;font-weight:800;letter-spacing:-.02em;color:#34d399;">64%</div>
           </div>
         </div>
       </div>
