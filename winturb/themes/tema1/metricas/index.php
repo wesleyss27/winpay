@@ -172,6 +172,31 @@
 .chart-tooltip strong { color: var(--accent); }
 .chart-tooltip.green strong { color: #12a765; }
 
+
+/* ── Curva de retenção (estilo player) ───────────────────── */
+.ret-stage {
+  position: relative; height: 360px; border-radius: 12px; overflow: hidden;
+  background: #090b14;
+}
+.ret-frame {
+  position: absolute; z-index: 0; overflow: hidden; display: none;
+  border-radius: 4px; background: #000; opacity: .62;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.16);
+}
+.ret-frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ret-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }
+.ret-stage .ax { font-size: 11px; fill: #9aa1bd; font-family: inherit; }
+.ret-tip {
+  position: absolute; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .12s;
+  background: #fff; color: var(--text); border-radius: 9px; padding: .45rem .7rem;
+  font-size: .75rem; line-height: 1.35; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+.ret-tip.show { opacity: 1; }
+.ret-tip b { font-size: .85rem; color: #0f9d58; }
+.ret-tip span { display: block; color: var(--muted); }
+.ret-note { font-size: .76rem; color: var(--muted); margin-top: .7rem; }
+
 /* ── Conv pills ──────────────────────────────────────────── */
 .conv-pill {
   display: inline-flex; align-items: center; gap: .3rem;
@@ -495,31 +520,20 @@ $engajamento    = $avgPct;
   <!-- Curva de retenção -->
   <div class="chart-card">
     <div class="chart-header">
-      <span class="chart-title"><i class="fas fa-wave-square" style="color:#12a765;margin-right:.4rem;opacity:.8;"></i>Curva de Retenção</span>
-      <span class="chart-legend"><span class="chart-legend-dot green"></span> % assistindo</span>
+      <span class="chart-title">Retenção geral</span>
+      <span class="chart-legend"><span class="chart-legend-dot green"></span> % do público ainda assistindo</span>
     </div>
 
     <?php if ($retencao) : ?>
-    <div id="ret-tooltip" class="chart-tooltip green"></div>
-    <div class="chart-outer">
-      <div class="chart-y-axis" id="ret-y-axis"></div>
-      <div class="chart-svg-wrap" id="ret-svg-wrap">
-        <svg id="ret-svg" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="ret-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stop-color="#12a765" stop-opacity=".28"/>
-              <stop offset="100%" stop-color="#12a765" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <g id="ret-grid"></g>
-          <path id="ret-area-fill" fill="url(#ret-grad)"/>
-          <path id="ret-line" fill="none" stroke="#12a765" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <g id="ret-dots"></g>
-          <rect id="ret-hover-zone" fill="transparent" style="cursor:crosshair;"/>
-        </svg>
+    <div class="ret-stage" id="ret-stage">
+      <div class="ret-frame" id="ret-frame">
+        <video id="ret-video" muted playsinline preload="metadata"
+               src="<?= htmlspecialchars(url("videos/stream/{$video->embed_token}"), ENT_QUOTES) ?>"></video>
       </div>
+      <svg id="ret-svg" aria-label="Curva de retenção"></svg>
+      <div class="ret-tip" id="ret-tip"></div>
     </div>
-    <div class="chart-x-axis" id="ret-x-axis"></div>
+    <p class="ret-note">Passe o mouse sobre a curva para ver o trecho do vídeo e quanto do público chegou até ali.<?= $pitchTime > 0 ? " A linha tracejada marca o pitch." : "" ?></p>
     <?php else : ?>
     <div style="height:180px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-direction:column;gap:.5rem;">
       <i class="fas fa-wave-square" style="font-size:2rem;opacity:.15;"></i>
@@ -831,147 +845,129 @@ function fmtSeg(s) {
   ro.observe(wrap);
 })();
 
-// ── Curva de retenção chart ───────────────────────────────
+// ── Curva de retenção ─────────────────────────────────────
 (function() {
-  var retData = <?= json_encode($retencao ?: []) ?>;
-  var videoDur = <?= (int)$videoDur ?>;
-  if (!retData.length) return;
+  var retData  = <?= json_encode($retencao ?: []) ?>;
+  var pitch    = <?= (int)$pitchTime ?>;
+  var stage    = document.getElementById('ret-stage');
+  if (!stage || !retData.length) return;
 
   var svg   = document.getElementById('ret-svg');
-  var wrap  = document.getElementById('ret-svg-wrap');
-  var yAxis = document.getElementById('ret-y-axis');
-  var xAxis = document.getElementById('ret-x-axis');
-  var tooltip = document.getElementById('ret-tooltip');
-  if (!svg || !wrap) return;
+  var tip   = document.getElementById('ret-tip');
+  var frame = document.getElementById('ret-frame');
+  var vid   = document.getElementById('ret-video');
+  var NS = 'http://www.w3.org/2000/svg';
+  var GREEN = '#2fdc7c';
+  var frameOk = true, aspect = 9 / 16, lastSeek = 0;
 
-  // Y axis: 0-100% in 25% steps
-  var ticks = [0, 0.25, 0.5, 0.75, 1];
-  yAxis.innerHTML = ticks.slice().reverse().map(function(t) {
-    return '<div class="chart-y-tick">' + Math.round(t * 100) + '%</div>';
-  }).join('');
+  vid.addEventListener('loadedmetadata', function() { if (vid.videoWidth) aspect = vid.videoWidth / vid.videoHeight; });
+  vid.addEventListener('error', function() { frameOk = false; frame.style.display = 'none'; });
 
-  // X axis: 5 labels evenly across duration
-  xAxis.innerHTML = '';
-  var xIdxs = [0, Math.floor(retData.length * 0.25), Math.floor(retData.length * 0.5), Math.floor(retData.length * 0.75), retData.length - 1];
-  xIdxs.forEach(function(idx) {
-    var s = retData[Math.min(idx, retData.length - 1)].s;
-    xAxis.innerHTML += '<span class="chart-x-tick">' + fmtSeg(s) + '</span>';
-  });
-
-  function smoothPath(points) {
-    if (points.length < 2) return '';
-    var d = 'M ' + points[0][0] + ',' + points[0][1];
-    var t = 0.3;
-    for (var i = 0; i < points.length - 1; i++) {
-      var p0 = points[i > 0 ? i - 1 : 0];
-      var p1 = points[i];
-      var p2 = points[i + 1];
-      var p3 = points[i + 2] || p2;
-      var cp1x = p1[0] + (p2[0] - p0[0]) * t;
-      var cp1y = p1[1] + (p2[1] - p0[1]) * t;
-      var cp2x = p2[0] - (p3[0] - p1[0]) * t;
-      var cp2y = p2[1] - (p3[1] - p1[1]) * t;
-      d += ' C ' + cp1x + ',' + cp1y + ' ' + cp2x + ',' + cp2y + ' ' + p2[0] + ',' + p2[1];
-    }
-    return d;
+  function el(name, attrs) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
   }
+  function pct(v) { return String(v).replace('.', ',') + '%'; }
 
   function render() {
-    var W = wrap.clientWidth;
-    var H = 180;
-    var padL = 4, padR = 4, padT = 12, padB = 22;
-    var plotW = W - padL - padR;
-    var plotH = H - padT - padB;
+    var W = stage.clientWidth, H = stage.clientHeight;
+    var L = 46, R = 12, T = 14, B = 30;
+    var pw = W - L - R, ph = H - T - B;
+    var n = retData.length, lastS = Math.max(retData[n - 1].s, 1);
+    var X = function(s) { return L + s / lastS * pw; };
+    var Y = function(p) { return T + (1 - Math.min(p, 100) / 100) * ph; };
 
+    svg.innerHTML = '';
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    svg.style.height = H + 'px';
 
-    // Grid lines
-    var grid = document.getElementById('ret-grid');
-    grid.innerHTML = '';
-    ticks.slice(1).forEach(function(t) {
-      var y = padT + (1 - t) * plotH;
-      var line = document.createElementNS('http://www.w3.org/2000/svg','line');
-      line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
-      line.setAttribute('y1', y); line.setAttribute('y2', y);
-      line.setAttribute('stroke', 'rgba(0,0,0,.05)');
-      line.setAttribute('stroke-width', '1');
-      grid.appendChild(line);
-    });
+    var defs = el('defs', {});
+    var g = el('linearGradient', { id: 'ret-g', x1: 0, y1: 0, x2: 0, y2: 1 });
+    g.appendChild(el('stop', { offset: '0%',   'stop-color': GREEN, 'stop-opacity': '.42' }));
+    g.appendChild(el('stop', { offset: '100%', 'stop-color': GREEN, 'stop-opacity': '.06' }));
+    defs.appendChild(g); svg.appendChild(defs);
 
-    // Points: x = second/duration, y = pct/100
-    var n = retData.length;
-    var pts = retData.map(function(d, i) {
-      var x = padL + (n > 1 ? (i / (n - 1)) : 0) * plotW;
-      var y = padT + (1 - Math.min(d.pct, 100) / 100) * plotH;
-      return [x, y, d];
-    });
+    // grade + eixo Y (0–100% de 20 em 20)
+    for (var t = 0; t <= 100; t += 20) {
+      var y = Y(t);
+      svg.appendChild(el('line', { x1: L, x2: W - R, y1: y, y2: y, stroke: 'rgba(255,255,255,.16)', 'stroke-width': 1 }));
+      var tx = el('text', { x: L - 8, y: y + 4, 'text-anchor': 'end', 'class': 'ax' });
+      tx.textContent = t + '%'; svg.appendChild(tx);
+    }
+    // eixo X (5 marcas)
+    for (var i = 0; i <= 4; i++) {
+      var sx = Math.round(lastS * i / 4);
+      var lx = el('text', { x: X(sx), y: H - 8, 'text-anchor': i === 0 ? 'start' : (i === 4 ? 'end' : 'middle'), 'class': 'ax' });
+      lx.textContent = fmtSeg(sx); svg.appendChild(lx);
+    }
 
-    var linePath = smoothPath(pts);
-    var baseY = padT + plotH;
-    var areaPath = linePath + ' L ' + pts[pts.length-1][0] + ',' + baseY + ' L ' + pts[0][0] + ',' + baseY + ' Z';
-    document.getElementById('ret-area-fill').setAttribute('d', areaPath);
+    // curva em degraus: mantém o valor até a próxima amostra e então cai
+    var d = 'M' + X(retData[0].s) + ',' + Y(retData[0].pct);
+    for (var k = 1; k < n; k++) {
+      d += ' L' + X(retData[k].s) + ',' + Y(retData[k - 1].pct) + ' L' + X(retData[k].s) + ',' + Y(retData[k].pct);
+    }
+    var base = T + ph;
+    svg.appendChild(el('path', { d: d + ' L' + X(retData[n - 1].s) + ',' + base + ' L' + X(retData[0].s) + ',' + base + ' Z', fill: 'url(#ret-g)' }));
+    svg.appendChild(el('path', { d: d, fill: 'none', stroke: GREEN, 'stroke-width': 1.6, 'stroke-linejoin': 'round' }));
 
-    var line = document.getElementById('ret-line');
-    line.setAttribute('d', linePath);
-    var len = line.getTotalLength ? line.getTotalLength() : 2000;
-    line.style.strokeDasharray = len;
-    line.style.strokeDashoffset = len;
-    line.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1)';
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() { line.style.strokeDashoffset = 0; });
-    });
+    // marca do pitch
+    if (pitch > 0 && pitch <= lastS) {
+      var px = X(pitch);
+      svg.appendChild(el('line', { x1: px, x2: px, y1: T, y2: base, stroke: '#ffb020', 'stroke-width': 1.4, 'stroke-dasharray': '5 4' }));
+      var pl = el('text', { x: px + 6, y: T + 13, 'class': 'ax', fill: '#ffb020', style: 'fill:#ffb020;font-weight:700' });
+      pl.textContent = 'Pitch ' + fmtSeg(pitch); svg.appendChild(pl);
+    }
 
-    // Dots
-    var dotsG = document.getElementById('ret-dots');
-    dotsG.innerHTML = '';
-    pts.forEach(function(p) {
-      var c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]);
-      c.setAttribute('r', '4');
-      c.setAttribute('fill', '#12a765');
-      c.setAttribute('stroke', '#f2f3f8');
-      c.setAttribute('stroke-width', '2');
-      c.style.opacity = '0';
-      c.style.transition = 'opacity .15s';
-      dotsG.appendChild(c);
-    });
+    // guia + ponto de hover
+    var guide = el('line', { y1: T, y2: base, stroke: '#fff', 'stroke-opacity': .5, 'stroke-width': 1, style: 'display:none' });
+    var dot   = el('circle', { r: 5, fill: GREEN, stroke: '#fff', 'stroke-width': 2, style: 'display:none' });
+    svg.appendChild(guide); svg.appendChild(dot);
+    var hit = el('rect', { x: L, y: T, width: pw, height: ph, fill: 'transparent', style: 'cursor:crosshair' });
+    svg.appendChild(hit);
 
-    // Hover
-    var hz = document.getElementById('ret-hover-zone');
-    hz.setAttribute('x', padL); hz.setAttribute('y', padT);
-    hz.setAttribute('width', plotW); hz.setAttribute('height', plotH);
+    function mover(ev) {
+      var r = hit.getBoundingClientRect();
+      var cx = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+      var s = Math.max(0, Math.min(lastS, cx / pw * lastS));
+      var idx = 0;
+      for (var q = 0; q < n; q++) { if (retData[q].s <= s) idx = q; else break; }
+      var p = retData[idx], x = X(s);
 
-    var activeDot = null;
-    hz.addEventListener('mousemove', function(e) {
-      var rect = svg.getBoundingClientRect();
-      var mx = e.clientX - rect.left - padL;
-      var idx = Math.round(mx / plotW * (n - 1));
-      idx = Math.max(0, Math.min(n - 1, idx));
-      var p = pts[idx];
-      var d = retData[idx];
+      guide.setAttribute('x1', x); guide.setAttribute('x2', x);
+      dot.setAttribute('cx', x);   dot.setAttribute('cy', Y(p.pct));
+      guide.style.display = dot.style.display = '';
 
-      if (activeDot) activeDot.style.opacity = '0';
-      activeDot = dotsG.children[idx];
-      if (activeDot) activeDot.style.opacity = '1';
+      tip.innerHTML = '<b>' + pct(p.pct) + ' assistindo</b><span>em ' + fmtSeg(Math.round(s)) + '</span>';
+      var tw = tip.offsetWidth;
+      tip.style.left = Math.max(4, Math.min(W - tw - 4, x + 14)) + 'px';
+      tip.style.top  = Math.max(4, Y(p.pct) - 56) + 'px';
+      tip.classList.add('show');
 
-      tooltip.innerHTML = '<strong>' + d.pct + '%</strong> assistindo &middot; ' + fmtSeg(d.s);
-
-      var tx = p[0] + rect.left - wrap.getBoundingClientRect().left + 10;
-      var ty = p[1] - 40;
-      tooltip.style.left = tx + 'px';
-      tooltip.style.top  = ty + 'px';
-      tooltip.classList.add('show');
-    });
-    hz.addEventListener('mouseleave', function() {
-      tooltip.classList.remove('show');
-      if (activeDot) { activeDot.style.opacity = '0'; activeDot = null; }
-    });
+      if (frameOk) {
+        var fh = ph, fw = Math.min(fh * aspect, pw * 0.4);
+        frame.style.display = 'block';
+        frame.style.width = fw + 'px'; frame.style.height = fh + 'px';
+        frame.style.top = T + 'px';
+        frame.style.left = Math.max(L, Math.min(L + pw - fw, x - fw / 2)) + 'px';
+        var now = Date.now();
+        if (now - lastSeek > 70 && vid.readyState >= 1) {
+          lastSeek = now;
+          try { vid.currentTime = Math.min(s, (vid.duration || s) - 0.1); } catch (e) {}
+        }
+      }
+    }
+    function sair() {
+      guide.style.display = dot.style.display = 'none';
+      tip.classList.remove('show'); frame.style.display = 'none';
+    }
+    hit.addEventListener('mousemove', mover);
+    hit.addEventListener('touchstart', mover, { passive: true });
+    hit.addEventListener('touchmove', mover, { passive: true });
+    hit.addEventListener('mouseleave', sair);
   }
 
   render();
-  var ro = new ResizeObserver(render);
-  ro.observe(wrap);
+  new ResizeObserver(render).observe(stage);
 })();
 
 // ── Pitch editor ──────────────────────────────────────────

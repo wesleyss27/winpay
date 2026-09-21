@@ -100,10 +100,16 @@ class AppMetricas
         $playsUnicos = (int)($totaisUnicos->plays_unicos ?? 0);
         $retencao = [];
         if ($playsUnicos > 0 && $videoDur > 0) {
-            $interval = max(10, (int)($videoDur / 60));
+            // ~150 amostras: curva detalhada sem pesar (contagem por ponteiro sobre lista ordenada)
+            $interval = max(2, (int)ceil($videoDur / 150));
+            $ordenados = array_map('intval', $maxSeconds);
+            sort($ordenados);
+            $total = count($ordenados);
+            $i = 0;
             for ($s = 0; $s <= $videoDur; $s += $interval) {
-                $cnt = count(array_filter($maxSeconds, fn($ms) => (int)$ms >= $s));
-                $retencao[] = ['s' => $s, 'pct' => round($cnt / $playsUnicos * 100, 1)];
+                while ($i < $total && $ordenados[$i] < $s) $i++;
+                $cnt = $total - $i;
+                $retencao[] = ['s' => $s, 'pct' => min(100, round($cnt / $playsUnicos * 100, 1))];
             }
         }
 
