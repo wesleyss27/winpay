@@ -1046,6 +1046,19 @@ $router->get("/", "AppLaudosDemo:form", "laudos.demo.form");
 $router->group(null);
 
 /*
+* NAMESPACE Source\App\Ia
+* API REST para agentes de IA (QuickAgent / automações)
+* Auth: X-Api-Key header com API_KEY_IA
+*/
+$router->namespace("Source\App\Ia");
+$router->group("ia");
+$router->get("/produtos",        "AppIaApi:produtos",     "ia.produtos");
+$router->post("/venda",          "AppIaApi:criarVenda",   "ia.venda.criar");
+$router->get("/venda/buscar",    "AppIaApi:buscarVenda",  "ia.venda.buscar");
+$router->get("/venda/{uuid}",    "AppIaApi:statusVenda",  "ia.venda.status");
+$router->group(null);
+
+/*
 * Processos
 */
 $router->dispatch();
