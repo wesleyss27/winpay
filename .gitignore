@@ -26,3 +26,4 @@ winnf/backend/**/*.pyc
 # Claude / ferramentas locais
 .claude/
 .codex
+source/App/MobileApi/firebase-service-account.json
