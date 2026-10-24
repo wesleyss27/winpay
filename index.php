@@ -1052,6 +1052,7 @@ $router->group(null);
 */
 $router->namespace("Source\App\Ia");
 $router->group("ia");
+$router->post("/login",          "AppIaApi:login",        "ia.login");
 $router->get("/produtos",        "AppIaApi:produtos",     "ia.produtos");
 $router->post("/venda",          "AppIaApi:criarVenda",   "ia.venda.criar");
 $router->get("/venda/buscar",    "AppIaApi:buscarVenda",  "ia.venda.buscar");

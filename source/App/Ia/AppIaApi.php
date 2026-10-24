@@ -15,6 +15,7 @@ use Source\Models\Vendas\Venda;
  * Autenticação: header  X-Api-Key: <API_KEY_IA>
  *
  * Rotas:
+ *   POST /ia/login                       → autentica produtor, retorna produtor_id + produtos
  *   GET  /ia/produtos?produtor_id=N      → lista produtos + planos do produtor
  *   POST /ia/venda                       → cria venda PIX, retorna link + QR
  *   GET  /ia/venda/{uuid}                → status pelo link_publico
@@ -63,6 +64,64 @@ class AppIaApi
         if ($s === 4)                   return "pago";
         if (in_array($s, [5, 6, 7]))    return "cancelado";
         return "aguardando";
+    }
+
+    // ── POST /ia/login ────────────────────────────────────────────────────────
+    // Body JSON: { email, senha }
+    // Não requer X-Api-Key — usa credenciais do próprio produtor WinPay
+
+    public function login($data): void
+    {
+        $in    = $this->input();
+        $email = trim($in["email"] ?? "");
+        $senha = $in["senha"] ?? "";
+
+        if (!$email || !$senha) {
+            $this->json(["erro" => "email e senha são obrigatórios."], 422);
+        }
+
+        $acesso = (new Usuario())
+            ->find("email = :e OR login = :e", "e={$email}")
+            ->fetch();
+
+        if (!$acesso || !password_verify($senha, $acesso->senha)) {
+            $this->json(["erro" => "Credenciais inválidas."], 401);
+        }
+
+        $produtorId  = (int)$acesso->id;
+
+        // Carrega produtos ativos do produtor
+        $rawProdutos = (new Produto())->find(
+            "excluir = 0 AND status = 2 AND rascunho = 0 AND usuario = {$produtorId}"
+        )->order("nome ASC")->fetch(true) ?? [];
+
+        $produtos = [];
+        foreach ($rawProdutos as $produto) {
+            $planos = (new Plano())->find(
+                "produto = {$produto->id} AND ativo = 1 AND privado = 0"
+            )->order("preco ASC")->fetch(true);
+
+            if (!$planos) continue;
+
+            $produtos[] = [
+                "id"     => (int)$produto->id,
+                "codigo" => $produto->codigo,
+                "nome"   => $produto->nome,
+                "planos" => array_map(fn($pl) => [
+                    "id"             => (int)$pl->id,
+                    "nome"           => $pl->nome,
+                    "preco"          => (float)$pl->preco,
+                    "link_checkout"  => url("checkout/{$produto->codigo}/{$pl->id}"),
+                ], $planos),
+            ];
+        }
+
+        $this->json([
+            "produtor_id" => $produtorId,
+            "nome"        => $acesso->nome,
+            "email"       => $acesso->email,
+            "produtos"    => $produtos,
+        ]);
     }
 
     // ── GET /ia/produtos?produtor_id=N ────────────────────────────────────────
